@@ -47,7 +47,7 @@ namespace HerPublicWebsite
             if (app.Environment.IsDevelopment() || app.Configuration["CF_INSTANCE_INDEX"] == "0")
             {
                 using var scope = app.Services.CreateScope();
-                var dbContext = scope.ServiceProvider.GetRequiredService<SeaDbContext>();
+                var dbContext = scope.ServiceProvider.GetRequiredService<HerDbContext>();
                 dbContext.Database.Migrate();
             }
 

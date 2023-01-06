@@ -11,7 +11,7 @@ using HerPublicWebsite.Data;
 
 namespace HerPublicWebsite.Data.Migrations
 {
-    [DbContext(typeof(SeaDbContext))]
+    [DbContext(typeof(HerDbContext))]
     [Migration("20220627102103_RenameBackupToUneditedDataInPropertyData")]
     partial class RenameBackupToUneditedDataInPropertyData
     {

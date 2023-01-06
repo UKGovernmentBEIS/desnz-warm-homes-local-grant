@@ -11,7 +11,7 @@ using HerPublicWebsite.Data;
 
 namespace HerPublicWebsite.Data.Migrations
 {
-    [DbContext(typeof(SeaDbContext))]
+    [DbContext(typeof(HerDbContext))]
     [Migration("20220629171058_RemovePersonalData")]
     partial class RemovePersonalData
     {

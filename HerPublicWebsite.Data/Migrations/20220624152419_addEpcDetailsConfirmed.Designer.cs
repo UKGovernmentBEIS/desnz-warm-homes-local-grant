@@ -11,7 +11,7 @@ using HerPublicWebsite.Data;
 
 namespace HerPublicWebsite.Data.Migrations
 {
-    [DbContext(typeof(SeaDbContext))]
+    [DbContext(typeof(HerDbContext))]
     [Migration("20220624152419_addEpcDetailsConfirmed")]
     partial class addEpcDetailsConfirmed
     {

@@ -49,7 +49,7 @@ namespace HerPublicWebsite
             services.AddSingleton<StaticAssetsVersioningService>();
             services.AddScoped<RecommendationService>();
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
-            services.AddDataProtection().PersistKeysToDbContext<SeaDbContext>();
+            services.AddDataProtection().PersistKeysToDbContext<HerDbContext>();
 
             ConfigureEpcApi(services);
             ConfigureBreApi(services);
@@ -87,7 +87,7 @@ namespace HerPublicWebsite
                 // In Gov.PaaS the Database URL is automatically put into the DATABASE_URL environment variable
                 databaseConnectionString = DatabaseUrlToConnectionString(configuration["DATABASE_URL"]);
             }
-            services.AddDbContext<SeaDbContext>(opt =>
+            services.AddDbContext<HerDbContext>(opt =>
                 opt.UseNpgsql(databaseConnectionString));
         }
 

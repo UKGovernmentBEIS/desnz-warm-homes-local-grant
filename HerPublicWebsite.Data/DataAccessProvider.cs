@@ -5,9 +5,9 @@ namespace HerPublicWebsite.Data;
 
 public class DataAccessProvider : IDataAccessProvider
 {
-    private readonly SeaDbContext context;
+    private readonly HerDbContext context;
 
-    public DataAccessProvider(SeaDbContext context)
+    public DataAccessProvider(HerDbContext context)
     {
         this.context = context;
     }

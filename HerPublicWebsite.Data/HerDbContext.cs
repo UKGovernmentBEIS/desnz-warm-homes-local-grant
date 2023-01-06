@@ -5,14 +5,14 @@ using HerPublicWebsite.BusinessLogic.Models;
 
 namespace HerPublicWebsite.Data;
 
-public class SeaDbContext : DbContext, IDataProtectionKeyContext
+public class HerDbContext : DbContext, IDataProtectionKeyContext
 {
     public DbSet<PropertyData> PropertyData { get; set; }
     public DbSet<Epc> Epc { get; set; }
     public DbSet<PropertyRecommendation> PropertyRecommendations { get; set; }
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     
-    public SeaDbContext(DbContextOptions<SeaDbContext> options) : base(options)
+    public HerDbContext(DbContextOptions<HerDbContext> options) : base(options)
     {
     }
 
