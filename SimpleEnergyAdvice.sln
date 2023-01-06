@@ -21,11 +21,9 @@ EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHubActions", "GitHubActions", "{F7C11F5D-EF14-4842-90D1-BB3084CA7F14}"
 ProjectSection(SolutionItems) = preProject
-	.github\workflows\build-and-deploy-to-gov-paas-dev.yml = .github\workflows\build-and-deploy-to-gov-paas-dev.yml
-	.github\workflows\_build-and-deploy-to-gov-paas.yml = .github\workflows\_build-and-deploy-to-gov-paas.yml
+	.github\workflows\build-and-deploy-to-azure-dev.yml = .github\workflows\build-and-deploy-to-azure-dev.yml
+	.github\workflows\_build-and-deploy-to-azure.yml = .github\workflows\_build-and-deploy-to-azure.yml
 	.github\workflows\build-and-run-tests.yml = .github\workflows\build-and-run-tests.yml
-	.github\workflows\build-and-deploy-to-gov-paas-production.yml = .github\workflows\build-and-deploy-to-gov-paas-production.yml
-	.github\workflows\build-and-deploy-to-gov-paas-loadtest.yml = .github\workflows\build-and-deploy-to-gov-paas-loadtest.yml
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaPublicWebsite.UnitTests", "SeaPublicWebsite.UnitTests\SeaPublicWebsite.UnitTests.csproj", "{BC27E00A-BCB1-40DD-872A-3FF0A46A5FFF}"

@@ -7,7 +7,7 @@ on:
         required: true
         type: string
     secrets:
-      gov_paas_password:
+      azure_password:
         required: true
 
 jobs:
@@ -26,13 +26,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        
-    - name: Install the Cloud Foundry CLI
-      run: |
-        wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
-        echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
-        sudo apt-get update
-        sudo apt-get install cf7-cli
 
     - name: Save the build number to build-number.json
       run: |
@@ -53,9 +46,6 @@ jobs:
     - name: Build .Net code
       run: dotnet build SeaPublicWebsite --no-restore --configuration Release --output ./ci-server-build/
 
-    - name: Push the app to Gov.UK PaaS
-      run: |
-        cf login -a api.cloud.service.gov.uk -u team-beisesassupport@softwire.com -p '${{ secrets.gov_paas_password }}' -o 'beis-domestic-energy-advice-service'
-        cf target -s sea-beta-${{ inputs.environment_name }}
-        cf push sea-beta-${{ inputs.environment_name }} --manifest manifest.yml --strategy rolling
+    - name: Push the app to Azure
+      # TODO fill this in for Azure environment
       working-directory: ./ci-server-build/
