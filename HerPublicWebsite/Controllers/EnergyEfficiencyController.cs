@@ -11,7 +11,6 @@ using HerPublicWebsite.BusinessLogic.Services;
 using HerPublicWebsite.DataStores;
 using HerPublicWebsite.ExternalServices.EmailSending;
 using HerPublicWebsite.ExternalServices.GoogleAnalytics;
-using HerPublicWebsite.ExternalServices.PostcodesIo;
 using HerPublicWebsite.Models.EnergyEfficiency;
 using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
@@ -27,7 +26,6 @@ namespace HerPublicWebsite.Controllers
         private readonly IEmailSender emailApi;
         private readonly CookieService cookieService;
         private readonly GoogleAnalyticsService googleAnalyticsService;
-        private readonly PostcodesIoApi postcodesIoApi;
         private readonly AnswerService answerService;
 
         public EnergyEfficiencyController(
@@ -37,7 +35,6 @@ namespace HerPublicWebsite.Controllers
             IEmailSender emailApi,
             CookieService cookieService,
             GoogleAnalyticsService googleAnalyticsService,
-            PostcodesIoApi postcodesIoApi,
             AnswerService answerService)
         {
             this.propertyDataStore = propertyDataStore;
@@ -46,7 +43,6 @@ namespace HerPublicWebsite.Controllers
             this.epcApi = epcApi;
             this.cookieService = cookieService;
             this.googleAnalyticsService = googleAnalyticsService;
-            this.postcodesIoApi = postcodesIoApi;
             this.answerService = answerService;
         }
         
@@ -216,12 +212,7 @@ namespace HerPublicWebsite.Controllers
                 var nextStepCancel = await answerService.UpdateSearchForEpc(viewModel.Reference, SearchForEpc.No);
                 return RedirectToNextStep(nextStepCancel, viewModel.Reference);
             }
-            
-            if (viewModel.Postcode is not null && !(await postcodesIoApi.IsValidPostcode(viewModel.Postcode)))
-            {
-                ModelState.AddModelError(nameof(AskForPostcodeViewModel.Postcode), "Enter a valid UK postcode");
-            }
-            
+
             if (!ModelState.IsValid)
             {
                 return await AskForPostcode_Get(viewModel.Reference);

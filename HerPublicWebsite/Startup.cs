@@ -15,7 +15,6 @@ using HerPublicWebsite.DataStores;
 using HerPublicWebsite.ErrorHandling;
 using HerPublicWebsite.ExternalServices.EmailSending;
 using HerPublicWebsite.ExternalServices.GoogleAnalytics;
-using HerPublicWebsite.ExternalServices.PostcodesIo;
 using HerPublicWebsite.Middleware;
 using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
@@ -40,7 +39,6 @@ namespace HerPublicWebsite
             services.AddScoped<PropertyDataStore>();
             services.AddScoped<PropertyDataUpdater>();
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
-            services.AddScoped<PostcodesIoApi>();
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
