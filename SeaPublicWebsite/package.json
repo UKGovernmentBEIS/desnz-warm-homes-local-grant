@@ -1,0 +1,22 @@
+{
+  "name": "simpleenergyadvicepublicwebsite",
+  "version": "1.0.0",
+  "description": "The public-facing website of the Simple Energy Advice service",
+  "dependencies": {
+    "govuk-frontend": "^4.0.0",
+    "html5shiv": "^3.7.3",
+    "readline": "^1.3.0",
+    "sass": "^1.49.0",
+    "shx": "^0.3.4",
+    "uglify-js": "^3.15.0"
+  },
+  "scripts": {
+    "build": "node compile-sass-and-js.js",
+    "watch": "node compile-sass-and-js.js --watch",
+
+    "update-govuk-images": "shx cp -r ./node_modules/govuk-frontend/govuk/assets/images/* ./wwwroot/assets/images/",
+    "update-govuk-fonts": "shx cp -r ./node_modules/govuk-frontend/govuk/assets/fonts/* ./wwwroot/assets/fonts/",
+    "update-govuk-js": "shx cp -r ./node_modules/govuk-frontend/govuk/all.js ./wwwroot/js/bundle/gov_uk_front_end.js && shx cp -r ./node_modules/html5shiv/dist/html5shiv.js ./wwwroot/js/html5shiv.js",
+    "update-govuk-assets": "npm run update-govuk-images && npm run update-govuk-fonts && npm run update-govuk-js"
+  }
+}

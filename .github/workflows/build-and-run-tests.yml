@@ -1,0 +1,40 @@
+name: Run automated tests
+
+on:
+  pull_request:
+    branches:
+      - main
+      - production
+  push:
+    branches:
+      - main
+      - production
+
+jobs:
+  build-and-run-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code onto job runner
+      uses: actions/checkout@v2
+
+    - name: Install .Net (6.0)
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore .Net dependencies
+      run: dotnet restore --configfile Nuget.config
+
+    - name: Build .Net code
+      run: dotnet build --no-restore
+
+    - name: Run tests
+      run: dotnet test --no-restore --logger trx --results-directory "TestResults"
+
+    - name: Upload dotnet test results
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: TestResults
+      # Use always() to always run this step to publish test results when there are test failures
+      if: ${{ always() }}

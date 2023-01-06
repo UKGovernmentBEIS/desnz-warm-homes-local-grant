@@ -1,0 +1,10 @@
+﻿
+/* Resets */
+@import "_reset";
+
+/* Imported from Gov.UK Frontend */
+$govuk-new-link-styles: true;
+@import "govuk/all-ie8";
+
+/* Simple Energy Advice service custom styles */
+@import "_simple-energy-advice-custom";

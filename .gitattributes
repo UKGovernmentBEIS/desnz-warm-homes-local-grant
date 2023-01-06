@@ -1,0 +1,4 @@
+
+# Treat the EF core snapshot file as binary so that git warns us if we try to merge two branches with different migrations on
+# See "Merging Migrations" the readme for more details
+SeaDbContextModelSnapshot.cs binary

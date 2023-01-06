@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <LangVersion>10</LangVersion>
+        <UserSecretsId>b88a2d94-9041-47c6-ab29-ff57149dd347</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CabinetOffice.GovUkDesignSystem" Version="1.0.0-922f9ad" />
+      <PackageReference Include="GovukNotify" Version="6.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="6.0.4" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.13" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.4">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.4" />
+      <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+      <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
+      <PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
+      <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+      <PackageReference Include="Serilog.Sinks.Network" Version="2.0.2.68" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="build-number.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+        <None Include="wwwroot\**\*">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <Content Remove="wwwroot\assets\images\hot-water-tank.png" />
+        <ProjectReference Include="..\SeaPublicWebsite.Data\SeaPublicWebsite.Data.csproj" />
+        <None Update="manifest.yml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>

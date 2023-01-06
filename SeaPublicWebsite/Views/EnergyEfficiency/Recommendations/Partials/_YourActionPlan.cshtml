@@ -1,0 +1,49 @@
+﻿@using SeaPublicWebsite.BusinessLogic.Models
+@model SeaPublicWebsite.Models.EnergyEfficiency.RecommendationViewModel
+
+<aside class="sea-recommendation-side-panel govuk-!-margin-bottom-9" role="complementary">
+    <h2 class="govuk-heading-m" id="subsection-title">Your action plan</h2>
+    @if (Model.GetSavedRecommendations().Count > 0)
+    {
+        <p class="govuk-body-s">
+            You have saved <strong>@Model.GetSavedRecommendations().Count</strong> recommended
+            @(Model.GetSavedRecommendations().Count == 1 ? "improvement" : "improvements").
+        </p>
+        
+        <ul class="govuk-list govuk-list--bullet">
+            @foreach (PropertyRecommendation propertyRecommendation in Model.GetSavedRecommendations())
+            {
+                <li class="govuk-body-s">
+                    @(propertyRecommendation.Title)
+                </li>
+            }
+        </ul>
+        
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half govuk-!-margin-bottom-0 govuk-body-s">
+                    You could save
+                </dt>
+                <dd class="govuk-summary-list__value govuk-!-width-one-half govuk-!-padding-right-0 govuk-body-s govuk-!-text-align-right">
+                    @Model.GetTotalSavingText()
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half govuk-!-margin-bottom-0 govuk-body-s">
+                    @(Model.GetSavedRecommendations().Count == 1 ? "It could cost" : "They could cost")
+                </dt>
+                <dd class="govuk-summary-list__value govuk-!-width-one-half govuk-!-padding-right-0 govuk-body-s govuk-!-text-align-right">
+                    @Model.GetTotalInstallationCostText()
+                </dd>
+            </div>
+        </dl>
+        
+        <p class="govuk-body-s">
+            You will be able to review your action plan once you have seen all the available recommendations.
+        </p>
+    }
+    else
+    {
+        <p class="govuk-body-s">You haven’t saved any improvements yet.</p>
+    }
+</aside>

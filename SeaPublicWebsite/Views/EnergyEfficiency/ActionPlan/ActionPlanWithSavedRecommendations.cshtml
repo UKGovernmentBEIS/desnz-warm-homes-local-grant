@@ -1,0 +1,215 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using SeaPublicWebsite.BusinessLogic.Models.Enums
+@using SeaPublicWebsite.Models.EnergyEfficiency
+@model SeaPublicWebsite.Models.EnergyEfficiency.ActionPlanViewModel;
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
+}
+
+<div class="govuk-grid-row">
+<div class="govuk-grid-column-full">
+<h1 class="govuk-heading-xl">
+    Your Action Plan
+</h1>
+
+<p class="govuk-body">
+    Here is a summary of your estimated yearly energy bill savings and cost to install the
+    <strong>
+        @{
+            var count = Model.GetSavedRecommendations().Count;
+        }
+        @(count == 1 ? "1 recommendation" : $"{count} recommendations")
+    </strong>
+    you told us you would consider for your home.
+</p>
+
+<div class="govuk-!-padding-left-4 sea-total-savings govuk-!-margin-bottom-6">
+    <h2 class="govuk-heading-s govuk-!-margin-0">You could save up to</h2>
+    <span class="govuk-heading-l sea-total-savings-text">@Model.GetTotalSavingText()</span>
+</div>
+<div class="govuk-grid-row govuk-!-margin-bottom-4">
+    <div class="govuk-grid-column-one-half">
+        <div class="govuk-!-padding-left-4 sea-total-installation-cost">
+            <h2 class="govuk-heading-s govuk-!-margin-0">The total cost of the improvements could be</h2>
+            <span class="govuk-heading-l">@Model.GetTotalInstallationCostText()</span>
+        </div>
+    </div>
+</div>
+
+@await Html.GovUkDetails(new DetailsViewModel
+{
+    SummaryText = "How did we calculate these figures?",
+    Html = @<text>
+               The costs and savings you view using the services on this site are based on standards
+               developed for Government as a way of understanding how houses and flats use energy,
+               and how your home’s energy use could be improved. You can find out more information
+               about these standards with the guidance published on the
+               <a class="govuk-link" target="_blank" href="https://www.gov.uk/guidance/standard-assessment-procedure">
+                   Standard Assessment Procedure site.<span class="govuk-visually-hidden">(opens in a new window)</span>
+               </a>
+            </text>
+})
+
+<div class="sea-action-plan-margin-right sea-saved-recommendations-table sea-saved-recommendations-table-desktop-hide">
+    @await Html.GovUkTable(new TableGovUkViewModel
+    {
+        Classes = "govuk-!-margin-bottom-9",
+        Head = new(),
+        Rows = Model.GetSavedRecommendations().Select(recommendation => new TableRowViewModel
+        {
+            Row = new List<TableCellViewModel>
+            {
+                new()
+                {
+                    Classes = "govuk-!-padding-top-4",
+                    Html = @<text>
+                               <p class="govuk-body govuk-!-margin-bottom-1 govuk-!-font-weight-bold">
+                                   @(recommendation.Title)
+                               </p>
+                               <p class="govuk-body-s govuk-!-margin-bottom-0">
+                                   @(recommendation.Summary)
+                               </p>
+                               <p>
+                                   Typical savings per year: @Model.GetSavingText(recommendation)
+                               </p>
+                               <p>
+                                   Typical costs: @Model.GetInstallationCostText(recommendation)
+                               </p>
+                               <a class="govuk-link" href=@Url.Action("Recommendation_Get", new {id = (int) recommendation.Key, reference = Model.PropertyData.Reference, fromActionPlan = true})>
+                                   Revisit recommendation
+                               </a>
+                            </text>
+                }
+            }
+        }).ToList()
+    })
+</div>
+
+<div class="sea-action-plan-margin-right sea-saved-recommendations-table sea-saved-recommendations-table-mobile-hide">
+    @await Html.GovUkTable(new TableGovUkViewModel
+    {
+        Classes = "govuk-!-margin-bottom-9",
+        Head = new List<TableCellViewModel>
+        {
+            new()
+            {
+                Text = "Recommendation"
+            },
+            new()
+            {
+                Text = "Typical savings per year"
+            },
+            new()
+            {
+                Classes = "govuk-!-padding-right-0",
+                Text = "Typical costs"
+            },
+            new()
+        },
+        Rows = Model.GetSavedRecommendations().Select(recommendation => new TableRowViewModel
+        {
+            Row = new List<TableCellViewModel>
+            {
+                new()
+                {
+                    Classes = "govuk-!-padding-top-4 sea-saved-recommendations-table-headers",
+                    Html = @<text>
+                               <p class="govuk-body govuk-!-margin-bottom-1 govuk-!-font-weight-bold">
+                                   @(recommendation.Title)
+                               </p>
+                               <p class="govuk-body-s govuk-!-margin-bottom-0">
+                                   @(recommendation.Summary)
+                               </p>
+                            </text>
+                },
+                new()
+                {
+                    Classes = "govuk-!-padding-top-4 sea-saved-recommendations-table-headers",
+                    Text = Model.GetSavingText(recommendation)
+                },
+                new()
+                {
+                    Classes = "govuk-!-padding-top-4 sea-saved-recommendations-table-headers",
+                    Text = Model.GetInstallationCostText(recommendation)
+                },
+                new()
+                {
+                    Classes = "sea-saved-recommendations-table-headers",
+                    Html = @<a class="govuk-link" href=@Url.Action("Recommendation_Get", new {id = (int) recommendation.Key, reference = Model.PropertyData.Reference, fromActionPlan = true})>
+                               Revisit recommendation
+                           </a>
+                }
+            }
+        }).ToList()
+    })
+</div>
+
+<p class="govuk-body">
+    Next we have steps to help you action these recommendations.
+</p>
+
+<h2 class="govuk-heading-l govuk-!-margin-bottom-3 govuk-!-margin-top-7">
+    1. Find out if you can apply for support
+</h2>
+@{ await Html.RenderPartialAsync("ActionPlan/Partials/_AvailableSchemesOrGrants", Model); }
+
+<h2 class="govuk-heading-l govuk-!-margin-bottom-3 govuk-!-margin-top-7">
+    2. Consult with a qualified installer
+</h2>
+<p class="govuk-body">
+    We recommend consulting with a qualified installer to confirm what changes you can make to your property.
+</p>
+<p class="govuk-body">
+    You can get help finding a qualified installer of heat pumps or solar panels in your area by visiting the
+    <a href="https://mcscertified.com/find-an-installer/" target="_blank">MCS website.</a>
+</p>
+<p class="govuk-body">
+    For all other changes to your property, get help finding a qualified installer in your area by visiting the
+    <a href="https://www.trustmark.org.uk/" target="_blank">TrustMark website.</a>
+</p>
+
+@if (Model.GetDecideLaterRecommendations().Any())
+{
+    <h2 class="govuk-heading-l govuk-!-margin-bottom-3 govuk-!-margin-top-7">
+        3. Research improvements you are unsure about
+    </h2>
+    await Html.RenderPartialAsync("ActionPlan/Partials/_ImprovementsUnsureAbout", Model);
+}
+
+@{ await Html.RenderPartialAsync("ActionPlan/Partials/_DiscardedRecommendations", Model); }
+
+<h2 class="govuk-heading-l govuk-!-margin-bottom-3 govuk-!-margin-top-7">
+    @(Model.GetDecideLaterRecommendations().Any() ? "4." : "3.") Other ways to save energy
+</h2>
+
+<p class="govuk-body">
+    If you’d like to do more to improve the energy efficiency of your home, consider the following:
+</p>
+
+<ul class="govuk-list govuk-list--bullet">
+    <li>
+        Visit the <a class="govuk-link" target="_blank" href="https://helpforhouseholds.campaign.gov.uk/help-with-your-bills/energy-saving-advice/">Help for Households</a> website for even more ways to save energy and reduce your bills.
+    </li>
+    <li>When buying new appliances, upgrade to an energy efficient one - <a class="govuk-link" target="_blank" href="https://energylabel.org.uk/">Learn about energy labels</a></li>
+    @if (Model.PropertyData?.HasOutdoorSpace != HasOutdoorSpace.No)
+    {
+        <li>Install a heat pump - <a class="govuk-link" target="_blank" href="https://www.heat-pump-check.service.gov.uk/">Check if your home may be suitable</a></li>
+    }
+</ul>
+
+@{
+    await Html.RenderPartialAsync("ActionPlan/Partials/_ReturnToActionPlan", new ReturnToActionPlanViewModel
+    {
+        Reference = Model.PropertyData.Reference,
+        EmailAddress = Model.EmailAddress,
+        EmailSent = Model.EmailSent
+    });
+}
+</div>
+</div>

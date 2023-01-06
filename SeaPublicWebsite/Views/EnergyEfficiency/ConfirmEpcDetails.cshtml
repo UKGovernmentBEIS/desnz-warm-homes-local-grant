@@ -1,0 +1,103 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.Attributes
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SeaPublicWebsite.BusinessLogic.Models.Enums
+
+@model SeaPublicWebsite.Models.EnergyEfficiency.ConfirmEpcDetailsViewModel
+@{
+    ViewBag.Title = "Confirm your EPC details";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
+}
+
+@{
+    var rows = new List<SummaryListRowViewModel>();
+
+    rows.Add(new()
+    {
+        Key = new()
+        {
+            Classes = "govuk-!-width-one-half",
+            Text = "Building type"
+        },
+        Value = new()
+        {
+            Classes = "govuk-!-width-one-half",
+            Html = (@<text>
+                        @(Model.Epc.PropertyType == PropertyType.House ? GovUkRadioCheckboxLabelTextAttribute.GetLabelText(Model.Epc.HouseType) : null)
+                        @(Model.Epc.PropertyType == PropertyType.Bungalow ? GovUkRadioCheckboxLabelTextAttribute.GetLabelText(Model.Epc.BungalowType) : null)
+                        @(Model.Epc.PropertyType == PropertyType.ApartmentFlatOrMaisonette ? GovUkRadioCheckboxLabelTextAttribute.GetLabelText(Model.Epc.FlatType) : null)
+                        @(GovUkRadioCheckboxLabelTextAttribute.GetLabelText(Model.Epc.PropertyType).ToLower())
+                     </text>)
+        }
+    });
+
+    rows.Add(new()
+    {
+        Key = new()
+        {
+            Classes = "govuk-!-width-one-half",
+            Text = "Year home was built"
+        },
+        Value = new()
+        {
+            Classes = "govuk-!-width-one-half",
+            Text = Model.Epc.ConstructionAgeBand.HasValue ? GovUkRadioCheckboxLabelTextAttribute.GetLabelText(Model.Epc.ConstructionAgeBand) : null,
+        }
+    });
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <form action="@Url.Action("ConfirmEpcDetails_Post", "EnergyEfficiency", new { reference = Model.Reference })" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+
+            @await Html.GovUkFieldset(new FieldsetViewModel
+            {
+                Legend = new LegendViewModel
+                {
+                    Text = "Check your property's details",
+                    Classes = "govuk-fieldset__legend--l",
+                    IsPageHeading = true
+                },
+                InnerHtml =
+                    @<text>
+                        <p class="govuk-caption-m">
+                            Please confirm that this information about your property is correct. This information cannot be changed later once you continue.
+                        </p>
+                        @(await Html.GovUkSummaryList(new SummaryListViewModel
+                        {
+                            Rows = rows
+                        }))
+                        
+                        @await Html.GovUkRadiosFor(
+                            m => m.EpcDetailsConfirmed,
+                            fieldsetOptions: new FieldsetViewModel
+                            {
+                                Legend = new LegendViewModel
+                                {
+                                    Text = "Is this information correct?",
+                                    Classes = "govuk-fieldset__legend--m",
+                                    IsPageHeading = false
+                                }
+                            })
+                     </text>
+            })
+
+            <div class="govuk-button-group">
+                @(await Html.GovUkButton(new ButtonViewModel
+                {
+                    Text = "Continue",
+                }))
+            </div>
+        </form>
+    </div>
+</div>

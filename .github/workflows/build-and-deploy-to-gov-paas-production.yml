@@ -1,0 +1,13 @@
+name: (Production) Build & Deploy SEA-Beta to Gov.UK PaaS
+
+on:
+  push:
+    branches: [ production ]
+
+jobs:
+  call-build-and-deploy-workflow:
+    uses: ./.github/workflows/_build-and-deploy-to-gov-paas.yml
+    with:
+      environment_name: Production
+    secrets:
+      gov_paas_password: ${{ secrets.TEAM_BEISESASSUPPORT_GOV_PAAS_PASSWORD }}

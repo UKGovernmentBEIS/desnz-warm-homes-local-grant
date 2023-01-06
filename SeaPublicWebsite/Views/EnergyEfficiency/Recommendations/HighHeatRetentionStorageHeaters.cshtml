@@ -1,0 +1,65 @@
+﻿@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model SeaPublicWebsite.Models.EnergyEfficiency.RecommendationViewModel;
+
+@{
+    Layout = "_Recommendation";
+}
+
+@section RecommendationBody
+{
+    <p class="govuk-body">
+        Based on the information we have collected; it looks like you have manual storage heaters. Consider upgrading to high heat retention storage heaters with automatic controls.
+    </p>
+
+    <p class="govuk-body">
+        Compared to older storage heaters, modern high heat retention storage heaters:
+    </p>
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
+        <li>
+            Hold more heat
+        </li>
+        <li>
+            Have better insulation
+        </li>
+        <li>
+            Release heat more quickly when needed
+        </li>
+    </ul>
+    
+    <p class="govuk-body">
+        Their improved controls, including automatic charge control, thermostat and programmer, allowing you to set the temperature you want the room to be heated and when, with the heater only drawing the electricity needed to meet that programme.
+    </p>
+    
+    <p class="govuk-body govuk-!-margin-bottom-6">
+        You can find more information on high heat retention storage heaters on the
+        <a class="govuk-link" target="_blank" href="https://energysavingtrust.org.uk/advice/electric-heating/">Energy Saving Trust website.<span class="govuk-visually-hidden">(opens in a new window)</span></a>
+    </p>
+}
+
+@section RecommendationSuitableFor
+{
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
+        <li>
+            You have older, manually controlled storage heaters  
+        </li>
+    </ul>
+}
+
+@section RecommendationLifetime
+{
+    <p class="govuk-body">High heat retention storage heaters are typically expected to last <b>around @Model.GetCurrentPropertyRecommendation().Lifetime years</b></p>
+}
+
+@{
+    Model.DisruptionTagViewModel = new TagViewModel
+    {
+        Classes = "govuk-tag--green",
+        Text = "MINIMAL"
+    };
+    
+    Model.DurationTagViewModel = new TagViewModel
+    {
+        Classes = "govuk-tag--green",
+        Text = "LESS THAN A DAY"
+    };
+}

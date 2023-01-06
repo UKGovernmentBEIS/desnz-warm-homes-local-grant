@@ -1,0 +1,63 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model SeaPublicWebsite.Models.EnergyEfficiency.RecommendationViewModel;
+
+@{
+    Layout = "_Recommendation";
+}
+
+@section RecommendationBody
+{
+    <p class="govuk-body">
+        From the information we have it looks like the outside walls of your home are cavity walls,
+        and that the cavity has not been insulated.
+    </p>
+
+    <p class="govuk-body">
+        Specialist contractors can inject insulation into the cavity, reducing heat loss
+        significantly and helping to cut your bills.
+    </p>
+
+    <p class="govuk-body govuk-!-margin-bottom-6">
+        You can find more information on cavity wall insulation on the
+        <a class="govuk-link" target="_blank" href="https://energysavingtrust.org.uk/advice/cavity-wall-insulation/">Energy Saving Trust website.<span class="govuk-visually-hidden">(opens in a new window)</span></a>
+    </p>
+}
+
+@section RecommendationSuitableFor
+{
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
+        <li>
+            Your property was built with uninsulated cavity walls - this was common between the 1920s and the 1980s.
+        </li>
+        <li>
+            The cavity has not been insulated since.
+        </li>
+    </ul>
+    
+    @await Html.GovUkWarningText(new WarningTextViewModel
+    {
+        IconFallbackText = "Caution",
+        Text = "Not all buildings are suitable for standard cavity wall insulation. You will need a " +
+               "specialist contractor to inspect your property to work out what insulation options you have."
+    })
+}
+
+@section RecommendationLifetime
+{
+    <p class="govuk-body">Cavity wall insulation is expected to last <b>around @Model.GetCurrentPropertyRecommendation().Lifetime years</b></p>
+}
+
+@{
+    Model.DisruptionTagViewModel = new TagViewModel
+    {
+        Classes = "govuk-tag--green",
+        Text = "MINIMAL"
+    };
+    
+    Model.DurationTagViewModel = new TagViewModel
+    {
+        Classes = "govuk-tag--yellow",
+        Text = "1 DAY"
+    };
+}

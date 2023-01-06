@@ -1,0 +1,109 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaPublicWebsite", "SeaPublicWebsite\SeaPublicWebsite.csproj", "{68F9016E-95CB-4A9E-A111-43619D287158}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "General files", "General files", "{B4E04C79-22C1-4E83-92AE-9666840A1933}"
+ProjectSection(SolutionItems) = preProject
+	.gitignore = .gitignore
+	README.md = README.md
+	Nuget.config = Nuget.config
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{EE6BCE34-EE65-4B59-9310-3AD1608277BB}"
+ProjectSection(SolutionItems) = preProject
+	Infrastructure\CreateEnvironment.sh = Infrastructure\CreateEnvironment.sh
+	Infrastructure\LoginToGovPaas.sh = Infrastructure\LoginToGovPaas.sh
+	Infrastructure\LoginToGovPaasTemplate.sh = Infrastructure\LoginToGovPaasTemplate.sh
+	Infrastructure\SetEnvironmentSecrets.sh = Infrastructure\SetEnvironmentSecrets.sh
+	Infrastructure\SetEnvironmentSecretsTemplate.sh = Infrastructure\SetEnvironmentSecretsTemplate.sh
+	Infrastructure\autoscaling-policy.Production.json = Infrastructure\autoscaling-policy.Production.json
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHubActions", "GitHubActions", "{F7C11F5D-EF14-4842-90D1-BB3084CA7F14}"
+ProjectSection(SolutionItems) = preProject
+	.github\workflows\build-and-deploy-to-gov-paas-dev.yml = .github\workflows\build-and-deploy-to-gov-paas-dev.yml
+	.github\workflows\_build-and-deploy-to-gov-paas.yml = .github\workflows\_build-and-deploy-to-gov-paas.yml
+	.github\workflows\build-and-run-tests.yml = .github\workflows\build-and-run-tests.yml
+	.github\workflows\build-and-deploy-to-gov-paas-production.yml = .github\workflows\build-and-deploy-to-gov-paas-production.yml
+	.github\workflows\build-and-deploy-to-gov-paas-loadtest.yml = .github\workflows\build-and-deploy-to-gov-paas-loadtest.yml
+EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaPublicWebsite.UnitTests", "SeaPublicWebsite.UnitTests\SeaPublicWebsite.UnitTests.csproj", "{BC27E00A-BCB1-40DD-872A-3FF0A46A5FFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaPublicWebsite.Data", "SeaPublicWebsite.Data\SeaPublicWebsite.Data.csproj", "{2829E31D-41AF-4B37-87C9-1F78BE84990A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Metrics", "Metrics", "{9E875C15-E270-4952-8C83-3D2FA04C9D09}"
+	ProjectSection(SolutionItems) = preProject
+		Infrastructure\Metrics\README.md = Infrastructure\Metrics\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Grafana", "Grafana", "{78864A65-55C3-4E60-B099-F9A068083BFC}"
+	ProjectSection(SolutionItems) = preProject
+		Infrastructure\Metrics\Grafana\manifest.yml = Infrastructure\Metrics\Grafana\manifest.yml
+		Infrastructure\Metrics\Grafana\runtime.txt = Infrastructure\Metrics\Grafana\runtime.txt
+		Infrastructure\Metrics\Grafana\dev-dashboard.json = Infrastructure\Metrics\Grafana\dev-dashboard.json
+		Infrastructure\Metrics\Grafana\production-dashboard.json = Infrastructure\Metrics\Grafana\production-dashboard.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PrometheusServer", "PrometheusServer", "{835C7323-A422-4C2B-9BAE-082A665C338F}"
+	ProjectSection(SolutionItems) = preProject
+		Infrastructure\Metrics\PrometheusServer\manifest.yml = Infrastructure\Metrics\PrometheusServer\manifest.yml
+		Infrastructure\Metrics\PrometheusServer\prometheus.yml = Infrastructure\Metrics\PrometheusServer\prometheus.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Conf", "Conf", "{10A4A1C1-7187-44FD-ADAD-8FF85B21BFB7}"
+	ProjectSection(SolutionItems) = preProject
+		Infrastructure\Metrics\Grafana\Conf\custom.ini = Infrastructure\Metrics\Grafana\Conf\custom.ini
+		Infrastructure\Metrics\Grafana\Conf\defaults.ini = Infrastructure\Metrics\Grafana\Conf\defaults.ini
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logging", "Logging", "{B72D428D-D0C8-4910-B781-039FEF25523B}"
+	ProjectSection(SolutionItems) = preProject
+		Infrastructure\Logging\README.md = Infrastructure\Logging\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logit.io", "Logit.io", "{94B8C042-6AF7-4B9C-93FC-BAA03A1A5492}"
+	ProjectSection(SolutionItems) = preProject
+		Infrastructure\Logging\Logit.io\LogstashPipeline.txt = Infrastructure\Logging\Logit.io\LogstashPipeline.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AlertRules", "AlertRules", "{E6F96C6F-9441-43DD-9E74-B116E5AEC001}"
+	ProjectSection(SolutionItems) = preProject
+		Infrastructure\Logging\Logit.io\AlertRules\WebsiteError.yaml = Infrastructure\Logging\Logit.io\AlertRules\WebsiteError.yaml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaPublicWebsite.BusinessLogic", "SeaPublicWebsite.BusinessLogic\SeaPublicWebsite.BusinessLogic.csproj", "{52A59A93-AC33-48E1-927D-FFCBB37A330E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68F9016E-95CB-4A9E-A111-43619D287158}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68F9016E-95CB-4A9E-A111-43619D287158}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68F9016E-95CB-4A9E-A111-43619D287158}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68F9016E-95CB-4A9E-A111-43619D287158}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC27E00A-BCB1-40DD-872A-3FF0A46A5FFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC27E00A-BCB1-40DD-872A-3FF0A46A5FFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC27E00A-BCB1-40DD-872A-3FF0A46A5FFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC27E00A-BCB1-40DD-872A-3FF0A46A5FFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2829E31D-41AF-4B37-87C9-1F78BE84990A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2829E31D-41AF-4B37-87C9-1F78BE84990A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2829E31D-41AF-4B37-87C9-1F78BE84990A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2829E31D-41AF-4B37-87C9-1F78BE84990A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52A59A93-AC33-48E1-927D-FFCBB37A330E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52A59A93-AC33-48E1-927D-FFCBB37A330E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52A59A93-AC33-48E1-927D-FFCBB37A330E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52A59A93-AC33-48E1-927D-FFCBB37A330E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9E875C15-E270-4952-8C83-3D2FA04C9D09} = {EE6BCE34-EE65-4B59-9310-3AD1608277BB}
+		{78864A65-55C3-4E60-B099-F9A068083BFC} = {9E875C15-E270-4952-8C83-3D2FA04C9D09}
+		{835C7323-A422-4C2B-9BAE-082A665C338F} = {9E875C15-E270-4952-8C83-3D2FA04C9D09}
+		{10A4A1C1-7187-44FD-ADAD-8FF85B21BFB7} = {78864A65-55C3-4E60-B099-F9A068083BFC}
+		{B72D428D-D0C8-4910-B781-039FEF25523B} = {EE6BCE34-EE65-4B59-9310-3AD1608277BB}
+		{94B8C042-6AF7-4B9C-93FC-BAA03A1A5492} = {B72D428D-D0C8-4910-B781-039FEF25523B}
+		{E6F96C6F-9441-43DD-9E74-B116E5AEC001} = {94B8C042-6AF7-4B9C-93FC-BAA03A1A5492}
+	EndGlobalSection
+EndGlobal

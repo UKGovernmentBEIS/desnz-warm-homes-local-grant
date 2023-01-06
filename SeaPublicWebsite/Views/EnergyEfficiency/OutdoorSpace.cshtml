@@ -1,0 +1,97 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SeaPublicWebsite.BusinessLogic.Models.Enums
+@using SeaPublicWebsite.Controllers
+
+@model SeaPublicWebsite.Models.EnergyEfficiency.OutdoorSpaceViewModel
+@{
+    ViewBag.Title = "Outdoor space for heat pump";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <form action="@Url.Action(nameof(EnergyEfficiencyController.OutdoorSpace_Post), "EnergyEfficiency", new {reference = Model.Reference})" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+            
+            @{
+                Func<object, object> details = 
+                    @<text>
+                        <p class="govuk-body">
+                            A heat pump is a heating technology transferring heat from outside to heat your rooms and hot water.
+                        </p>
+                        <p class="govuk-body">
+                            The most common type in the UK are air-to-water heat pumps, meaning they transfer heat energy in the
+                            air to water that is sent to your radiators or underfloor heating, as well as a hot water cylinder for providing hot water.
+                        </p>
+                     </text>;
+                Func<object, object> blueBannerHint = 
+                    @<p class="govuk-body">
+                        Homes of your type typically
+                        <strong>
+                            @(Model.HintHasOutdoorSpace ? "have some outdoor space" : "do not have any outdoor space")
+                            that could fit a heat pump.
+                        </strong>
+                    </p>;
+            }
+            
+            @(await Html.GovUkRadiosFor(m => m.HasOutdoorSpace,
+                fieldsetOptions: new FieldsetViewModel
+                {
+                    Legend = new LegendViewModel
+                    {
+                        Text = "Do you have anywhere outside your home where you could fit a heat pump?", 
+                        Classes = "govuk-fieldset__legend--l",
+                        IsPageHeading = true
+                    }
+                },
+                hintOptions: new HintViewModel
+                {
+                    Html = @<text>
+                               <p class="govuk-body">
+                                   Most heat pump systems will need some outside space that you own where you could fit 
+                                   an external unit, about as big as a medium-sized chest of drawers. 
+                               </p>
+                               <p class="govuk-body">
+                                   If you have a garden or own some land next to your home that would be accessible to an 
+                                   installer, then you may have enough outside space for a heat pump. 
+                               </p>                              
+                               <p class="govuk-body">
+                                   If you don’t have a garden or don’t own any land next to your home, then you may not 
+                                   have anywhere that could fit the external unit of a heat pump.
+                               </p>
+                               
+                               @await Html.GovUkDetails(new DetailsViewModel
+                               {
+                                   SummaryText = "What is a heat pump?",
+                                   Html = details
+                               })
+                               
+                               @await Html.GovUkInsetText(new InsetTextViewModel
+                               {
+                                   Classes = "sea-epc-hint",
+                                   Html = blueBannerHint
+                               })
+                            </text>
+                }
+            ))
+
+            @await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Continue"
+            })
+            
+        </form>
+        
+    </div>
+</div>

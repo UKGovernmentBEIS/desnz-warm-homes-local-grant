@@ -1,0 +1,12 @@
+---
+applications:
+  - name: prometheus-server
+    memory: 3G
+    routes:
+      - route: prometheus-server.apps.internal
+
+    buildpacks:
+      - https://github.com/alphagov/prometheus-buildpack.git
+
+    env:
+      PROMETHEUS_FLAGS: --storage.tsdb.retention.time=5d

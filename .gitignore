@@ -1,0 +1,17 @@
+
+# User preferences
+.idea
+
+# Dependencies
+node_modules/
+
+# Build results
+bin/
+obj/
+**/wwwroot/compiled
+
+# Secrets
+Infrastructure/LoginToGovPaas.sh
+Infrastructure/SetEnvironmentSecrets.sh
+
+ci-server-build/

@@ -1,0 +1,95 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using SeaPublicWebsite.BusinessLogic.Models.Enums
+@using SeaPublicWebsite.Controllers
+@using SeaPublicWebsite.Models.EnergyEfficiency
+@model SeaPublicWebsite.Models.EnergyEfficiency.NoRecommendationsViewModel;
+
+@{
+    ViewBag.Title = "Your home is energy efficient";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        @await Html.GovUkPanel(new PanelViewModel
+        {
+            TitleText = "Your home is energy efficient",
+            Text = "Your home is well insulated"
+        })
+        
+        <p class="govuk-body">From the information collected, it seems like your home is already energy efficient and may not significantly benefit from further measures.</p>
+        <p class="govuk-body">You may be able to make changes to how you use energy to help reduce your bills.</p>
+        
+        <h2 class="govuk-heading-l">What else you can do</h2>
+        
+        <p class="govuk-body">
+            If you’d like to do more to improve the energy efficiency of your home, consider the following:
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>When buying new appliances, upgrade to an energy efficient one - <a class="govuk-link" target="_blank" href="https://energylabel.org.uk/">Learn about energy labels</a></li>
+            @if (Model?.HasOutdoorSpace != HasOutdoorSpace.No)
+            {
+                <li>Install a heat pump - <a class="govuk-link" target="_blank" href="https://www.heat-pump-check.service.gov.uk/">Check if your home may be suitable</a></li>
+            }
+        </ul>
+
+        <h2 class="govuk-heading-l">Still need help?</h2>
+        <p class="govuk-body">You can visit the <a href="https://energysavingtrust.org.uk/" target="_blank" class="govuk-link">Energy Saving Trust website</a> for more information on reducing your home’s energy use.</p>
+
+        <h2 class="govuk-heading-m">
+            Returning to this service
+        </h2>
+        
+        <div class="sea-user-reference govuk-!-margin-bottom-6" role="complementary">
+            <h2 class="govuk-body-l govuk-!-margin-0">Your reference code</h2>
+            <span class="govuk-heading-l" id="subsection-title">@Model.Reference</span>
+        </div>
+        
+        <p class="govuk-body">
+            You can come back to this page using your reference number or we can send a link to your email.
+        </p>
+        
+        @{ await Html.RenderPartialAsync("ActionPlan/Partials/_SendEmail", new YourSavedRecommendationsEmailViewModel
+           {
+               Reference = Model.Reference,
+               EmailAddress = Model.EmailAddress,
+               EmailSent = Model.EmailSent,
+               PostAction = Url.Action(nameof(EnergyEfficiencyController.NoRecommendations_Post), "EnergyEfficiency", new {reference = Model.Reference})
+           }); }
+        
+        <h2 class="govuk-heading-m">
+            Start over
+        </h2>
+        <p class="govuk-body">
+            See if there are improvements you can make to another property.
+        </p>
+        <p class="govuk-body">
+            <a class="govuk-link" href="@Url.Action(nameof(EnergyEfficiencyController.Index), "EnergyEfficiency")">
+                Start again for another property
+            </a>
+        </p>
+        
+        <h2 class="govuk-heading-m">
+            Give feedback
+        </h2>
+        <p class="govuk-body">
+            This service is still in its early stages and under active development. 
+        </p>
+        <p class="govuk-body">
+            Your feedback can help us to shape how the service develops so that it can best serve the needs of the public.
+        </p>
+        <a class="govuk-link" href=@Constants.FEEDBACK_URL_DEFAULT target="_blank">
+            Leave some feedback for this service (opens in new tab)
+        </a>
+
+    </div>
+</div>

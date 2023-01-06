@@ -1,0 +1,21 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model SeaPublicWebsite.Models.EnergyEfficiency.ActionPlanViewModel;
+
+@if (Model.GetDiscardedRecommendations().Any())
+{
+    @await Html.GovUkDetails(new DetailsViewModel
+    {
+        SummaryText = "Recommendations you discarded",
+        Html = @<ul class="govuk-list govuk-list--bullet">
+                   @foreach(var recommendation in Model.GetDiscardedRecommendations())
+                   {
+                       <li>
+                           <a href="@Url.Action("Recommendation_Get", new {id = (int) recommendation.Key, reference = Model.PropertyData.Reference, fromActionPlan = true})">
+                               @recommendation.Title
+                           </a>
+                       </li>
+                   }
+               </ul>
+    })
+}

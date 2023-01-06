@@ -1,0 +1,83 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SeaPublicWebsite.BusinessLogic.Models.Enums
+@using SeaPublicWebsite.Controllers
+
+@model SeaPublicWebsite.Models.EnergyEfficiency.LoftSpaceViewModel
+@{
+    ViewBag.Title = "Loft space";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <form action="@Url.Action(nameof(EnergyEfficiencyController.LoftSpace_Post), "EnergyEfficiency", new {reference = Model.Reference})" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+            
+            @{
+                Func<object, object> details = 
+                    @<text>
+                        <p class="govuk-body">
+                            A loft is an unheated space without walls and ceilings, immediately beneath the pitched roof. You will usually be able to see the roof timbers.
+                        </p>
+                        <p class="govuk-body">
+                            If all the space under your pitched roof, or nearly all the space, is used as living space with finished walls and ceilings then the loft has been converted into a room.
+                        </p>
+                     </text>;
+                
+                Func<object, object> blueBannerHint =
+                    @<p class="govuk-body">
+                        Homes of your type typically
+                        <strong>
+                            @(Model.HintHaveLoftAndAccess ? "have a loft." : "do not have a loft.")
+                        </strong>
+                    </p>;
+            }
+            
+            @(await Html.GovUkRadiosFor(m => m.LoftSpace,
+                fieldsetOptions: new FieldsetViewModel
+                {
+                    Legend = new LegendViewModel
+                    {
+                        Text = "Do you have a loft that hasn’t been converted into a room?",
+                        Classes = "govuk-fieldset__legend--l",
+                        IsPageHeading = true
+                    }
+                },
+                new HintViewModel
+                {
+                    Html = @<text>
+                               @await Html.GovUkDetails(new DetailsViewModel
+                               {
+                                   SummaryText = "Help me decide if I have a loft",
+                                   Html = details
+                               })
+                               
+                               @await Html.GovUkInsetText(new InsetTextViewModel
+                               {
+                                   Classes = "sea-epc-hint",
+                                   Html = blueBannerHint
+                               })
+                            </text>
+                }
+                ))
+
+            @await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Continue"
+            })
+            
+        </form>
+        
+    </div>
+</div>

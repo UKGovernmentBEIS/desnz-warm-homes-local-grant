@@ -1,0 +1,61 @@
+name: Shared functionality for the Build & Deploy workflows
+
+on:
+  workflow_call:
+    inputs:
+      environment_name:
+        required: true
+        type: string
+    secrets:
+      gov_paas_password:
+        required: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code onto job runner
+      uses: actions/checkout@v2
+      
+    - name: Install Node.JS (v14)
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+        
+    - name: Install .Net (6.0)
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+        
+    - name: Install the Cloud Foundry CLI
+      run: |
+        wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
+        echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+        sudo apt-get update
+        sudo apt-get install cf7-cli
+
+    - name: Save the build number to build-number.json
+      run: |
+        echo '{ BuildNumber: ${{ github.run_number }} }' > build-number.json
+      working-directory: ./SeaPublicWebsite
+
+    - name: Restore Node.JS dependencies
+      run: npm ci
+      working-directory: ./SeaPublicWebsite
+      
+    - name: Build SCSS and JS code
+      run: npm run build
+      working-directory: ./SeaPublicWebsite
+      
+    - name: Restore .Net dependencies
+      run: dotnet restore --configfile Nuget.config
+      
+    - name: Build .Net code
+      run: dotnet build SeaPublicWebsite --no-restore --configuration Release --output ./ci-server-build/
+
+    - name: Push the app to Gov.UK PaaS
+      run: |
+        cf login -a api.cloud.service.gov.uk -u team-beisesassupport@softwire.com -p '${{ secrets.gov_paas_password }}' -o 'beis-domestic-energy-advice-service'
+        cf target -s sea-beta-${{ inputs.environment_name }}
+        cf push sea-beta-${{ inputs.environment_name }} --manifest manifest.yml --strategy rolling
+      working-directory: ./ci-server-build/

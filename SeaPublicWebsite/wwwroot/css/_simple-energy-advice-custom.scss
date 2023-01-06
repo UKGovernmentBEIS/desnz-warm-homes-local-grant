@@ -1,0 +1,341 @@
+// This is a GOV.UK Publishing specific component that
+// can be seen at http://govuk-static.herokuapp.com/component-guide/related_items
+
+.app-related-items {
+    border-top: 2px solid govuk-colour("blue");
+    padding-top: govuk-spacing(2);
+}
+
+.app-related-items .govuk-list > li {
+    margin-bottom: govuk-spacing(2);
+}
+
+
+
+// sea specific styling
+
+.sea-telephone {
+    color: govuk-colour("green");
+}
+
+.sea-service-unsuitable, .sea-recommendations-panel {
+    background-color: govuk-colour("blue");
+}
+
+.sea-recommendations-panel {
+    .govuk-caption-l, .sea-reference {
+        color: govuk-colour("white");
+    }
+}
+
+.sea-total-installation-cost {
+    border-left: 4px solid govuk-colour("black");
+}
+
+.sea-total-savings {
+    border-left: 4px solid govuk-colour("green");
+}
+
+.sea-total-savings-text {
+    color: govuk-colour("green");
+}
+
+.sea-user-reference {
+    border: solid 2px govuk-colour("blue");
+    padding: 40px 10px 0px 20px;
+}
+
+.sea-recommendation-side-panel {
+    border-top: 2px solid govuk-colour("blue");
+    padding-top: govuk-spacing(2);
+}
+
+.sea-install-costs {
+    border-left: 4px solid govuk-colour("black");
+}
+
+.sea-yearly-savings {
+    border-left: 4px solid govuk-colour("green");
+
+    h3 {
+        color: govuk-colour("green");
+    }
+}
+
+.sea-assumed-answer {
+    color: govuk-colour("dark-grey");
+}
+
+.sea-recommendation-impact {
+    text-align: right;
+}
+
+.sea-next-steps {
+    //margin-top: 15px;
+}
+
+.sea-warning-text__icon--long {
+    top: 33.3%;
+}
+
+.sea-numbered-steps {
+    position: relative;
+
+    ol {
+        list-style: none;
+        counter-reset: li;
+    }
+}
+
+.sea-numbered-steps::after {
+    content: '';
+    position: absolute;
+    width: 1px;
+    background-color: govuk-colour("mid-grey");
+    top: 0;
+    bottom: 0;
+    left: 0;
+    margin-left: 15px;
+}
+
+.sea-step {
+    counter-increment: li;
+    padding: 0 0 0 30px;
+    position: relative;
+    background-color: inherit;
+    width: 100%;
+}
+
+.sea-step::after {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    left: -20px;
+    background-color: govuk-colour("blue");
+    border: 4px solid govuk-colour("blue");
+    top: 0px;
+    border-radius: 50%;
+    color: govuk-colour("white");
+    content: counter(li);
+    text-align: center;
+    z-index: 1;
+}
+
+.sea-nav-button {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    height: 80px;
+    text-decoration: none;
+}
+
+.sea-nav-button-title {
+    color: govuk-colour("blue");
+    text-decoration: underline;
+    text-decoration-thickness: max(1px, 0.0625rem);
+    text-underline-offset: 0.1em;
+}
+
+.sea-nav-button:hover {
+    .sea-nav-button-title {
+        color: govuk-colour("dark-blue");
+        text-decoration-thickness: max(3px, 0.1875rem, 0.12em);
+    }
+}
+
+.sea-nav-button:focus {
+    color: govuk-colour("black");
+    box-sizing: border-box;
+    box-shadow: 0 -2px govuk-colour("yellow"), 0 4px govuk-colour("black");
+    background-color: govuk-colour("yellow");
+
+    .sea-nav-button-title {
+        color: govuk-colour("black");
+        text-decoration: none;
+    }
+}
+
+.sea-first-recommendation, .sea-previous-recommendation {
+    .sea-nav-button-caption, .sea-nav-button-title {
+        padding-left: govuk-spacing(8);
+    }
+
+    .sea-nav-button-title {
+        word-wrap: normal;
+    }
+}
+
+.sea-next-recommendation, .sea-go-to-plan {
+    .sea-nav-button-caption, .sea-nav-button-title {
+        padding-right: govuk-spacing(8);
+
+    }
+
+    .sea-nav-button-title {
+        word-wrap: normal;
+    }
+}
+
+.sea-nav-button-left {
+    left: 0;
+    text-align: left;
+    position: relative;
+    top: -65px;
+}
+
+.sea-previous-recommendation {
+    .sea-nav-button-left {
+        @media (max-width: 900px) {
+            top: -95px;
+        }
+    }
+}
+
+.sea-previous-recommendation, .sea-first-recommendation {
+    .sea-nav-button-left {
+        @media (max-width: 769px) {
+            top: -55px;
+        }
+    }
+}
+
+.sea-nav-button-right {
+    right: 0;
+    position: relative;
+    top: -65px;
+}
+
+.sea-next-recommendation {
+    .sea-nav-button-right {
+        @media (max-width: 900px) {
+            top: -95px;
+        }
+    }
+}
+
+.sea-next-recommendation, .sea-go-to-plan {
+    .sea-nav-button-right {
+        @media (max-width: 769px) {
+            top: -55px;
+        }
+    }
+}
+
+.sea-recommendation-link-caption {
+    text-decoration: none;
+}
+
+.sea-change-answers-link {
+    @media (max-width: 769px) {
+        margin-top: 10px;
+        margin-bottom: 40px;
+    }
+}
+
+.sea-decide-later-action-links {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    @media (max-width: 640px) and (min-width: 400px) {
+        flex-direction: row;
+        gap: 15px;
+    }
+}
+
+.sea-saved-recommendations-table {
+    overflow-x: auto;
+}
+
+.sea-saved-recommendations-table-headers {
+    @media (max-width: 640px) {
+        border: none;
+        padding-bottom: 0;
+    }
+}
+
+.sea-saved-recommendations-table-headers-hide {
+    @media (max-width: 640px) {
+        display: none;
+    }
+}
+
+.sea-saved-recommendations-secondary-row {
+    @media (min-width: 641px) {
+        display: none;
+    }
+}
+
+.sea-saved-recommendations-table-mobile-hide {
+    @media (max-width: 640px) {
+        display: none;
+    }
+}
+
+.sea-saved-recommendations-table-desktop-hide {
+    border-top: 1px solid $govuk-border-colour;
+    @media (min-width: 641px) {
+        display: none;
+    }
+}
+
+.sea-decide-later-summary-list {
+    border-top: 2px solid govuk-colour("blue");
+    border-bottom: 0;
+}
+
+.sea-action-plan-margin-right {
+    @media (min-width: 641px) {
+        margin-right: govuk-spacing(9);
+    }
+
+    @media (max-width: 641px) {
+        margin-right: govuk-spacing(3);
+    }
+}
+
+.sea-decide-summary-list-cell {
+    padding-top: govuk-spacing(4);
+}
+
+.sea-epc-hint {
+    background: #EFF4F9;
+    border-left: 10px solid #1D70B8;
+}
+
+.sea-email-sent {
+    color: govuk-colour("green");
+    font-weight: 700;
+}
+
+// Source: https://stackoverflow.com/questions/1367409/how-to-make-button-look-like-a-link
+.sea-button-as-link {
+    align-items: normal;
+    background-color: rgba(0,0,0,0);
+    border-color: rgb(29, 112, 184);
+    border-style: none;
+    box-sizing: content-box;
+    color: rgb(29, 112, 184);
+    cursor: pointer;
+    display: inline;
+    font: inherit;
+    height: auto;
+    padding: govuk-spacing(2); /* Use same padding as govuk-button */
+    perspective-origin: 0 0;
+    text-align: start;
+    text-decoration: underline;
+    transform-origin: 0 0;
+    width: auto;
+    -moz-appearance: none;
+    -webkit-logical-height: 1em; /* Chrome ignores auto, so we have to use this hack to set the correct height  */
+    -webkit-logical-width: auto; /* Chrome ignores auto, but here for completeness */
+}
+
+// Link to discussion about issue and workaround:
+// https://github.com/alphagov/govuk-design-system-backlog/issues/71#issuecomment-492667019
+.govuk-warning-text__icon {
+    top: 33.3%;
+}
