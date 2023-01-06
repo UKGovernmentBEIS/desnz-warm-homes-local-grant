@@ -1,4 +1,4 @@
-# Find energy improvements suitable for your home BETA
+# Find Energy Saving Grants You May Be Eligible For BETA
 
 ## Deployment
 
@@ -13,10 +13,7 @@ Migrations will be run automatically on deployment. If a migration needs to be r
    2. [Install EF Core CLI tools](https://docs.microsoft.com/en-us/ef/core/cli/dotnet) if you haven't already
    3. Generate a rollback script using `dotnet ef migrations script 2022010112345678_BadMigration 2022010112345678_LastGoodMigration -o revert.sql` from the `HerPublicWebsite` directory
    4. Review the script 
-   5. Connect to the database using cf conduit
-       1. If you haven't used conduit before: `cf install-plugin conduit`
-       2. `cf conduit sea-beta-<Environment>-db`
-   6. Use pgAdmin or similar with the credentials from cf conduit to run the rollback script
+   5. TODO Add instructions for running the script on the Azure environment
 
 ## Development
 
@@ -62,8 +59,8 @@ If you need to make changes to the GovUkDesignSystem (e.g. to add a new componen
 - Develop and commit your changes (don't forget automated tests as applicable)
 - Build and package your branch with `dotnet pack -p:PackageVersion=1.0.0-$(git rev-parse --short HEAD) -c Release -o .` in the `GovUkDesignSystem` folder
 - Copy the built package to /Lib and delete the old package
-- Update the package version in the IYPEE project
-- Test that your changes work on the IYPEE site
+- Update the package version in the HER project
+- Test that your changes work on the HER site
 - Create a PR from your branch back to `master`
 - Get the PR reviewed and merged
 - From time to time create a PR to merge the `master` branch back to the Cabinet Office repository (https://github.com/cabinetoffice/govuk-design-system-dotnet)
@@ -85,18 +82,8 @@ Fill in the opened `secrets.json` file with:
         "Username": "<REAL_VALUE_HERE>",
         "Password": "<REAL_VALUE_HERE>"
     },
-    
-    "OpenEpc": {
-        "Username": "<REAL_VALUE_HERE>",
-        "Password": "<REAL_VALUE_HERE>"
-    },
 
     "EpbEpc": {
-        "Username": "<REAL_VALUE_HERE>",
-        "Password": "<REAL_VALUE_HERE>"
-    },
-  
-    "Bre": {
         "Username": "<REAL_VALUE_HERE>",
         "Password": "<REAL_VALUE_HERE>"
     },
@@ -156,19 +143,13 @@ The solution is unfortunately tedious. Given branch 1 with migration A and branc
 
 ## Environments
 
-This app is deployed to GOV.UK Platform as a Service (https://docs.cloud.service.gov.uk/)
+This app is deployed to BEIS Azure subscription
 
 ### Pre-requisites
 
 Before you can work with the environments you will need some things:
-- Credentials for GOV.UK PaaS
-- Install the CloudFoundry CLI (https://github.com/cloudfoundry/cli/wiki/V7-CLI-Installation-Guide)
+- Credentials for BEIS Azure
 
 ### Set up
 
-To set up an environment for the first time:
-- CD to `Infrastructure`
-- Take a copy of `LoginToGovPaasTemplate.sh`, rename it to `LoginToGovPaas.sh`, and update it with your credentials
-- Run `CreateEnvironment.sh`
-- Take a copy of `SetEnvironmentSecretsTemplate.sh`, rename it to `SetEnvironmentSecrets.sh`, and fill in the required credentials
-- Run `SetEnvironmentSecrets.sh`
+TODO fill this in once we know how to create Azure environments
