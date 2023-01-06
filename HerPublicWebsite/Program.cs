@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using HerPublicWebsite.Data;
-using Serilog;
-using Serilog.Events;
 
 namespace HerPublicWebsite
 {
@@ -13,13 +11,6 @@ namespace HerPublicWebsite
     {
         public static void Main(string[] args)
         {
-            // Create a Serilog bootstrap logger
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .CreateBootstrapLogger();
-            
             var builder = WebApplication.CreateBuilder(args);
             
             // Hide that we are using Kestrel for security reasons
@@ -27,15 +18,6 @@ namespace HerPublicWebsite
             
             var startup = new Startup(builder.Configuration, builder.Environment);
             startup.ConfigureServices(builder.Services);
-
-            // Switch to the full Serilog logger
-            builder.Host.UseSerilog((context, services, configuration) => configuration
-                .ReadFrom.Configuration(context.Configuration)
-                .ReadFrom.Services(services)
-                .WriteTo.Console()
-                .Enrich.FromLogContext()
-                .Enrich.WithEnvironmentName()
-                .Enrich.WithMachineName());
 
             var app = builder.Build();
 

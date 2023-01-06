@@ -22,7 +22,6 @@ using HerPublicWebsite.ExternalServices.PostcodesIo;
 using HerPublicWebsite.Middleware;
 using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
-using Serilog;
 
 namespace HerPublicWebsite
 {
@@ -158,8 +157,6 @@ namespace HerPublicWebsite
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            
-            app.UseSerilogRequestLogging();
 
             app.UseRouting();
 
