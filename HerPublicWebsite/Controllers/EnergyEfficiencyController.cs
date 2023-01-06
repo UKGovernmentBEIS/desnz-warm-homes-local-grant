@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using HerPublicWebsite.BusinessLogic.ExternalServices.Bre;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
@@ -26,7 +25,6 @@ namespace HerPublicWebsite.Controllers
         private readonly IQuestionFlowService questionFlowService;
         private readonly IEpcApi epcApi;
         private readonly IEmailSender emailApi;
-        private readonly RecommendationService recommendationService;
         private readonly CookieService cookieService;
         private readonly GoogleAnalyticsService googleAnalyticsService;
         private readonly PostcodesIoApi postcodesIoApi;
@@ -37,7 +35,6 @@ namespace HerPublicWebsite.Controllers
             IQuestionFlowService questionFlowService, 
             IEpcApi epcApi,
             IEmailSender emailApi,
-            RecommendationService recommendationService,
             CookieService cookieService,
             GoogleAnalyticsService googleAnalyticsService,
             PostcodesIoApi postcodesIoApi,
@@ -47,7 +44,6 @@ namespace HerPublicWebsite.Controllers
             this.questionFlowService = questionFlowService;
             this.emailApi = emailApi;
             this.epcApi = epcApi;
-            this.recommendationService = recommendationService;
             this.cookieService = cookieService;
             this.googleAnalyticsService = googleAnalyticsService;
             this.postcodesIoApi = postcodesIoApi;
@@ -1165,23 +1161,6 @@ namespace HerPublicWebsite.Controllers
             }
             
             var propertyData = await propertyDataStore.LoadPropertyDataAsync(reference);
-            if (propertyData.PropertyRecommendations is null || propertyData.PropertyRecommendations.Count == 0)
-            {
-                var recommendationsForPropertyAsync = await recommendationService.GetRecommendationsForPropertyAsync(propertyData);
-                propertyData.PropertyRecommendations = recommendationsForPropertyAsync.Select(r => 
-                    new PropertyRecommendation()
-                    {
-                        Key = r.Key,
-                        Title = r.Title,
-                        MinInstallCost = r.MinInstallCost,
-                        MaxInstallCost = r.MaxInstallCost,
-                        Saving = r.Saving,
-                        LifetimeSaving = r.LifetimeSaving,
-                        Lifetime = r.Lifetime,
-                        Summary = r.Summary
-                    }
-                ).ToList();
-            }
 
             propertyData.HasSeenRecommendations = true;
             await propertyDataStore.SavePropertyDataAsync(propertyData);

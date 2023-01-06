@@ -1,5 +1,3 @@
-using System;
-using System.Text.RegularExpressions;
 using GovUkDesignSystem.ModelBinders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -10,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using HerPublicWebsite.BusinessLogic;
-using HerPublicWebsite.BusinessLogic.ExternalServices.Bre;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using HerPublicWebsite.BusinessLogic.Services;
 using HerPublicWebsite.Data;
@@ -46,12 +43,10 @@ namespace HerPublicWebsite
             services.AddScoped<PostcodesIoApi>();
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();
-            services.AddScoped<RecommendationService>();
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
             services.AddDataProtection().PersistKeysToDbContext<HerDbContext>();
 
             ConfigureEpcApi(services);
-            ConfigureBreApi(services);
             ConfigureGovUkNotify(services);
             ConfigureCookieService(services);
             ConfigureDatabaseContext(services);
@@ -103,13 +98,6 @@ namespace HerPublicWebsite
             services.Configure<EpbEpcConfiguration>(
                 configuration.GetSection(EpbEpcConfiguration.ConfigSection));
             services.AddScoped<IEpcApi, EpbEpcApi>();
-        }
-
-        private void ConfigureBreApi(IServiceCollection services)
-        {
-            services.Configure<BreConfiguration>(
-                configuration.GetSection(BreConfiguration.ConfigSection));
-            services.AddScoped<BreApi>();
         }
 
         private void ConfigureGovUkNotify(IServiceCollection services)
