@@ -1,0 +1,78 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using HerPublicWebsite.Controllers
+
+@model HerPublicWebsite.Models.EnergyEfficiency.TemperatureViewModel
+@{
+    ViewBag.Title = "Temperature";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <form action="@Url.Action(nameof(EnergyEfficiencyController.Temperature_Post), "EnergyEfficiency", new {reference = Model.Reference})" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+            
+            @await Html.GovUkFieldset(new FieldsetViewModel
+            {
+                Legend = new LegendViewModel
+                {
+                    Text = "What temperature do you heat your home to?",
+                    Classes = "govuk-fieldset__legend--l",
+                    IsPageHeading = true
+                },
+                
+                InnerHtml = 
+                    @<text>
+                        <div class="govuk-body">
+                            If you have a room thermostat, this will be the temperature that is usually set to.
+                        </div>
+                        
+                        @await Html.GovUkTextInputFor(
+                            m => m.Temperature,
+                            hintOptions: new HintViewModel
+                            {
+                                Text = "Enter the temperature you heat your home to in degrees Celcius (°C)."
+                            },
+                            classes: "govuk-input--width-5",
+                            placeholder: "e.g. 20")
+                     </text>
+                
+            })
+            
+            <div class="govuk-button-group">
+                @(await Html.GovUkButton(new ButtonViewModel
+                {
+                    Text = "Continue",
+                }))
+                
+                <!-- We don't want to use the design library component since it adds additional styles we do not want -->
+                <button type="submit" class="sea-button-as-link govuk-link" name="skip" value="true">
+                    Skip this question
+                </button>
+            </div>
+            
+        </form>
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <aside class="app-related-items" role="complementary">
+            <h2 class="govuk-heading-m" id="subsection-title">What temperature should I heat my home to?</h2>
+            <p class="govuk-body-s">
+                The World Health Organisation recommends living areas are heated between 18 and 21 degrees Celsius (&deg;C). 
+            </p>
+            <p class="govuk-body-s">
+                Age UK suggest the elderly heat their main living areas to 21 degrees, while heating the rest of their home to at least 18 degrees.
+            </p>
+        </aside>
+    </div>
+</div>

@@ -1,0 +1,78 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using HerPublicWebsite.Controllers
+@using HerPublicWebsite.Models.EnergyEfficiency
+
+@model HerPublicWebsite.Models.EnergyEfficiency.NewOrReturningUserViewModel
+@{
+    ViewBag.Title = "New or returning user";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <form method="post" action="@Url.Action(nameof(EnergyEfficiencyController.NewOrReturningUser_Post), "EnergyEfficiency")">
+
+            @Html.AntiForgeryToken()
+            @(await Html.GovUkRadiosFor(
+                m => m.NewOrReturningUser,
+                fieldsetOptions: new FieldsetViewModel
+                {
+                    Legend = new LegendViewModel
+                    {
+                        Text = "Have you used this service before?",
+                        Classes = "govuk-fieldset__legend--l",
+                        IsPageHeading = true,
+                    },
+                },
+                conditionalOptions: new Dictionary<NewOrReturningUser, Conditional>
+                {
+                    {
+                        NewOrReturningUser.ReturningUser,
+                        new Conditional
+                        {
+                            Html = (@<text>
+                                        @await Html.GovUkTextInputFor(
+                                            m => m.Reference,
+                                            labelOptions: new LabelViewModel
+                                            {
+                                                Text = "Your 8-character reference code",
+                                            },
+                                            classes: "govuk-input--width-10"
+                                            )
+                                     </text>)
+                        }
+                    }
+                }))
+
+            @(await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Continue",
+            }))
+
+        </form>
+
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <aside class="app-related-items" role="complementary" aria-label="helper text">
+            <h2 class="govuk-heading-m">What does this mean?</h2>
+            <p class="govuk-body-s">
+                If you have visited the service before, you can get your recommendations with the 
+                8-character reference code provided to you during your last visit.
+            </p>
+        </aside>
+        <aside class="sea-user-reference" role="complementary" aria-label="example reference code">
+            <h2 class="govuk-caption-l govuk-!-margin-top-1">Example reference code</h2>
+            <span class="govuk-heading-l govuk-!-padding-bottom-3" id="subsection-title">ABC123DE</span>
+        </aside>
+    </div>
+</div>

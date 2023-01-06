@@ -1,0 +1,62 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model HerPublicWebsite.Models.EnergyEfficiency.RecommendationViewModel;
+
+@{
+    Layout = "_Recommendation";
+}
+
+@section RecommendationBody
+{
+    <p class="govuk-body">
+        Based on the information we have collected; it looks like you could save money by adding an insulating jacket to your hot water cylinder. By insulating your hot water cylinder, you will retain more heat. It will mean your hot water stays hotter for longer, and you spend less money heating water up.
+    </p>
+
+    <p class="govuk-body">
+        If you feel comfortable fitting this yourself, you can buy a British Standard jacket from most DIY shops and fit it snugly around the tank. These jackets will have heavy duty fixings and a flame retardant cover.
+    </p>
+
+    <p class="govuk-body">
+        You may also want to consider using foam collars around any exposed hot water pipes to save even more energy.
+    </p>
+
+    <p class="govuk-body govuk-!-margin-bottom-6">
+        You can find more information on solid wall insulation on the
+        <a class="govuk-link" target="_blank" href="https://energysavingtrust.org.uk/advice/insulating-tanks-pipes-and-radiators/`">Energy Saving Trust website.<span class="govuk-visually-hidden">(opens in a new window)</span></a>
+    </p>
+}
+
+@section RecommendationSuitableFor
+{
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
+        <li>
+            You have a hot water cylinder that isn’t factory insulated or has less than 80 mm thick insulating jacket 
+        </li>
+    </ul>
+    
+    @await Html.GovUkWarningText(new WarningTextViewModel
+    {
+        IconFallbackText = "Caution",
+        Text = "If you are reasonably confident with DIY, this could be a task you can complete yourself. " +
+               "If not, this is a job for a handyperson."
+    })
+}
+
+@section RecommendationLifetime
+{
+    <p class="govuk-body">Insulating hot water cylinder jackets typically last <b>around @Model.GetCurrentPropertyRecommendation().Lifetime years</b></p>
+}
+
+@{
+    Model.DisruptionTagViewModel = new TagViewModel
+    {
+        Classes = "govuk-tag--green",
+        Text = "MINIMAL"
+    };
+    
+    Model.DurationTagViewModel = new TagViewModel
+    {
+        Classes = "govuk-tag--green",
+        Text = "LESS THAN A DAY"
+    };
+}

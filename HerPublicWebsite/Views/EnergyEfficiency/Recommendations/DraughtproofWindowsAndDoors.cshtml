@@ -1,0 +1,53 @@
+﻿@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model HerPublicWebsite.Models.EnergyEfficiency.RecommendationViewModel;
+
+@{
+    Layout = "_Recommendation";
+}
+
+@section RecommendationBody
+{
+    <p class="govuk-body">
+        Under Development
+    </p>
+
+    <p class="govuk-body">
+        Under Development
+    </p>
+
+    <p class="govuk-inset-text">
+        Under Development
+    </p>
+
+    <p class="govuk-body govuk-!-margin-bottom-6">
+        Under Development
+    </p>
+}
+
+@section RecommendationSuitableFor
+{
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
+        <li>
+            Under Development
+        </li>
+    </ul>
+}
+
+@section RecommendationLifetime
+{
+    <p class="govuk-body">Under Development is typically expected to last <b>around @Model.GetCurrentPropertyRecommendation().Lifetime years</b></p>
+}
+
+@{
+    Model.DisruptionTagViewModel = new TagViewModel
+    {
+        Classes = "govuk-tag--green",
+        Text = "Under Development"
+    };
+    
+    Model.DurationTagViewModel = new TagViewModel
+    {
+        Classes = "govuk-tag--green",
+        Text = "Under Development"
+    };
+}

@@ -1,0 +1,66 @@
+﻿@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model HerPublicWebsite.Models.EnergyEfficiency.RecommendationViewModel;
+
+@{
+    Layout = "_Recommendation";
+}
+
+@section RecommendationBody
+{
+    <p class="govuk-body">
+        A heat pump is a low carbon heating system and is much more efficient than a boiler. Rather than burning a fuel like gas or oil, it uses electricity to transfer heat from outside to heat your rooms and hot water.
+    </p>
+    <p class="govuk-body">
+        Heat pumps are suitable for many homes, will cut your carbon emissions and there are grants available through the 
+        <a class="govuk-link" href="https://www.gov.uk/guidance/check-if-you-may-be-eligible-for-the-boiler-upgrade-scheme-from-april-2022">Boiler Upgrade Scheme</a> 
+        for air source heat pumps and ground source heat pumps to reduce the upfront cost.
+    </p>
+
+    <p class="govuk-body">
+        There are different types of heat pump and you can 
+        <a class="govuk-link" href="https://www.heat-pump-check.service.gov.uk/" target="_blank">
+            check which might be suitable for your home 
+        </a>
+        on our dedicated heat pump service.
+    </p>
+
+    <p class="govuk-body govuk-!-margin-bottom-6">
+        You can find more information on heat pumps on the 
+        <a class="govuk-link" href="https://energysavingtrust.org.uk/" target="_blank">
+            Energy Saving Trust
+        </a>
+        website.
+    </p>
+}
+
+@section RecommendationSuitableFor
+{
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
+        <li>
+            You have some outdoor space
+        </li>
+        <li>
+            You are looking to reduce your carbon footprint
+        </li>
+    </ul>
+}
+
+@section RecommendationLifetime
+{
+    <p class="govuk-body">Heat pumps are typically expected to last <b>12 - 15 years</b></p>
+    <p class="govuk-body">The running costs of heat pumps depend on a number of factors to do with your heating system and your property. Speak to a heat pump installer to find out more.</p>
+}
+
+@{
+    Model.DisruptionTagViewModel = new TagViewModel
+    {
+        Classes = "govuk-tag--yellow",
+        Text = "MODERATE"
+    };
+    
+    Model.DurationTagViewModel = new TagViewModel
+    {
+        Classes = "govuk-tag--red",
+        Text = "3 DAYS"
+    };
+}

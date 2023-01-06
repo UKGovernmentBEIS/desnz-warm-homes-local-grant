@@ -1,0 +1,102 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using HerPublicWebsite.Controllers
+
+@model HerPublicWebsite.Models.EnergyEfficiency.AskForPostcodeViewModel
+@{
+    ViewBag.Title = "Enter your address";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <form action="@Url.Action(nameof(EnergyEfficiencyController.AskForPostcode_Post), "EnergyEfficiency", new {reference = Model.Reference})" method="post">
+            @Html.AntiForgeryToken()
+            <text>
+                <p class="govuk-caption-l">
+                Find your EPC
+                </p>
+            </text>
+            
+            @{
+                Func<object, object> details =
+                    @<text>
+                        <p class="govuk-body">
+                            We use this information to search the Energy Performance of Buildings Register for an Energy
+                            Performance Certificate that matches your address. The Energy Performance of Buildings
+                            Register is an open register and you can find more details from the 
+                            <a href="https://epc.opendatacommunities.org/" target="_blank">Department for Levelling Up,
+                                Housing and Communities</a>.
+                        </p>
+                     </text>;
+            }
+            
+            @await Html.GovUkFieldset(new FieldsetViewModel
+            {
+                Legend = new LegendViewModel
+                {
+                    Text = "What is the address of your property?",
+                    Classes = "govuk-fieldset__legend--l",
+                    IsPageHeading = true
+                },
+                InnerHtml = 
+                    @<text>
+                        @await Html.GovUkDetails(new DetailsViewModel
+                        {
+                            SummaryText = "What we do with your address", 
+                            Html = details
+                        })
+                        
+                        @(await Html.GovUkTextInputFor(
+                            m => m.HouseNameOrNumber, 
+                            labelOptions: new LabelViewModel
+                            {
+                                Text = "Building number or name",
+                            },
+                            classes: "govuk-input--width-10",
+                            formGroupOptions: new FormGroupViewModel
+                            {
+                                Classes = "govuk-!-margin-bottom-2"
+                            },
+                            placeholder: "e.g. 19 or Buckingham Palace"
+                            ))
+
+                        @(await Html.GovUkTextInputFor(
+                            m => m.Postcode,
+                            labelOptions: new LabelViewModel
+                            {
+                                Text = "Postcode",
+                            },
+                            classes: "govuk-input--width-10",
+
+                            placeholder: "e.g. AB12 3CD",
+                            autocomplete: "postal-code"
+                            ))
+                     </text>
+            })
+            
+            <div class="govuk-button-group">
+                @(await Html.GovUkButton(new ButtonViewModel
+                {
+                    Text = "Continue",
+                }))
+                
+                <!-- We don't want to use the design library component since it adds additional styles we do not want -->
+                <button type="submit" class="sea-button-as-link govuk-link" name="cancel" value="true">
+                    Cancel and continue without an EPC
+                </button>
+            </div>
+            
+        </form>
+        
+    </div>
+</div>

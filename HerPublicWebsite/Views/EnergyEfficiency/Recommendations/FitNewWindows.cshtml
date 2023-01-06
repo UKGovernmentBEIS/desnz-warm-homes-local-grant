@@ -1,0 +1,67 @@
+﻿@using GovUkDesignSystem.GovUkDesignSystemComponents
+@model HerPublicWebsite.Models.EnergyEfficiency.RecommendationViewModel;
+
+@{
+    Layout = "_Recommendation";
+}
+
+@section RecommendationBody
+{
+    <h1 class="govuk-heading-l">Fit new windows</h1>
+
+    <p class="govuk-body">
+        Based on the information we have, it looks like you have some single glazed windows in your home. Double or
+        triple glazed windows are much better at keeping the heat in, so would help
+        you keep warm while reducing your heating bills.
+    </p>
+
+    <p class="govuk-body">
+        The fuel bill savings from replacing windows are unlikely to pay back the full installation cost, 
+        but there are other benefits such as reduced maintenance and better sound proofing that may affect your decision.
+    </p>
+
+    <p class="govuk-body govuk-!-margin-bottom-6">
+        You can find more information on efficient windows and how to choose them at the
+        <a class="govuk-link" target="_blank" href="https://www.bfrc.org/homeowners">
+            British Fenestration Rating Council.<span class="govuk-visually-hidden">(opens in a new window)</span>
+        </a>
+    </p>
+}
+
+@section RecommendationSuitableFor
+{
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
+        <li>
+            You have any single glazed windows.
+        </li>
+    </ul>
+    
+    <div class="govuk-warning-text govuk-!-margin-bottom-6">
+        <span class="govuk-warning-text__icon  sea-warning-text__icon--long" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">Caution</span>
+            If you live in a conservation area or listed building there may be limits on what
+            changes you can make to your windows. You should check with your local authority
+            to see what is allowed.
+        </strong>
+    </div>
+}
+
+@section RecommendationLifetime
+{
+    <p class="govuk-body">New windows are typically expected to last <b>around @Model.GetCurrentPropertyRecommendation().Lifetime years</b></p>
+}
+
+@{
+    Model.DisruptionTagViewModel = new TagViewModel
+    {
+        Classes = "govuk-tag--yellow",
+        Text = "MODERATE"
+    };
+    
+    Model.DurationTagViewModel = new TagViewModel
+    {
+        Classes = "govuk-tag--yellow",
+        Text = "1 OR 2 DAYS"
+    };
+}

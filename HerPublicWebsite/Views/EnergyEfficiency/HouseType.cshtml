@@ -1,0 +1,100 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using HerPublicWebsite.BusinessLogic.Models.Enums
+@using HerPublicWebsite.Controllers
+
+@model HerPublicWebsite.Models.EnergyEfficiency.HouseTypeViewModel
+@{
+    ViewBag.Title = "House type";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <form action="@Url.Action(nameof(EnergyEfficiencyController.HouseType_Post), "EnergyEfficiency", new {reference = Model.Reference})" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+            
+            @{
+                Func<object, object> details =
+                    @<text>
+                        <p class="govuk-body">
+                            Energy use varies between different buildings, particularly for heating.
+                        </p>
+                        <p class="govuk-body">
+                            Some home improvements are only possible or appropriate for certain buildings.
+                        </p>
+                     </text>;
+            }
+            
+            @(await Html.GovUkRadiosFor(m => m.HouseType,
+                fieldsetOptions: new FieldsetViewModel
+                {
+                    Legend = new LegendViewModel
+                    {
+                        Text = "What kind of house do you have?",
+                        Classes = "govuk-fieldset__legend--l",
+                        IsPageHeading = true
+                    }
+                },
+                radioHints: new Dictionary<HouseType, HintViewModel>
+                {
+                    {
+                        HouseType.Detached,
+                        new HintViewModel
+                        {
+                            Text = "Does not share any of its walls with another house or building"
+                        }
+                    },
+                    {
+                        HouseType.SemiDetached,
+                        new HintViewModel
+                        {
+                            Text = "Is attached to one other house or building"
+                        }
+                    },
+                    {
+                        HouseType.Terraced,
+                        new HintViewModel
+                        {
+                            Text = "Sits in the middle with a house or building on each side"
+                        }
+                    },
+                    {
+                        HouseType.EndTerrace,
+                        new HintViewModel
+                        {
+                            Text = "Sits at the end of a row of similar houses with one house attached to it"
+                        }
+                    }
+                },
+                hintOptions: new HintViewModel
+                {
+                    Html = @<text>
+                               
+                               @await Html.GovUkDetails(new DetailsViewModel
+                               {
+                                   SummaryText = "Why do we need to know this?",
+                                   Html = details
+                               })
+                            </text>
+                }))
+
+            @await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Continue"
+            })
+            
+        </form>
+        
+    </div>
+</div>

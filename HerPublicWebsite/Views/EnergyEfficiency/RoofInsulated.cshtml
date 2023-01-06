@@ -1,0 +1,104 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using HerPublicWebsite.BusinessLogic.Models.Enums
+@using HerPublicWebsite.Controllers
+
+@model HerPublicWebsite.Models.EnergyEfficiency.RoofInsulatedViewModel
+@{
+    ViewBag.Title = "Roof Insulated";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <form action="@Url.Action(nameof(EnergyEfficiencyController.RoofInsulated_Post), "EnergyEfficiency", new {reference = Model.Reference})" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+            
+            @{
+                Func<object, object> details = 
+                    @<p class="govuk-body">
+                        If your home was built after 2002, or you have installed loft insulation since 2002, 
+                        it is likely that it is fully insulated.
+                    </p>;
+                
+                Func<object, object> blueBannerHint = null;
+                if (Model.Epc?.RoofInsulated is not null)
+                {
+                    var insulated = Model.Epc?.RoofInsulated is RoofInsulated.Yes;
+                    blueBannerHint = 
+                        @<p class="govuk-body">
+                            Your @Model.Epc.LodgementYear Energy Performance Certificate suggests your
+                            <strong>
+                                loft is @(insulated ? "" : "not") fully insulated
+                            </strong>
+                            as it has @(insulated ? "at least" : "less than") 200mm of insulation.
+                        </p>;
+                } else if (Model.HintUninsulatedRoof is not null)
+                {
+                    blueBannerHint =
+                        @<p class="govuk-body">
+                            Homes of your type
+                            <strong>
+                                @(Model.HintUninsulatedRoof is true
+                                    ? "typically have less than 200mm of insulation." 
+                                    : "are typically fully insulated with at least 200mm of insulation.")
+                            </strong>
+                        </p>;
+                }
+            }
+            
+            @(await Html.GovUkRadiosFor(m => m.RoofInsulated,
+                fieldsetOptions: new FieldsetViewModel
+                {
+                    Legend = new LegendViewModel
+                    {
+                        Text = "Is your loft fully insulated?",
+                        Classes = "govuk-fieldset__legend--l",
+                        IsPageHeading = true
+                    }
+                },
+                new HintViewModel
+                {
+                    Html = @<text>
+                               <p class="govuk-body">
+                                   A loft is fully insulated if it has more than 200mm (eight inches) of insulation covering the whole loft,
+                                   usually laid on the "floor" of the loft with one layer between the horizontal timbers and
+                                   another layer going across them to bring the insulation up to the required level.
+                               </p>
+                               
+                               @await Html.GovUkDetails(new DetailsViewModel
+                               {
+                                   SummaryText = "Help me answer this question",
+                                   Html = details
+                               })
+                               
+                               @if (blueBannerHint is not null)
+                               {
+                                   @await Html.GovUkInsetText(new InsetTextViewModel
+                                   {
+                                       Classes = "sea-epc-hint",
+                                       Html = blueBannerHint
+                                   })
+                               }
+                            </text>
+                }))
+
+            @await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Continue"
+            })
+            
+        </form>
+        
+    </div>
+</div>

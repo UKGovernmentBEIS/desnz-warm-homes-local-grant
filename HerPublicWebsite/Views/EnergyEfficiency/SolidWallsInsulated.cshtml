@@ -1,0 +1,103 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using HerPublicWebsite.BusinessLogic.Models.Enums
+@using HerPublicWebsite.Controllers
+
+@model HerPublicWebsite.Models.EnergyEfficiency.SolidWallsInsulatedViewModel
+@{
+    ViewBag.Title = "Solid Walls Insulated";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <form action="@Url.Action(nameof(EnergyEfficiencyController.SolidWallsInsulated_Post), "EnergyEfficiency", new {reference = Model.Reference})" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            @(Html.HiddenFor(m => m.EntryPoint))
+            
+            @{
+                Func<object, object> details = 
+                    @<text>
+                        <p class="govuk-body">
+                            Solid walls are more common in pre-1930 buildings and these were typically built without insulation.
+                        </p>
+                        <p class="govuk-body">
+                            If you have solid walls, it’s unlikely they are insulated. 
+                        </p>
+                     </text>;
+                
+                Func<object, object> blueBannerHint = null;
+                if (Model.Epc?.SolidWallsInsulated is not null)
+                {
+                    blueBannerHint = 
+                        @<p class="govuk-body">
+                            Your @Model.Epc.LodgementYear Energy Performance Certificate suggests
+                            <strong>
+                                @(Model.Epc?.SolidWallsInsulated switch {
+                                    SolidWallsInsulated.No => "your solid walls are uninsulated.",
+                                    SolidWallsInsulated.Some => "some of your solid walls are insulated.",
+                                    SolidWallsInsulated.All => "your solid walls are insulated.",
+                                    _ => throw new ArgumentOutOfRangeException()})
+                            </strong>
+                        </p>;
+                } else
+                {
+                    blueBannerHint =
+                        @<p class="govuk-body">
+                            Homes of your type typically have
+                            <strong>
+                                uninsulated solid walls
+                            </strong>
+                        </p>;
+                }
+            }
+            
+            @(await Html.GovUkRadiosFor(m => m.SolidWallsInsulated,
+                fieldsetOptions: new FieldsetViewModel
+                {
+                    Legend = new LegendViewModel
+                    {
+                        Text = "Are your solid walls insulated?",
+                        Classes = "govuk-fieldset__legend--l",
+                        IsPageHeading = true
+                    }
+                },
+                hintOptions: new HintViewModel
+                {
+                    Html = @<text>
+                               <p class="govuk-body">
+                                   Solid wall insulation may be installed internally, inside your home, or externally, on the outside walls.
+                               </p>
+                               
+                               @await Html.GovUkDetails(new DetailsViewModel
+                               {
+                                   SummaryText = "Help me answer this question",
+                                   Html = details
+                               })
+                               
+                               @await Html.GovUkInsetText(new InsetTextViewModel
+                               {
+                                   Classes = "sea-epc-hint",
+                                   Html = blueBannerHint
+                               })
+                            </text>
+                    }))
+
+            @await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Continue"
+            })
+            
+        </form>
+        
+    </div>
+</div>

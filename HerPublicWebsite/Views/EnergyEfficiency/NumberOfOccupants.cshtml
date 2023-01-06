@@ -1,0 +1,76 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using HerPublicWebsite.Controllers
+
+@model HerPublicWebsite.Models.EnergyEfficiency.NumberOfOccupantsViewModel
+@{
+    ViewBag.Title = "Number of occupants";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <form action="@Url.Action(nameof(EnergyEfficiencyController.NumberOfOccupants_Post), "EnergyEfficiency", new {reference = Model.Reference})" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+            
+            @{
+                Func<object, object> details =
+                    @<p class="govuk-body">
+                        This information allows us to estimate how much energy your household uses.
+                    </p>;
+                
+                Func<object, object> hint = 
+                    @<text>
+                        <p class="govuk-body">
+                            Count all adults and any children normally resident in your home.
+                        </p>
+
+                        @await Html.GovUkDetails(new DetailsViewModel
+                        {
+                            SummaryText = "Why do we want to know this?",
+                            Html = details
+                        })
+                     </text>;
+            }
+            
+            @await Html.GovUkTextInputFor(
+                m => m.NumberOfOccupants,
+                labelOptions: new LabelViewModel
+                {
+                    Text = "How many people live in your home?",
+                    Classes = "govuk-label--l",
+                    IsPageHeading = true
+                },
+                hintOptions: new HintViewModel
+                {
+                    Html = hint
+                },
+                classes: "govuk-input--width-5",
+                placeholder: "e.g. 3")
+            
+            <div class="govuk-button-group">
+                @(await Html.GovUkButton(new ButtonViewModel
+                {
+                    Text = "Continue"
+                }))
+                
+                <!-- We don't want to use the design library component since it adds additional styles we do not want -->
+                <button type="submit" class="sea-button-as-link govuk-link" name="skip" value="true">
+                    Skip this question
+                </button>
+            </div>
+            
+        </form>
+        
+    </div>
+</div>

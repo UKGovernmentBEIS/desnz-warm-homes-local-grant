@@ -1,0 +1,36 @@
+﻿@using HerPublicWebsite.BusinessLogic.Models.Enums
+@model HerPublicWebsite.Models.EnergyEfficiency.RecommendationViewModel
+
+<div class="govuk-grid-row govuk-!-margin-left-0 govuk-!-margin-bottom-7 govuk-!-margin-top-6">
+    @if (Model.GetCurrentPropertyRecommendation().Key != RecommendationKey.InstallHeatPump)
+    {
+        <div class="govuk-grid-column-full sea-yearly-savings govuk-!-margin-bottom-2">
+            <span class="govuk-heading-s govuk-!-margin-bottom-0"><b>This could save up to</b></span>
+            <h3 class="govuk-heading-l govuk-!-margin-bottom-1">
+                £@Model.GetCurrentPropertyRecommendation().Saving a year
+            </h3>
+            <span class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-3"><b>Which adds up to</b></span>
+            <h3 class="govuk-heading-l govuk-!-margin-bottom-1">
+                £@Model.GetCurrentPropertyRecommendation().LifetimeSaving <span class="govuk-body"><b>over the lifetime of the installation</b></span>
+            </h3>
+        </div>
+    }
+    <div class="govuk-grid-column-full sea-install-costs">
+        <span class="govuk-heading-s govuk-!-margin-bottom-0"><b>This could cost</b></span>
+        @if (Model.GetCurrentPropertyRecommendation().Key == RecommendationKey.InstallHeatPump)
+        {
+            <h3 class="govuk-heading-l govuk-!-margin-bottom-1">
+                £9500 - £12000 <span class="govuk-body"><b>for an air source heat pump</b></span>
+            </h3>
+            <h3 class="govuk-heading-l govuk-!-margin-bottom-1">
+                £12000 - £37000 <span class="govuk-body"><b>for a ground source heat pump</b></span>
+            </h3>
+        }
+        else
+        {
+            <h3 class="govuk-heading-l govuk-!-margin-bottom-1">
+                £@Model.GetCurrentPropertyRecommendation().MinInstallCost - £@Model.GetCurrentPropertyRecommendation().MaxInstallCost
+            </h3>
+        }
+    </div>
+</div>

@@ -1,0 +1,131 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using HerPublicWebsite.Controllers
+@using HerPublicWebsite.Models.EnergyEfficiency
+@model HerPublicWebsite.Models.EnergyEfficiency.RecommendationViewModel;
+
+@{
+    ViewBag.Title = "Recommendation " + (Model.RecommendationIndex + 1) + " of " + Model.PropertyRecommendations.Count;
+    Layout = "_Layout";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+        @{ await Html.RenderPartialAsync("../EnergyEfficiency/Recommendations/Partials/_YourActionPlan.cshtml", Model); }
+    </div>
+    
+    <div class="govuk-grid-column-two-thirds">
+        
+        <form action="@Url.Action(nameof(EnergyEfficiencyController.Recommendation_Post),
+                          "EnergyEfficiency",
+                          new {id = (int) Model.GetCurrentPropertyRecommendation().Key})" method="post" novalidate>
+
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.FromActionPlan)
+
+            <span class="govuk-caption-l">
+                Recommendation @(Model.RecommendationIndex + 1) of @Model.PropertyRecommendations.Count
+            </span>
+            <h1 class="govuk-heading-l">
+                @Model.GetCurrentPropertyRecommendation().Title
+            </h1>
+
+            @await RenderSectionAsync("RecommendationBody", true)
+            
+            <h2 class="govuk-heading-m">Who this improvement is suitable for</h2>
+            <p class="govuk-body">You should consider this improvement for your property if:</p>
+            @await RenderSectionAsync("RecommendationSuitableFor", true)
+
+            <h2 class="govuk-heading-m">
+                What you could save
+            </h2>
+            @await RenderSectionAsync("RecommendationLifetime", true)
+            @{ await Html.RenderPartialAsync("../EnergyEfficiency/Recommendations/Partials/_WhatYouCouldSave.cshtml", Model); }
+            
+            @await Html.GovUkWarningText(new WarningTextViewModel
+            {
+                IconFallbackText = "Note",
+                Text = "These figures are for a typical installation in a home like yours. " +
+                       "The costs and savings you experience will be affected by your circumstances, the details of the installations and energy prices. " + 
+                       "The savings displayed are based on the October 2022 energy price cap. " +
+                       "As energy prices change, so will the estimates of savings."
+            })
+            
+            @await Html.GovUkSummaryList(new SummaryListViewModel
+            {
+                Classes = "govuk-!-margin-bottom-9",
+                Rows = new List<SummaryListRowViewModel>
+                {
+                    new()
+                    {
+                        Key = new SummaryListRowKey
+                        {
+                            Classes = "govuk-!-width-two-thirds",
+                            Text = "Will this cause disruption during installation?"
+                        },
+                        Value = new SummaryListRowValue
+                        {
+                            Classes = "sea-recommendation-impact govuk-!-padding-right-0",
+                            Html = @<text>
+                                       @await Html.GovUkTag(Model.DisruptionTagViewModel)
+                                    </text>
+                        }
+                    },
+                    new()
+                    {
+                        Key = new SummaryListRowKey
+                        {
+                            Classes = "govuk-!-width-two-thirds",
+                            Text = "How long could this take to install?"
+                        },
+                        Value = new SummaryListRowValue
+                        {
+                            Classes = "sea-recommendation-impact govuk-!-padding-right-0",
+                            Html = @<text>
+                                       @await Html.GovUkTag(Model.DurationTagViewModel)
+                                    </text>
+                        }
+                    }
+                }
+            })
+
+            @(await Html.GovUkRadiosFor(m => m.RecommendationAction,
+                fieldsetOptions: new FieldsetViewModel
+                {
+                    Legend = new LegendViewModel
+                    {
+                        Html = @<h1 class="govuk-fieldset__heading">
+                                   Would you consider this improvement for your property?
+                               </h1>,
+                        Classes = "govuk-fieldset__legend--l",
+                    }
+                },
+                classes: "govuk-!-margin-bottom-7"
+                ))
+
+            @{
+                var hasBack = Model.HasPreviousIndex() && !Model.FromActionPlan;
+                await Html.RenderPartialAsync("../EnergyEfficiency/Recommendations/Partials/_ActionButtons.cshtml", new ActionButtonsViewModel
+               {
+                   BackTitle = hasBack ? "Go back to" : null,
+                   BackText = hasBack ? $"Recommendation {Model.RecommendationIndex}" : null,
+                   ForwardTitle = Model.FromActionPlan ? "Back to" : "Continue to",
+                   ForwardText = Model.FromActionPlan 
+                       ? "Action Plan" 
+                       : Model.HasNextIndex() 
+                           ? $"Recommendation {Model.RecommendationIndex + 2}" 
+                           : "Action Plan"
+               }); }
+
+        </form>
+
+    </div>
+</div>

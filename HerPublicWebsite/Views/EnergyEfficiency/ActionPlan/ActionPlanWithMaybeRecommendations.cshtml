@@ -1,0 +1,55 @@
+﻿
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using HerPublicWebsite.BusinessLogic.Models.Enums
+@using HerPublicWebsite.Models.EnergyEfficiency
+@model HerPublicWebsite.Models.EnergyEfficiency.ActionPlanViewModel;
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">
+            Your Action Plan
+        </h1>
+        
+        <h2 class="govuk-heading-l govuk-!-margin-bottom-3 govuk-!-margin-top-7">
+            Research improvements you are unsure about
+        </h2>
+        @{ await Html.RenderPartialAsync("ActionPlan/Partials/_ImprovementsUnsureAbout", Model); }
+        @{ await Html.RenderPartialAsync("ActionPlan/Partials/_AvailableSchemesOrGrants", Model); }
+        @{ await Html.RenderPartialAsync("ActionPlan/Partials/_DiscardedRecommendations", Model); }
+        
+        <h2 class="govuk-heading-l govuk-!-margin-bottom-3 govuk-!-margin-top-7">
+            Other ways to save energy
+        </h2>
+        
+        <p class="govuk-body">
+            If you’d like to do more to improve the energy efficiency of your home, consider the following:
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+              <li>
+                  Visit the <a class="govuk-link" target="_blank" href="https://helpforhouseholds.campaign.gov.uk/help-with-your-bills/energy-saving-advice/">Help for Households</a> website for even more ways to save energy and reduce your bills.
+              </li>
+            <li>When buying new appliances, upgrade to an energy efficient one - <a class="govuk-link" target="_blank" href="https://energylabel.org.uk/">Learn about energy labels</a></li>
+            @if (Model.PropertyData?.HasOutdoorSpace != HasOutdoorSpace.No)
+            {
+                <li>Install a heat pump - <a class="govuk-link" target="_blank" href="https://www.heat-pump-check.service.gov.uk/">Check if your home may be suitable</a></li>
+            }
+        </ul>
+
+        @{ await Html.RenderPartialAsync("ActionPlan/Partials/_ReturnToActionPlan", new ReturnToActionPlanViewModel
+           {
+               Reference = Model.PropertyData.Reference,
+               EmailAddress = Model.EmailAddress,
+               EmailSent = Model.EmailSent
+           }); }
+    </div>
+</div>

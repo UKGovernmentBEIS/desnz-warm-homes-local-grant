@@ -30,21 +30,21 @@ jobs:
     - name: Save the build number to build-number.json
       run: |
         echo '{ BuildNumber: ${{ github.run_number }} }' > build-number.json
-      working-directory: ./SeaPublicWebsite
+      working-directory: ./HerPublicWebsite
 
     - name: Restore Node.JS dependencies
       run: npm ci
-      working-directory: ./SeaPublicWebsite
+      working-directory: ./HerPublicWebsite
       
     - name: Build SCSS and JS code
       run: npm run build
-      working-directory: ./SeaPublicWebsite
+      working-directory: ./HerPublicWebsite
       
     - name: Restore .Net dependencies
       run: dotnet restore --configfile Nuget.config
       
     - name: Build .Net code
-      run: dotnet build SeaPublicWebsite --no-restore --configuration Release --output ./ci-server-build/
+      run: dotnet build HerPublicWebsite --no-restore --configuration Release --output ./ci-server-build/
 
     - name: Push the app to Azure
       # TODO fill this in for Azure environment
