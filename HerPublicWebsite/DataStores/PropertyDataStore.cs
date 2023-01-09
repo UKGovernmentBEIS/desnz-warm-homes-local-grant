@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.Data;
 using HerPublicWebsite.ErrorHandling;
-using HerPublicWebsite.Helpers;
 
 namespace HerPublicWebsite.DataStores;
 
@@ -67,9 +66,10 @@ public class PropertyDataStore
 
         while (saveCount <= MaxRetries)
         {
+            var now = DateTime.Now;
             PropertyData propertyData = new()
             {
-                Reference = RandomHelper.Generate8CharacterReference()
+                Reference = now.ToString("ddhhmmss")
             };
             attemptedReferences.Add(propertyData.Reference);
             
