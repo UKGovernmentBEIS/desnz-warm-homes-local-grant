@@ -3,7 +3,7 @@ using HerPublicWebsite.BusinessLogic.Models;
 
 namespace HerPublicWebsite.Data;
 
-public class DataAccessProvider : IDataAccessProvider
+public class DataAccessProvider
 {
     private readonly HerDbContext context;
 

@@ -1,55 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.Data;
-using HerPublicWebsite.ErrorHandling;
+using HerPublicWebsite.BusinessLogic.Models.Enums;
 
 namespace HerPublicWebsite.DataStores;
 
 public class PropertyDataStore
 {
-    private readonly IDataAccessProvider dataAccessProvider;
     private readonly ILogger<PropertyDataStore> logger;
-    private const int MaxRetries = 10;
-    private const int SleepMilliSeconds = 500;
 
-    public PropertyDataStore(IDataAccessProvider dataAccessProvider, ILogger<PropertyDataStore> logger)
+    public PropertyDataStore(ILogger<PropertyDataStore> logger)
     {
-        this.dataAccessProvider = dataAccessProvider;
         this.logger = logger;
     }
     
     public async Task<PropertyData> LoadPropertyDataAsync(string reference)
     {
-        var data = await dataAccessProvider.GetPropertyDataAsync(reference.ToUpper());
-        
-        if (data == null)
+        return new PropertyData()
         {
-            throw new PropertyReferenceNotFoundException
-            {
-                Reference = reference
-            };
-        }
-        
-        // Recommendations need to be in a consistent order to allow navigation between them.
-        data.PropertyRecommendations.Sort(Comparer<PropertyRecommendation>.Create((p1, p2) => p1.Key.CompareTo(p2.Key)));
-        
-        return data;
+            Reference = "DUMMY123",
+            OwnershipStatus = OwnershipStatus.OwnerOccupancy,
+            Country = Country.England,
+            SearchForEpc = SearchForEpc.No,
+
+            PropertyType = PropertyType.House,
+            HouseType = HouseType.Detached,
+
+            YearBuilt = YearBuilt.From1967To1982,
+
+            WallConstruction = WallConstruction.Cavity,
+            CavityWallsInsulated = CavityWallsInsulated.All,
+            FloorConstruction = FloorConstruction.SolidConcrete,
+            FloorInsulated = FloorInsulated.Yes,
+            RoofConstruction = RoofConstruction.Pitched,
+            LoftSpace = LoftSpace.Yes,
+            LoftAccess = LoftAccess.Yes,
+            RoofInsulated = RoofInsulated.Yes,
+            HasOutdoorSpace = HasOutdoorSpace.Yes,
+            GlazingType = GlazingType.DoubleOrTripleGlazed,
+            HeatingType = HeatingType.GasBoiler,
+            HasHotWaterCylinder = HasHotWaterCylinder.Yes,
+
+            NumberOfOccupants = 5,
+            HeatingPattern = HeatingPattern.AllDayNotNight,
+            Temperature = 20,
+        };
     }
 
     public async Task<bool> IsReferenceValidAsync(string reference)
     {
-        return await dataAccessProvider.PropertyDataExistsAsync(reference);
+        return true;
     }
 
     public async Task SavePropertyDataAsync(PropertyData propertyData)
     {
         try
         {
-            await dataAccessProvider.UpdatePropertyDataAsync(propertyData);
+            // TODO Save actual data
         }
         catch (DbUpdateConcurrencyException e)
         {
@@ -61,32 +69,9 @@ public class PropertyDataStore
 
     public async Task<PropertyData> CreateNewPropertyDataAsync()
     {
-        var saveCount = 0;
-        var attemptedReferences = new List<string>();
-
-        while (saveCount <= MaxRetries)
+        return  new()
         {
-            var now = DateTime.Now;
-            PropertyData propertyData = new()
-            {
-                Reference = now.ToString("ddhhmmss")
-            };
-            attemptedReferences.Add(propertyData.Reference);
-            
-            try
-            {
-                await dataAccessProvider.AddPropertyDataAsync(propertyData);
-                return propertyData;
-            }
-            catch (Exception)
-            {
-                // Just retry
-                logger.LogWarning("Failed to create new property data row with reference " + propertyData.Reference);
-                await Task.Delay(SleepMilliSeconds);
-            }
-            saveCount++;
-        }
-
-        throw new Exception("Failed to create new property data row. Tried references: " + string.Join(',', attemptedReferences));
+            Reference = "DUMMY123"
+        };
     }
 }

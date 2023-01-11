@@ -41,7 +41,6 @@ namespace HerPublicWebsite
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();
-            services.AddScoped<IDataAccessProvider, DataAccessProvider>();
             services.AddDataProtection().PersistKeysToDbContext<HerDbContext>();
 
             ConfigureEpcApi(services);
