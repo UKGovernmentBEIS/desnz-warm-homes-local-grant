@@ -41,6 +41,7 @@ namespace HerPublicWebsite
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();
+            // This allows encrypted cookies to be understood across multiple web server instances
             services.AddDataProtection().PersistKeysToDbContext<HerDbContext>();
 
             ConfigureEpcApi(services);

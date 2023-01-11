@@ -4,8 +4,7 @@ namespace HerPublicWebsite.Data;
 
 public interface IDataAccessProvider
 {
-    Task AddPropertyDataAsync(PropertyData propertyData);
-    Task UpdatePropertyDataAsync(PropertyData propertyData);
-    Task<PropertyData> GetPropertyDataAsync(string reference);
-    Task<bool> PropertyDataExistsAsync(string reference);
+    Task<Questionnaire> AddQuestionnaireAsync(Questionnaire questionnaire);
+    Task UpdateQuestionnaireAsync(Questionnaire questionnaire);
+    Task<Questionnaire> GetQuestionnaireAsync(int id);
 }

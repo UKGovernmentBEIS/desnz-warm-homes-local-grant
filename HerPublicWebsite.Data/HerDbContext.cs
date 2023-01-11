@@ -7,9 +7,8 @@ namespace HerPublicWebsite.Data;
 
 public class HerDbContext : DbContext, IDataProtectionKeyContext
 {
-    public DbSet<PropertyData> PropertyData { get; set; }
-    public DbSet<Epc> Epc { get; set; }
-    public DbSet<PropertyRecommendation> PropertyRecommendations { get; set; }
+    public DbSet<Questionnaire> Questionnaires { get; set; }
+    public DbSet<ContactDetails> ContactDetails { get; set; }
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     
     public HerDbContext(DbContextOptions<HerDbContext> options) : base(options)
@@ -18,79 +17,50 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        SetupPropertyData(modelBuilder);
-        SetupPropertyRecommendations(modelBuilder);
-        SetupEpc(modelBuilder);
+        SetupQuestionnaires(modelBuilder);
+        SetupContactDetails(modelBuilder);
         SetupRelations(modelBuilder);
     }
 
-    private void SetupPropertyData(ModelBuilder modelBuilder)
+    private void SetupQuestionnaires(ModelBuilder modelBuilder)
     {
-        // Property data primary key
-        modelBuilder.Entity<PropertyData>()
-            .Property<int>("PropertyDataId")
+        // Questionnaire primary key
+        modelBuilder.Entity<Questionnaire>()
+            .Property<int>("QuestionnaireId")
             .HasColumnType("integer")
             .ValueGeneratedOnAdd();
-        modelBuilder.Entity<PropertyData>()
-            .HasKey("PropertyDataId");
+        modelBuilder.Entity<Questionnaire>()
+            .HasKey("QuestionnaireId");
         
-        // Property data row versioning
-        AddRowVersionColumn(modelBuilder.Entity<PropertyData>());
-
-        modelBuilder.Entity<PropertyData>()
-            .HasIndex(p => p.Reference)
-            .IsUnique();
-    }
-    
-    private void SetupPropertyRecommendations(ModelBuilder modelBuilder)
-    {
-        // Property recommendations primary key
-        modelBuilder.Entity<PropertyRecommendation>()
-            .Property<int>("PropertyRecommendationId")
-            .HasColumnType("integer")
-            .ValueGeneratedOnAdd();
-        modelBuilder.Entity<PropertyRecommendation>()
-            .HasKey("PropertyRecommendationId");
-        
-        // Property recommendations row versioning
-        AddRowVersionColumn(modelBuilder.Entity<PropertyRecommendation>());
+        // Questionnaire row versioning
+        AddRowVersionColumn(modelBuilder.Entity<Questionnaire>());
     }
 
-    private void SetupEpc(ModelBuilder modelBuilder)
+    private void SetupContactDetails(ModelBuilder modelBuilder)
     {
-        // Epc primary key
-        modelBuilder.Entity<Epc>()
+        // Contact details primary key
+        modelBuilder.Entity<ContactDetails>()
             .Property<int>("Id")
             .HasColumnType("integer")
             .ValueGeneratedOnAdd();
-        modelBuilder.Entity<Epc>()
+        modelBuilder.Entity<ContactDetails>()
             .HasKey("Id");
         
-        // Epc row versioning
-        AddRowVersionColumn(modelBuilder.Entity<Epc>());
+        // Contact details row versioning
+        AddRowVersionColumn(modelBuilder.Entity<ContactDetails>());
     }
 
     private void SetupRelations(ModelBuilder modelBuilder)
     {
-        // Set up the PropertyData <-> EPC relationship in the database
-        modelBuilder.Entity<Epc>()
-            .Property<int>("PropertyDataId");
+        // Set up the Questionnaire <-> ContactDetails relationship in the database
+        modelBuilder.Entity<ContactDetails>()
+            .Property<int>("QuestionnaireId");
         
-        modelBuilder.Entity<Epc>()
-            .HasOne<PropertyData>()
-            .WithOne(d => d.Epc)
-            .HasForeignKey<Epc>("PropertyDataId")
+        modelBuilder.Entity<ContactDetails>()
+            .HasOne<Questionnaire>()
+            .WithOne(d => d.ContactDetails)
+            .HasForeignKey<ContactDetails>("QuestionnaireId")
             .IsRequired();
-        
-        // Set up the PropertyData <-> UneditedData relationship in the database
-        modelBuilder.Entity<PropertyData>()
-            .Property<int?>("EditedDataId");
-
-        modelBuilder.Entity<PropertyData>()
-            .HasOne<PropertyData>()
-            .WithOne(d => d.UneditedData)
-            .HasForeignKey<PropertyData>("EditedDataId")
-            .OnDelete(DeleteBehavior.Cascade);
     }
 
     private void AddRowVersionColumn<T>(EntityTypeBuilder<T> builder) where T : class

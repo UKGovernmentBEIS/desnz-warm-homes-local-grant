@@ -3,7 +3,7 @@ using HerPublicWebsite.BusinessLogic.Models;
 
 namespace HerPublicWebsite.Data;
 
-public class DataAccessProvider
+public class DataAccessProvider : IDataAccessProvider
 {
     private readonly HerDbContext context;
 
@@ -11,30 +11,24 @@ public class DataAccessProvider
     {
         this.context = context;
     }
-    
-    public async Task AddPropertyDataAsync(PropertyData propertyData)
+
+    public async Task<Questionnaire> AddQuestionnaireAsync(Questionnaire questionnaire)
     {
-        context.PropertyData.Add(propertyData);
+        context.Questionnaires.Add(questionnaire);
+        await context.SaveChangesAsync();
+        return questionnaire;
+    }
+
+    public async Task UpdateQuestionnaireAsync(Questionnaire questionnaire)
+    {
+        context.Questionnaires.Update(questionnaire);
         await context.SaveChangesAsync();
     }
 
-    public async Task UpdatePropertyDataAsync(PropertyData propertyData)
+    public async Task<Questionnaire> GetQuestionnaireAsync(int id)
     {
-        context.PropertyData.Update(propertyData);
-        await context.SaveChangesAsync();
-    }
-
-    public async Task<PropertyData> GetPropertyDataAsync(string reference)
-    {
-        return await context.PropertyData
-            .Include(p => p.Epc)
-            .Include(p => p.PropertyRecommendations)
-            .Include(p => p.UneditedData)
-            .SingleOrDefaultAsync(p => p.Reference == reference);
-    }
-
-    public async Task<bool> PropertyDataExistsAsync(string reference)
-    {
-        return await context.PropertyData.AnyAsync(p => p.Reference == reference);
+        return await context.Questionnaires
+            .Include(q => q.ContactDetails)
+            .SingleOrDefaultAsync(q => q.QuestionnaireId == id);
     }
 }
