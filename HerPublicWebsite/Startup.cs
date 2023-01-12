@@ -38,7 +38,7 @@ namespace HerPublicWebsite
             services.AddScoped<AnswerService>();
             services.AddScoped<PropertyDataStore>();
             services.AddScoped<PropertyDataUpdater>();
-            services.AddScoped<IQuestionFlowService, QuestionFlowService>();
+            services.AddScoped<IQuestionFlowServiceOld, QuestionFlowServiceOld>();
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();
             // This allows encrypted cookies to be understood across multiple web server instances

@@ -42,7 +42,7 @@
             {
                 new()
                 {
-                    Href = @Url.Action(nameof(EnergyEfficiencyController.WallConstruction_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.WallConstruction}),
+                    Href = @Url.Action(nameof(EnergyEfficiencyController.WallConstruction_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.WallConstruction}),
                     Text = "Change",
                     VisuallyHiddenText = "wall type"
                 }
@@ -71,7 +71,7 @@
                 {
                     new()
                     {
-                        Href = Url.Action(nameof(EnergyEfficiencyController.CavityWallsInsulated_Get), "EnergyEfficiency", new { reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.CavityWallsInsulated }),
+                        Href = Url.Action(nameof(EnergyEfficiencyController.CavityWallsInsulated_Get), "EnergyEfficiency", new { reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.CavityWallsInsulated }),
                         Text = "Change",
                         VisuallyHiddenText = "are your cavity walls insulated"
                     }
@@ -101,7 +101,7 @@
                 {
                     new()
                     {
-                        Href = Url.Action(nameof(EnergyEfficiencyController.SolidWallsInsulated_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.SolidWallsInsulated}),
+                        Href = Url.Action(nameof(EnergyEfficiencyController.SolidWallsInsulated_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.SolidWallsInsulated}),
                         Text = "Change",
                         VisuallyHiddenText = "are your solid walls insulated"
                     }
@@ -131,7 +131,7 @@
                 {
                     new()
                     {
-                        Href = Url.Action(nameof(EnergyEfficiencyController.FloorConstruction_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.FloorConstruction}),
+                        Href = Url.Action(nameof(EnergyEfficiencyController.FloorConstruction_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.FloorConstruction}),
                         Text = "Change",
                         VisuallyHiddenText = "floor construction"
                     }
@@ -160,7 +160,7 @@
                     {
                         new()
                         {
-                            Href = Url.Action(nameof(EnergyEfficiencyController.FloorInsulated_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.FloorInsulated}),
+                            Href = Url.Action(nameof(EnergyEfficiencyController.FloorInsulated_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.FloorInsulated}),
                             Text = "Change",
                             VisuallyHiddenText = "is your ground floor insulated"
                         }
@@ -191,7 +191,7 @@
                 {
                     new()
                     {
-                        Href = Url.Action(nameof(EnergyEfficiencyController.RoofConstruction_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.RoofConstruction}),
+                        Href = Url.Action(nameof(EnergyEfficiencyController.RoofConstruction_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.RoofConstruction}),
                         Text = "Change",
                         VisuallyHiddenText = "is any part of your roof flat"
                     }
@@ -220,7 +220,7 @@
                     {
                         new()
                         {
-                            Href = Url.Action(nameof(EnergyEfficiencyController.LoftSpace_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.LoftSpace}),
+                            Href = Url.Action(nameof(EnergyEfficiencyController.LoftSpace_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.LoftSpace}),
                             Text = "Change",
                             VisuallyHiddenText = "do you have a loft that hasn't been converted into a room"
                         }
@@ -249,7 +249,7 @@
                         {
                             new()
                             {
-                                Href = Url.Action(nameof(EnergyEfficiencyController.LoftAccess_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.LoftAccess}),
+                                Href = Url.Action(nameof(EnergyEfficiencyController.LoftAccess_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.LoftAccess}),
                                 Text = "Change",
                                 VisuallyHiddenText = "is there access to your loft"
                             }
@@ -278,7 +278,7 @@
                             {
                                 new()
                                 {
-                                    Href = Url.Action(nameof(EnergyEfficiencyController.RoofInsulated_Get), "EnergyEfficiency", new { reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.RoofInsulated }),
+                                    Href = Url.Action(nameof(EnergyEfficiencyController.RoofInsulated_Get), "EnergyEfficiency", new { reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.RoofInsulated }),
                                     Text = "Change",
                                     VisuallyHiddenText = "is your loft fully insulated"
                                 }
@@ -309,7 +309,7 @@
             {
                 new()
                 {
-                    Href = Url.Action(nameof(EnergyEfficiencyController.GlazingType_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.GlazingType}),
+                    Href = Url.Action(nameof(EnergyEfficiencyController.GlazingType_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.GlazingType}),
                     Text = "Change",
                     VisuallyHiddenText = "glazing type"
                 }
@@ -336,7 +336,7 @@
             {
                 new()
                 {
-                    Href = Url.Action(nameof(EnergyEfficiencyController.OutdoorSpace_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.OutdoorSpace}),
+                    Href = Url.Action(nameof(EnergyEfficiencyController.OutdoorSpace_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.OutdoorSpace}),
                     Text = "Change",
                     VisuallyHiddenText = "outdoor space for heat pump"
                 }
@@ -365,7 +365,7 @@
             {
                 new()
                 {
-                    Href = Url.Action(nameof(EnergyEfficiencyController.HeatingType_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.HeatingType}),
+                    Href = Url.Action(nameof(EnergyEfficiencyController.HeatingType_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.HeatingType}),
                     Text = "Change",
                     VisuallyHiddenText = "heating system"
                 }
@@ -394,7 +394,7 @@
                 {
                     new()
                     {
-                        Href = Url.Action(nameof(EnergyEfficiencyController.HotWaterCylinder_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.HotWaterCylinder}),
+                        Href = Url.Action(nameof(EnergyEfficiencyController.HotWaterCylinder_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.HotWaterCylinder}),
                         Text = "Change",
                         VisuallyHiddenText = "hot water cylinder"
                     }
@@ -422,7 +422,7 @@
             {
                 new()
                 {
-                    Href = Url.Action(nameof(EnergyEfficiencyController.NumberOfOccupants_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.NumberOfOccupants}),
+                    Href = Url.Action(nameof(EnergyEfficiencyController.NumberOfOccupants_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.NumberOfOccupants}),
                     Text = "Change",
                     VisuallyHiddenText = "size of household"
                 }
@@ -465,7 +465,7 @@
             {
                 new()
                 {
-                    Href = Url.Action(nameof(EnergyEfficiencyController.HeatingPattern_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.HeatingPattern}),
+                    Href = Url.Action(nameof(EnergyEfficiencyController.HeatingPattern_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.HeatingPattern}),
                     Text = "Change",
                     VisuallyHiddenText = "heating pattern"
                 }
@@ -492,7 +492,7 @@
             {
                 new()
                 {
-                    Href = Url.Action(nameof(EnergyEfficiencyController.Temperature_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.Temperature}),
+                    Href = Url.Action(nameof(EnergyEfficiencyController.Temperature_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.Temperature}),
                     Text = "Change",
                     VisuallyHiddenText = "temperature"
                 }

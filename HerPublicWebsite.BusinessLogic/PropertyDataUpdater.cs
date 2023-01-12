@@ -7,34 +7,34 @@ namespace HerPublicWebsite.BusinessLogic;
 
 public class PropertyDataUpdater
 {
-    private readonly IQuestionFlowService questionFlowService;
+    private readonly IQuestionFlowServiceOld questionFlowServiceOld;
     private readonly IEpcApi epcApi;
     
     public PropertyDataUpdater(
-        IQuestionFlowService questionFlowService,
+        IQuestionFlowServiceOld questionFlowServiceOld,
         IEpcApi epcApi)
     {
-        this.questionFlowService = questionFlowService;
+        this.questionFlowServiceOld = questionFlowServiceOld;
         this.epcApi = epcApi;
     }
     
-    public QuestionFlowStep UpdateOwnershipStatus(PropertyData propertyData, OwnershipStatus? ownershipStatus)
+    public QuestionFlowStepOld UpdateOwnershipStatus(PropertyData propertyData, OwnershipStatus? ownershipStatus)
     {
         return UpdatePropertyData(
             p => { p.OwnershipStatus = ownershipStatus; },
             propertyData,
-            QuestionFlowStep.OwnershipStatus);
+            QuestionFlowStepOld.OwnershipStatus);
     }
     
-    public QuestionFlowStep UpdateCountry(PropertyData propertyData, Country? country)
+    public QuestionFlowStepOld UpdateCountry(PropertyData propertyData, Country? country)
     {
         return UpdatePropertyData(
             p => { p.Country = country; },
             propertyData,
-            QuestionFlowStep.Country);
+            QuestionFlowStepOld.Country);
     }
     
-    public QuestionFlowStep UpdateSearchForEpc(PropertyData propertyData, SearchForEpc? searchForEpc)
+    public QuestionFlowStepOld UpdateSearchForEpc(PropertyData propertyData, SearchForEpc? searchForEpc)
     {
         return UpdatePropertyData(
             p =>
@@ -46,20 +46,20 @@ public class PropertyDataUpdater
                 p.YearBuilt = null;
             },
             propertyData,
-            QuestionFlowStep.FindEpc);
+            QuestionFlowStepOld.FindEpc);
     }
     
-    public async Task<QuestionFlowStep> SetEpcAsync(PropertyData propertyData, string epcId)
+    public async Task<QuestionFlowStepOld> SetEpcAsync(PropertyData propertyData, string epcId)
     {
         var epc = epcId == null ? null : await epcApi.GetEpcForId(epcId);
 
         return UpdatePropertyData(
             p => { p.Epc = epc; },
             propertyData,
-            QuestionFlowStep.ConfirmAddress);
+            QuestionFlowStepOld.ConfirmAddress);
     }
 
-    public QuestionFlowStep ConfirmEpcDetails(PropertyData propertyData, EpcDetailsConfirmed? confirmed)
+    public QuestionFlowStepOld ConfirmEpcDetails(PropertyData propertyData, EpcDetailsConfirmed? confirmed)
     {
         return UpdatePropertyData(
             p =>
@@ -91,255 +91,255 @@ public class PropertyDataUpdater
                 }
             },
             propertyData,
-            QuestionFlowStep.ConfirmEpcDetails);
+            QuestionFlowStepOld.ConfirmEpcDetails);
     }
     
-    public QuestionFlowStep UpdatePropertyType(
+    public QuestionFlowStepOld UpdatePropertyType(
         PropertyData propertyData,
         PropertyType? propertyType,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.PropertyType = propertyType; },
             propertyData,
-            QuestionFlowStep.PropertyType,
+            QuestionFlowStepOld.PropertyType,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateHouseType(
+    public QuestionFlowStepOld UpdateHouseType(
         PropertyData propertyData,
         HouseType? houseType,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.HouseType = houseType; },
             propertyData,
-            QuestionFlowStep.HouseType,
+            QuestionFlowStepOld.HouseType,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateBungalowType(
+    public QuestionFlowStepOld UpdateBungalowType(
         PropertyData propertyData,
         BungalowType? bungalowType,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.BungalowType = bungalowType; },
             propertyData,
-            QuestionFlowStep.BungalowType,
+            QuestionFlowStepOld.BungalowType,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateFlatType(
+    public QuestionFlowStepOld UpdateFlatType(
         PropertyData propertyData,
         FlatType? flatType,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.FlatType = flatType; },
             propertyData,
-            QuestionFlowStep.FlatType,
+            QuestionFlowStepOld.FlatType,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateYearBuilt(
+    public QuestionFlowStepOld UpdateYearBuilt(
         PropertyData propertyData,
         YearBuilt? yearBuilt,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.YearBuilt = yearBuilt; },
             propertyData,
-            QuestionFlowStep.HomeAge,
+            QuestionFlowStepOld.HomeAge,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateWallConstruction(
+    public QuestionFlowStepOld UpdateWallConstruction(
         PropertyData propertyData,
         WallConstruction? wallConstruction,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.WallConstruction = wallConstruction; },
             propertyData,
-            QuestionFlowStep.WallConstruction,
+            QuestionFlowStepOld.WallConstruction,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateCavityWallInsulation(
+    public QuestionFlowStepOld UpdateCavityWallInsulation(
         PropertyData propertyData,
         CavityWallsInsulated? cavityWallsInsulated,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.CavityWallsInsulated = cavityWallsInsulated; },
             propertyData,
-            QuestionFlowStep.CavityWallsInsulated,
+            QuestionFlowStepOld.CavityWallsInsulated,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateSolidWallInsulation(
+    public QuestionFlowStepOld UpdateSolidWallInsulation(
         PropertyData propertyData,
         SolidWallsInsulated? solidWallsInsulated,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.SolidWallsInsulated = solidWallsInsulated; },
             propertyData,
-            QuestionFlowStep.SolidWallsInsulated,
+            QuestionFlowStepOld.SolidWallsInsulated,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateFloorConstruction(
+    public QuestionFlowStepOld UpdateFloorConstruction(
         PropertyData propertyData,
         FloorConstruction? floorConstruction,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.FloorConstruction = floorConstruction; },
             propertyData,
-            QuestionFlowStep.FloorConstruction,
+            QuestionFlowStepOld.FloorConstruction,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateFloorInsulated(
+    public QuestionFlowStepOld UpdateFloorInsulated(
         PropertyData propertyData,
         FloorInsulated? floorInsulated,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.FloorInsulated = floorInsulated; },
             propertyData,
-            QuestionFlowStep.FloorInsulated,
+            QuestionFlowStepOld.FloorInsulated,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateRoofConstruction(
+    public QuestionFlowStepOld UpdateRoofConstruction(
         PropertyData propertyData,
         RoofConstruction? roofConstruction,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.RoofConstruction = roofConstruction; },
             propertyData,
-            QuestionFlowStep.RoofConstruction,
+            QuestionFlowStepOld.RoofConstruction,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateLoftSpace(
+    public QuestionFlowStepOld UpdateLoftSpace(
         PropertyData propertyData,
         LoftSpace? loftSpace,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.LoftSpace = loftSpace; },
             propertyData,
-            QuestionFlowStep.LoftSpace,
+            QuestionFlowStepOld.LoftSpace,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateLoftAccess(
+    public QuestionFlowStepOld UpdateLoftAccess(
         PropertyData propertyData,
         LoftAccess? loftAccess,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.LoftAccess = loftAccess; },
             propertyData,
-            QuestionFlowStep.LoftAccess,
+            QuestionFlowStepOld.LoftAccess,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateRoofInsulated(
+    public QuestionFlowStepOld UpdateRoofInsulated(
         PropertyData propertyData,
         RoofInsulated? roofInsulated,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.RoofInsulated = roofInsulated; },
             propertyData,
-            QuestionFlowStep.RoofInsulated,
+            QuestionFlowStepOld.RoofInsulated,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateGlazingType(
+    public QuestionFlowStepOld UpdateGlazingType(
         PropertyData propertyData,
         GlazingType? glazingType,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.GlazingType = glazingType; },
             propertyData,
-            QuestionFlowStep.GlazingType,
+            QuestionFlowStepOld.GlazingType,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateHasOutdoorSpace(
+    public QuestionFlowStepOld UpdateHasOutdoorSpace(
         PropertyData propertyData,
         HasOutdoorSpace? hasOutdoorSpace,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.HasOutdoorSpace = hasOutdoorSpace; },
             propertyData,
-            QuestionFlowStep.OutdoorSpace,
+            QuestionFlowStepOld.OutdoorSpace,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateHeatingType(
+    public QuestionFlowStepOld UpdateHeatingType(
         PropertyData propertyData,
         HeatingType? heatingType,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.HeatingType = heatingType; },
             propertyData,
-            QuestionFlowStep.HeatingType,
+            QuestionFlowStepOld.HeatingType,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateOtherHeatingType(
+    public QuestionFlowStepOld UpdateOtherHeatingType(
         PropertyData propertyData,
         OtherHeatingType? otherHeatingType,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.OtherHeatingType = otherHeatingType; },
             propertyData,
-            QuestionFlowStep.OtherHeatingType,
+            QuestionFlowStepOld.OtherHeatingType,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateHasHotWaterCylinder(
+    public QuestionFlowStepOld UpdateHasHotWaterCylinder(
         PropertyData propertyData,
         HasHotWaterCylinder? hasHotWaterCylinder,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.HasHotWaterCylinder = hasHotWaterCylinder; },
             propertyData,
-            QuestionFlowStep.HotWaterCylinder,
+            QuestionFlowStepOld.HotWaterCylinder,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateNumberOfOccupants(
+    public QuestionFlowStepOld UpdateNumberOfOccupants(
         PropertyData propertyData,
         int? numberOfOccupants,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.NumberOfOccupants = numberOfOccupants; },
             propertyData,
-            QuestionFlowStep.NumberOfOccupants,
+            QuestionFlowStepOld.NumberOfOccupants,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateHeatingPattern(
+    public QuestionFlowStepOld UpdateHeatingPattern(
         PropertyData propertyData,
         HeatingPattern? heatingPattern,
         int? hoursOfHeatingMorning,
         int? hoursOfHeatingEvening,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p =>
@@ -349,27 +349,27 @@ public class PropertyDataUpdater
                 p.HoursOfHeatingEvening = hoursOfHeatingEvening;
             },
             propertyData,
-            QuestionFlowStep.HeatingPattern,
+            QuestionFlowStepOld.HeatingPattern,
             entryPoint);
     }
     
-    public QuestionFlowStep UpdateTemperature(
+    public QuestionFlowStepOld UpdateTemperature(
         PropertyData propertyData,
         decimal? temperature,
-        QuestionFlowStep? entryPoint)
+        QuestionFlowStepOld? entryPoint)
     {
         return UpdatePropertyData(
             p => { p.Temperature = temperature; },
             propertyData,
-            QuestionFlowStep.Temperature,
+            QuestionFlowStepOld.Temperature,
             entryPoint);
     }
     
-    private QuestionFlowStep UpdatePropertyData(
+    private QuestionFlowStepOld UpdatePropertyData(
         Action<PropertyData> update,
         PropertyData propertyData,
-        QuestionFlowStep currentPage,
-        QuestionFlowStep? entryPoint = null)
+        QuestionFlowStepOld currentPage,
+        QuestionFlowStepOld? entryPoint = null)
     {
         // If entryPoint is set then the user is editing their answers (and if HasSeenRecommendations then they have
         // already generated recommendations that may now need to change), so we need to take a copy of the current
@@ -382,13 +382,13 @@ public class PropertyDataUpdater
         update(propertyData);
         propertyData.ResetUnusedFields();
         
-        var nextStep = questionFlowService.NextStep(currentPage, propertyData, entryPoint);
+        var nextStep = questionFlowServiceOld.NextStep(currentPage, propertyData, entryPoint);
             
         // If the user is going back to the answer summary page or the check your unchangeable answers page then they
         // finished editing and we can get rid of the old answers
         if ((entryPoint is not null || propertyData.HasSeenRecommendations) &&
-            (nextStep == QuestionFlowStep.AnswerSummary ||
-             nextStep == QuestionFlowStep.CheckYourUnchangeableAnswers))
+            (nextStep == QuestionFlowStepOld.AnswerSummary ||
+             nextStep == QuestionFlowStepOld.CheckYourUnchangeableAnswers))
         {
             propertyData.CommitEdits();
         }

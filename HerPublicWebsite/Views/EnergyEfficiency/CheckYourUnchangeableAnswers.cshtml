@@ -45,7 +45,7 @@
             {
                 new()
                 {
-                    Href = Url.Action(nameof(EnergyEfficiencyController.PropertyType_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.PropertyType}),
+                    Href = Url.Action(nameof(EnergyEfficiencyController.PropertyType_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.PropertyType}),
                     Text = "Change",
                     VisuallyHiddenText = "address"
                 }
@@ -72,7 +72,7 @@
             {
                 new()
                 {
-                    Href = @Url.Action(nameof(EnergyEfficiencyController.HomeAge_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStep.HomeAge}),
+                    Href = @Url.Action(nameof(EnergyEfficiencyController.HomeAge_Get), "EnergyEfficiency", new {reference = Model.PropertyData.Reference, entryPoint = QuestionFlowStepOld.HomeAge}),
                     Text = "Change",
                     VisuallyHiddenText = "home type"
                 }

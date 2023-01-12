@@ -8,21 +8,21 @@ using HerPublicWebsite.BusinessLogic.Services;
 namespace Tests.BusinessLogic.Services;
 
 [TestFixture]
-public class QuestionFlowServiceTests
+public class QuestionFlowServiceOldTests
 {
     [SetUp]
     public void Setup()
     {
-        QuestionFlowService = new QuestionFlowService();
+        questionFlowServiceOld = new QuestionFlowServiceOld();
     }
 
-    private IQuestionFlowService QuestionFlowService;
+    private IQuestionFlowServiceOld questionFlowServiceOld;
 
     [TestCaseSource(nameof(BackTestCases))]
     public void RunBackLinkTestCases(QuestionFlowServiceTestCase testCase)
     {
         // Act
-        var output = QuestionFlowService.PreviousStep(
+        var output = questionFlowServiceOld.PreviousStep(
             testCase.Input.Page,
             testCase.Input.PropertyData,
             testCase.Input.EntryPoint);
@@ -35,7 +35,7 @@ public class QuestionFlowServiceTests
     public void RunForwardLinkTestCases(QuestionFlowServiceTestCase testCase)
     {
         // Act
-        var output = QuestionFlowService.NextStep(
+        var output = questionFlowServiceOld.NextStep(
             testCase.Input.Page,
             testCase.Input.PropertyData,
             testCase.Input.EntryPoint);
@@ -48,7 +48,7 @@ public class QuestionFlowServiceTests
     public void RunSkipLinkTestCases(QuestionFlowServiceTestCase testCase)
     {
         // Act
-        var output = QuestionFlowService.SkipDestination(
+        var output = questionFlowServiceOld.SkipDestination(
             testCase.Input.Page,
             testCase.Input.PropertyData,
             testCase.Input.EntryPoint);
@@ -62,78 +62,78 @@ public class QuestionFlowServiceTests
         new(
             "A new or returning user goes back to the Index page",
             new Input(
-                QuestionFlowStep.NewOrReturningUser
+                QuestionFlowStepOld.NewOrReturningUser
             ),
-            QuestionFlowStep.Start),
+            QuestionFlowStepOld.Start),
         new(
             "Country goes back to new or returning user",
             new Input(
-                QuestionFlowStep.Country
+                QuestionFlowStepOld.Country
             ),
-            QuestionFlowStep.NewOrReturningUser),
+            QuestionFlowStepOld.NewOrReturningUser),
         new(
             "Ownership status goes back to Country",
             new Input(
-                QuestionFlowStep.OwnershipStatus,
+                QuestionFlowStepOld.OwnershipStatus,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.Country),
+            QuestionFlowStepOld.Country),
         new(
             "Service unsuitable goes back to the country you came from",
             new Input(
-                QuestionFlowStep.ServiceUnsuitable,
+                QuestionFlowStepOld.ServiceUnsuitable,
                 "ABCDEFGH",
                 country: Country.Other
             ),
-            QuestionFlowStep.Country),
+            QuestionFlowStepOld.Country),
         new(
             "Service unsuitable goes back to ownership status if user is a private tenant",
             new Input(
-                QuestionFlowStep.ServiceUnsuitable,
+                QuestionFlowStepOld.ServiceUnsuitable,
                 "ABCDEFGH",
                 country: Country.England,
                 ownershipStatus: OwnershipStatus.PrivateTenancy
             ),
-            QuestionFlowStep.OwnershipStatus),
+            QuestionFlowStepOld.OwnershipStatus),
         new(
             "Find EPC goes back to ownership status",
             new Input(
-                QuestionFlowStep.FindEpc,
+                QuestionFlowStepOld.FindEpc,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.OwnershipStatus),
+            QuestionFlowStepOld.OwnershipStatus),
         new(
             "Postcode goes back to find EPC",
             new Input(
-                QuestionFlowStep.AskForPostcode,
+                QuestionFlowStepOld.AskForPostcode,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.FindEpc),
+            QuestionFlowStepOld.FindEpc),
         new(
             "Confirm address goes back to postcode",
             new Input(
-                QuestionFlowStep.ConfirmAddress,
+                QuestionFlowStepOld.ConfirmAddress,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.AskForPostcode),
+            QuestionFlowStepOld.AskForPostcode),
         new(
             "Confirm EPC details goes back to ask for postcode",
             new Input(
-                QuestionFlowStep.ConfirmEpcDetails,
+                QuestionFlowStepOld.ConfirmEpcDetails,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.AskForPostcode),
+            QuestionFlowStepOld.AskForPostcode),
         new(
             "No EPC found goes back to postcode",
             new Input(
-                QuestionFlowStep.NoEpcFound,
+                QuestionFlowStepOld.NoEpcFound,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.AskForPostcode),
+            QuestionFlowStepOld.AskForPostcode),
         new(
             "Property type goes back to confirm EPC details if epc exists with property type and age",
             new Input(
-                QuestionFlowStep.PropertyType,
+                QuestionFlowStepOld.PropertyType,
                 "ABCDEFGH",
                 epc: new Epc
                 {
@@ -142,22 +142,22 @@ public class QuestionFlowServiceTests
                     ConstructionAgeBand = HomeAge.From1950To1966
                 }
             ),
-            QuestionFlowStep.ConfirmEpcDetails),
+            QuestionFlowStepOld.ConfirmEpcDetails),
         new(
             "Property type goes back to postcode if epc doesn't contain property type",
             new Input(
-                QuestionFlowStep.PropertyType,
+                QuestionFlowStepOld.PropertyType,
                 "ABCDEFGH",
                 epc: new Epc
                 {
                     ConstructionAgeBand = HomeAge.From1950To1966
                 }
             ),
-            QuestionFlowStep.AskForPostcode),
+            QuestionFlowStepOld.AskForPostcode),
         new(
             "Property type goes back to postcode if epc doesn't contain property age",
             new Input(
-                QuestionFlowStep.PropertyType,
+                QuestionFlowStepOld.PropertyType,
                 "ABCDEFGH",
                 epc: new Epc()
                 {
@@ -165,497 +165,497 @@ public class QuestionFlowServiceTests
                     HouseType = HouseType.Detached
                 }
             ),
-            QuestionFlowStep.AskForPostcode),
+            QuestionFlowStepOld.AskForPostcode),
         new(
             "Property type goes back to no EPC found if searched for EPC but no EPC set",
             new Input(
-                QuestionFlowStep.PropertyType,
+                QuestionFlowStepOld.PropertyType,
                 "ABCDEFGH",
                 epc: null,
                 searchForEpc: SearchForEpc.Yes
             ),
-            QuestionFlowStep.NoEpcFound),
+            QuestionFlowStepOld.NoEpcFound),
         new(
             "Property type goes back to find EPC if didn't search for EPC",
             new Input(
-                QuestionFlowStep.PropertyType,
+                QuestionFlowStepOld.PropertyType,
                 "ABCDEFGH",
                 searchForEpc: SearchForEpc.No
             ),
-            QuestionFlowStep.FindEpc),
+            QuestionFlowStepOld.FindEpc),
         new(
             "Changing property type goes back to check your unchangeable answers",
             new Input(
-                QuestionFlowStep.PropertyType,
+                QuestionFlowStepOld.PropertyType,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.PropertyType
+                entryPoint: QuestionFlowStepOld.PropertyType
             ),
-            QuestionFlowStep.CheckYourUnchangeableAnswers),
+            QuestionFlowStepOld.CheckYourUnchangeableAnswers),
         new(
             "House type goes back to property type",
             new Input(
-                QuestionFlowStep.HouseType,
+                QuestionFlowStepOld.HouseType,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.PropertyType),
+            QuestionFlowStepOld.PropertyType),
         new(
             "Bungalow type goes back to property type",
             new Input(
-                QuestionFlowStep.BungalowType,
+                QuestionFlowStepOld.BungalowType,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.PropertyType),
+            QuestionFlowStepOld.PropertyType),
         new(
             "Flat type goes back to property type",
             new Input(
-                QuestionFlowStep.FlatType,
+                QuestionFlowStepOld.FlatType,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.PropertyType),
+            QuestionFlowStepOld.PropertyType),
         new(
             "Home age goes back to the property type it came from (house)",
             new Input(
-                QuestionFlowStep.HomeAge,
+                QuestionFlowStepOld.HomeAge,
                 "ABCDEFGH",
                 propertyType: PropertyType.House
             ),
-            QuestionFlowStep.HouseType),
+            QuestionFlowStepOld.HouseType),
         new(
             "Home age goes back to the property type it came from (bungalow)",
             new Input(
-                QuestionFlowStep.HomeAge,
+                QuestionFlowStepOld.HomeAge,
                 "ABCDEFGH",
                 propertyType: PropertyType.Bungalow
             ),
-            QuestionFlowStep.BungalowType),
+            QuestionFlowStepOld.BungalowType),
         new(
             "Home age goes back to the property type it came from (flat)",
             new Input(
-                QuestionFlowStep.HomeAge,
+                QuestionFlowStepOld.HomeAge,
                 "ABCDEFGH",
                 propertyType: PropertyType.ApartmentFlatOrMaisonette
             ),
-            QuestionFlowStep.FlatType),
+            QuestionFlowStepOld.FlatType),
         new(
             "Changing home age goes back to check your unchangeable answers",
             new Input(
-                QuestionFlowStep.HomeAge,
+                QuestionFlowStepOld.HomeAge,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.HomeAge
+                entryPoint: QuestionFlowStepOld.HomeAge
             ),
-            QuestionFlowStep.CheckYourUnchangeableAnswers),
+            QuestionFlowStepOld.CheckYourUnchangeableAnswers),
         new(
             "Wall construction goes back to check your unchangeable answers if EPC details were not confirmed",
             new Input(
-                QuestionFlowStep.WallConstruction,
+                QuestionFlowStepOld.WallConstruction,
                 "ABCDEFGH",
                 epcDetailsConfirmed: EpcDetailsConfirmed.No
 
             ),
-            QuestionFlowStep.CheckYourUnchangeableAnswers),
+            QuestionFlowStepOld.CheckYourUnchangeableAnswers),
         new(
             "Wall construction goes back to confirm EPC details if EPC details were confirmed",
             new Input(
-                QuestionFlowStep.WallConstruction,
+                QuestionFlowStepOld.WallConstruction,
                 "ABCDEFGH",
                 epcDetailsConfirmed: EpcDetailsConfirmed.Yes
             ),
-            QuestionFlowStep.ConfirmEpcDetails),
+            QuestionFlowStepOld.ConfirmEpcDetails),
         new(
             "Changing wall construction goes back to summary",
             new Input(
-                QuestionFlowStep.WallConstruction,
+                QuestionFlowStepOld.WallConstruction,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.WallConstruction
+                entryPoint: QuestionFlowStepOld.WallConstruction
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Cavity walls insulated goes back to wall construction",
             new Input(
-                QuestionFlowStep.CavityWallsInsulated,
+                QuestionFlowStepOld.CavityWallsInsulated,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.WallConstruction),
+            QuestionFlowStepOld.WallConstruction),
         new(
             "Changing cavity walls insulated goes back to summary",
             new Input(
-                QuestionFlowStep.CavityWallsInsulated,
+                QuestionFlowStepOld.CavityWallsInsulated,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.CavityWallsInsulated
+                entryPoint: QuestionFlowStepOld.CavityWallsInsulated
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Solid walls insulated goes back to cavity walls insulated if user has mixed walls",
             new Input(
-                QuestionFlowStep.SolidWallsInsulated,
+                QuestionFlowStepOld.SolidWallsInsulated,
                 "ABCDEFGH",
                 wallConstruction: WallConstruction.Mixed
             ),
-            QuestionFlowStep.CavityWallsInsulated),
+            QuestionFlowStepOld.CavityWallsInsulated),
         new(
             "Solid walls insulated goes back to wall construction if user does not have mixed walls",
             new Input(
-                QuestionFlowStep.SolidWallsInsulated,
+                QuestionFlowStepOld.SolidWallsInsulated,
                 "ABCDEFGH",
                 wallConstruction: WallConstruction.Solid
             ),
-            QuestionFlowStep.WallConstruction),
+            QuestionFlowStepOld.WallConstruction),
         new(
             "Changing solid walls insulated goes back to summary",
             new Input(
-                QuestionFlowStep.SolidWallsInsulated,
+                QuestionFlowStepOld.SolidWallsInsulated,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.SolidWallsInsulated
+                entryPoint: QuestionFlowStepOld.SolidWallsInsulated
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Floor construction goes back to the wall insulation the user answered last (solid walls)",
             new Input(
-                QuestionFlowStep.FloorConstruction,
+                QuestionFlowStepOld.FloorConstruction,
                 "ABCDEFGH",
                 wallConstruction: WallConstruction.Solid
             ),
-            QuestionFlowStep.SolidWallsInsulated),
+            QuestionFlowStepOld.SolidWallsInsulated),
         new(
             "Floor construction goes back to the wall insulation the user answered last (cavity walls)",
             new Input(
-                QuestionFlowStep.FloorConstruction,
+                QuestionFlowStepOld.FloorConstruction,
                 "ABCDEFGH",
                 wallConstruction: WallConstruction.Cavity
             ),
-            QuestionFlowStep.CavityWallsInsulated),
+            QuestionFlowStepOld.CavityWallsInsulated),
         new(
             "Floor construction goes back to wall construction if user has neither cavity not solid walls",
             new Input(
-                QuestionFlowStep.FloorConstruction,
+                QuestionFlowStepOld.FloorConstruction,
                 "ABCDEFGH",
                 wallConstruction: WallConstruction.Other
             ),
-            QuestionFlowStep.WallConstruction),
+            QuestionFlowStepOld.WallConstruction),
         new(
             "Changing floor construction goes back to summary",
             new Input(
-                QuestionFlowStep.FloorConstruction,
+                QuestionFlowStepOld.FloorConstruction,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.FloorConstruction
+                entryPoint: QuestionFlowStepOld.FloorConstruction
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Floor insulated goes back to floor construction",
             new Input(
-                QuestionFlowStep.FloorInsulated,
+                QuestionFlowStepOld.FloorInsulated,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.FloorConstruction),
+            QuestionFlowStepOld.FloorConstruction),
         new(
             "Changing floor insulated goes back to summary",
             new Input(
-                QuestionFlowStep.FloorInsulated,
+                QuestionFlowStepOld.FloorInsulated,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.FloorInsulated
+                entryPoint: QuestionFlowStepOld.FloorInsulated
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Roof construction goes back to floor insulation if the user has timber or concrete floors",
             new Input(
-                QuestionFlowStep.RoofConstruction,
+                QuestionFlowStepOld.RoofConstruction,
                 propertyType: PropertyType.House,
                 floorConstruction: FloorConstruction.SuspendedTimber,
                 reference: "ABCDEFGH"
             ),
-            QuestionFlowStep.FloorInsulated),
+            QuestionFlowStepOld.FloorInsulated),
         new(
             "Roof construction goes back to floor construction if the user has different floors",
             new Input(
-                QuestionFlowStep.RoofConstruction,
+                QuestionFlowStepOld.RoofConstruction,
                 propertyType: PropertyType.House,
                 floorConstruction: FloorConstruction.Other,
                 reference: "ABCDEFGH"
             ),
-            QuestionFlowStep.FloorConstruction),
+            QuestionFlowStepOld.FloorConstruction),
         new(
             "Roof construction goes back to wall insulation if user was not asked about their floor but has insulated walls",
             new Input(
-                QuestionFlowStep.RoofConstruction,
+                QuestionFlowStepOld.RoofConstruction,
                 propertyType: PropertyType.ApartmentFlatOrMaisonette,
                 flatType: FlatType.TopFloor,
                 wallConstruction: WallConstruction.Solid,
                 reference: "ABCDEFGH"
             ),
-            QuestionFlowStep.SolidWallsInsulated),
+            QuestionFlowStepOld.SolidWallsInsulated),
         new(
             "Roof construction goes back to wall construction if user was not asked about their floor and has other walls",
             new Input(
-                QuestionFlowStep.RoofConstruction,
+                QuestionFlowStepOld.RoofConstruction,
                 propertyType: PropertyType.ApartmentFlatOrMaisonette,
                 flatType: FlatType.TopFloor,
                 wallConstruction: WallConstruction.DoNotKnow,
                 reference: "ABCDEFGH"
             ),
-            QuestionFlowStep.WallConstruction),
+            QuestionFlowStepOld.WallConstruction),
         new(
             "Changing roof construction goes back to summary",
             new Input(
-                QuestionFlowStep.RoofConstruction,
+                QuestionFlowStepOld.RoofConstruction,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.RoofConstruction
+                entryPoint: QuestionFlowStepOld.RoofConstruction
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Loft space goes back to roof construction",
             new Input(
-                QuestionFlowStep.LoftSpace,
+                QuestionFlowStepOld.LoftSpace,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.RoofConstruction),
+            QuestionFlowStepOld.RoofConstruction),
         new(
             "Changing loft space goes back to summary",
             new Input(
-                QuestionFlowStep.LoftSpace,
+                QuestionFlowStepOld.LoftSpace,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.LoftSpace
+                entryPoint: QuestionFlowStepOld.LoftSpace
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Loft access goes back to loft space",
             new Input(
-                QuestionFlowStep.LoftAccess,
+                QuestionFlowStepOld.LoftAccess,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.LoftSpace),
+            QuestionFlowStepOld.LoftSpace),
         new(
             "Changing loft access goes back to summary",
             new Input(
-                QuestionFlowStep.LoftAccess,
+                QuestionFlowStepOld.LoftAccess,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.LoftAccess
+                entryPoint: QuestionFlowStepOld.LoftAccess
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Roof insulated goes back to loft access",
             new Input(
-                QuestionFlowStep.RoofInsulated,
+                QuestionFlowStepOld.RoofInsulated,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.LoftAccess),
+            QuestionFlowStepOld.LoftAccess),
         new(
             "Changing roof insulated goes back to summary",
             new Input(
-                QuestionFlowStep.RoofInsulated,
+                QuestionFlowStepOld.RoofInsulated,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.RoofInsulated
+                entryPoint: QuestionFlowStepOld.RoofInsulated
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Glazing type goes back to roof construction if the user has flat roof",
             new Input(
-                QuestionFlowStep.GlazingType,
+                QuestionFlowStepOld.GlazingType,
                 "ABCDEFGH",
                 propertyType: PropertyType.House,
                 roofConstruction: RoofConstruction.Flat
             ),
-            QuestionFlowStep.RoofConstruction),
+            QuestionFlowStepOld.RoofConstruction),
         new(
             "Glazing type goes back to loft space if the user does not have flat roof nor loft space",
             new Input(
-                QuestionFlowStep.GlazingType,
+                QuestionFlowStepOld.GlazingType,
                 "ABCDEFGH",
                 propertyType: PropertyType.House,
                 roofConstruction: RoofConstruction.Pitched,
                 loftSpace: LoftSpace.No
             ),
-            QuestionFlowStep.LoftSpace),
+            QuestionFlowStepOld.LoftSpace),
         new(
             "Glazing type goes back to loft access if the user does not have flat roof and has inaccessible loft space",
             new Input(
-                QuestionFlowStep.GlazingType,
+                QuestionFlowStepOld.GlazingType,
                 "ABCDEFGH",
                 propertyType: PropertyType.House,
                 roofConstruction: RoofConstruction.Pitched,
                 loftSpace: LoftSpace.Yes,
                 accessibleLoft: LoftAccess.No
             ),
-            QuestionFlowStep.LoftAccess),
+            QuestionFlowStepOld.LoftAccess),
         new(
             "Glazing type goes back to roof insulation if the user does not have flat roof but has accessible loft space",
             new Input(
-                QuestionFlowStep.GlazingType,
+                QuestionFlowStepOld.GlazingType,
                 "ABCDEFGH",
                 propertyType: PropertyType.House,
                 roofConstruction: RoofConstruction.Pitched,
                 loftSpace: LoftSpace.Yes,
                 accessibleLoft: LoftAccess.Yes
             ),
-            QuestionFlowStep.RoofInsulated),
+            QuestionFlowStepOld.RoofInsulated),
         new(
             "Glazing type goes back to floor construction if the user was not asked about their roof",
             new Input(
-                QuestionFlowStep.GlazingType,
+                QuestionFlowStepOld.GlazingType,
                 propertyType: PropertyType.ApartmentFlatOrMaisonette,
                 flatType: FlatType.GroundFloor,
                 reference: "ABCDEFGH"
             ),
-            QuestionFlowStep.FloorConstruction),
+            QuestionFlowStepOld.FloorConstruction),
         new(
             "Glazing type goes back to wall construction if the user was not asked about neither their roof or floor",
             new Input(
-                QuestionFlowStep.GlazingType,
+                QuestionFlowStepOld.GlazingType,
                 propertyType: PropertyType.ApartmentFlatOrMaisonette,
                 flatType: FlatType.MiddleFloor,
                 reference: "ABCDEFGH"
             ),
-            QuestionFlowStep.WallConstruction),
+            QuestionFlowStepOld.WallConstruction),
         new(
             "Changing glazing type goes back to summary",
             new Input(
-                QuestionFlowStep.GlazingType,
+                QuestionFlowStepOld.GlazingType,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.GlazingType
+                entryPoint: QuestionFlowStepOld.GlazingType
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Outdoor space goes back to glazing type",
             new Input(
-                QuestionFlowStep.OutdoorSpace,
+                QuestionFlowStepOld.OutdoorSpace,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.GlazingType),
+            QuestionFlowStepOld.GlazingType),
         new(
             "Changing outdoor space goes back to summary",
             new Input(
-                QuestionFlowStep.OutdoorSpace,
+                QuestionFlowStepOld.OutdoorSpace,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.OutdoorSpace
+                entryPoint: QuestionFlowStepOld.OutdoorSpace
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Heating type goes back to outdoor space",
             new Input(
-                QuestionFlowStep.HeatingType,
+                QuestionFlowStepOld.HeatingType,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.OutdoorSpace),
+            QuestionFlowStepOld.OutdoorSpace),
         new(
             "Changing heating type goes back to summary",
             new Input(
-                QuestionFlowStep.HeatingType,
+                QuestionFlowStepOld.HeatingType,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.HeatingType
+                entryPoint: QuestionFlowStepOld.HeatingType
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Other heating type goes back to outdoor space",
             new Input(
-                QuestionFlowStep.OtherHeatingType,
+                QuestionFlowStepOld.OtherHeatingType,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.HeatingType),
+            QuestionFlowStepOld.HeatingType),
         new(
             "Changing other heating type goes back to summary",
             new Input(
-                QuestionFlowStep.OtherHeatingType,
+                QuestionFlowStepOld.OtherHeatingType,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.OtherHeatingType
+                entryPoint: QuestionFlowStepOld.OtherHeatingType
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Hot water cylinder goes back to heating type",
             new Input(
-                QuestionFlowStep.HotWaterCylinder,
+                QuestionFlowStepOld.HotWaterCylinder,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.HeatingType),
+            QuestionFlowStepOld.HeatingType),
         new(
             "Changing hot water cylinder goes back to summary",
             new Input(
-                QuestionFlowStep.HotWaterCylinder,
+                QuestionFlowStepOld.HotWaterCylinder,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.HotWaterCylinder
+                entryPoint: QuestionFlowStepOld.HotWaterCylinder
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Number of occupants goes back to hot water cylinder if user has boiler",
             new Input(
-                QuestionFlowStep.NumberOfOccupants,
+                QuestionFlowStepOld.NumberOfOccupants,
                 "ABCDEFGH",
                 heatingType: HeatingType.GasBoiler
             ),
-            QuestionFlowStep.HotWaterCylinder),
+            QuestionFlowStepOld.HotWaterCylinder),
         new(
             "Number of occupants goes back to other heating type if the user selected so",
             new Input(
-                QuestionFlowStep.NumberOfOccupants,
+                QuestionFlowStepOld.NumberOfOccupants,
                 "ABCDEFGH",
                 heatingType: HeatingType.Other
             ),
-            QuestionFlowStep.OtherHeatingType),
+            QuestionFlowStepOld.OtherHeatingType),
         new(
             "Number of occupants goes back to heating type if the user does not have a boiler",
             new Input(
-                QuestionFlowStep.NumberOfOccupants,
+                QuestionFlowStepOld.NumberOfOccupants,
                 "ABCDEFGH",
                 heatingType: HeatingType.HeatPump
             ),
-            QuestionFlowStep.HeatingType),
+            QuestionFlowStepOld.HeatingType),
         new(
             "Changing number of occupants goes back to summary",
             new Input(
-                QuestionFlowStep.NumberOfOccupants,
+                QuestionFlowStepOld.NumberOfOccupants,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.NumberOfOccupants
+                entryPoint: QuestionFlowStepOld.NumberOfOccupants
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Heating pattern goes back to number of occupants",
             new Input(
-                QuestionFlowStep.HeatingPattern,
+                QuestionFlowStepOld.HeatingPattern,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.NumberOfOccupants),
+            QuestionFlowStepOld.NumberOfOccupants),
         new(
             "Changing heating pattern goes back to summary",
             new Input(
-                QuestionFlowStep.HeatingPattern,
+                QuestionFlowStepOld.HeatingPattern,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.HeatingPattern
+                entryPoint: QuestionFlowStepOld.HeatingPattern
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Temperature goes back to heating pattern",
             new Input(
-                QuestionFlowStep.Temperature,
+                QuestionFlowStepOld.Temperature,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.HeatingPattern),
+            QuestionFlowStepOld.HeatingPattern),
         new(
             "Changing temperature goes back to summary",
             new Input(
-                QuestionFlowStep.Temperature,
+                QuestionFlowStepOld.Temperature,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.Temperature
+                entryPoint: QuestionFlowStepOld.Temperature
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Answer summary goes back to temperature",
             new Input(
-                QuestionFlowStep.AnswerSummary,
+                QuestionFlowStepOld.AnswerSummary,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.Temperature),
+            QuestionFlowStepOld.Temperature),
         new(
             "No recommendations goes back to summary",
             new Input(
-                QuestionFlowStep.NoRecommendations,
+                QuestionFlowStepOld.NoRecommendations,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Your recommendations goes back to summary",
             new Input(
-                QuestionFlowStep.YourRecommendations,
+                QuestionFlowStepOld.YourRecommendations,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.AnswerSummary)
+            QuestionFlowStepOld.AnswerSummary)
     };
 
     private static QuestionFlowServiceTestCase[] ForwardTestCases =
@@ -663,70 +663,70 @@ public class QuestionFlowServiceTests
         new(
             "Country continues to service unsuitable if the service is not available",
             new Input(
-                QuestionFlowStep.Country,
+                QuestionFlowStepOld.Country,
                 "ABCDEFGH",
                 country: Country.Other
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStepOld.ServiceUnsuitable),
         new(
             "Country continues to ownership status",
             new Input(
-                QuestionFlowStep.Country,
+                QuestionFlowStepOld.Country,
                 "ABCDEFGH",
                 country: Country.England
             ),
-            QuestionFlowStep.OwnershipStatus),
+            QuestionFlowStepOld.OwnershipStatus),
         new(
             "Ownership status continues to service unsuitable if user is a private tenant",
             new Input(
-                QuestionFlowStep.OwnershipStatus,
+                QuestionFlowStepOld.OwnershipStatus,
                 "ABCDEFGH",
                 OwnershipStatus.PrivateTenancy
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStepOld.ServiceUnsuitable),
         new(
             "Ownership status continues to find EPC",
             new Input(
-                QuestionFlowStep.OwnershipStatus,
+                QuestionFlowStepOld.OwnershipStatus,
                 "ABCDEFGH",
                 OwnershipStatus.OwnerOccupancy
             ),
-            QuestionFlowStep.FindEpc),
+            QuestionFlowStepOld.FindEpc),
         new(
             "Find EPC continues to postcode if yes selected",
             new Input(
-                QuestionFlowStep.FindEpc,
+                QuestionFlowStepOld.FindEpc,
                 "ABCDEFGH",
                 searchForEpc: SearchForEpc.Yes
             ),
-            QuestionFlowStep.AskForPostcode),
+            QuestionFlowStepOld.AskForPostcode),
         new(
             "Find EPC continues to property type if no selected",
             new Input(
-                QuestionFlowStep.FindEpc,
+                QuestionFlowStepOld.FindEpc,
                 "ABCDEFGH",
                 searchForEpc: SearchForEpc.No
             ),
-            QuestionFlowStep.PropertyType),
+            QuestionFlowStepOld.PropertyType),
         new(
             "Postcode continues to confirm address",
             new Input(
-                QuestionFlowStep.AskForPostcode,
+                QuestionFlowStepOld.AskForPostcode,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.ConfirmAddress),
+            QuestionFlowStepOld.ConfirmAddress),
         new(
             "Confirm address continues to no EPC found if no EPC set",
             new Input(
-                QuestionFlowStep.ConfirmAddress,
+                QuestionFlowStepOld.ConfirmAddress,
                 "ABCDEFGH",
                 epc: null
             ),
-            QuestionFlowStep.NoEpcFound),
+            QuestionFlowStepOld.NoEpcFound),
         new(
             "Confirm address continues to confirm EPC details if EPC added contains property type and age",
             new Input(
-                QuestionFlowStep.ConfirmAddress,
+                QuestionFlowStepOld.ConfirmAddress,
                 "ABCDEFGH",
                 epc: new Epc
                 {
@@ -735,22 +735,22 @@ public class QuestionFlowServiceTests
                     ConstructionAgeBand = HomeAge.From1950To1966
                 }
             ),
-            QuestionFlowStep.ConfirmEpcDetails),
+            QuestionFlowStepOld.ConfirmEpcDetails),
         new(
             "Confirm address continues to property type if EPC exists but property type is missing",
             new Input(
-                QuestionFlowStep.ConfirmAddress,
+                QuestionFlowStepOld.ConfirmAddress,
                 "ABCDEFGH",
                 epc: new Epc
                 {
                     ConstructionAgeBand = HomeAge.From1950To1966
                 }
             ),
-            QuestionFlowStep.PropertyType),
+            QuestionFlowStepOld.PropertyType),
         new(
             "Confirm address continues to property type if EPC exists but age is missing",
             new Input(
-                QuestionFlowStep.ConfirmAddress,
+                QuestionFlowStepOld.ConfirmAddress,
                 "ABCDEFGH",
                 epc: new Epc()
                 {
@@ -758,559 +758,559 @@ public class QuestionFlowServiceTests
                     HouseType = HouseType.Detached
                 }
             ),
-            QuestionFlowStep.PropertyType),
+            QuestionFlowStepOld.PropertyType),
         new(
             "Confirm EPC details continues to wall construction if epc details confirmed",
             new Input(
-                QuestionFlowStep.ConfirmEpcDetails,
+                QuestionFlowStepOld.ConfirmEpcDetails,
                 "ABCDEFGH",
                 epcDetailsConfirmed: EpcDetailsConfirmed.Yes
             ),
-            QuestionFlowStep.WallConstruction),
+            QuestionFlowStepOld.WallConstruction),
         new(
             "Confirm EPC details continues to property type if epc details not confirmed",
             new Input(
-                QuestionFlowStep.ConfirmEpcDetails,
+                QuestionFlowStepOld.ConfirmEpcDetails,
                 "ABCDEFGH",
                 epcDetailsConfirmed: EpcDetailsConfirmed.No
             ),
-            QuestionFlowStep.PropertyType),
+            QuestionFlowStepOld.PropertyType),
         new(
             "No EPC found continues to property type",
             new Input(
-                QuestionFlowStep.NoEpcFound,
+                QuestionFlowStepOld.NoEpcFound,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.PropertyType),
+            QuestionFlowStepOld.PropertyType),
         new(
             "Property type continues to the relevant specific type of property (house)",
             new Input(
-                QuestionFlowStep.PropertyType,
+                QuestionFlowStepOld.PropertyType,
                 "ABCDEFGH",
                 propertyType: PropertyType.House
             ),
-            QuestionFlowStep.HouseType),
+            QuestionFlowStepOld.HouseType),
         new(
             "Property type continues to the relevant specific type of property (bungalow)",
             new Input(
-                QuestionFlowStep.PropertyType,
+                QuestionFlowStepOld.PropertyType,
                 "ABCDEFGH",
                 propertyType: PropertyType.Bungalow
             ),
-            QuestionFlowStep.BungalowType),
+            QuestionFlowStepOld.BungalowType),
         new(
             "Property type continues to the relevant specific type of property (flat)",
             new Input(
-                QuestionFlowStep.PropertyType,
+                QuestionFlowStepOld.PropertyType,
                 "ABCDEFGH",
                 propertyType: PropertyType.ApartmentFlatOrMaisonette
             ),
-            QuestionFlowStep.FlatType),
+            QuestionFlowStepOld.FlatType),
         new(
             "House type continues to home age",
             new Input(
-                QuestionFlowStep.HouseType,
+                QuestionFlowStepOld.HouseType,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.HomeAge),
+            QuestionFlowStepOld.HomeAge),
         new(
             "Changing house type continues to check your unchangeable answers",
             new Input(
-                QuestionFlowStep.HouseType,
+                QuestionFlowStepOld.HouseType,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.PropertyType
+                entryPoint: QuestionFlowStepOld.PropertyType
             ),
-            QuestionFlowStep.CheckYourUnchangeableAnswers),
+            QuestionFlowStepOld.CheckYourUnchangeableAnswers),
         new(
             "Bungalow type continues to home age",
             new Input(
-                QuestionFlowStep.BungalowType,
+                QuestionFlowStepOld.BungalowType,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.HomeAge),
+            QuestionFlowStepOld.HomeAge),
         new(
             "Changing bungalow type continues to check your unchangeable answers",
             new Input(
-                QuestionFlowStep.BungalowType,
+                QuestionFlowStepOld.BungalowType,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.PropertyType
+                entryPoint: QuestionFlowStepOld.PropertyType
             ),
-            QuestionFlowStep.CheckYourUnchangeableAnswers),
+            QuestionFlowStepOld.CheckYourUnchangeableAnswers),
         new(
             "Flat type continues to home age",
             new Input(
-                QuestionFlowStep.FlatType,
+                QuestionFlowStepOld.FlatType,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.HomeAge),
+            QuestionFlowStepOld.HomeAge),
         new(
             "Changing flat type continues to check your unchangeable answers",
             new Input(
-                QuestionFlowStep.FlatType,
+                QuestionFlowStepOld.FlatType,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.PropertyType
+                entryPoint: QuestionFlowStepOld.PropertyType
             ),
-            QuestionFlowStep.CheckYourUnchangeableAnswers),
+            QuestionFlowStepOld.CheckYourUnchangeableAnswers),
         new(
             "Home age continues to check your unchangeable answers",
             new Input(
-                QuestionFlowStep.HomeAge,
+                QuestionFlowStepOld.HomeAge,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.CheckYourUnchangeableAnswers),
+            QuestionFlowStepOld.CheckYourUnchangeableAnswers),
         new(
             "Changing home age continues to check your unchangeable answers",
             new Input(
-                QuestionFlowStep.HomeAge,
+                QuestionFlowStepOld.HomeAge,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.HomeAge
+                entryPoint: QuestionFlowStepOld.HomeAge
             ),
-            QuestionFlowStep.CheckYourUnchangeableAnswers),
+            QuestionFlowStepOld.CheckYourUnchangeableAnswers),
         new(
             "Check your unchangeable answers continues to wall consutruction",
             new Input(
-                QuestionFlowStep.CheckYourUnchangeableAnswers,
+                QuestionFlowStepOld.CheckYourUnchangeableAnswers,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.WallConstruction),
+            QuestionFlowStepOld.WallConstruction),
         new(
             "Wall construction continues to the respective type of wall insulation",
             new Input(
-                QuestionFlowStep.WallConstruction,
+                QuestionFlowStepOld.WallConstruction,
                 "ABCDEFGH",
                 wallConstruction: WallConstruction.Solid
             ),
-            QuestionFlowStep.SolidWallsInsulated),
+            QuestionFlowStepOld.SolidWallsInsulated),
         new(
             "Wall construction continues to floor construction if user's walls are not known and the user can answer floor questions",
             new Input(
-                QuestionFlowStep.WallConstruction,
+                QuestionFlowStepOld.WallConstruction,
                 "ABCDEFGH",
                 propertyType: PropertyType.House,
                 wallConstruction: WallConstruction.Other
             ),
-            QuestionFlowStep.FloorConstruction),
+            QuestionFlowStepOld.FloorConstruction),
         new(
             "Wall construction continues to roof construction if user's walls are not known, can not answer floor questions but can answer roof ones",
             new Input(
-                QuestionFlowStep.WallConstruction,
+                QuestionFlowStepOld.WallConstruction,
                 "ABCDEFGH",
                 propertyType: PropertyType.ApartmentFlatOrMaisonette,
                 flatType: FlatType.TopFloor,
                 wallConstruction: WallConstruction.Other
             ),
-            QuestionFlowStep.RoofConstruction),
+            QuestionFlowStepOld.RoofConstruction),
         new(
             "Wall construction continues to glazing type if user's walls are not known and can not answer neither floor questions nor roof ones",
             new Input(
-                QuestionFlowStep.WallConstruction,
+                QuestionFlowStepOld.WallConstruction,
                 "ABCDEFGH",
                 propertyType: PropertyType.ApartmentFlatOrMaisonette,
                 flatType: FlatType.MiddleFloor,
                 wallConstruction: WallConstruction.Other
             ),
-            QuestionFlowStep.GlazingType),
+            QuestionFlowStepOld.GlazingType),
         new(
             "Changing wall construction continues to summary if walls are not known",
             new Input(
-                QuestionFlowStep.WallConstruction,
+                QuestionFlowStepOld.WallConstruction,
                 "ABCDEFGH",
                 wallConstruction: WallConstruction.Other,
-                entryPoint: QuestionFlowStep.WallConstruction
+                entryPoint: QuestionFlowStepOld.WallConstruction
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Changing cavity walls insulated continues to summary",
             new Input(
-                QuestionFlowStep.CavityWallsInsulated,
+                QuestionFlowStepOld.CavityWallsInsulated,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.CavityWallsInsulated
+                entryPoint: QuestionFlowStepOld.CavityWallsInsulated
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Cavity walls insulated continue to solid walls insulated if user has mixed walls",
             new Input(
-                QuestionFlowStep.CavityWallsInsulated,
+                QuestionFlowStepOld.CavityWallsInsulated,
                 "ABCDEFGH",
                 wallConstruction: WallConstruction.Mixed
             ),
-            QuestionFlowStep.SolidWallsInsulated),
+            QuestionFlowStepOld.SolidWallsInsulated),
         new(
             "Cavity walls insulated continue to floor construction if user only does not have solid walls and can answer floor questions",
             new Input(
-                QuestionFlowStep.CavityWallsInsulated,
+                QuestionFlowStepOld.CavityWallsInsulated,
                 "ABCDEFGH",
                 propertyType: PropertyType.House,
                 wallConstruction: WallConstruction.Cavity
             ),
-            QuestionFlowStep.FloorConstruction),
+            QuestionFlowStepOld.FloorConstruction),
         new(
             "Cavity walls insulated continue to roof construction if user only does not have solid walls, can not answer floor questions but can answer roof questions",
             new Input(
-                QuestionFlowStep.CavityWallsInsulated,
+                QuestionFlowStepOld.CavityWallsInsulated,
                 "ABCDEFGH",
                 propertyType: PropertyType.ApartmentFlatOrMaisonette,
                 flatType: FlatType.TopFloor,
                 wallConstruction: WallConstruction.Cavity
             ),
-            QuestionFlowStep.RoofConstruction),
+            QuestionFlowStepOld.RoofConstruction),
         new(
             "Cavity walls insulated continue to glazing type if user only does not have solid walls and can not answer neither floor questions nor roof questions",
             new Input(
-                QuestionFlowStep.CavityWallsInsulated,
+                QuestionFlowStepOld.CavityWallsInsulated,
                 "ABCDEFGH",
                 propertyType: PropertyType.ApartmentFlatOrMaisonette,
                 flatType: FlatType.MiddleFloor,
                 wallConstruction: WallConstruction.Cavity
             ),
-            QuestionFlowStep.GlazingType),
+            QuestionFlowStepOld.GlazingType),
         new(
             "Changing solid walls insulated continues to summary",
             new Input(
-                QuestionFlowStep.SolidWallsInsulated,
+                QuestionFlowStepOld.SolidWallsInsulated,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.SolidWallsInsulated
+                entryPoint: QuestionFlowStepOld.SolidWallsInsulated
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Solid walls insulated continue to floor construction if user can answer floor questions",
             new Input(
-                QuestionFlowStep.SolidWallsInsulated,
+                QuestionFlowStepOld.SolidWallsInsulated,
                 "ABCDEFGH",
                 propertyType: PropertyType.House
             ),
-            QuestionFlowStep.FloorConstruction),
+            QuestionFlowStepOld.FloorConstruction),
         new(
             "Solid walls insulated continue to roof construction if user can not answer floor questions but can answer roof ones",
             new Input(
-                QuestionFlowStep.SolidWallsInsulated,
+                QuestionFlowStepOld.SolidWallsInsulated,
                 "ABCDEFGH",
                 propertyType: PropertyType.ApartmentFlatOrMaisonette,
                 flatType: FlatType.TopFloor
             ),
-            QuestionFlowStep.RoofConstruction),
+            QuestionFlowStepOld.RoofConstruction),
         new(
             "Solid walls insulated continue to glazing type if user can not answer neither floor questions nor roof ones",
             new Input(
-                QuestionFlowStep.SolidWallsInsulated,
+                QuestionFlowStepOld.SolidWallsInsulated,
                 "ABCDEFGH",
                 propertyType: PropertyType.ApartmentFlatOrMaisonette,
                 flatType: FlatType.MiddleFloor
             ),
-            QuestionFlowStep.GlazingType),
+            QuestionFlowStepOld.GlazingType),
         new(
             "Floor construction continues to floor insulated if the floors are known",
             new Input(
-                QuestionFlowStep.FloorConstruction,
+                QuestionFlowStepOld.FloorConstruction,
                 "ABCDEFGH",
                 floorConstruction: FloorConstruction.Mix
             ),
-            QuestionFlowStep.FloorInsulated),
+            QuestionFlowStepOld.FloorInsulated),
         new(
             "Changing floor construction continues to summary if floor are not known",
             new Input(
-                QuestionFlowStep.FloorConstruction,
+                QuestionFlowStepOld.FloorConstruction,
                 "ABCDEFGH",
                 floorConstruction: FloorConstruction.Other,
-                entryPoint: QuestionFlowStep.FloorConstruction
+                entryPoint: QuestionFlowStepOld.FloorConstruction
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Floor construction continues to roof construction if floors are unknown and the user can answer roof questions",
             new Input(
-                QuestionFlowStep.FloorConstruction,
+                QuestionFlowStepOld.FloorConstruction,
                 "ABCDEFGH",
                 propertyType: PropertyType.House,
                 floorConstruction: FloorConstruction.Other
             ),
-            QuestionFlowStep.RoofConstruction),
+            QuestionFlowStepOld.RoofConstruction),
         new(
             "Floor construction continues to glazing type if floor are unknown and the user can not answer roof questions",
             new Input(
-                QuestionFlowStep.FloorConstruction,
+                QuestionFlowStepOld.FloorConstruction,
                 "ABCDEFGH",
                 propertyType: PropertyType.ApartmentFlatOrMaisonette,
                 flatType: FlatType.MiddleFloor,
                 floorConstruction: FloorConstruction.Other
             ),
-            QuestionFlowStep.GlazingType),
+            QuestionFlowStepOld.GlazingType),
         new(
             "Changing floor insulated continues to summary",
             new Input(
-                QuestionFlowStep.FloorInsulated,
+                QuestionFlowStepOld.FloorInsulated,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.FloorInsulated
+                entryPoint: QuestionFlowStepOld.FloorInsulated
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Floor insulated continues to roof construction if user can answer roof questions",
             new Input(
-                QuestionFlowStep.FloorInsulated,
+                QuestionFlowStepOld.FloorInsulated,
                 "ABCDEFGH",
                 propertyType: PropertyType.House
             ),
-            QuestionFlowStep.RoofConstruction),
+            QuestionFlowStepOld.RoofConstruction),
         new(
             "Floor insulated continues to glazing type if user can not answer roof questions",
             new Input(
-                QuestionFlowStep.FloorInsulated,
+                QuestionFlowStepOld.FloorInsulated,
                 "ABCDEFGH",
                 propertyType: PropertyType.ApartmentFlatOrMaisonette,
                 flatType: FlatType.MiddleFloor
             ),
-            QuestionFlowStep.GlazingType),
+            QuestionFlowStepOld.GlazingType),
         new(
             "Roof construction continues to loft space if roof is pitched",
             new Input(
-                QuestionFlowStep.RoofConstruction,
+                QuestionFlowStepOld.RoofConstruction,
                 "ABCDEFGH",
                 roofConstruction: RoofConstruction.Pitched
             ),
-            QuestionFlowStep.LoftSpace),
+            QuestionFlowStepOld.LoftSpace),
         new(
             "Roof construction continues to loft space if roof is mixed",
             new Input(
-                QuestionFlowStep.RoofConstruction,
+                QuestionFlowStepOld.RoofConstruction,
                 "ABCDEFGH",
                 roofConstruction: RoofConstruction.Mixed
             ),
-            QuestionFlowStep.LoftSpace),
+            QuestionFlowStepOld.LoftSpace),
         new(
             "Changing roof construction continues to summary if roof is not pitched",
             new Input(
-                QuestionFlowStep.RoofConstruction,
+                QuestionFlowStepOld.RoofConstruction,
                 "ABCDEFGH",
                 roofConstruction: RoofConstruction.Flat,
-                entryPoint: QuestionFlowStep.RoofConstruction
+                entryPoint: QuestionFlowStepOld.RoofConstruction
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Roof construction continues to glazing type space if roof is not pitched",
             new Input(
-                QuestionFlowStep.RoofConstruction,
+                QuestionFlowStepOld.RoofConstruction,
                 "ABCDEFGH",
                 roofConstruction: RoofConstruction.Flat
             ),
-            QuestionFlowStep.GlazingType),
+            QuestionFlowStepOld.GlazingType),
         new(
             "Loft space continues to loft access if user has it",
             new Input(
-                QuestionFlowStep.LoftSpace,
+                QuestionFlowStepOld.LoftSpace,
                 "ABCDEFGH",
                 loftSpace: LoftSpace.Yes
             ),
-            QuestionFlowStep.LoftAccess),
+            QuestionFlowStepOld.LoftAccess),
         new(
             "Changing loft space continues to answer summary if user does not have loft space",
             new Input(
-                QuestionFlowStep.LoftSpace,
+                QuestionFlowStepOld.LoftSpace,
                 "ABCDEFGH",
                 loftSpace: LoftSpace.No,
-                entryPoint: QuestionFlowStep.LoftSpace
+                entryPoint: QuestionFlowStepOld.LoftSpace
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Loft space continues to glazing type if user does not have it",
             new Input(
-                QuestionFlowStep.LoftSpace,
+                QuestionFlowStepOld.LoftSpace,
                 "ABCDEFGH",
                 loftSpace: LoftSpace.No
             ),
-            QuestionFlowStep.GlazingType),
+            QuestionFlowStepOld.GlazingType),
         new(
             "Loft access continues to roof insulation if user has it",
             new Input(
-                QuestionFlowStep.LoftAccess,
+                QuestionFlowStepOld.LoftAccess,
                 "ABCDEFGH",
                 accessibleLoft: LoftAccess.Yes
             ),
-            QuestionFlowStep.RoofInsulated),
+            QuestionFlowStepOld.RoofInsulated),
         new(
             "Changing loft access continues to roof insulation if user has it",
             new Input(
-                QuestionFlowStep.LoftAccess,
+                QuestionFlowStepOld.LoftAccess,
                 "ABCDEFGH",
                 accessibleLoft: LoftAccess.Yes,
-                entryPoint: QuestionFlowStep.LoftAccess
+                entryPoint: QuestionFlowStepOld.LoftAccess
             ),
-            QuestionFlowStep.RoofInsulated),
+            QuestionFlowStepOld.RoofInsulated),
         new(
             "Changing loft access continues to answer summary if user does not have it",
             new Input(
-                QuestionFlowStep.LoftAccess,
+                QuestionFlowStepOld.LoftAccess,
                 "ABCDEFGH",
                 accessibleLoft: LoftAccess.No,
-                entryPoint: QuestionFlowStep.LoftAccess
+                entryPoint: QuestionFlowStepOld.LoftAccess
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Loft access continues to glazing type if user does not have it",
             new Input(
-                QuestionFlowStep.LoftAccess,
+                QuestionFlowStepOld.LoftAccess,
                 "ABCDEFGH",
                 loftSpace: LoftSpace.No
             ),
-            QuestionFlowStep.GlazingType),
+            QuestionFlowStepOld.GlazingType),
         new(
             "Roof insulated continues to glazing type",
             new Input(
-                QuestionFlowStep.RoofInsulated,
+                QuestionFlowStepOld.RoofInsulated,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.GlazingType),
+            QuestionFlowStepOld.GlazingType),
         new(
             "Changing roof insulated continues to summary",
             new Input(
-                QuestionFlowStep.RoofInsulated,
+                QuestionFlowStepOld.RoofInsulated,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.RoofInsulated
+                entryPoint: QuestionFlowStepOld.RoofInsulated
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Glazing type continues to outdoor space",
             new Input(
-                QuestionFlowStep.GlazingType,
+                QuestionFlowStepOld.GlazingType,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.OutdoorSpace),
+            QuestionFlowStepOld.OutdoorSpace),
         new(
             "Changing glazing type continues to summary",
             new Input(
-                QuestionFlowStep.GlazingType,
+                QuestionFlowStepOld.GlazingType,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.GlazingType
+                entryPoint: QuestionFlowStepOld.GlazingType
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Outdoor space continues to heating type",
             new Input(
-                QuestionFlowStep.OutdoorSpace,
+                QuestionFlowStepOld.OutdoorSpace,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.HeatingType),
+            QuestionFlowStepOld.HeatingType),
         new(
             "Changing outdoor space continues to summary",
             new Input(
-                QuestionFlowStep.OutdoorSpace,
+                QuestionFlowStepOld.OutdoorSpace,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.OutdoorSpace
+                entryPoint: QuestionFlowStepOld.OutdoorSpace
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Heating type continues to other heating type in that scenario",
             new Input(
-                QuestionFlowStep.HeatingType,
+                QuestionFlowStepOld.HeatingType,
                 "ABCDEFGH",
                 heatingType: HeatingType.Other
             ),
-            QuestionFlowStep.OtherHeatingType),
+            QuestionFlowStepOld.OtherHeatingType),
         new(
             "Heating type continues to hot water cylinder if user has a boiler",
             new Input(
-                QuestionFlowStep.HeatingType,
+                QuestionFlowStepOld.HeatingType,
                 "ABCDEFGH",
                 heatingType: HeatingType.GasBoiler
             ),
-            QuestionFlowStep.HotWaterCylinder),
+            QuestionFlowStepOld.HotWaterCylinder),
         new(
             "Changing heating type continues to summary if user doesn't have a boiler or other heating type",
             new Input(
-                QuestionFlowStep.HeatingType,
+                QuestionFlowStepOld.HeatingType,
                 "ABCDEFGH",
                 heatingType: HeatingType.HeatPump,
-                entryPoint: QuestionFlowStep.HeatingType
+                entryPoint: QuestionFlowStepOld.HeatingType
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Heating type continues to number of occupants if user doesn't have a boiler or other heating",
             new Input(
-                QuestionFlowStep.HeatingType,
+                QuestionFlowStepOld.HeatingType,
                 "ABCDEFGH",
                 heatingType: HeatingType.HeatPump
             ),
-            QuestionFlowStep.NumberOfOccupants),
+            QuestionFlowStepOld.NumberOfOccupants),
         new(
             "Other heating type continues to number of occupants",
             new Input(
-                QuestionFlowStep.OtherHeatingType,
+                QuestionFlowStepOld.OtherHeatingType,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.NumberOfOccupants),
+            QuestionFlowStepOld.NumberOfOccupants),
         new(
             "Changing other heating type continues to summary",
             new Input(
-                QuestionFlowStep.OtherHeatingType,
+                QuestionFlowStepOld.OtherHeatingType,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.OtherHeatingType
+                entryPoint: QuestionFlowStepOld.OtherHeatingType
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Hot water cylinder continues to number of occupants",
             new Input(
-                QuestionFlowStep.HotWaterCylinder,
+                QuestionFlowStepOld.HotWaterCylinder,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.NumberOfOccupants),
+            QuestionFlowStepOld.NumberOfOccupants),
         new(
             "Changing hot water cylinder continues to summary",
             new Input(
-                QuestionFlowStep.HotWaterCylinder,
+                QuestionFlowStepOld.HotWaterCylinder,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.HotWaterCylinder
+                entryPoint: QuestionFlowStepOld.HotWaterCylinder
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Number of occupants continues to heating pattern",
             new Input(
-                QuestionFlowStep.NumberOfOccupants,
+                QuestionFlowStepOld.NumberOfOccupants,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.HeatingPattern),
+            QuestionFlowStepOld.HeatingPattern),
         new(
             "Changing number of occupants continues to summary",
             new Input(
-                QuestionFlowStep.NumberOfOccupants,
+                QuestionFlowStepOld.NumberOfOccupants,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.NumberOfOccupants
+                entryPoint: QuestionFlowStepOld.NumberOfOccupants
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Heating pattern continues to temperature",
             new Input(
-                QuestionFlowStep.HeatingPattern,
+                QuestionFlowStepOld.HeatingPattern,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.Temperature),
+            QuestionFlowStepOld.Temperature),
         new(
             "Changing heating pattern continues to summary",
             new Input(
-                QuestionFlowStep.HeatingPattern,
+                QuestionFlowStepOld.HeatingPattern,
                 "ABCDEFGH",
-                entryPoint: QuestionFlowStep.HeatingPattern
+                entryPoint: QuestionFlowStepOld.HeatingPattern
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Temperature continues to summary",
             new Input(
-                QuestionFlowStep.Temperature,
+                QuestionFlowStepOld.Temperature,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.AnswerSummary),
+            QuestionFlowStepOld.AnswerSummary),
         new(
             "Answer summary continues to your recommendations if user has at least one",
             new Input(
-                QuestionFlowStep.AnswerSummary,
+                QuestionFlowStepOld.AnswerSummary,
                 "ABCDEFGH",
                 propertyRecommendations: new List<PropertyRecommendation> {new()}
             ),
-            QuestionFlowStep.YourRecommendations),
+            QuestionFlowStepOld.YourRecommendations),
         new(
             "Answer summary continues to no recommendations if user has none",
             new Input(
-                QuestionFlowStep.AnswerSummary,
+                QuestionFlowStepOld.AnswerSummary,
                 "ABCDEFGH",
                 propertyRecommendations: new List<PropertyRecommendation>()),
-            QuestionFlowStep.NoRecommendations)
+            QuestionFlowStepOld.NoRecommendations)
     };
 
     private static QuestionFlowServiceTestCase[] SkipTestCases =
@@ -1318,22 +1318,22 @@ public class QuestionFlowServiceTests
         new(
             "Postcode skips to property type",
             new Input(
-                QuestionFlowStep.AskForPostcode,
+                QuestionFlowStepOld.AskForPostcode,
                 "ABCDEFGH"
             ),
-            QuestionFlowStep.PropertyType)
+            QuestionFlowStepOld.PropertyType)
     };
 
     public class QuestionFlowServiceTestCase
     {
         public readonly string Description;
-        public readonly QuestionFlowStep ExpectedOutput;
+        public readonly QuestionFlowStepOld ExpectedOutput;
         public readonly Input Input;
 
         public QuestionFlowServiceTestCase(
             string description,
             Input input,
-            QuestionFlowStep expectedOutput
+            QuestionFlowStepOld expectedOutput
         )
         {
             Description = description;
@@ -1349,12 +1349,12 @@ public class QuestionFlowServiceTests
 
     public class Input
     {
-        public readonly QuestionFlowStep Page;
+        public readonly QuestionFlowStepOld Page;
         public readonly PropertyData PropertyData;
-        public QuestionFlowStep? EntryPoint;
+        public QuestionFlowStepOld? EntryPoint;
 
         public Input(
-            QuestionFlowStep page,
+            QuestionFlowStepOld page,
             string reference = null,
             OwnershipStatus? ownershipStatus = null,
             Country? country = null,
@@ -1385,7 +1385,7 @@ public class QuestionFlowServiceTests
             int? hoursOfHeatingMorning = null,
             int? hoursOfHeatingEvening = null,
             decimal? temperature = null,
-            QuestionFlowStep? entryPoint = null,
+            QuestionFlowStepOld? entryPoint = null,
             List<PropertyRecommendation> propertyRecommendations = null)
         {
             Page = page;
