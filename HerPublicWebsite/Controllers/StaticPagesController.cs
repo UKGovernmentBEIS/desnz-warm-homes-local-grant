@@ -4,6 +4,12 @@ namespace HerPublicWebsite.Controllers;
 
 public class StaticPagesController : Controller
 {
+    [HttpGet("/")]
+    public IActionResult Index()
+    {
+        return View("Index");
+    }
+    
     [HttpGet("/accessibility-statement")]
     public IActionResult AccessibilityStatement()
     {

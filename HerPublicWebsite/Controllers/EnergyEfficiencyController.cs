@@ -49,7 +49,7 @@ namespace HerPublicWebsite.Controllers
         [HttpGet("")]
         public IActionResult Index()
         {
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
         }
         
         
