@@ -2,5 +2,8 @@
 
 public enum QuestionFlowStep
 {
-    
+    Start,
+    Country,
+    ServiceUnsuitable,
+    OwnershipStatus
 }

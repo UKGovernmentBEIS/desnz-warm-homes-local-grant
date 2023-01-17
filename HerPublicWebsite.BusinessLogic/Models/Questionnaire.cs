@@ -5,6 +5,9 @@ namespace HerPublicWebsite.BusinessLogic.Models;
 public class Questionnaire
 {
     public int QuestionnaireId { get; set; }
+
+    public Country? Country { get; set; }
+    public OwnershipStatus? OwnershipStatus { get; set; }
     
     public string AddressLine1 { get; set; }
     public string AddressLine2 { get; set; }
