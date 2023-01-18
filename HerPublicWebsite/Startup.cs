@@ -1,3 +1,5 @@
+using System;
+using System.Text.Json.Serialization;
 using GovUkDesignSystem.ModelBinders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -66,6 +68,18 @@ namespace HerPublicWebsite
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 options.ModelMetadataDetailsProviders.Add(new GovUkDataBindingErrorTextProvider());
             });
+
+            // TODO: Replace this with a database based cache
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            services.AddHttpContextAccessor();
         }
 
         private void ConfigureGoogleAnalyticsService(IServiceCollection services)
@@ -134,6 +148,8 @@ namespace HerPublicWebsite
             ConfigureHttpBasicAuth(app);
 
             app.UseMiddleware<SecurityHeadersMiddleware>();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
