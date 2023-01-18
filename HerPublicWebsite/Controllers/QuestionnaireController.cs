@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services;
@@ -17,20 +16,17 @@ namespace HerPublicWebsite.Controllers;
 public class QuestionnaireController : Controller
 {
     private readonly IQuestionFlowService questionFlowService;
-    private readonly IEpcApi epcApi;
     private readonly CookieService cookieService;
     private readonly GoogleAnalyticsService googleAnalyticsService;
     private readonly QuestionnaireService questionnaireService;
 
     public QuestionnaireController(
         IQuestionFlowService questionFlowService, 
-        IEpcApi epcApi,
         CookieService cookieService,
         GoogleAnalyticsService googleAnalyticsService,
         QuestionnaireService questionnaireService)
     {
         this.questionFlowService = questionFlowService;
-        this.epcApi = epcApi;
         this.cookieService = cookieService;
         this.googleAnalyticsService = googleAnalyticsService;
         this.questionnaireService = questionnaireService;

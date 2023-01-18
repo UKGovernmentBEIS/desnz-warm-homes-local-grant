@@ -1,5 +1,4 @@
 using System;
-using System.Text.Json.Serialization;
 using GovUkDesignSystem.ModelBinders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -13,7 +12,6 @@ using HerPublicWebsite.BusinessLogic;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using HerPublicWebsite.BusinessLogic.Services;
 using HerPublicWebsite.Data;
-using HerPublicWebsite.DataStores;
 using HerPublicWebsite.ErrorHandling;
 using HerPublicWebsite.ExternalServices.EmailSending;
 using HerPublicWebsite.ExternalServices.GoogleAnalytics;
@@ -41,10 +39,6 @@ namespace HerPublicWebsite
             services.AddScoped<QuestionnaireUpdater>();
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
             
-            services.AddScoped<AnswerService>();
-            services.AddScoped<PropertyDataStore>();
-            services.AddScoped<PropertyDataUpdater>();
-            services.AddScoped<IQuestionFlowServiceOld, QuestionFlowServiceOld>();
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();
             // This allows encrypted cookies to be understood across multiple web server instances
