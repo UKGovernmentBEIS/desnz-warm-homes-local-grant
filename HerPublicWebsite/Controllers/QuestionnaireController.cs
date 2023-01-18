@@ -87,13 +87,34 @@ public class QuestionnaireController : Controller
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         
-        // TODO: Return the correct page
-        var viewModel = new ServiceUnsuitableViewModel
+        var viewModel = new OwnershipStatusViewModel()
         {
-            BackLink = GetBackUrl(QuestionFlowStep.ServiceUnsuitable, questionnaire)
+            OwnershipStatus = questionnaire.OwnershipStatus,
+            BackLink = GetBackUrl(QuestionFlowStep.OwnershipStatus, questionnaire)
         };
+
+        return View("OwnershipStatus", viewModel);
+    }
+    
+    [HttpPost("ownership-status/")]
+    public IActionResult OwnershipStatus_Post(OwnershipStatusViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return Country_Get();
+        }
             
-        return View("ServiceUnsuitable", viewModel);
+        var questionnaire = questionnaireService.UpdateOwnershipStatus(viewModel.OwnershipStatus!.Value);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.OwnershipStatus, questionnaire);
+        
+        return RedirectToNextStep(nextStep);
+    }
+    
+    [HttpGet("address/")]
+    public IActionResult Address_Get()
+    {
+        // TODO: Return the correct page
+        return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
 
     private string GetBackUrl(
@@ -123,6 +144,7 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.Country => new PathByActionArguments(nameof(Country_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.ServiceUnsuitable => new PathByActionArguments(nameof(ServiceUnsuitable_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.OwnershipStatus => new PathByActionArguments(nameof(OwnershipStatus_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.Address => new PathByActionArguments(nameof(Address_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

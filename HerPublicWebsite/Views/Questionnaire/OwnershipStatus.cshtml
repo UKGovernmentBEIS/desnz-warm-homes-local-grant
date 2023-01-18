@@ -1,0 +1,55 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using HerPublicWebsite.BusinessLogic.Models.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using HerPublicWebsite.Controllers
+
+@model HerPublicWebsite.Models.Questionnaire.OwnershipStatusViewModel
+@{
+    ViewBag.Title = "Ownership status";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <form action="@Url.Action(nameof(QuestionnaireController.OwnershipStatus_Post), "Questionnaire")" method="post" novalidate>  
+            @Html.AntiForgeryToken()
+            @(Html.HiddenFor(m => m.EntryPoint))
+
+            @await Html.GovUkRadiosFor(m => m.OwnershipStatus,
+                fieldsetOptions: new FieldsetViewModel
+                {
+                    Legend = new LegendViewModel
+                    {
+                        Text = "Do you own your property?",
+                        Classes = "govuk-fieldset__legend--l",
+                        IsPageHeading = true
+                    }
+                },
+                radioHints: new Dictionary<OwnershipStatus, HintViewModel>()
+                {
+                    {
+                        OwnershipStatus.PrivateTenancy, new HintViewModel()
+                        {
+                            Html = @<text>If you have a <a href="https://www.gov.uk/shared-ownership-scheme">shared ownership home</a> select this one.</text>
+                        }
+                    }
+                })
+
+            @(await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Continue",
+            }))
+
+        </form>
+        
+    </div>
+</div>

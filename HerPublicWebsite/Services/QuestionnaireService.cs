@@ -45,6 +45,14 @@ public class QuestionnaireService
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
+    
+    public Questionnaire UpdateOwnershipStatus(OwnershipStatus ownershipStatus)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdateOwnershipStatus(questionnaire, ownershipStatus);
+        SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
 
     private void SaveQuestionnaireToSession(Questionnaire questionnaire)
     {

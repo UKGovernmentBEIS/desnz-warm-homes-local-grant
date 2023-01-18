@@ -10,4 +10,10 @@ public class QuestionnaireUpdater
         questionnaire.Country = country;
         return questionnaire;
     }
+
+    public Questionnaire UpdateOwnershipStatus(Questionnaire questionnaire, OwnershipStatus ownershipStatus)
+    {
+        questionnaire.OwnershipStatus = ownershipStatus;
+        return questionnaire;
+    }
 }
