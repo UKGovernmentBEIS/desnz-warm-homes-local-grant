@@ -99,6 +99,11 @@ Fill in the opened `secrets.json` file with:
 }
 ```
 
+You can also add secrets with `dotnet user-secrets`, just pipe the JSON you want to be added to it e.g.
+```
+cat secrets.json | dotnet user-secrets set
+```
+
 ### Running Locally
 
 - In Visual Studio / Rider build the solution
