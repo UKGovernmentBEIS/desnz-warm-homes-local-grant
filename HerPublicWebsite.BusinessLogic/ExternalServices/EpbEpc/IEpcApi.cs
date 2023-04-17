@@ -2,6 +2,6 @@
 {
     public interface IEpcApi
     {
-        public Task PlaceholderMethod(); // TODO: Create real EPC methods
+        public Task<EpcAssessment> EpcFromUprn(string uprn); // TODO: Create real EPC methods
     }
 }
