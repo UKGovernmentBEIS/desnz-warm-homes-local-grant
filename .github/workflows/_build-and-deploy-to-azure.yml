@@ -41,7 +41,7 @@ jobs:
       working-directory: ./HerPublicWebsite
       
     - name: Restore .Net dependencies
-      run: dotnet restore --configfile Nuget.config
+      run: dotnet restore --configfile nuget.config
       
     - name: Build .Net code
       run: dotnet build HerPublicWebsite --no-restore --configuration Release --output ./ci-server-build/

@@ -23,7 +23,7 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Restore .Net dependencies
-      run: dotnet restore --configfile Nuget.config
+      run: dotnet restore --configfile nuget.config
 
     - name: Build .Net code
       run: dotnet build --no-restore
