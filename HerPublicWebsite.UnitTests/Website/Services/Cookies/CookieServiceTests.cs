@@ -1,15 +1,14 @@
 ﻿using System;
-using NUnit.Framework;
 using FluentAssertions;
+using HerPublicWebsite.Models.Cookies;
+using HerPublicWebsite.Services.Cookies;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using HerPublicWebsite.Models.Cookies;
-using HerPublicWebsite.Services.Cookies;
+using NUnit.Framework;
 
-namespace Tests;
+namespace Tests.Website.Services.Cookies;
 
 [TestFixture]
 public class CookieServiceTests

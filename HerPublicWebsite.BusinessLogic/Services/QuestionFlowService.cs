@@ -10,7 +10,6 @@ namespace HerPublicWebsite.BusinessLogic.Services
         public QuestionFlowStep NextStep(QuestionFlowStep page, Questionnaire questionnaire, QuestionFlowStep? entryPoint = null);
     }
 
-    // TODO: Add tests
     public class QuestionFlowService: IQuestionFlowService
     {
         public QuestionFlowStep PreviousStep(

@@ -93,7 +93,7 @@ Fill in the opened `secrets.json` file with:
     },
    
     "GoogleAnalytics": {
-        "ApiSecret": "REAL_VALUE_HERE"
+        "ApiSecret": "REAL_VALUE_HERE",
         "MeasurementId": "REAL_VALUE_HERE"
     }
 }
@@ -114,7 +114,7 @@ cat secrets.json | dotnet user-secrets set
 
 ### Local Database Setup
 
-- For Windows: Download the installer and PostgreSQL 14 here: https://www.postgresql.org/download/windows/
+- For Windows: Download the installer and PostgreSQL 15 here: https://www.postgresql.org/download/windows/
 - Follow default installation steps (no additional software is required from Stack Builder upon completion)
   - You may be prompted for a password for the postgres user and a port (good defaults are "postgres" and "5432", respectively). If you choose your own, you will have to update the connection string in appsettings.json
 
