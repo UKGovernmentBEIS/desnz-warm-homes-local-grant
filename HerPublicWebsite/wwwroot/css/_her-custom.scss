@@ -1,0 +1,21 @@
+// This is a GOV.UK Publishing specific component that
+// can be seen at http://govuk-static.herokuapp.com/component-guide/related_items
+
+.app-related-items {
+    border-top: 2px solid govuk-colour("blue");
+    padding-top: govuk-spacing(2);
+}
+
+.app-related-items .govuk-list > li {
+    margin-bottom: govuk-spacing(2);
+}
+
+
+
+// her specific styling
+
+// Link to discussion about issue and workaround:
+// https://github.com/alphagov/govuk-design-system-backlog/issues/71#issuecomment-492667019
+.govuk-warning-text__icon {
+    top: 33.3%;
+}
