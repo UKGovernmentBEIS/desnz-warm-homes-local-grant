@@ -58,6 +58,12 @@ public class QuestionFlowServiceOldTests
             ),
             QuestionFlowStep.Country),
         new(
+            "Address goes back to Ownership status",
+            new Input(
+                QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.OwnershipStatus),
+        new(
             "Service unsuitable goes back to the country you came from",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
@@ -104,6 +110,12 @@ public class QuestionFlowServiceOldTests
                 OwnershipStatus.OwnerOccupancy
             ),
             QuestionFlowStep.Address),
+        new(
+            "Address continues to address selection",
+            new Input(
+                QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.SelectAddress),
     };
 
     public class QuestionFlowServiceTestCase

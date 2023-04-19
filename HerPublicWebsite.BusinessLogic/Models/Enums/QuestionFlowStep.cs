@@ -6,5 +6,6 @@ public enum QuestionFlowStep
     Country,
     ServiceUnsuitable,
     OwnershipStatus,
-    Address
+    Address,
+    SelectAddress,
 }
