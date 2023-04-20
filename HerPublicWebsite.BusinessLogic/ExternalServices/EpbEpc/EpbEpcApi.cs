@@ -3,11 +3,13 @@ using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
 {
 
-    public record struct EpcAddress
+    public record class EpcAddressDto
     {
         [JsonProperty("addressLine1")]
         public string AddressLine1 { get; set; }
@@ -28,10 +30,10 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
         public string Postcode { get; set; }
     }
 
-    public record struct EpcAssessment
+    public record class EpcAssessmentDto
     {
         [JsonProperty("address")]
-        public EpcAddress Address { get; set; }
+        public EpcAddressDto Address { get; set; }
 
         [JsonProperty("uprn")]
         public string Uprn { get; set; }
@@ -43,38 +45,94 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
         public EpcRating CurrentBand { get; set; }
     }
 
-    public record struct Data
+    public record class EpcDataDto
     {
         [JsonProperty("assessment")]
-        public EpcAssessment Assessment { get; set; }
+        public EpcAssessmentDto Assessment { get; set; }
     }
 
-    public record struct Root
+    public record class EpbEpcDto
     {
         [JsonProperty("data", Required = Required.Always)]
-        public Data Data { get; set; }
+        public EpcDataDto Data { get; set; }
     }
 
     public class EpbEpcApi : IEpcApi
     {
         private readonly EpbEpcConfiguration config;
+        private readonly IMemoryCache memoryCache;
+        private readonly ILogger logger;
+        private readonly string cacheTokenKey = "EpbEpcToken";
 
-        public EpbEpcApi(IOptions<EpbEpcConfiguration> options)
+        public EpbEpcApi(IOptions<EpbEpcConfiguration> options, IMemoryCache memoryCache, ILogger<EpbEpcApi> logger)
         {
-            config = options.Value;
+            this.config = options.Value;
+            this.memoryCache = memoryCache;
+            this.logger = logger;
         }
 
-        public async Task<EpcAssessment> EpcFromUprn(string uprn)
+        public async Task<EpcAssessmentDto> EpcFromUprn(string uprn)
         {
-            var parameters = new RequestParameters {
+
+            var token = await RequestTokenIfNeeded();
+
+            var parameters = new RequestParameters
+            {
                 BaseAddress = config.BaseUrl,
                 Path = $"/retrofit-funding/assessments?uprn={uprn}",
-                Auth = new AuthenticationHeaderValue("Basic", config.Token)
+                Auth = new AuthenticationHeaderValue("Bearer", token)
             };
 
-            var response = await HttpRequestHelper.SendGetRequestAsync<Root>(parameters);
+            var response = await HttpRequestHelper.SendGetRequestAsync<EpbEpcDto>(parameters);
 
             return response.Data.Assessment;
+        }
+
+        private async Task<string> RequestTokenIfNeeded()
+        {
+            if (memoryCache.TryGetValue(cacheTokenKey, out string token))
+            {
+                return token;
+            }
+
+            TokenRequestResponse response;
+            try
+            {
+
+                response = await HttpRequestHelper.SendPostRequestAsync<TokenRequestResponse>(
+                    new RequestParameters
+                    {
+                        BaseAddress = config.BaseUrl,
+                        Path = "/auth/oauth/token",
+                        Auth = new AuthenticationHeaderValue("Basic",
+                            HttpRequestHelper.ConvertToBase64(config.Username, config.Password))
+                    }
+                );
+            }
+            catch (Exception e)
+            {
+                logger.LogError("There was an error requesting an access token for the epc api: {}", e.Message);
+                throw;
+            }
+            // We divide by 2 to avoid edge cases of sending requests on the exact expiration time
+            var expiryTimeInSeconds = response.ExpiryTimeInSeconds / 2;
+            token = response.Token;
+
+            var cacheEntryOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromSeconds(expiryTimeInSeconds));
+
+            memoryCache.Set(cacheTokenKey, token, cacheEntryOptions);
+            return token;
+        }
+
+        internal record class TokenRequestResponse
+        {
+            [JsonProperty(PropertyName = "access_token")]
+            public string Token { get; set; }
+            [JsonProperty(PropertyName = "expires_in")]
+            public int ExpiryTimeInSeconds { get; set; }
+            [JsonProperty(PropertyName = "token_type")]
+            public string TokenType { get; set; }
         }
     }
 }
