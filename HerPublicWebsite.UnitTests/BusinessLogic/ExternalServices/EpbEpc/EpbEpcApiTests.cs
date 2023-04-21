@@ -1,13 +1,10 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using Microsoft.Extensions.Options;
-using System.Net.Http;
 using RichardSzalay.MockHttp;
 using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System;
 using Microsoft.Extensions.Caching.Memory;
@@ -39,7 +36,6 @@ public class EpbEpcApiTests
         memoryCache.Set("EpbEpcToken", "foobar");
 
         epcApi = new EpbEpcApi(Options.Create(config), memoryCache, logger);
-
 
         mockHttpHandler = new MockHttpMessageHandler();
         HttpRequestHelper.handler = mockHttpHandler;

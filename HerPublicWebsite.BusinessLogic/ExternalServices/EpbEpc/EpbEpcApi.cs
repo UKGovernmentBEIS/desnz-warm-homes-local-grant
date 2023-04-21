@@ -74,7 +74,14 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
         public async Task<EpcAssessmentDto> EpcFromUprn(string uprn)
         {
 
-            var token = await RequestTokenIfNeeded();
+            string token = null;
+            try {
+                token = await RequestTokenIfNeeded();
+            }
+            catch(Exception e) {
+                logger.LogError("Unable to get EPB API Token: {}", e.Message);
+                return null;
+            }
 
             var parameters = new RequestParameters
             {
@@ -83,9 +90,15 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
                 Auth = new AuthenticationHeaderValue("Bearer", token)
             };
 
-            var response = await HttpRequestHelper.SendGetRequestAsync<EpbEpcDto>(parameters);
+            try {
+                var response = await HttpRequestHelper.SendGetRequestAsync<EpbEpcDto>(parameters);
+                return response.Data.Assessment;
+            }
+            catch (Exception e) {
+                logger.LogError("EPB EPC request failed: {}", e.Message);
+                return null;
+            }
 
-            return response.Data.Assessment;
         }
 
         private async Task<string> RequestTokenIfNeeded()
@@ -98,7 +111,6 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
             TokenRequestResponse response;
             try
             {
-
                 response = await HttpRequestHelper.SendPostRequestAsync<TokenRequestResponse>(
                     new RequestParameters
                     {
