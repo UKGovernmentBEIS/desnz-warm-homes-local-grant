@@ -5,6 +5,8 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.Common
 {
     public static class HttpRequestHelper
     {
+        public static HttpMessageHandler handler {get; set;}
+
         public static Task<T> SendGetRequestAsync<T>(RequestParameters parameters)
         {
             return SendRequestAsync<T>(RequestType.Get, parameters);
@@ -34,7 +36,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.Common
 
         private static HttpClient SetupHttpClient(RequestParameters parameters)
         {
-            var httpClient = new HttpClient();
+            var httpClient = new HttpClient(handler ?? new HttpClientHandler());
             httpClient.BaseAddress = new Uri(parameters.BaseAddress);
             httpClient.DefaultRequestHeaders.Authorization = parameters.Auth;
             httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
