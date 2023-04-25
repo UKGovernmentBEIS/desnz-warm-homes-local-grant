@@ -4,17 +4,17 @@ using HerPublicWebsite.BusinessLogic.Models.Enums;
 namespace HerPublicWebsite.BusinessLogic.Services
 {
     public interface IQuestionFlowService
-    { 
+    {
         public QuestionFlowStep PreviousStep(QuestionFlowStep page, Questionnaire questionnaire, QuestionFlowStep? entryPoint = null);
-        
+
         public QuestionFlowStep NextStep(QuestionFlowStep page, Questionnaire questionnaire, QuestionFlowStep? entryPoint = null);
     }
 
-    public class QuestionFlowService: IQuestionFlowService
+    public class QuestionFlowService : IQuestionFlowService
     {
         public QuestionFlowStep PreviousStep(
-            QuestionFlowStep page, 
-            Questionnaire questionnaire, 
+            QuestionFlowStep page,
+            Questionnaire questionnaire,
             QuestionFlowStep? entryPoint = null)
         {
             return page switch
@@ -23,6 +23,7 @@ namespace HerPublicWebsite.BusinessLogic.Services
                 QuestionFlowStep.ServiceUnsuitable => ServiceUnsuitableBackDestination(questionnaire),
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusBackDestination(),
                 QuestionFlowStep.Address => AddressBackDestination(),
+                QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -34,6 +35,7 @@ namespace HerPublicWebsite.BusinessLogic.Services
                 QuestionFlowStep.Country => CountryForwardDestination(questionnaire),
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusForwardDestination(questionnaire),
                 QuestionFlowStep.Address => AddressForwardDestination(questionnaire),
+                QuestionFlowStep.SelectAddress => SelectAddressForwardDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
             };
         }
@@ -42,7 +44,7 @@ namespace HerPublicWebsite.BusinessLogic.Services
         {
             return QuestionFlowStep.Start;
         }
-        
+
         private QuestionFlowStep ServiceUnsuitableBackDestination(Questionnaire questionnaire)
         {
             return questionnaire switch
@@ -54,7 +56,7 @@ namespace HerPublicWebsite.BusinessLogic.Services
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
-        
+
         private QuestionFlowStep OwnershipStatusBackDestination()
         {
             return QuestionFlowStep.Country;
@@ -65,16 +67,21 @@ namespace HerPublicWebsite.BusinessLogic.Services
             return QuestionFlowStep.OwnershipStatus;
         }
 
+        private QuestionFlowStep SelectAddressBackDestination()
+        {
+            return QuestionFlowStep.GasBoiler;
+        }
+
         private QuestionFlowStep CountryForwardDestination(Questionnaire questionnaire)
         {
-            return questionnaire.Country is not Country.England 
+            return questionnaire.Country is not Country.England
                 ? QuestionFlowStep.ServiceUnsuitable
                 : QuestionFlowStep.OwnershipStatus;
         }
-        
+
         private QuestionFlowStep OwnershipStatusForwardDestination(Questionnaire questionnaire)
         {
-            return questionnaire.OwnershipStatus is not OwnershipStatus.OwnerOccupancy 
+            return questionnaire.OwnershipStatus is not OwnershipStatus.OwnerOccupancy
                 ? QuestionFlowStep.ServiceUnsuitable
                 : QuestionFlowStep.Address;
         }
@@ -82,6 +89,11 @@ namespace HerPublicWebsite.BusinessLogic.Services
         private QuestionFlowStep AddressForwardDestination(Questionnaire questionnaire)
         {
             return QuestionFlowStep.SelectAddress;
+        }
+
+        private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire)
+        {
+            return QuestionFlowStep.GasBoiler;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using HerPublicWebsite.BusinessLogic;
 using HerPublicWebsite.BusinessLogic.Models;
@@ -46,6 +47,14 @@ public class QuestionnaireService
         return questionnaire;
     }
     
+    public Questionnaire UpdateAddress(OsPlacesResult addressResult)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdateAddress(questionnaire, addressResult);
+        SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+
     public Questionnaire UpdateOwnershipStatus(OwnershipStatus ownershipStatus)
     {
         var questionnaire = GetQuestionnaire();
@@ -59,4 +68,6 @@ public class QuestionnaireService
         var questionnaireString = JsonSerializer.Serialize(questionnaire, JsonSerializerOptions);
         httpContextAccessor.HttpContext!.Session.SetString(SessionKeyQuestionnaire, questionnaireString);
     }
+
+
 }

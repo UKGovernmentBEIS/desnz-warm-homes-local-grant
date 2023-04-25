@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services;
@@ -7,6 +9,7 @@ using HerPublicWebsite.ExternalServices.GoogleAnalytics;
 using HerPublicWebsite.Models.Questionnaire;
 using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -135,18 +138,70 @@ public class QuestionnaireController : Controller
             extraRouteValues: new Dictionary<string, object>
             {
                 { "postcode", viewModel.Postcode },
-                { "number", viewModel.BuildingNameOrNumber }
+                { "buildingNameOrNumber", viewModel.BuildingNameOrNumber }
             }
         );
 
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
 
-    [HttpGet("address/{postcode}/{number}")]
-    public IActionResult SelectAddress_Get(AddressViewModel viewModel, string postcode, string buildingNameOrNumber)
+    [HttpGet("address/{postcode}/{buildingNameOrNumber}")]
+    public IActionResult SelectAddress_Get(string postcode, string buildingNameOrNumber)
+    {
+
+        //TODO (BEISHER-248): Replace with call to OS Places API to get actual results
+        var viewModel = new SelectAddressViewModel()
+        {
+            Addresses = new List<OsPlacesResult>
+            {
+                new() {
+                    Address = "82 Test Place",
+                    Uprn = "1337"
+                },
+                new ()
+                {
+                    Address = "23 Jellyifsh Place",
+                    Uprn = "420"
+                }
+            }
+        };
+
+        TempData["Addresses"] = JsonSerializer.Serialize(viewModel.Addresses);
+
+        return View("SelectAddress", viewModel);
+    }
+
+    [HttpPost("address/select")]
+    public IActionResult SelectAddress_Post(SelectAddressViewModel viewModel, [FromForm] int index)
+    {
+        try
+        {
+            var addressResults = JsonSerializer.Deserialize<List<OsPlacesResult>>(TempData["Addresses"] as string ?? throw new InvalidOperationException());
+            var questionnaire = questionnaireService.UpdateAddress(addressResults[index]);
+
+            var nextStep = questionFlowService.NextStep(QuestionFlowStep.SelectAddress, questionnaire);
+            return RedirectToNextStep(nextStep);
+        }
+        catch (Exception e)
+        {
+            var questionnaire = questionnaireService.GetQuestionnaire();
+            var nextStep = questionFlowService.PreviousStep(QuestionFlowStep.SelectAddress, questionnaire);
+            return RedirectToNextStep(nextStep);
+        }
+    }
+
+    [HttpGet("address/manual")]
+    public IActionResult ManualAddress_Get()
     {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
+
+    [HttpGet("boiler")]
+    public IActionResult GasBoiler_Get()
+    {
+        return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
+    }
+
 
     private string GetBackUrl(
         QuestionFlowStep currentStep,
@@ -177,6 +232,7 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.OwnershipStatus => new PathByActionArguments(nameof(OwnershipStatus_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.Address => new PathByActionArguments(nameof(Address_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.SelectAddress => new PathByActionArguments(nameof(SelectAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.GasBoiler => new PathByActionArguments(nameof(GasBoiler_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
