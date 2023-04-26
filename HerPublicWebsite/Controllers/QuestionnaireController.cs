@@ -129,14 +129,15 @@ public class QuestionnaireController : Controller
         }
         var questionnaire = questionnaireService.GetQuestionnaire();
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Address, questionnaire);
-        var forwardArgs = GetActionArgumentsForQuestion(nextStep, null, extraRouteValues: new Dictionary<string, object>{
-                {
-                "postcode", viewModel.Postcode
-                },
-                {
-                "number", viewModel.BuildingNameOrNumber
-                }
-                });
+        var forwardArgs = GetActionArgumentsForQuestion(
+            nextStep,
+            null,
+            extraRouteValues: new Dictionary<string, object>
+            {
+                { "postcode", viewModel.Postcode },
+                { "number", viewModel.BuildingNameOrNumber }
+            }
+        );
 
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
