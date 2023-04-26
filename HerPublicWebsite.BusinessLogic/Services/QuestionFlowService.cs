@@ -22,6 +22,7 @@ namespace HerPublicWebsite.BusinessLogic.Services
                 QuestionFlowStep.Country => CountryBackDestination(),
                 QuestionFlowStep.ServiceUnsuitable => ServiceUnsuitableBackDestination(questionnaire),
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusBackDestination(),
+                QuestionFlowStep.Address => AddressBackDestination(),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -32,6 +33,7 @@ namespace HerPublicWebsite.BusinessLogic.Services
             {
                 QuestionFlowStep.Country => CountryForwardDestination(questionnaire),
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusForwardDestination(questionnaire),
+                QuestionFlowStep.Address => AddressForwardDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
             };
         }
@@ -58,6 +60,11 @@ namespace HerPublicWebsite.BusinessLogic.Services
             return QuestionFlowStep.Country;
         }
 
+        private QuestionFlowStep AddressBackDestination()
+        {
+            return QuestionFlowStep.OwnershipStatus;
+        }
+
         private QuestionFlowStep CountryForwardDestination(Questionnaire questionnaire)
         {
             return questionnaire.Country is not Country.England 
@@ -70,6 +77,11 @@ namespace HerPublicWebsite.BusinessLogic.Services
             return questionnaire.OwnershipStatus is not OwnershipStatus.OwnerOccupancy 
                 ? QuestionFlowStep.ServiceUnsuitable
                 : QuestionFlowStep.Address;
+        }
+
+        private QuestionFlowStep AddressForwardDestination(Questionnaire questionnaire)
+        {
+            return QuestionFlowStep.SelectAddress;
         }
     }
 }

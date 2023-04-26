@@ -9,6 +9,7 @@ using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace HerPublicWebsite.Controllers;
 
@@ -21,7 +22,7 @@ public class QuestionnaireController : Controller
     private readonly QuestionnaireService questionnaireService;
 
     public QuestionnaireController(
-        IQuestionFlowService questionFlowService, 
+        IQuestionFlowService questionFlowService,
         CookieService cookieService,
         GoogleAnalyticsService googleAnalyticsService,
         QuestionnaireService questionnaireService)
@@ -31,13 +32,13 @@ public class QuestionnaireController : Controller
         this.googleAnalyticsService = googleAnalyticsService;
         this.questionnaireService = questionnaireService;
     }
-    
+
     [HttpGet("")]
     public IActionResult Index()
     {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
-    
+
     [HttpGet("country/")]
     public IActionResult Country_Get()
     {
@@ -58,31 +59,31 @@ public class QuestionnaireController : Controller
         {
             return Country_Get();
         }
-            
+
         var questionnaire = questionnaireService.UpdateCountry(viewModel.Country!.Value);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Country, questionnaire);
-        
+
         return RedirectToNextStep(nextStep);
     }
-    
+
     [HttpGet("service-unsuitable/")]
     public IActionResult ServiceUnsuitable_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        
+
         var viewModel = new ServiceUnsuitableViewModel
         {
             BackLink = GetBackUrl(QuestionFlowStep.ServiceUnsuitable, questionnaire)
         };
-            
+
         return View("ServiceUnsuitable", viewModel);
     }
-    
+
     [HttpGet("ownership-status/")]
     public IActionResult OwnershipStatus_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        
+
         var viewModel = new OwnershipStatusViewModel()
         {
             OwnershipStatus = questionnaire.OwnershipStatus,
@@ -91,7 +92,7 @@ public class QuestionnaireController : Controller
 
         return View("OwnershipStatus", viewModel);
     }
-    
+
     [HttpPost("ownership-status/")]
     public IActionResult OwnershipStatus_Post(OwnershipStatusViewModel viewModel)
     {
@@ -99,17 +100,51 @@ public class QuestionnaireController : Controller
         {
             return Country_Get();
         }
-            
+
         var questionnaire = questionnaireService.UpdateOwnershipStatus(viewModel.OwnershipStatus!.Value);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.OwnershipStatus, questionnaire);
-        
+
         return RedirectToNextStep(nextStep);
     }
-    
+
     [HttpGet("address/")]
     public IActionResult Address_Get()
     {
-        // TODO: Return the correct page
+        var questionnaire = questionnaireService.GetQuestionnaire();
+
+        var viewModel = new AddressViewModel()
+        {
+            BackLink = GetBackUrl(QuestionFlowStep.Address, questionnaire)
+        };
+
+        return View("Address", viewModel);
+    }
+
+    [HttpPost("address/")]
+    public IActionResult Address_Post(AddressViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return Address_Get();
+        }
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.Address, questionnaire);
+        var forwardArgs = GetActionArgumentsForQuestion(
+            nextStep,
+            null,
+            extraRouteValues: new Dictionary<string, object>
+            {
+                { "postcode", viewModel.Postcode },
+                { "number", viewModel.BuildingNameOrNumber }
+            }
+        );
+
+        return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
+    }
+
+    [HttpGet("address/{postcode}/{number}")]
+    public IActionResult SelectAddress_Get(AddressViewModel viewModel, string postcode, string buildingNameOrNumber)
+    {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
 
@@ -122,13 +157,13 @@ public class QuestionnaireController : Controller
         var args = GetActionArgumentsForQuestion(backStep, entryPoint);
         return Url.Action(args.Action, args.Controller, args.Values);
     }
-    
+
     private RedirectToActionResult RedirectToNextStep(QuestionFlowStep nextStep, QuestionFlowStep? entryPoint = null)
     {
         var forwardArgs = GetActionArgumentsForQuestion(nextStep, entryPoint);
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
-    
+
     private PathByActionArguments GetActionArgumentsForQuestion(
             QuestionFlowStep question,
             QuestionFlowStep? entryPoint = null,
@@ -141,10 +176,11 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.ServiceUnsuitable => new PathByActionArguments(nameof(ServiceUnsuitable_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.OwnershipStatus => new PathByActionArguments(nameof(OwnershipStatus_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.Address => new PathByActionArguments(nameof(Address_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.SelectAddress => new PathByActionArguments(nameof(SelectAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
-    
+
     private RouteValueDictionary GetRouteValues(
         IDictionary<string, object> extraRouteValues,
         QuestionFlowStep? entryPoint = null)
@@ -162,13 +198,13 @@ public class QuestionnaireController : Controller
 
         return ret;
     }
-    
+
     private class PathByActionArguments
     {
         public readonly string Action;
         public readonly string Controller;
         public readonly RouteValueDictionary Values;
-        
+
         public PathByActionArguments(string action, string controller, RouteValueDictionary values = null)
         {
             Action = action;
