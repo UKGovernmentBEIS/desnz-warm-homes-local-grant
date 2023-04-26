@@ -7,7 +7,7 @@ using HerPublicWebsite.BusinessLogic.Services;
 namespace Tests.BusinessLogic.Services;
 
 [TestFixture]
-public class QuestionFlowServiceOldTests
+public class QuestionFlowServiceTests
 {
     [SetUp]
     public void Setup()
