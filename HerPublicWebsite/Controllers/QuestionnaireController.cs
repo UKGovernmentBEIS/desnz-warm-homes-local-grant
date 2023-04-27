@@ -171,13 +171,18 @@ public class QuestionnaireController : Controller
         return View("SelectAddress", viewModel);
     }
 
-    [HttpPost("address/select")]
-    public IActionResult SelectAddress_Post(SelectAddressViewModel viewModel, [FromForm] int index)
+    [HttpPost("address/{postcode}/{buildingNameOrNumber}")]
+    public IActionResult SelectAddress_Post(SelectAddressViewModel viewModel, string postcode, string buildingNameOrNumber)
     {
+        if (!ModelState.IsValid)
+        {
+            return SelectAddress_Get(postcode, buildingNameOrNumber);
+        }
+        
         try
         {
             var addressResults = JsonSerializer.Deserialize<List<OsPlacesResult>>(TempData["Addresses"] as string ?? throw new InvalidOperationException());
-            var questionnaire = questionnaireService.UpdateAddress(addressResults[index]);
+            var questionnaire = questionnaireService.UpdateAddress(addressResults[Convert.ToInt32(viewModel.Index)]);
 
             var nextStep = questionFlowService.NextStep(QuestionFlowStep.SelectAddress, questionnaire);
             return RedirectToNextStep(nextStep);

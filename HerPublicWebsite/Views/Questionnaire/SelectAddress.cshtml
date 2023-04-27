@@ -24,27 +24,28 @@
             @(Html.HiddenFor(m => m.EntryPoint))
             @Html.AntiForgeryToken()
 
-            @await Html.GovUkRadios(new RadiosViewModel
-                   {
-                       Fieldset = new FieldsetViewModel
+            @await Html.GovUkRadiosFromStringsFor(m => m.Index,
+                       radioOptions: new Dictionary<string, LabelViewModel>(
+                           Model.Addresses.Select(
+                               (result, i) => new KeyValuePair<string, LabelViewModel>(
+                                   i.ToString(),
+                                   new LabelViewModel
+                                   {
+                                       Text = result.Address,
+                                   }
+                                )
+                            )
+                        ),
+                       fieldsetOptions: new FieldsetViewModel()
                        {
-                           Legend = new LegendViewModel
+                           Legend = new LegendViewModel()
                            {
                                Text = "Select your address",
                                Classes = "govuk-fieldset__legend--l",
                                IsPageHeading = true
                            }
-                       },
-                       Name = "index",
-                       Items = Model.Addresses.Select((result, i) => new RadioItemViewModel()
-                       {
-                           Value = i.ToString(),
-                           Label = new LabelViewModel
-                           {
-                               Text = result.Address,
-                           }
-                       } as ItemViewModel ).ToList()
-                   })
+                       }
+                    )       
 
 
             <div class="govuk-button-group">
