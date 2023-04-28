@@ -6,12 +6,12 @@ public static class StringExtensions
 {
     private static Regex[] validPostCodeRegexes = new[]
     {
-        new Regex(@"^[A-Z]\d \d[A-Z][A-Z]$", RegexOptions.Compiled),          //   AN NAA
-        new Regex(@"^[A-Z]\d\d \d[A-Z][A-Z]$", RegexOptions.Compiled),        //  ANN NAA
-        new Regex(@"^[A-Z][A-Z]\d \d[A-Z][A-Z]$", RegexOptions.Compiled),     //  AAN NAA
-        new Regex(@"^[A-Z][A-Z]\d\d \d[A-Z][A-Z]$", RegexOptions.Compiled),   // AANN NAA
-        new Regex(@"^[A-Z]\d[A-Z] \d[A-Z][A-Z]$", RegexOptions.Compiled),     //  ANA NAA
-        new Regex(@"^[A-Z][A-Z]\d[A-Z] \d[A-Z][A-Z]$", RegexOptions.Compiled) // AANA NAA
+        new Regex(@"^[A-Z]\d \d[A-Z]{2}$", RegexOptions.Compiled),        //   AN NAA
+        new Regex(@"^[A-Z]\d\d \d[A-Z]{2}$", RegexOptions.Compiled),      //  ANN NAA
+        new Regex(@"^[A-Z]{2}\d \d[A-Z]{2}$", RegexOptions.Compiled),     //  AAN NAA
+        new Regex(@"^[A-Z]{2}\d\d \d[A-Z]{2}$", RegexOptions.Compiled),   // AANN NAA
+        new Regex(@"^[A-Z]\d[A-Z] \d[A-Z]{2}$", RegexOptions.Compiled),   //  ANA NAA
+        new Regex(@"^[A-Z]{2}\d[A-Z] \d[A-Z]{2}$", RegexOptions.Compiled) // AANA NAA
     };
 
     private static Regex multipleSpacesRegex = new Regex(@"[ ]{2,}", RegexOptions.Compiled);
