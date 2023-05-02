@@ -12,23 +12,18 @@ public class DataAccessProvider : IDataAccessProvider
         this.context = context;
     }
 
-    public async Task<Questionnaire> AddQuestionnaireAsync(Questionnaire questionnaire)
+    public async Task<ReferralRequest> AddReferralRequestAsync(ReferralRequest referralRequest)
     {
-        context.Questionnaires.Add(questionnaire);
+        context.ReferralRequests.Add(referralRequest);
         await context.SaveChangesAsync();
-        return questionnaire;
+        return referralRequest;
     }
 
-    public async Task UpdateQuestionnaireAsync(Questionnaire questionnaire)
+    public async Task<IEnumerable<ReferralRequest>> GetUnsubmittedReferralRequestsAsync()
     {
-        context.Questionnaires.Update(questionnaire);
-        await context.SaveChangesAsync();
-    }
-
-    public async Task<Questionnaire> GetQuestionnaireAsync(int id)
-    {
-        return await context.Questionnaires
-            .Include(q => q.ContactDetails)
-            .SingleOrDefaultAsync(q => q.QuestionnaireId == id);
+        return await context.ReferralRequests
+            .Include(rr => rr.ContactDetails)
+            .Where(rr => !rr.ReferralCreated)
+            .ToListAsync();
     }
 }
