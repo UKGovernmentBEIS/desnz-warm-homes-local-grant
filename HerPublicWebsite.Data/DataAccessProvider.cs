@@ -13,7 +13,7 @@ public class DataAccessProvider : IDataAccessProvider
         this.context = context;
     }
 
-    public async Task<ReferralRequest> AddReferralRequestAsync(ReferralRequest referralRequest)
+    public async Task<ReferralRequest> PersistNewReferralRequestAsync(ReferralRequest referralRequest)
     {
         context.ReferralRequests.Add(referralRequest);
         await context.SaveChangesAsync();
@@ -26,5 +26,10 @@ public class DataAccessProvider : IDataAccessProvider
             .Include(rr => rr.ContactDetails)
             .Where(rr => !rr.ReferralCreated)
             .ToListAsync();
+    }
+
+    public async Task PersistAllChangesAsync()
+    {
+        await context.SaveChangesAsync();
     }
 }

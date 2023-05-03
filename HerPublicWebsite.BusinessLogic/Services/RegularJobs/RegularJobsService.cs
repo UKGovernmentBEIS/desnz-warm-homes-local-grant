@@ -1,6 +1,4 @@
-﻿using HerPublicWebsite.BusinessLogic.Models;
-
-namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+﻿namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public interface IRegularJobsService
 {
@@ -18,7 +16,15 @@ public class RegularJobsService : IRegularJobsService
 
     public async Task RunNightlyTasksAsync()
     {
-        Console.WriteLine("RunNightlyTasks called");
         var newReferrals = await dataProvider.GetUnsubmittedReferralRequestsAsync();
+        
+        // TODO Generate and write the CSV file
+        
+        foreach (var referralRequest in newReferrals)
+        {
+            referralRequest.ReferralCreated = true;
+        }
+
+        await dataProvider.PersistAllChangesAsync();
     }
 }

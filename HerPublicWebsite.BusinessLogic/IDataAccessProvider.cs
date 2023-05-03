@@ -4,6 +4,7 @@ namespace HerPublicWebsite.BusinessLogic;
 
 public interface IDataAccessProvider
 {
-    Task<ReferralRequest> AddReferralRequestAsync(ReferralRequest referralRequest);
+    Task<ReferralRequest> PersistNewReferralRequestAsync(ReferralRequest referralRequest);
     Task<IEnumerable<ReferralRequest>> GetUnsubmittedReferralRequestsAsync();
+    Task PersistAllChangesAsync();
 }
