@@ -1,3 +1,5 @@
+using Hangfire;
+using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +29,15 @@ namespace HerPublicWebsite
             var dbContext = scope.ServiceProvider.GetRequiredService<HerDbContext>();
             dbContext.Database.Migrate();
 
+            // Run nightly tasks at 00:30 UTC daily
+            app
+                .Services
+                .GetService<IRecurringJobManager>()
+                .AddOrUpdate<RegularJobsService>(
+                    "Nightly tasks",
+                    rjs => rjs.RunNightlyTasksAsync(),
+                    "30 0 * * *");
+            
             app.Run();
         }
     }

@@ -5,6 +5,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CabinetOffice.GovUkDesignSystem" Version="1.0.0-922f9ad" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.0" />
+    <PackageReference Include="Hangfire.Core" Version="1.8.0" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.19.12" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 </Project>
