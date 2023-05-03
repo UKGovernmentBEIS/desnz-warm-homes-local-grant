@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HerPublicWebsite.BusinessLogic;
+using Microsoft.EntityFrameworkCore;
 using HerPublicWebsite.BusinessLogic.Models;
 
 namespace HerPublicWebsite.Data;
