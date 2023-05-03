@@ -69,7 +69,7 @@ namespace HerPublicWebsite.BusinessLogic.Services
 
         private QuestionFlowStep SelectAddressBackDestination()
         {
-            return QuestionFlowStep.GasBoiler;
+            return QuestionFlowStep.Address;
         }
 
         private QuestionFlowStep CountryForwardDestination(Questionnaire questionnaire)

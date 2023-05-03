@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
+using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services;
@@ -13,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Logging;
 
 namespace HerPublicWebsite.Controllers;
 
@@ -23,17 +26,24 @@ public class QuestionnaireController : Controller
     private readonly CookieService cookieService;
     private readonly GoogleAnalyticsService googleAnalyticsService;
     private readonly QuestionnaireService questionnaireService;
+    private readonly IOsPlacesApi osPlaces;
+    private readonly ILogger logger;
 
     public QuestionnaireController(
         IQuestionFlowService questionFlowService,
         CookieService cookieService,
         GoogleAnalyticsService googleAnalyticsService,
-        QuestionnaireService questionnaireService)
+        QuestionnaireService questionnaireService,
+        IOsPlacesApi osPlaces,
+        ILogger<QuestionnaireController> logger
+    )
     {
         this.questionFlowService = questionFlowService;
         this.cookieService = cookieService;
         this.googleAnalyticsService = googleAnalyticsService;
         this.questionnaireService = questionnaireService;
+        this.osPlaces = osPlaces;
+        this.logger = logger;
     }
 
     [HttpGet("")]
@@ -146,24 +156,13 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("address/{postcode}/{buildingNameOrNumber}")]
-    public IActionResult SelectAddress_Get(string postcode, string buildingNameOrNumber)
+    public async Task<IActionResult> SelectAddress_Get(string postcode, string buildingNameOrNumber)
     {
-
-        //TODO (BEISHER-248): Replace with call to OS Places API to get actual results
+        var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new SelectAddressViewModel()
         {
-            Addresses = new List<OsPlacesResult>
-            {
-                new() {
-                    Address = "82 Test Place",
-                    Uprn = "1337"
-                },
-                new ()
-                {
-                    Address = "23 Jellyifsh Place",
-                    Uprn = "420"
-                }
-            }
+            Addresses = await osPlaces.GetAddresses(postcode, buildingNameOrNumber),
+            BackLink = GetBackUrl(QuestionFlowStep.SelectAddress, questionnaire)
         };
 
         TempData["Addresses"] = JsonSerializer.Serialize(viewModel.Addresses);
@@ -172,26 +171,27 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("address/{postcode}/{buildingNameOrNumber}")]
-    public IActionResult SelectAddress_Post(SelectAddressViewModel viewModel, string postcode, string buildingNameOrNumber)
+    public async Task<IActionResult> SelectAddress_Post(SelectAddressViewModel viewModel, string postcode, string buildingNameOrNumber)
     {
         if (!ModelState.IsValid)
         {
-            return SelectAddress_Get(postcode, buildingNameOrNumber);
+            return await SelectAddress_Get(postcode, buildingNameOrNumber);
         }
-        
+
         try
         {
-            var addressResults = JsonSerializer.Deserialize<List<OsPlacesResult>>(TempData["Addresses"] as string ?? throw new InvalidOperationException());
-            var questionnaire = questionnaireService.UpdateAddress(addressResults[Convert.ToInt32(viewModel.Index)]);
+            var addressResults = JsonSerializer.Deserialize<List<Address>>(TempData["Addresses"] as string ?? throw new InvalidOperationException());
+            var questionnaire = questionnaireService.UpdateAddress(addressResults[Convert.ToInt32(viewModel.SelectedAddressIndex)]);
 
             var nextStep = questionFlowService.NextStep(QuestionFlowStep.SelectAddress, questionnaire);
             return RedirectToNextStep(nextStep);
         }
         catch (Exception e)
         {
-            var questionnaire = questionnaireService.GetQuestionnaire();
-            var nextStep = questionFlowService.PreviousStep(QuestionFlowStep.SelectAddress, questionnaire);
-            return RedirectToNextStep(nextStep);
+            // This shouldn't ever happen unless something has really gone wrong, or someone's messed with the page
+            // so just redirect to the beginning of the address entry
+            logger.LogError("Couldn't deserialize and retrieve address from selection: {}", e.Message);
+            return RedirectToAction(nameof(QuestionnaireController.Address_Get), "Questionnaire");
         }
     }
 
@@ -225,9 +225,9 @@ public class QuestionnaireController : Controller
     }
 
     private PathByActionArguments GetActionArgumentsForQuestion(
-            QuestionFlowStep question,
-            QuestionFlowStep? entryPoint = null,
-            IDictionary<string, object> extraRouteValues = null)
+        QuestionFlowStep question,
+        QuestionFlowStep? entryPoint = null,
+        IDictionary<string, object> extraRouteValues = null)
     {
         return question switch
         {

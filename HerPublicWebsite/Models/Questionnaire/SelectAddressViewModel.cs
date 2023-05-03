@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using GovUkDesignSystem.Attributes.ValidationAttributes;
+using Microsoft.AspNetCore.Mvc;
+using HerPublicWebsite.BusinessLogic.Models;
 
 namespace HerPublicWebsite.Models.Questionnaire;
 
-public record class SelectAddressViewModel : QuestionFlowViewModel
+public class SelectAddressViewModel : QuestionFlowViewModel
 {
-    public List<OsPlacesResult> Addresses {get; set;}
+    public List<Address> Addresses {get; set;}
     [GovUkValidateRequired(ErrorMessageIfMissing = "You must select an address")]
-    public string Index {get; set;}
+    public string SelectedAddressIndex {get; set;}
 }

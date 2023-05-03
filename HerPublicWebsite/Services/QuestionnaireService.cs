@@ -47,10 +47,10 @@ public class QuestionnaireService
         return questionnaire;
     }
     
-    public Questionnaire UpdateAddress(OsPlacesResult addressResult)
+    public Questionnaire UpdateAddress(Address address)
     {
         var questionnaire = GetQuestionnaire();
-        questionnaire = questionnaireUpdater.UpdateAddress(questionnaire, addressResult);
+        questionnaire = questionnaireUpdater.UpdateAddress(questionnaire, address);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }

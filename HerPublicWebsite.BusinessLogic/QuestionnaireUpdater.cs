@@ -18,14 +18,16 @@ public class QuestionnaireUpdater
         return questionnaire;
     }
 
-    public Questionnaire UpdateAddress(Questionnaire questionnaire, OsPlacesResult addressResult)
+    public Questionnaire UpdateAddress(Questionnaire questionnaire, Address address)
     {
-        questionnaire.Uprn = addressResult.Uprn;
-        questionnaire.AddressPostcode = addressResult.Postcode;
-        questionnaire.AddressLine1 = $"{addressResult.BuildingNumber} {addressResult.ThoroughFareName}";
-        questionnaire.AddressLine2 = addressResult.DependentLocality;
-        questionnaire.AddressLine3 = addressResult.OrganisationName;
-        questionnaire.AddressTown = addressResult.PostTown;
+        questionnaire.Uprn = address.Uprn;
+        questionnaire.AddressPostcode = address.AddressPostcode;
+        questionnaire.AddressLine1 = address.AddressLine1;
+        questionnaire.AddressLine2 = address.AddressLine2;
+        questionnaire.AddressLine3 = address.AddressLine3;
+        questionnaire.AddressTown = address.AddressTown;
+        questionnaire.Uprn = address.Uprn;
+
         return questionnaire;
     }
 }

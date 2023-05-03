@@ -1,5 +1,5 @@
 ﻿namespace HerPublicWebsite.Models.Questionnaire;
 
-public record ServiceUnsuitableViewModel : QuestionFlowViewModel
+public class ServiceUnsuitableViewModel : QuestionFlowViewModel
 {
 }

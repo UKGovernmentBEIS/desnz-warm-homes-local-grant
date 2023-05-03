@@ -1,16 +1,7 @@
 using Newtonsoft.Json;
 
-public record class OsPlacesResult
+public record class OsPlacesDpaDto
 {
-    public OsPlacesResult()
-    {
-    }
-
-    public OsPlacesResult(string address, string uprn)
-    {
-        Address = address;
-        Uprn = uprn;
-    }
 
     [JsonProperty("UPRN")]
     public string Uprn { get; set; }

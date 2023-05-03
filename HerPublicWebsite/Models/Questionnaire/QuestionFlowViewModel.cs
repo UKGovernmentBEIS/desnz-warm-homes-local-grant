@@ -2,7 +2,7 @@
 
 namespace HerPublicWebsite.Models.Questionnaire
 {
-    public abstract record class QuestionFlowViewModel
+    public abstract class QuestionFlowViewModel
     {
         public string BackLink { get; set; }
         public QuestionFlowStep? EntryPoint { get; set; }

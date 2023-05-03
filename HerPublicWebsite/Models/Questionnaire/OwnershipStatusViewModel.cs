@@ -2,7 +2,7 @@
 
 namespace HerPublicWebsite.Models.Questionnaire;
 
-public record OwnershipStatusViewModel : QuestionFlowViewModel
+public class OwnershipStatusViewModel : QuestionFlowViewModel
 {
     public OwnershipStatus? OwnershipStatus { get; set; }
 }
