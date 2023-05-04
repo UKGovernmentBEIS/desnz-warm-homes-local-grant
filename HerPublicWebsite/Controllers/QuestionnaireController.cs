@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
+using HerPublicWebsite.BusinessLogic.Extensions;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services;
@@ -136,6 +137,11 @@ public class QuestionnaireController : Controller
     [HttpPost("address/")]
     public IActionResult Address_Post(AddressViewModel viewModel)
     {
+        if (viewModel.Postcode is not null && !viewModel.Postcode.IsValidUkPostcodeFormat())
+        {
+            ModelState.AddModelError(nameof(AddressViewModel.Postcode), "Enter a valid UK postcode");
+        }
+        
         if (!ModelState.IsValid)
         {
             return Address_Get();
@@ -147,7 +153,7 @@ public class QuestionnaireController : Controller
             null,
             extraRouteValues: new Dictionary<string, object>
             {
-                { "postcode", viewModel.Postcode },
+                { "postcode", viewModel.Postcode.NormaliseToUkPostcodeFormat() },
                 { "buildingNameOrNumber", viewModel.BuildingNameOrNumber }
             }
         );
