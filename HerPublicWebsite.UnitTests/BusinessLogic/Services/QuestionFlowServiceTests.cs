@@ -70,9 +70,15 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Address),
         new(
-            "Manual adress goes back to Address",
+            "Manual address goes back to Address",
             new Input(
                 QuestionFlowStep.ManualAddress
+            ),
+            QuestionFlowStep.Address),
+        new(
+            "Gas boiler goes back to Address",
+            new Input(
+                QuestionFlowStep.GasBoiler
             ),
             QuestionFlowStep.Address),
         new(
@@ -140,6 +146,12 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.ManualAddress
             ),
             QuestionFlowStep.GasBoiler), 
+        new(
+            "Gas boiler continues to household income",
+            new Input(
+                QuestionFlowStep.GasBoiler
+            ),
+            QuestionFlowStep.HouseholdIncome), 
     };
 
     public class QuestionFlowServiceTestCase

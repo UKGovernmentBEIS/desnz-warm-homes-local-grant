@@ -10,4 +10,5 @@ public enum QuestionFlowStep
     SelectAddress,
     GasBoiler,
     ManualAddress,
+    HouseholdIncome
 }
