@@ -167,7 +167,7 @@ public class QuestionnaireController : Controller
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new SelectAddressViewModel()
         {
-            Addresses = await osPlaces.GetAddresses(postcode, buildingNameOrNumber),
+            Addresses = await osPlaces.GetAddressesAsync(postcode, buildingNameOrNumber),
             BackLink = GetBackUrl(QuestionFlowStep.SelectAddress, questionnaire)
         };
 

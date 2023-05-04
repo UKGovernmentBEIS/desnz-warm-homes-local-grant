@@ -4,7 +4,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 
 public class OsPlacesApi : IOsPlacesApi
 {
-    public async Task<List<Address>> GetAddresses(string postcode, string buildingNumber)
+    public async Task<List<Address>> GetAddressesAsync(string postcode, string buildingNumber)
     {
         //TODO BEISHER-248: Actually implement API here
         return new List<Address> {
