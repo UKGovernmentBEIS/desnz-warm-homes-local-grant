@@ -26,6 +26,7 @@ public class QuestionnaireUpdater
         questionnaire.AddressLine2 = address.AddressLine2;
         questionnaire.AddressLine3 = address.AddressLine3;
         questionnaire.AddressTown = address.AddressTown;
+        questionnaire.AddressCounty = address.AddressCounty;
         questionnaire.Uprn = address.Uprn;
 
         return questionnaire;

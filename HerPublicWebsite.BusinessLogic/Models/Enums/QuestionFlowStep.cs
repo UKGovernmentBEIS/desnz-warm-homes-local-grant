@@ -9,4 +9,5 @@ public enum QuestionFlowStep
     Address,
     SelectAddress,
     GasBoiler,
+    ManualAddress,
 }
