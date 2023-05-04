@@ -54,14 +54,7 @@
                    },
                        classes: "govuk-!-width-two-thirds"
                        )
-
-            @await Html.GovUkTextInputFor(m => m.County, labelOptions: new LabelViewModel()
-                   {
-                       Text = "County (optional)"
-                   },
-                       classes: "govuk-input--width-10"
-                       )
-
+            
             @await Html.GovUkTextInputFor(m => m.Postcode, labelOptions: new LabelViewModel()
                    {
                        Text = "Postcode"

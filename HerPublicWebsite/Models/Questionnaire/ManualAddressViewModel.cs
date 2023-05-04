@@ -7,7 +7,7 @@ public class ManualAddressViewModel: QuestionFlowViewModel
     [GovUkValidateRequired(ErrorMessageIfMissing = "You must provide an address")]
     public string AddressLine1 { get; set; }
     public string AddressLine2 { get; set; }
-    [GovUkValidateRequired(ErrorMessageIfMissing = "You must provide a town")]
+    [GovUkValidateRequired(ErrorMessageIfMissing = "You must provide a town or city")]
     public string Town { get; set; }
     public string County { get; set; }
     [GovUkValidateRequired(ErrorMessageIfMissing = "You must provide a valid postcode")]
