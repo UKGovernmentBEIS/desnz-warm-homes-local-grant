@@ -18,6 +18,7 @@ using HerPublicWebsite.ExternalServices.GoogleAnalytics;
 using HerPublicWebsite.Middleware;
 using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
+using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 
 namespace HerPublicWebsite
 {
@@ -46,6 +47,7 @@ namespace HerPublicWebsite
             services.AddDataProtection().PersistKeysToDbContext<HerDbContext>();
 
             ConfigureEpcApi(services);
+            ConfigureOsPlacesApi(services);
             ConfigureGovUkNotify(services);
             ConfigureCookieService(services);
             ConfigureDatabaseContext(services);
@@ -109,6 +111,12 @@ namespace HerPublicWebsite
             services.Configure<EpbEpcConfiguration>(
                 configuration.GetSection(EpbEpcConfiguration.ConfigSection));
             services.AddScoped<IEpcApi, EpbEpcApi>();
+        }
+
+        private void ConfigureOsPlacesApi(IServiceCollection services)
+        {
+            //TODO BEISHER-248: Set up OS Places properly
+            services.AddScoped<IOsPlacesApi, OsPlacesApi>();
         }
 
         private void ConfigureGovUkNotify(IServiceCollection services)

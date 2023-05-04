@@ -64,6 +64,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.OwnershipStatus),
         new(
+            "Select address goes back to Address",
+            new Input(
+                QuestionFlowStep.SelectAddress
+            ),
+            QuestionFlowStep.Address),
+        new(
             "Service unsuitable goes back to the country you came from",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
@@ -116,6 +122,12 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.Address
             ),
             QuestionFlowStep.SelectAddress),
+        new(
+            "Address selection continues to gas boiler",
+            new Input(
+                QuestionFlowStep.SelectAddress
+            ),
+            QuestionFlowStep.GasBoiler), 
     };
 
     public class QuestionFlowServiceTestCase

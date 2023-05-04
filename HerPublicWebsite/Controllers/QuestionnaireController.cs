@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
+using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Extensions;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
@@ -8,9 +12,11 @@ using HerPublicWebsite.ExternalServices.GoogleAnalytics;
 using HerPublicWebsite.Models.Questionnaire;
 using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Logging;
 
 namespace HerPublicWebsite.Controllers;
 
@@ -21,17 +27,24 @@ public class QuestionnaireController : Controller
     private readonly CookieService cookieService;
     private readonly GoogleAnalyticsService googleAnalyticsService;
     private readonly QuestionnaireService questionnaireService;
+    private readonly IOsPlacesApi osPlaces;
+    private readonly ILogger logger;
 
     public QuestionnaireController(
         IQuestionFlowService questionFlowService,
         CookieService cookieService,
         GoogleAnalyticsService googleAnalyticsService,
-        QuestionnaireService questionnaireService)
+        QuestionnaireService questionnaireService,
+        IOsPlacesApi osPlaces,
+        ILogger<QuestionnaireController> logger
+    )
     {
         this.questionFlowService = questionFlowService;
         this.cookieService = cookieService;
         this.googleAnalyticsService = googleAnalyticsService;
         this.questionnaireService = questionnaireService;
+        this.osPlaces = osPlaces;
+        this.logger = logger;
     }
 
     [HttpGet("")]
@@ -141,18 +154,65 @@ public class QuestionnaireController : Controller
             extraRouteValues: new Dictionary<string, object>
             {
                 { "postcode", viewModel.Postcode.NormaliseToUkPostcodeFormat() },
-                { "number", viewModel.BuildingNameOrNumber }
+                { "buildingNameOrNumber", viewModel.BuildingNameOrNumber }
             }
         );
 
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
 
-    [HttpGet("address/{postcode}/{number}")]
-    public IActionResult SelectAddress_Get(AddressViewModel viewModel, string postcode, string buildingNameOrNumber)
+    [HttpGet("address/{postcode}/{buildingNameOrNumber}")]
+    public async Task<IActionResult> SelectAddress_Get(string postcode, string buildingNameOrNumber)
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new SelectAddressViewModel()
+        {
+            Addresses = await osPlaces.GetAddressesAsync(postcode, buildingNameOrNumber),
+            BackLink = GetBackUrl(QuestionFlowStep.SelectAddress, questionnaire)
+        };
+
+        TempData["Addresses"] = JsonSerializer.Serialize(viewModel.Addresses);
+
+        return View("SelectAddress", viewModel);
+    }
+
+    [HttpPost("address/{postcode}/{buildingNameOrNumber}")]
+    public async Task<IActionResult> SelectAddress_Post(SelectAddressViewModel viewModel, string postcode, string buildingNameOrNumber)
+    {
+        if (!ModelState.IsValid)
+        {
+            return await SelectAddress_Get(postcode, buildingNameOrNumber);
+        }
+
+        try
+        {
+            var addressResults = JsonSerializer.Deserialize<List<Address>>(TempData["Addresses"] as string ?? throw new InvalidOperationException());
+            var questionnaire = questionnaireService.UpdateAddress(addressResults[Convert.ToInt32(viewModel.SelectedAddressIndex)]);
+
+            var nextStep = questionFlowService.NextStep(QuestionFlowStep.SelectAddress, questionnaire);
+            return RedirectToNextStep(nextStep);
+        }
+        catch (Exception e)
+        {
+            // This shouldn't ever happen unless something has really gone wrong, or someone's messed with the page
+            // so just redirect to the beginning of the address entry
+            logger.LogError("Couldn't deserialize and retrieve address from selection: {}", e.Message);
+            return RedirectToAction(nameof(QuestionnaireController.Address_Get), "Questionnaire");
+        }
+    }
+
+    [HttpGet("address/manual")]
+    public IActionResult ManualAddress_Get()
     {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
+
+    [HttpGet("boiler")]
+    public IActionResult GasBoiler_Get()
+    {
+        return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
+    }
+
 
     private string GetBackUrl(
         QuestionFlowStep currentStep,
@@ -171,9 +231,9 @@ public class QuestionnaireController : Controller
     }
 
     private PathByActionArguments GetActionArgumentsForQuestion(
-            QuestionFlowStep question,
-            QuestionFlowStep? entryPoint = null,
-            IDictionary<string, object> extraRouteValues = null)
+        QuestionFlowStep question,
+        QuestionFlowStep? entryPoint = null,
+        IDictionary<string, object> extraRouteValues = null)
     {
         return question switch
         {
@@ -183,6 +243,7 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.OwnershipStatus => new PathByActionArguments(nameof(OwnershipStatus_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.Address => new PathByActionArguments(nameof(Address_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.SelectAddress => new PathByActionArguments(nameof(SelectAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.GasBoiler => new PathByActionArguments(nameof(GasBoiler_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

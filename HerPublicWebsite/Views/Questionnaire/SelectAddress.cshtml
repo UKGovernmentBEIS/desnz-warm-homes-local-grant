@@ -1,0 +1,63 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using HerPublicWebsite.BusinessLogic.Models.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using HerPublicWebsite.Controllers
+
+@model HerPublicWebsite.Models.Questionnaire.SelectAddressViewModel
+@{
+    ViewBag.Title = "Address";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+           {
+               Text = "Back",
+               Href = Model.BackLink,
+           })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <form action="@Url.Action(nameof(QuestionnaireController.SelectAddress_Post), "Questionnaire")" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+
+            @await Html.GovUkRadiosFromStringsFor(m => m.SelectedAddressIndex,
+                       radioOptions: new Dictionary<string, LabelViewModel>(
+                           Model.Addresses.Select(
+                               (result, i) => new KeyValuePair<string, LabelViewModel>(
+                                   i.ToString(),
+                                   new LabelViewModel
+                                   {
+                                       Text = result.DisplayAddress,
+                                   }
+                                   )
+                               )
+                           ),
+                       fieldsetOptions: new FieldsetViewModel()
+                       {
+                           Legend = new LegendViewModel()
+                           {
+                               Text = "Select your address",
+                               Classes = "govuk-fieldset__legend--l",
+                               IsPageHeading = true
+                           }
+                       }
+                   )
+
+
+            <div class="govuk-button-group">
+                @(await Html.GovUkButton(new ButtonViewModel
+                {
+                    Text = "Continue",
+                }))
+
+                <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.ManualAddress_Get), "Questionnaire")">Address not listed above</a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
