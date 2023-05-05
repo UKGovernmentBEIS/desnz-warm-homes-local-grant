@@ -12,9 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using HerPublicWebsite.BusinessLogic;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
+using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
 using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
 using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+using HerPublicWebsite.BusinessLogic.Services.S3ReferralFileKeyGenerator;
 using HerPublicWebsite.Data;
 using HerPublicWebsite.ErrorHandling;
 using HerPublicWebsite.ExternalServices.EmailSending;
@@ -56,6 +58,8 @@ namespace HerPublicWebsite
             services.AddScoped<QuestionnaireUpdater>();
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
             services.AddScoped<IRegularJobsService, RegularJobsService>();
+            services.AddScoped<IS3FileWriter, S3FileWriter>();
+            services.AddScoped<S3ReferralFileKeyGenerator>();
             
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();

@@ -20,11 +20,18 @@ public class DataAccessProvider : IDataAccessProvider
         return referralRequest;
     }
 
-    public async Task<IEnumerable<ReferralRequest>> GetUnsubmittedReferralRequestsAsync()
+    public async Task<IList<ReferralRequest>> GetUnsubmittedReferralRequestsAsync()
+    {
+        return await context.ReferralRequests
+            .Where(rr => !rr.ReferralCreated)
+            .ToListAsync();
+    }
+    
+    public async Task<IList<ReferralRequest>> GetReferralRequestsByCustodianAndRequestDateAsync(int custodianCode, int month, int year)
     {
         return await context.ReferralRequests
             .Include(rr => rr.ContactDetails)
-            .Where(rr => !rr.ReferralCreated)
+            .Where(rr => rr.CustodianCode == custodianCode && rr.RequestDate.Month == month && rr.RequestDate.Year == year)
             .ToListAsync();
     }
 
