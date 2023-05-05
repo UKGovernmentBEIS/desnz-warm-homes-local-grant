@@ -30,8 +30,9 @@ public class ReferralRequest
     {
     }
 
-    public ReferralRequest(Questionnaire questionnaire)
+    public ReferralRequest(Questionnaire questionnaire, ContactDetails contactDetails)
     {
+        ContactDetails = contactDetails;
         AddressLine1 = questionnaire.AddressLine1;
         AddressLine2 = questionnaire.AddressLine2;
         AddressTown = questionnaire.AddressTown;
