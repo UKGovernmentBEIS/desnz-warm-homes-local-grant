@@ -25,6 +25,7 @@ using HerPublicWebsite.Middleware;
 using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
 using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
+using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 
 namespace HerPublicWebsite
 {
@@ -52,6 +53,7 @@ namespace HerPublicWebsite
             // Add the Hangfire processing server as IHostedService
             services.AddHangfireServer();
 
+            services.AddScoped<CsvFileCreator>();
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
             services.AddScoped<EligiblePostcodeService>();
             services.AddScoped<QuestionnaireService>();

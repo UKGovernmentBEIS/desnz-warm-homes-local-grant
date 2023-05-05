@@ -11,13 +11,16 @@ public class RegularJobsService : IRegularJobsService
 {
     private readonly IDataAccessProvider dataProvider;
     private readonly IS3FileWriter s3FileWriter;
+    private readonly CsvFileCreator.CsvFileCreator csvFileCreator;
 
     public RegularJobsService(
         IDataAccessProvider dataProvider,
-        IS3FileWriter s3FileWriter)
+        IS3FileWriter s3FileWriter,
+        CsvFileCreator.CsvFileCreator csvFileCreator)
     {
         this.dataProvider = dataProvider;
         this.s3FileWriter = s3FileWriter;
+        this.csvFileCreator = csvFileCreator;
     }
 
     public async Task RunNightlyTasksAsync()
@@ -28,12 +31,12 @@ public class RegularJobsService : IRegularJobsService
         {
             var grouping = referralsByCustodianMonthAndYear.Key;
             var referralsForFile = await dataProvider.GetReferralRequestsByCustodianAndRequestDateAsync(grouping.CustodianCode, grouping.Month, grouping.Year);
-            
-            // TODO Generate the CSV file
-            var fileData = new MemoryStream();
 
-            await s3FileWriter.WriteFileAsync(grouping.CustodianCode, grouping.Month, grouping.Year, fileData);
-            
+            using (var fileData = csvFileCreator.CreateFileData(referralsForFile))
+            {
+                await s3FileWriter.WriteFileAsync(grouping.CustodianCode, grouping.Month, grouping.Year, fileData);
+            }
+
             foreach (var referralRequest in referralsForFile)
             {
                 referralRequest.ReferralCreated = true;
