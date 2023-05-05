@@ -69,13 +69,13 @@ namespace HerPublicWebsite.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AddressCounty")
+                        .HasColumnType("text");
+
                     b.Property<string>("AddressLine1")
                         .HasColumnType("text");
 
                     b.Property<string>("AddressLine2")
-                        .HasColumnType("text");
-
-                    b.Property<string>("AddressLine3")
                         .HasColumnType("text");
 
                     b.Property<string>("AddressPostcode")

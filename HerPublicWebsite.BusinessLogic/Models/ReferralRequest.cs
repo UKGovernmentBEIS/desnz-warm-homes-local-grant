@@ -7,8 +7,8 @@ public class ReferralRequest
     public int Id { get; set; }
     public string AddressLine1 { get; set; }
     public string AddressLine2 { get; set; }
-    public string AddressLine3 { get; set; }
     public string AddressTown { get; set; }
+    public string AddressCounty { get; set; }
     public string AddressPostcode { get; set; }
     
     public int CustodianCode { get; set; }
@@ -34,8 +34,8 @@ public class ReferralRequest
     {
         AddressLine1 = questionnaire.AddressLine1;
         AddressLine2 = questionnaire.AddressLine2;
-        AddressLine3 = questionnaire.AddressLine3;
         AddressTown = questionnaire.AddressTown;
+        AddressCounty = questionnaire.AddressCounty;
         AddressPostcode = questionnaire.AddressPostcode;
         CustodianCode = questionnaire.CustodianCode;
         Uprn = questionnaire.Uprn;
