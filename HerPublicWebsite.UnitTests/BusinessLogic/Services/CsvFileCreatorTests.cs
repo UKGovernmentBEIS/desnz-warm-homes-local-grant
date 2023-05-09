@@ -66,7 +66,7 @@ public class CsvFileCreatorTests
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
 "Name,Email,Telephone,Preferred contact method,Address1,Address2,Town,County,Postcode,EPC Band,Is off gas grid,Household income band,Is eligible postcode,Tenure\r\n" +
-"Full Name1,contact1@example.com,00001 123456,Email,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,E,unknown,Below £31k,no,Owner");
+"Full Name1,contact1@example.com,00001 123456,Email,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,E,unknown,Below £31k,no,Owner\r\n");
     }
     
     [Test]
@@ -84,7 +84,7 @@ public class CsvFileCreatorTests
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
 "Name,Email,Telephone,Preferred contact method,Address1,Address2,Town,County,Postcode,EPC Band,Is off gas grid,Household income band,Is eligible postcode,Tenure\r\n" +
-"Full Name1,contact1@example.com,00001 123456,Email,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,E,yes,£31k or above,no,Owner");
+"Full Name1,contact1@example.com,00001 123456,Email,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,E,yes,£31k or above,no,Owner\r\n");
     }
     
     [Test]
