@@ -10,6 +10,6 @@ public class ManualAddressViewModel : QuestionFlowViewModel
     [GovUkValidateRequired(ErrorMessageIfMissing = "Enter a town or city")]
     public string Town { get; set; }
     public string County { get; set; }
-    [GovUkValidateRequired(ErrorMessageIfMissing = "Enter a valid postcode")]
+    [GovUkValidateRequired(ErrorMessageIfMissing = "Enter a valid UK postcode")]
     public string Postcode { get; set; }
 }
