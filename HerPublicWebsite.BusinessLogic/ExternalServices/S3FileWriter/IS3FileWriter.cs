@@ -2,5 +2,5 @@
 
 public interface IS3FileWriter
 {
-    public Task WriteFileAsync(int custodianCode, int month, int year, Stream fileContent);
+    public Task WriteFileAsync(string custodianCode, int month, int year, Stream fileContent);
 }

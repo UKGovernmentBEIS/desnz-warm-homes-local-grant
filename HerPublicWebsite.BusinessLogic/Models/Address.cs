@@ -8,5 +8,5 @@ public record Address {
   public string County { get; set; }
   public string Postcode {get; set;}
   public string Uprn { get; set; }
-  public int LocalCustodianCode { get; set; }
+  public string LocalCustodianCode { get; set; }
 }

@@ -87,8 +87,8 @@ namespace HerPublicWebsite.Data.Migrations
                     b.Property<int>("ContactDetailsId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("CustodianCode")
-                        .HasColumnType("integer");
+                    b.Property<string>("CustodianCode")
+                        .HasColumnType("text");
 
                     b.Property<int>("EpcRating")
                         .HasColumnType("integer");

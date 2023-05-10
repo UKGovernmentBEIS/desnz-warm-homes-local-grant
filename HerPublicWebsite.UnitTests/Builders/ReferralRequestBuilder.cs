@@ -18,7 +18,7 @@ public class ReferralRequestBuilder
             AddressTown = $"Town{id}",
             AddressCounty = $"County{id}",
             AddressPostcode = $"AL{id:D2} 1RS",
-            CustodianCode = 114,
+            CustodianCode = "114",
             EpcRating = EpcRating.E,
             HasGasBoiler = HasGasBoiler.No,
             Id = id,
@@ -46,7 +46,7 @@ public class ReferralRequestBuilder
         return this;
     }
 
-    public ReferralRequestBuilder WithCustodianCode(int custodianCode)
+    public ReferralRequestBuilder WithCustodianCode(string custodianCode)
     {
         referralRequest.CustodianCode = custodianCode;
         return this;

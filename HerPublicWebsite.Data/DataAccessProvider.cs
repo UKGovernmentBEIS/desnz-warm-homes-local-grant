@@ -27,7 +27,7 @@ public class DataAccessProvider : IDataAccessProvider
             .ToListAsync();
     }
     
-    public async Task<IList<ReferralRequest>> GetReferralRequestsByCustodianAndRequestDateAsync(int custodianCode, int month, int year)
+    public async Task<IList<ReferralRequest>> GetReferralRequestsByCustodianAndRequestDateAsync(string custodianCode, int month, int year)
     {
         return await context.ReferralRequests
             .Include(rr => rr.ContactDetails)

@@ -4,7 +4,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.S3ReferralFileKeyGenerator;
 
 public class S3ReferralFileKeyGenerator
 {
-    public string GetS3Key(int custodianCode, int month, int year)
+    public string GetS3Key(string custodianCode, int month, int year)
     {
         if (!LocalAuthorityData.LocalAuthorityDetailsByCustodianCode.ContainsKey(custodianCode))
         {

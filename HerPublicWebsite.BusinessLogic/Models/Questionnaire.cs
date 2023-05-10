@@ -13,7 +13,7 @@ public record class Questionnaire
     public string AddressCounty { get; set; }
     public string AddressPostcode { get; set; }
     
-    public int CustodianCode { get; set; }
+    public string CustodianCode { get; set; }
     
     public string Uprn { get; set; } // Should be populated for most questionnaires, but not 100% guaranteed
 

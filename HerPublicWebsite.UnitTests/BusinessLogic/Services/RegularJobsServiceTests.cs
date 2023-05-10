@@ -108,12 +108,12 @@ public class RegularJobsServiceTests
         // Arrange
         var newReferral1 = new ReferralRequestBuilder(1)
             .WithReferralCreated(false)
-            .WithCustodianCode(5)
+            .WithCustodianCode("5")
             .WithRequestDate(new DateTime(2023, 03, 01))
             .Build();
         var newReferral2 = new ReferralRequestBuilder(1)
             .WithReferralCreated(false)
-            .WithCustodianCode(6)
+            .WithCustodianCode("6")
             .WithRequestDate(new DateTime(2023, 03, 02))
             .Build();
         
@@ -121,9 +121,9 @@ public class RegularJobsServiceTests
         var allReferralListForCustodianCode5 = new List<ReferralRequest> { newReferral1 };
         var allReferralListForCustodianCode6 = new List<ReferralRequest> { newReferral2 };
         mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsAsync().Result).Returns(newReferralList);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync(5, 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync("5", 3, 2023).Result)
             .Returns(allReferralListForCustodianCode5);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync(6, 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync("6", 3, 2023).Result)
             .Returns(allReferralListForCustodianCode6);
         
         // Act
@@ -131,9 +131,9 @@ public class RegularJobsServiceTests
 
         // Assert
         mockS3FileWriter.Verify(fw =>
-            fw.WriteFileAsync(5, 3, 2023, It.IsAny<MemoryStream>()));
+            fw.WriteFileAsync("5", 3, 2023, It.IsAny<MemoryStream>()));
         mockS3FileWriter.Verify(fw =>
-            fw.WriteFileAsync(6, 3, 2023, It.IsAny<MemoryStream>()));
+            fw.WriteFileAsync("6", 3, 2023, It.IsAny<MemoryStream>()));
     }
     
     [Test]
@@ -142,12 +142,12 @@ public class RegularJobsServiceTests
         // Arrange
         var newReferral1 = new ReferralRequestBuilder(1)
             .WithReferralCreated(false)
-            .WithCustodianCode(5)
+            .WithCustodianCode("5")
             .WithRequestDate(new DateTime(2023, 03, 01))
             .Build();
         var newReferral2 = new ReferralRequestBuilder(1)
             .WithReferralCreated(false)
-            .WithCustodianCode(6)
+            .WithCustodianCode("6")
             .WithRequestDate(new DateTime(2023, 03, 02))
             .Build();
         
@@ -155,11 +155,11 @@ public class RegularJobsServiceTests
         var allReferralListForCustodianCode5 = new List<ReferralRequest> { newReferral1 };
         var allReferralListForCustodianCode6 = new List<ReferralRequest> { newReferral2 };
         mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsAsync().Result).Returns(newReferralList);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync(5, 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync("5", 3, 2023).Result)
             .Returns(allReferralListForCustodianCode5);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync(6, 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync("6", 3, 2023).Result)
             .Returns(allReferralListForCustodianCode6);
-        mockS3FileWriter.Setup(fw => fw.WriteFileAsync(6, 3, 2023, It.IsAny<MemoryStream>()))
+        mockS3FileWriter.Setup(fw => fw.WriteFileAsync("6", 3, 2023, It.IsAny<MemoryStream>()))
             .Throws(new InvalidOperationException("Test exception"));
         
         // Act
@@ -175,7 +175,7 @@ public class RegularJobsServiceTests
 
         // Assert
         mockS3FileWriter.Verify(fw =>
-            fw.WriteFileAsync(5, 3, 2023, It.IsAny<MemoryStream>()));
+            fw.WriteFileAsync("5", 3, 2023, It.IsAny<MemoryStream>()));
         allReferralListForCustodianCode5.Should().AllSatisfy(rr => rr.ReferralCreated.Should().BeTrue());
         allReferralListForCustodianCode6.Should().AllSatisfy(rr => rr.ReferralCreated.Should().BeFalse());
         mockDataAccessProvider.Verify(dap => dap.PersistAllChangesAsync());

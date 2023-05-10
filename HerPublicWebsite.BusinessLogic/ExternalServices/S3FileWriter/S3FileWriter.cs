@@ -28,7 +28,7 @@ public class S3FileWriter : IS3FileWriter
     // We'll still use a stream here so that if the AWS SDK ever starts supporting streams that don't know their length
     // it will be easier to take advantage.
     // https://github.com/aws/aws-sdk-net/issues/675
-    public async Task WriteFileAsync(int custodianCode, int month, int year, Stream fileContent)
+    public async Task WriteFileAsync(string custodianCode, int month, int year, Stream fileContent)
     {
         var keyName = keyGenerator.GetS3Key(custodianCode, month, year);
         

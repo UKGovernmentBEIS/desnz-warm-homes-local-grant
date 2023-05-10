@@ -16,7 +16,7 @@ public class OsPlacesApi : IOsPlacesApi
                 County = "A County",
                 Town = "Camdoon",
                 Uprn = "023232323",
-                LocalCustodianCode = 2323,
+                LocalCustodianCode = "2323",
             },
             new ()
             {
@@ -26,7 +26,7 @@ public class OsPlacesApi : IOsPlacesApi
                 Postcode = "LB6 420",
                 County = "A County",
                 Town = "Camdoon",
-                LocalCustodianCode = 2323,
+                LocalCustodianCode = "2323",
             }
         };
     }
