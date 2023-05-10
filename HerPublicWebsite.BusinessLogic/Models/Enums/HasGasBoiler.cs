@@ -1,4 +1,4 @@
-﻿using GovUkDesignSystem.Attributes;
+using GovUkDesignSystem.Attributes;
 
 namespace HerPublicWebsite.BusinessLogic.Models.Enums;
 

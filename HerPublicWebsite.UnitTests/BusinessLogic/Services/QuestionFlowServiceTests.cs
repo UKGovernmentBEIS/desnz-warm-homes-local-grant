@@ -76,11 +76,17 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Address),
         new(
-            "Gas boiler goes back to Address",
+            "Gas boiler goes back to Address if UPRN found",
             new Input(
-                QuestionFlowStep.GasBoiler
+                QuestionFlowStep.GasBoiler, uprn: "100023336956"
             ),
             QuestionFlowStep.Address),
+        new(
+            "Gas boiler goes back to Manual address if no UPRN found",
+            new Input(
+                QuestionFlowStep.GasBoiler, uprn: null
+            ),
+            QuestionFlowStep.ManualAddress),
         new(
             "Service unsuitable goes back to the country you came from",
             new Input(
@@ -145,13 +151,13 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.ManualAddress
             ),
-            QuestionFlowStep.GasBoiler), 
+            QuestionFlowStep.GasBoiler),
         new(
             "Gas boiler continues to household income",
             new Input(
                 QuestionFlowStep.GasBoiler
             ),
-            QuestionFlowStep.HouseholdIncome), 
+            QuestionFlowStep.HouseholdIncome),
     };
 
     public class QuestionFlowServiceTestCase
@@ -187,11 +193,13 @@ public class QuestionFlowServiceTests
             QuestionFlowStep page,
             OwnershipStatus? ownershipStatus = null,
             Country? country = null,
+            string uprn = null,
             QuestionFlowStep? entryPoint = null)
         {
             Page = page;
             Questionnaire = new Questionnaire
             {
+                Uprn = uprn,
                 OwnershipStatus = ownershipStatus,
                 Country = country,
             };

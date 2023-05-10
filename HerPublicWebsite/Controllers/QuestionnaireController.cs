@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -141,7 +141,7 @@ public class QuestionnaireController : Controller
         {
             ModelState.AddModelError(nameof(AddressViewModel.Postcode), "Enter a valid UK postcode");
         }
-        
+
         if (!ModelState.IsValid)
         {
             return Address_Get();
@@ -205,7 +205,8 @@ public class QuestionnaireController : Controller
     public IActionResult ManualAddress_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var viewModel = new ManualAddressViewModel(){
+        var viewModel = new ManualAddressViewModel()
+        {
             BackLink = GetBackUrl(QuestionFlowStep.SelectAddress, questionnaire)
         };
 
@@ -220,7 +221,8 @@ public class QuestionnaireController : Controller
             return ManualAddress_Get();
         }
 
-        var address = new Address {
+        var address = new Address
+        {
             AddressLine1 = viewModel.AddressLine1,
             AddressLine2 = viewModel.AddressLine2,
             AddressCounty = viewModel.County,
@@ -229,7 +231,7 @@ public class QuestionnaireController : Controller
         };
 
         var questionnaire = questionnaireService.UpdateAddress(address);
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ManualAddress, questionnaire );
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ManualAddress, questionnaire);
         return RedirectToNextStep(nextStep);
     }
 
@@ -237,13 +239,14 @@ public class QuestionnaireController : Controller
     public IActionResult GasBoiler_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var viewModel = new GasBoilerViewModel(){
+        var viewModel = new GasBoilerViewModel()
+        {
             BackLink = GetBackUrl(QuestionFlowStep.GasBoiler, questionnaire)
         };
 
         return View("GasBoiler", viewModel);
     }
-    
+
     [HttpPost("boiler")]
     public IActionResult GasBoiler_Post(GasBoilerViewModel viewModel)
     {
@@ -257,13 +260,13 @@ public class QuestionnaireController : Controller
 
         return RedirectToNextStep(nextStep);
     }
-    
+
     [HttpGet("income")]
     public IActionResult HouseholdIncome_Get()
     {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
-    
+
     [HttpPost("income")]
     public IActionResult HouseholdIncome_Post()
     {
@@ -299,6 +302,7 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.OwnershipStatus => new PathByActionArguments(nameof(OwnershipStatus_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.Address => new PathByActionArguments(nameof(Address_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.SelectAddress => new PathByActionArguments(nameof(SelectAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.ManualAddress => new PathByActionArguments(nameof(ManualAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.GasBoiler => new PathByActionArguments(nameof(GasBoiler_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.HouseholdIncome => new PathByActionArguments(nameof(HouseholdIncome_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             _ => throw new ArgumentOutOfRangeException()

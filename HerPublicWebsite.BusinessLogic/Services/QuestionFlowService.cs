@@ -25,7 +25,7 @@ namespace HerPublicWebsite.BusinessLogic.Services
                 QuestionFlowStep.Address => AddressBackDestination(),
                 QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
                 QuestionFlowStep.ManualAddress => ManualAddressBackDestination(),
-                QuestionFlowStep.GasBoiler => GasBoilerBackDestination(),
+                QuestionFlowStep.GasBoiler => GasBoilerBackDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -80,10 +80,14 @@ namespace HerPublicWebsite.BusinessLogic.Services
         {
             return QuestionFlowStep.Address;
         }
-        
-        private QuestionFlowStep GasBoilerBackDestination()
+
+        private QuestionFlowStep GasBoilerBackDestination(Questionnaire questionnaire)
         {
-            return QuestionFlowStep.Address;
+            return questionnaire.Uprn switch
+            {
+                null => QuestionFlowStep.ManualAddress,
+                _ => QuestionFlowStep.Address
+            };
         }
 
         private QuestionFlowStep CountryForwardDestination(Questionnaire questionnaire)
@@ -114,7 +118,7 @@ namespace HerPublicWebsite.BusinessLogic.Services
         {
             return QuestionFlowStep.GasBoiler;
         }
-        
+
         private QuestionFlowStep GasBoilerForwardDestination(Questionnaire questionnaire)
         {
             return QuestionFlowStep.HouseholdIncome;
