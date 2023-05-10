@@ -139,7 +139,7 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.ManualAddress
             ),
-            QuestionFlowStep.GasBoiler), 
+            QuestionFlowStep.GasBoiler),
     };
 
     public class QuestionFlowServiceTestCase

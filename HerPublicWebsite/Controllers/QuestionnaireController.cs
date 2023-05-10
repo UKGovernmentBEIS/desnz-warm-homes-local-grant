@@ -141,7 +141,7 @@ public class QuestionnaireController : Controller
         {
             ModelState.AddModelError(nameof(AddressViewModel.Postcode), "Enter a valid UK postcode");
         }
-        
+
         if (!ModelState.IsValid)
         {
             return Address_Get();
@@ -205,7 +205,8 @@ public class QuestionnaireController : Controller
     public IActionResult ManualAddress_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var viewModel = new ManualAddressViewModel(){
+        var viewModel = new ManualAddressViewModel()
+        {
             BackLink = GetBackUrl(QuestionFlowStep.SelectAddress, questionnaire)
         };
 
@@ -215,12 +216,18 @@ public class QuestionnaireController : Controller
     [HttpPost("address/manual")]
     public IActionResult ManualAddress_Post(ManualAddressViewModel viewModel)
     {
+        if (viewModel.Postcode is not null && !viewModel.Postcode.IsValidUkPostcodeFormat())
+        {
+            ModelState.AddModelError(nameof(ManualAddressViewModel.Postcode), "Enter a valid UK postcode");
+        }
+
         if (!ModelState.IsValid)
         {
             return ManualAddress_Get();
         }
 
-        var address = new Address {
+        var address = new Address
+        {
             AddressLine1 = viewModel.AddressLine1,
             AddressLine2 = viewModel.AddressLine2,
             AddressCounty = viewModel.County,
@@ -229,7 +236,7 @@ public class QuestionnaireController : Controller
         };
 
         var questionnaire = questionnaireService.UpdateAddress(address);
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ManualAddress, questionnaire );
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ManualAddress, questionnaire);
         return RedirectToNextStep(nextStep);
     }
 
