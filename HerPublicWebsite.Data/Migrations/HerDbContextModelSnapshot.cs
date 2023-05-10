@@ -48,9 +48,6 @@ namespace HerPublicWebsite.Data.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("text");
 
-                    b.Property<int>("QuestionnaireId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Telephone")
                         .HasColumnType("text");
 
@@ -61,27 +58,24 @@ namespace HerPublicWebsite.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionnaireId")
-                        .IsUnique();
-
                     b.ToTable("ContactDetails");
                 });
 
-            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.Questionnaire", b =>
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", b =>
                 {
-                    b.Property<int>("QuestionnaireId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("QuestionnaireId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AddressCounty")
+                        .HasColumnType("text");
 
                     b.Property<string>("AddressLine1")
                         .HasColumnType("text");
 
                     b.Property<string>("AddressLine2")
-                        .HasColumnType("text");
-
-                    b.Property<string>("AddressLine3")
                         .HasColumnType("text");
 
                     b.Property<string>("AddressPostcode")
@@ -90,25 +84,28 @@ namespace HerPublicWebsite.Data.Migrations
                     b.Property<string>("AddressTown")
                         .HasColumnType("text");
 
+                    b.Property<int>("ContactDetailsId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("CustodianCode")
+                        .HasColumnType("text");
+
                     b.Property<int>("EpcRating")
                         .HasColumnType("integer");
 
                     b.Property<int>("HasGasBoiler")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Hug2ReferralId")
-                        .HasColumnType("text");
-
                     b.Property<int>("IncomeBand")
                         .HasColumnType("integer");
-
-                    b.Property<bool>("IsEligibleForHug2")
-                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsLsoaProperty")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("ReferralCreated")
+                    b.Property<bool>("ReferralCreated")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("RequestDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Uprn")
@@ -119,9 +116,11 @@ namespace HerPublicWebsite.Data.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("xid");
 
-                    b.HasKey("QuestionnaireId");
+                    b.HasKey("Id");
 
-                    b.ToTable("Questionnaires");
+                    b.HasIndex("ContactDetailsId");
+
+                    b.ToTable("ReferralRequests");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
@@ -143,17 +142,14 @@ namespace HerPublicWebsite.Data.Migrations
                     b.ToTable("DataProtectionKeys");
                 });
 
-            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ContactDetails", b =>
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", b =>
                 {
-                    b.HasOne("HerPublicWebsite.BusinessLogic.Models.Questionnaire", null)
-                        .WithOne("ContactDetails")
-                        .HasForeignKey("HerPublicWebsite.BusinessLogic.Models.ContactDetails", "QuestionnaireId")
+                    b.HasOne("HerPublicWebsite.BusinessLogic.Models.ContactDetails", "ContactDetails")
+                        .WithMany()
+                        .HasForeignKey("ContactDetailsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.Questionnaire", b =>
-                {
                     b.Navigation("ContactDetails");
                 });
 #pragma warning restore 612, 618

@@ -4,17 +4,17 @@ namespace HerPublicWebsite.BusinessLogic.Models;
 
 public record class Questionnaire
 {
-    public int QuestionnaireId { get; set; }
-
     public Country? Country { get; set; }
     public OwnershipStatus? OwnershipStatus { get; set; }
 
     public string AddressLine1 { get; set; }
     public string AddressLine2 { get; set; }
-    public string AddressLine3 { get; set; }
     public string AddressTown { get; set; }
+    public string AddressCounty { get; set; }
     public string AddressPostcode { get; set; }
-
+    
+    public string CustodianCode { get; set; }
+    
     public string Uprn { get; set; } // Should be populated for most questionnaires, but not 100% guaranteed
 
     public EpcRating EpcRating { get; set; } = EpcRating.Unknown;
