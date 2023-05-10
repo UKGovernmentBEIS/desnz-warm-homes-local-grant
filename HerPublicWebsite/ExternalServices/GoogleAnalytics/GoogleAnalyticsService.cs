@@ -26,8 +26,38 @@ public class GoogleAnalyticsService
         this.cookieService = cookieService;
         this.logger = logger;
     }
+
+    public async Task SendQuestionnaireCompletedEvent(HttpRequest request)
+    {
+        await SendEvent(new GaRequestBody
+        {
+            ClientId = GetClientId(request),
+            GaEvents = new List<GaEvent>
+            {
+                new()
+                {
+                    Name = "questionnaire_completed"
+                }
+            }
+        });
+    }
     
-    public async Task SendEvent(GaRequestBody body)
+    public async Task SendReferralGeneratedEvent(HttpRequest request)
+    {
+        await SendEvent(new GaRequestBody
+        {
+            ClientId = GetClientId(request),
+            GaEvents = new List<GaEvent>
+            {
+                new()
+                {
+                    Name = "referral_generated"
+                }
+            }
+        });
+    }
+    
+    private async Task SendEvent(GaRequestBody body)
     {
         try
         {
@@ -47,7 +77,7 @@ public class GoogleAnalyticsService
     // Cookie format: GAx.y.zzzzzzzzz.tttttttttt.
     // The z section is the client id
     // If we can't find the _ga cookie, return a new id
-    public string GetClientId(HttpRequest request)
+    private string GetClientId(HttpRequest request)
     {
         return cookieService.TryGetCookie<string>(request, Configuration.CookieName, out var cookie) 
             ? cookie.Split('.')[2] 
