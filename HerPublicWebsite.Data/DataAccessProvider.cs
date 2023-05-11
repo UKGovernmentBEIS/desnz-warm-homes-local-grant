@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HerPublicWebsite.BusinessLogic;
+using Microsoft.EntityFrameworkCore;
 using HerPublicWebsite.BusinessLogic.Models;
 
 namespace HerPublicWebsite.Data;
@@ -12,23 +13,30 @@ public class DataAccessProvider : IDataAccessProvider
         this.context = context;
     }
 
-    public async Task<Questionnaire> AddQuestionnaireAsync(Questionnaire questionnaire)
+    public async Task<ReferralRequest> PersistNewReferralRequestAsync(ReferralRequest referralRequest)
     {
-        context.Questionnaires.Add(questionnaire);
+        context.ReferralRequests.Add(referralRequest);
         await context.SaveChangesAsync();
-        return questionnaire;
+        return referralRequest;
     }
 
-    public async Task UpdateQuestionnaireAsync(Questionnaire questionnaire)
+    public async Task<IList<ReferralRequest>> GetUnsubmittedReferralRequestsAsync()
     {
-        context.Questionnaires.Update(questionnaire);
-        await context.SaveChangesAsync();
+        return await context.ReferralRequests
+            .Where(rr => !rr.ReferralCreated)
+            .ToListAsync();
+    }
+    
+    public async Task<IList<ReferralRequest>> GetReferralRequestsByCustodianAndRequestDateAsync(string custodianCode, int month, int year)
+    {
+        return await context.ReferralRequests
+            .Include(rr => rr.ContactDetails)
+            .Where(rr => rr.CustodianCode == custodianCode && rr.RequestDate.Month == month && rr.RequestDate.Year == year)
+            .ToListAsync();
     }
 
-    public async Task<Questionnaire> GetQuestionnaireAsync(int id)
+    public async Task PersistAllChangesAsync()
     {
-        return await context.Questionnaires
-            .Include(q => q.ContactDetails)
-            .SingleOrDefaultAsync(q => q.QuestionnaireId == id);
+        await context.SaveChangesAsync();
     }
 }

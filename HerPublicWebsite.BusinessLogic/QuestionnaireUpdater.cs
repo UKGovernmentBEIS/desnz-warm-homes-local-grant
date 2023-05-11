@@ -21,12 +21,11 @@ public class QuestionnaireUpdater
     public Questionnaire UpdateAddress(Questionnaire questionnaire, Address address)
     {
         questionnaire.Uprn = address.Uprn;
-        questionnaire.AddressPostcode = address.AddressPostcode;
+        questionnaire.AddressPostcode = address.Postcode;
         questionnaire.AddressLine1 = address.AddressLine1;
         questionnaire.AddressLine2 = address.AddressLine2;
-        questionnaire.AddressLine3 = address.AddressLine3;
-        questionnaire.AddressTown = address.AddressTown;
-        questionnaire.AddressCounty = address.AddressCounty;
+        questionnaire.AddressTown = address.Town;
+        questionnaire.AddressCounty = address.County;
         questionnaire.Uprn = address.Uprn;
 
         return questionnaire;

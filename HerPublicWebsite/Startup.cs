@@ -1,5 +1,7 @@
 using System;
 using GovUkDesignSystem.ModelBinders;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -10,7 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using HerPublicWebsite.BusinessLogic;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
-using HerPublicWebsite.BusinessLogic.Services;
+using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
+using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
+using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
+using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+using HerPublicWebsite.BusinessLogic.Services.S3ReferralFileKeyGenerator;
 using HerPublicWebsite.Data;
 using HerPublicWebsite.ErrorHandling;
 using HerPublicWebsite.ExternalServices.EmailSending;
@@ -19,6 +25,7 @@ using HerPublicWebsite.Middleware;
 using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
 using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
+using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 
 namespace HerPublicWebsite
 {
@@ -36,10 +43,25 @@ namespace HerPublicWebsite
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add Hangfire services.
+            services.AddHangfire(config => config
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UsePostgreSqlStorage(configuration.GetConnectionString("PostgreSQLConnection")));
+
+            // Add the Hangfire processing server as IHostedService
+            services.AddHangfireServer();
+
+            services.AddScoped<CsvFileCreator>();
+            services.AddScoped<IDataAccessProvider, DataAccessProvider>();
             services.AddScoped<EligiblePostcodeService>();
             services.AddScoped<QuestionnaireService>();
             services.AddScoped<QuestionnaireUpdater>();
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
+            services.AddScoped<IRegularJobsService, RegularJobsService>();
+            services.AddScoped<IS3FileWriter, S3FileWriter>();
+            services.AddScoped<S3ReferralFileKeyGenerator>();
             
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();
