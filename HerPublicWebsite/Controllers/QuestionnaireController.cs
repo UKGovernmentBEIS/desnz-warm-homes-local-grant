@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -244,9 +244,40 @@ public class QuestionnaireController : Controller
     [HttpGet("boiler")]
     public IActionResult GasBoiler_Get()
     {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new GasBoilerViewModel()
+        {
+            BackLink = GetBackUrl(QuestionFlowStep.GasBoiler, questionnaire)
+        };
+
+        return View("GasBoiler", viewModel);
+    }
+
+    [HttpPost("boiler")]
+    public IActionResult GasBoiler_Post(GasBoilerViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return GasBoiler_Get();
+        }
+
+        var questionnaire = questionnaireService.UpdateGasBoiler(viewModel.HasGasBoiler!.Value);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.GasBoiler, questionnaire);
+
+        return RedirectToNextStep(nextStep);
+    }
+
+    [HttpGet("income")]
+    public IActionResult HouseholdIncome_Get()
+    {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
 
+    [HttpPost("income")]
+    public IActionResult HouseholdIncome_Post()
+    {
+        return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
+    }
 
     private string GetBackUrl(
         QuestionFlowStep currentStep,
@@ -277,7 +308,9 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.OwnershipStatus => new PathByActionArguments(nameof(OwnershipStatus_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.Address => new PathByActionArguments(nameof(Address_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.SelectAddress => new PathByActionArguments(nameof(SelectAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.ManualAddress => new PathByActionArguments(nameof(ManualAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.GasBoiler => new PathByActionArguments(nameof(GasBoiler_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.HouseholdIncome => new PathByActionArguments(nameof(HouseholdIncome_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

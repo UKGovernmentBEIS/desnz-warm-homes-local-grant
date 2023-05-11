@@ -25,6 +25,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.Address => AddressBackDestination(),
                 QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
                 QuestionFlowStep.ManualAddress => ManualAddressBackDestination(),
+                QuestionFlowStep.GasBoiler => GasBoilerBackDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -38,6 +39,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.Address => AddressForwardDestination(questionnaire),
                 QuestionFlowStep.SelectAddress => SelectAddressForwardDestination(questionnaire),
                 QuestionFlowStep.ManualAddress => ManualAddressForwardDestination(questionnaire),
+                QuestionFlowStep.GasBoiler => GasBoilerForwardDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
             };
         }
@@ -79,6 +81,15 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return QuestionFlowStep.Address;
         }
 
+        private QuestionFlowStep GasBoilerBackDestination(Questionnaire questionnaire)
+        {
+            return questionnaire.Uprn switch
+            {
+                null => QuestionFlowStep.ManualAddress,
+                _ => QuestionFlowStep.Address
+            };
+        }
+
         private QuestionFlowStep CountryForwardDestination(Questionnaire questionnaire)
         {
             return questionnaire.Country is not Country.England
@@ -106,6 +117,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         private QuestionFlowStep ManualAddressForwardDestination(Questionnaire questionnaire)
         {
             return QuestionFlowStep.GasBoiler;
+        }
+
+        private QuestionFlowStep GasBoilerForwardDestination(Questionnaire questionnaire)
+        {
+            return QuestionFlowStep.HouseholdIncome;
         }
     }
 }

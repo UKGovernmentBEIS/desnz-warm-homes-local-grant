@@ -1,0 +1,58 @@
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using HerPublicWebsite.BusinessLogic.Models.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using HerPublicWebsite.Controllers
+
+@model HerPublicWebsite.Models.Questionnaire.GasBoilerViewModel
+
+@{
+    ViewBag.Title = "Boiler";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+           {
+               Text = "Back",
+               Href = Model.BackLink,
+           })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <form action="@Url.Action(nameof(QuestionnaireController.GasBoiler_Post), "Questionnaire")" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+
+            @await Html.GovUkRadiosFor(m => m.HasGasBoiler,
+                       fieldsetOptions: new FieldsetViewModel
+                       {
+                           Legend = new LegendViewModel
+                           {
+                               Text = "Do you have a gas boiler?",
+                               Classes = "govuk-fieldset__legend--l",
+                               IsPageHeading = true
+                           }
+                       },
+                       new HintViewModel
+                       {
+                           Html = @<text>
+                                     <p>To receive the Home Upgrade Grant 2, your property can not have a gas boiler as a heating system.</p>
+
+                                     <p>If you have two heating systems, then select yes if you use your gas boiler to heat your home the most. </p>
+                               </text>
+                               
+                       },
+                       // Necessary to make sure the options appear in the correct order
+                       overrideRadioValues: new [] { HasGasBoiler.Yes, HasGasBoiler.No, HasGasBoiler.Unknown })
+
+            @(await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Continue",
+            }))
+
+        </form>
+        
+    </div>
+</div>

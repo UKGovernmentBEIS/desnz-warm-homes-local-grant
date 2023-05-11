@@ -30,4 +30,11 @@ public class QuestionnaireUpdater
 
         return questionnaire;
     }
+
+    public Questionnaire UpdateGasBoiler(Questionnaire questionnaire, HasGasBoiler hasGasBoiler)
+    {
+        questionnaire.HasGasBoiler = hasGasBoiler;
+
+        return questionnaire;
+    }
 }

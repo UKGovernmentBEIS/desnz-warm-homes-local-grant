@@ -62,6 +62,14 @@ public class QuestionnaireService
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
+    
+    public Questionnaire UpdateGasBoiler(HasGasBoiler hasGasBoiler)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdateGasBoiler(questionnaire, hasGasBoiler);
+        SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
 
     private void SaveQuestionnaireToSession(Questionnaire questionnaire)
     {
