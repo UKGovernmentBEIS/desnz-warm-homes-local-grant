@@ -8,6 +8,6 @@ namespace HerPublicWebsite.Models.Questionnaire;
 public class SelectAddressViewModel : QuestionFlowViewModel
 {
     public List<Address> Addresses {get; set;}
-    [GovUkValidateRequired(ErrorMessageIfMissing = "You must select an address")]
+    [GovUkValidateRequired(ErrorMessageIfMissing = "Select your address or click \"Address not listed above\"")]
     public string SelectedAddressIndex {get; set;}
 }
