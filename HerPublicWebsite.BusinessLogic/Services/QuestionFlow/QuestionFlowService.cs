@@ -24,6 +24,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusBackDestination(),
                 QuestionFlowStep.Address => AddressBackDestination(),
                 QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
+                QuestionFlowStep.ManualAddress => ManualAddressBackDestination(),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -36,6 +37,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusForwardDestination(questionnaire),
                 QuestionFlowStep.Address => AddressForwardDestination(questionnaire),
                 QuestionFlowStep.SelectAddress => SelectAddressForwardDestination(questionnaire),
+                QuestionFlowStep.ManualAddress => ManualAddressForwardDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
             };
         }
@@ -72,6 +74,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return QuestionFlowStep.Address;
         }
 
+        private QuestionFlowStep ManualAddressBackDestination()
+        {
+            return QuestionFlowStep.Address;
+        }
+
         private QuestionFlowStep CountryForwardDestination(Questionnaire questionnaire)
         {
             return questionnaire.Country is not Country.England
@@ -92,6 +99,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         }
 
         private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire)
+        {
+            return QuestionFlowStep.GasBoiler;
+        }
+
+        private QuestionFlowStep ManualAddressForwardDestination(Questionnaire questionnaire)
         {
             return QuestionFlowStep.GasBoiler;
         }

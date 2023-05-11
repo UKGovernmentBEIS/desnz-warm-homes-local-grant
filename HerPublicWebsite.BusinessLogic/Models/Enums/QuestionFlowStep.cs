@@ -8,5 +8,6 @@ public enum QuestionFlowStep
     OwnershipStatus,
     Address,
     SelectAddress,
+    ManualAddress,
     GasBoiler,
 }

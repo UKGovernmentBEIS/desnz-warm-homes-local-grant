@@ -2,7 +2,7 @@
 
 namespace HerPublicWebsite.BusinessLogic.Models;
 
-public record class Questionnaire
+public record Questionnaire
 {
     public Country? Country { get; set; }
     public OwnershipStatus? OwnershipStatus { get; set; }

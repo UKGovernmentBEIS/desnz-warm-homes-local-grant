@@ -1,0 +1,75 @@
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using HerPublicWebsite.BusinessLogic.Models.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using HerPublicWebsite.Controllers
+
+@model HerPublicWebsite.Models.Questionnaire.ManualAddressViewModel
+@{
+    ViewBag.Title = "Address";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+           {
+               Text = "Back",
+               Href = Model.BackLink,
+           })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <form action="@Url.Action(nameof(QuestionnaireController.ManualAddress_Post), "Questionnaire")" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            @(Html.HiddenFor(m => m.EntryPoint))
+
+            <h1 class="govuk-heading-l">
+                What is the address of your property?
+            </h1>
+
+
+            @await Html.GovUkTextInputFor(m => m.AddressLine1, labelOptions: new LabelViewModel()
+                   {
+                       Text = "Address line 1"
+                   },
+                       autocomplete: "address-line1"
+                       )
+            @await Html.GovUkTextInputFor(m => m.AddressLine2, labelOptions: new LabelViewModel()
+                   {
+                       Text = "Address line 2 (optional)"
+                   },
+                       autocomplete: "address-line2"
+                       )
+            @await Html.GovUkTextInputFor(m => m.Town, labelOptions: new LabelViewModel()
+                   {
+                       Text = "Town or city"
+                   },
+                       classes: "govuk-!-width-two-thirds",
+                       autocomplete: "address-level2"
+                       )
+
+            @await Html.GovUkTextInputFor(m => m.County, labelOptions: new LabelViewModel()
+                   {
+                       Text = "County (optional)"
+                   },
+                       classes: "govuk-!-width-two-thirds"
+                       )
+            
+            @await Html.GovUkTextInputFor(m => m.Postcode, labelOptions: new LabelViewModel()
+                   {
+                       Text = "Postcode"
+                   },
+                       classes: "govuk-input--width-10",
+                       autocomplete: "postal-code",
+                       placeholder: "e.g. AB12 3CD"
+                       )
+
+            @(await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Submit",
+            }))
+
+        </form>
+
+    </div>
+</div>
