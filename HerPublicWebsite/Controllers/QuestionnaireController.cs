@@ -60,6 +60,7 @@ public class QuestionnaireController : Controller
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new GasBoilerViewModel
         {
+            HasGasBoiler = questionnaire.HasGasBoiler,
             BackLink = GetBackUrl(QuestionFlowStep.GasBoiler, questionnaire)
         };
 
@@ -245,6 +246,11 @@ public class QuestionnaireController : Controller
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new ManualAddressViewModel()
         {
+            AddressLine1 = questionnaire.AddressLine1,
+            AddressLine2 = questionnaire.AddressLine2,
+            Town = questionnaire.AddressTown,
+            County = questionnaire.AddressCounty,
+            Postcode = questionnaire.AddressPostcode,
             BackLink = GetBackUrl(QuestionFlowStep.SelectAddress, questionnaire)
         };
 
