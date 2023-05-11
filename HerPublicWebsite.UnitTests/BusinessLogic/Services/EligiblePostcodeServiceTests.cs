@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using HerPublicWebsite.BusinessLogic.Services;
+using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 

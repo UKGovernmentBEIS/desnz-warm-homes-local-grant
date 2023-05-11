@@ -7,7 +7,7 @@ namespace HerPublicWebsite.Data;
 
 public class HerDbContext : DbContext, IDataProtectionKeyContext
 {
-    public DbSet<Questionnaire> Questionnaires { get; set; }
+    public DbSet<ReferralRequest> ReferralRequests { get; set; }
     public DbSet<ContactDetails> ContactDetails { get; set; }
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     
@@ -17,23 +17,23 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        SetupQuestionnaires(modelBuilder);
+        SetupReferralRequests(modelBuilder);
         SetupContactDetails(modelBuilder);
         SetupRelations(modelBuilder);
     }
 
-    private void SetupQuestionnaires(ModelBuilder modelBuilder)
+    private void SetupReferralRequests(ModelBuilder modelBuilder)
     {
-        // Questionnaire primary key
-        modelBuilder.Entity<Questionnaire>()
-            .Property<int>("QuestionnaireId")
+        // Referral request primary key
+        modelBuilder.Entity<ReferralRequest>()
+            .Property<int>("Id")
             .HasColumnType("integer")
             .ValueGeneratedOnAdd();
-        modelBuilder.Entity<Questionnaire>()
-            .HasKey("QuestionnaireId");
+        modelBuilder.Entity<ReferralRequest>()
+            .HasKey("Id");
         
-        // Questionnaire row versioning
-        AddRowVersionColumn(modelBuilder.Entity<Questionnaire>());
+        // Referral request row versioning
+        AddRowVersionColumn(modelBuilder.Entity<ReferralRequest>());
     }
 
     private void SetupContactDetails(ModelBuilder modelBuilder)
@@ -52,14 +52,11 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
 
     private void SetupRelations(ModelBuilder modelBuilder)
     {
-        // Set up the Questionnaire <-> ContactDetails relationship in the database
-        modelBuilder.Entity<ContactDetails>()
-            .Property<int>("QuestionnaireId");
-        
-        modelBuilder.Entity<ContactDetails>()
-            .HasOne<Questionnaire>()
-            .WithOne(d => d.ContactDetails)
-            .HasForeignKey<ContactDetails>("QuestionnaireId")
+        // Set up the ReferralRequest -> ContactDetails relationship in the database
+        modelBuilder.Entity<ReferralRequest>()
+            .HasOne(rr => rr.ContactDetails)
+            .WithMany()
+            .HasForeignKey("ContactDetailsId")
             .IsRequired();
     }
 
