@@ -231,9 +231,9 @@ public class QuestionnaireController : Controller
         {
             AddressLine1 = viewModel.AddressLine1,
             AddressLine2 = viewModel.AddressLine2,
-            AddressCounty = viewModel.County,
-            AddressTown = viewModel.Town,
-            AddressPostcode = viewModel.Postcode
+            County = viewModel.County,
+            Town = viewModel.Town,
+            Postcode = viewModel.Postcode
         };
 
         var questionnaire = questionnaireService.UpdateAddress(address);
