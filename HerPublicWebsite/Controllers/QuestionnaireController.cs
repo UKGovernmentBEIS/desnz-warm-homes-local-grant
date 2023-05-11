@@ -53,6 +53,43 @@ public class QuestionnaireController : Controller
     {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
+    
+    [HttpGet("boiler")]
+    public IActionResult GasBoiler_Get()
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new GasBoilerViewModel
+        {
+            BackLink = GetBackUrl(QuestionFlowStep.GasBoiler, questionnaire)
+        };
+
+        return View("GasBoiler", viewModel);
+    }
+
+    [HttpPost("boiler")]
+    public IActionResult GasBoiler_Post(GasBoilerViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return GasBoiler_Get();
+        }
+
+        var questionnaire = questionnaireService.UpdateGasBoiler(viewModel.HasGasBoiler!.Value);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.GasBoiler, questionnaire);
+
+        return RedirectToNextStep(nextStep);
+    }
+    
+    [HttpGet("direct-to-eco/")]
+    public IActionResult DirectToEco_Get()
+    {
+        var viewModel = new DirectToEcoViewModel
+        {
+            BackLink = GetBackUrl(QuestionFlowStep.DirectToEco)
+        };
+
+        return View("DirectToEco", viewModel);
+    }
 
     [HttpGet("country/")]
     public IActionResult Country_Get()
@@ -241,32 +278,6 @@ public class QuestionnaireController : Controller
         return RedirectToNextStep(nextStep);
     }
 
-    [HttpGet("boiler")]
-    public IActionResult GasBoiler_Get()
-    {
-        var questionnaire = questionnaireService.GetQuestionnaire();
-        var viewModel = new GasBoilerViewModel()
-        {
-            BackLink = GetBackUrl(QuestionFlowStep.GasBoiler, questionnaire)
-        };
-
-        return View("GasBoiler", viewModel);
-    }
-
-    [HttpPost("boiler")]
-    public IActionResult GasBoiler_Post(GasBoilerViewModel viewModel)
-    {
-        if (!ModelState.IsValid)
-        {
-            return GasBoiler_Get();
-        }
-
-        var questionnaire = questionnaireService.UpdateGasBoiler(viewModel.HasGasBoiler!.Value);
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.GasBoiler, questionnaire);
-
-        return RedirectToNextStep(nextStep);
-    }
-
     [HttpGet("income")]
     public IActionResult HouseholdIncome_Get()
     {
@@ -303,13 +314,14 @@ public class QuestionnaireController : Controller
         return question switch
         {
             QuestionFlowStep.Start => new PathByActionArguments(nameof(Index), "Questionnaire"),
+            QuestionFlowStep.GasBoiler => new PathByActionArguments(nameof(GasBoiler_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.DirectToEco => new PathByActionArguments(nameof(DirectToEco_Get), "Questionnaire"),
             QuestionFlowStep.Country => new PathByActionArguments(nameof(Country_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.ServiceUnsuitable => new PathByActionArguments(nameof(ServiceUnsuitable_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.OwnershipStatus => new PathByActionArguments(nameof(OwnershipStatus_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.Address => new PathByActionArguments(nameof(Address_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.SelectAddress => new PathByActionArguments(nameof(SelectAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.ManualAddress => new PathByActionArguments(nameof(ManualAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
-            QuestionFlowStep.GasBoiler => new PathByActionArguments(nameof(GasBoiler_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.HouseholdIncome => new PathByActionArguments(nameof(HouseholdIncome_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             _ => throw new ArgumentOutOfRangeException()
         };

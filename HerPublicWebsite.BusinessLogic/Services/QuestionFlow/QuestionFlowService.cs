@@ -19,13 +19,15 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         {
             return page switch
             {
+                QuestionFlowStep.GasBoiler => GasBoilerBackDestination(),
+                QuestionFlowStep.DirectToEco => DirectToEcoBackDestination(),
                 QuestionFlowStep.Country => CountryBackDestination(),
                 QuestionFlowStep.ServiceUnsuitable => ServiceUnsuitableBackDestination(questionnaire),
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusBackDestination(),
                 QuestionFlowStep.Address => AddressBackDestination(),
                 QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
                 QuestionFlowStep.ManualAddress => ManualAddressBackDestination(),
-                QuestionFlowStep.GasBoiler => GasBoilerBackDestination(questionnaire),
+                QuestionFlowStep.HouseholdIncome => HouseholdIncomeBackDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -34,19 +36,29 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         {
             return page switch
             {
+                QuestionFlowStep.GasBoiler => GasBoilerForwardDestination(questionnaire),
                 QuestionFlowStep.Country => CountryForwardDestination(questionnaire),
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusForwardDestination(questionnaire),
                 QuestionFlowStep.Address => AddressForwardDestination(questionnaire),
                 QuestionFlowStep.SelectAddress => SelectAddressForwardDestination(questionnaire),
                 QuestionFlowStep.ManualAddress => ManualAddressForwardDestination(questionnaire),
-                QuestionFlowStep.GasBoiler => GasBoilerForwardDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
             };
+        }
+        
+        private QuestionFlowStep GasBoilerBackDestination()
+        {
+            return QuestionFlowStep.Start;
+        }
+
+        private QuestionFlowStep DirectToEcoBackDestination()
+        {
+            return QuestionFlowStep.GasBoiler;
         }
 
         private QuestionFlowStep CountryBackDestination()
         {
-            return QuestionFlowStep.Start;
+            return QuestionFlowStep.GasBoiler;
         }
 
         private QuestionFlowStep ServiceUnsuitableBackDestination(Questionnaire questionnaire)
@@ -81,13 +93,20 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return QuestionFlowStep.Address;
         }
 
-        private QuestionFlowStep GasBoilerBackDestination(Questionnaire questionnaire)
+        private QuestionFlowStep HouseholdIncomeBackDestination(Questionnaire questionnaire)
         {
             return questionnaire.Uprn switch
             {
                 null => QuestionFlowStep.ManualAddress,
                 _ => QuestionFlowStep.Address
             };
+        }
+        
+        private QuestionFlowStep GasBoilerForwardDestination(Questionnaire questionnaire)
+        {
+            return questionnaire.HasGasBoiler is HasGasBoiler.Yes
+                ? QuestionFlowStep.DirectToEco
+                : QuestionFlowStep.Country;
         }
 
         private QuestionFlowStep CountryForwardDestination(Questionnaire questionnaire)
@@ -111,15 +130,10 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire)
         {
-            return QuestionFlowStep.GasBoiler;
+            return QuestionFlowStep.HouseholdIncome;
         }
 
         private QuestionFlowStep ManualAddressForwardDestination(Questionnaire questionnaire)
-        {
-            return QuestionFlowStep.GasBoiler;
-        }
-
-        private QuestionFlowStep GasBoilerForwardDestination(Questionnaire questionnaire)
         {
             return QuestionFlowStep.HouseholdIncome;
         }
