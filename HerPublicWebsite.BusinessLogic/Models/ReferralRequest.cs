@@ -42,8 +42,8 @@ public class ReferralRequest
         Uprn = questionnaire.Uprn;
         EpcRating = questionnaire.EpcRating;
         IsLsoaProperty = questionnaire.IsLsoaProperty;
-        HasGasBoiler = questionnaire.HasGasBoiler;
-        IncomeBand = questionnaire.IncomeBand;
+        HasGasBoiler = questionnaire.HasGasBoiler!.Value;
+        IncomeBand = questionnaire.IncomeBand!.Value;
         ContactDetails = questionnaire.ContactDetails;
     }
 }

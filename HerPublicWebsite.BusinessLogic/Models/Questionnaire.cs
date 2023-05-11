@@ -19,8 +19,8 @@ public record Questionnaire
 
     public EpcRating EpcRating { get; set; } = EpcRating.Unknown;
     public bool IsLsoaProperty { get; set; }
-    public HasGasBoiler HasGasBoiler { get; set; } = HasGasBoiler.Unknown;
-    public IncomeBand IncomeBand { get; set; }
+    public HasGasBoiler? HasGasBoiler { get; set; }
+    public IncomeBand? IncomeBand { get; set; }
 
     public DateTime ReferralCreated { get; set; }
 
