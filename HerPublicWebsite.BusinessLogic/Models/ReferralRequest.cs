@@ -10,20 +10,22 @@ public class ReferralRequest
     public string AddressTown { get; set; }
     public string AddressCounty { get; set; }
     public string AddressPostcode { get; set; }
-    
+
     public string CustodianCode { get; set; }
-    
+
     public string Uprn { get; set; } // Should be populated for most questionnaires, but not 100% guaranteed
 
     public EpcRating EpcRating { get; set; } = EpcRating.Unknown;
     public bool IsLsoaProperty { get; set; }
     public HasGasBoiler HasGasBoiler { get; set; } = HasGasBoiler.Unknown;
     public IncomeBand IncomeBand { get; set; }
-    
+
     public DateTime RequestDate { get; set; }
 
     public bool ReferralCreated { get; set; } = false;
-    
+
+    public string ReferralCode { get; set; }
+
     public ContactDetails ContactDetails { get; set; }
 
     public ReferralRequest()
@@ -45,5 +47,15 @@ public class ReferralRequest
         HasGasBoiler = questionnaire.HasGasBoiler;
         IncomeBand = questionnaire.IncomeBand;
         ContactDetails = questionnaire.ContactDetails;
+    }
+
+    public void UpdateReferralCode()
+    {
+        if (Id == 0)
+        {
+            throw new InvalidOperationException("Cannot generate referral code until referral request has a unique ID");
+        }
+
+        ReferralCode = $"HUG2{Id:D7}";
     }
 }
