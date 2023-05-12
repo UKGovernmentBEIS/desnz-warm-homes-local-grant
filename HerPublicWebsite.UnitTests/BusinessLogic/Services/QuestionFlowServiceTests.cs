@@ -47,11 +47,23 @@ public class QuestionFlowServiceTests
     private static QuestionFlowServiceTestCase[] BackTestCases =
     {
         new(
-            "Country goes back to start",
+            "Gas boiler goes back to start",
+            new Input(
+                QuestionFlowStep.GasBoiler
+            ),
+            QuestionFlowStep.Start),
+        new(
+            "Direct to ECO goes back to gas boiler",
+            new Input(
+                QuestionFlowStep.DirectToEco
+            ),
+            QuestionFlowStep.GasBoiler),
+        new(
+            "Country goes back to gas boiler",
             new Input(
                 QuestionFlowStep.Country
             ),
-            QuestionFlowStep.Start),
+            QuestionFlowStep.GasBoiler),
         new(
             "Ownership status goes back to Country",
             new Input(
@@ -77,15 +89,15 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Address),
         new(
-            "Gas boiler goes back to Address if UPRN found",
+            "Household income goes back to Address if UPRN found",
             new Input(
-                QuestionFlowStep.GasBoiler, uprn: "100023336956"
+                QuestionFlowStep.HouseholdIncome, uprn: "100023336956"
             ),
             QuestionFlowStep.Address),
         new(
-            "Gas boiler goes back to Manual address if no UPRN found",
+            "Household income goes back to Manual address if no UPRN found",
             new Input(
-                QuestionFlowStep.GasBoiler, uprn: null
+                QuestionFlowStep.HouseholdIncome, uprn: null
             ),
             QuestionFlowStep.ManualAddress),
         new(
@@ -96,11 +108,10 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
-            "Service unsuitable goes back to ownership status if user is not owner occupier",
+            "Service unsuitable goes back to ownership status if country is filled in",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
-                country: Country.England,
-                ownershipStatus: OwnershipStatus.PrivateTenancy
+                country: Country.England
             ),
             QuestionFlowStep.OwnershipStatus),
     };
@@ -108,7 +119,49 @@ public class QuestionFlowServiceTests
     private static QuestionFlowServiceTestCase[] ForwardTestCases =
     {
         new(
-            "Country continues to service unsuitable if the service is not available",
+            "Gas boiler continues to direct to ECO if the user has a boiler",
+            new Input(
+                QuestionFlowStep.GasBoiler,
+                hasGasBoiler: HasGasBoiler.Yes
+            ),
+            QuestionFlowStep.DirectToEco),
+        new(
+            "Gas boiler continues to country if the user doesn't have a boiler",
+            new Input(
+                QuestionFlowStep.GasBoiler,
+                hasGasBoiler: HasGasBoiler.No
+            ),
+            QuestionFlowStep.Country),
+        new(
+            "Gas boiler continues to country if the user doesn't know about their boiler",
+            new Input(
+                QuestionFlowStep.GasBoiler,
+                hasGasBoiler: HasGasBoiler.Unknown
+            ),
+            QuestionFlowStep.Country),
+        new(
+            "Country continues to service unsuitable if the country is Wales",
+            new Input(
+                QuestionFlowStep.Country,
+                country: Country.Wales
+            ),
+            QuestionFlowStep.ServiceUnsuitable),
+        new(
+            "Country continues to service unsuitable if the country is Scotland",
+            new Input(
+                QuestionFlowStep.Country,
+                country: Country.Scotland
+            ),
+            QuestionFlowStep.ServiceUnsuitable),
+        new(
+            "Country continues to service unsuitable if the country is Northern Ireland",
+            new Input(
+                QuestionFlowStep.Country,
+                country: Country.NorthernIreland
+            ),
+            QuestionFlowStep.ServiceUnsuitable),
+        new(
+            "Country continues to service unsuitable if the country is Other",
             new Input(
                 QuestionFlowStep.Country,
                 country: Country.Other
@@ -122,17 +175,24 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.OwnershipStatus),
         new(
-            "Ownership status continues to service unsuitable if user is not owner occupier",
+            "Ownership status continues to service unsuitable if user is private tenant",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
-                OwnershipStatus.PrivateTenancy
+                ownershipStatus: OwnershipStatus.PrivateTenancy
             ),
             QuestionFlowStep.ServiceUnsuitable),
         new(
-            "Ownership status continues to address",
+            "Ownership status continues to service unsuitable if user is landlord",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
-                OwnershipStatus.OwnerOccupancy
+                ownershipStatus: OwnershipStatus.Landlord
+            ),
+            QuestionFlowStep.ServiceUnsuitable),
+        new(
+            "Ownership status continues to address if user is owner occupier",
+            new Input(
+                QuestionFlowStep.OwnershipStatus,
+                ownershipStatus: OwnershipStatus.OwnerOccupancy
             ),
             QuestionFlowStep.Address),
         new(
@@ -142,21 +202,15 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectAddress),
         new(
-            "Address selection continues to gas boiler",
+            "Address selection continues to household income",
             new Input(
                 QuestionFlowStep.SelectAddress
             ),
-            QuestionFlowStep.GasBoiler),
+            QuestionFlowStep.HouseholdIncome),
         new(
-            "Manual address continues to gas boiler",
+            "Manual address continues to household income",
             new Input(
                 QuestionFlowStep.ManualAddress
-            ),
-            QuestionFlowStep.GasBoiler),
-        new(
-            "Gas boiler continues to household income",
-            new Input(
-                QuestionFlowStep.GasBoiler
             ),
             QuestionFlowStep.HouseholdIncome),
     };
@@ -192,6 +246,7 @@ public class QuestionFlowServiceTests
 
         public Input(
             QuestionFlowStep page,
+            HasGasBoiler? hasGasBoiler = null,
             OwnershipStatus? ownershipStatus = null,
             Country? country = null,
             string uprn = null,
@@ -200,6 +255,7 @@ public class QuestionFlowServiceTests
             Page = page;
             Questionnaire = new Questionnaire
             {
+                HasGasBoiler = hasGasBoiler,
                 Uprn = uprn,
                 OwnershipStatus = ownershipStatus,
                 Country = country,
