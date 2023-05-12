@@ -10,6 +10,7 @@ public enum QuestionFlowStep
     OwnershipStatus,
     Address,
     SelectAddress,
+    ReviewEpc,
     ManualAddress,
     HouseholdIncome
 }

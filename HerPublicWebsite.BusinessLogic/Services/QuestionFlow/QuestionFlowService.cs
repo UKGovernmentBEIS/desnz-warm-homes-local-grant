@@ -26,6 +26,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusBackDestination(),
                 QuestionFlowStep.Address => AddressBackDestination(),
                 QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
+                QuestionFlowStep.ReviewEpc => ReviewEpcBackDestination(),
                 QuestionFlowStep.ManualAddress => ManualAddressBackDestination(),
                 QuestionFlowStep.HouseholdIncome => HouseholdIncomeBackDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException()
@@ -41,6 +42,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusForwardDestination(questionnaire),
                 QuestionFlowStep.Address => AddressForwardDestination(questionnaire),
                 QuestionFlowStep.SelectAddress => SelectAddressForwardDestination(questionnaire),
+                QuestionFlowStep.ReviewEpc => ReviewEpcForwardDestination(questionnaire),
                 QuestionFlowStep.ManualAddress => ManualAddressForwardDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
             };
@@ -69,6 +71,8 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                     => QuestionFlowStep.Country,
                 { OwnershipStatus: not OwnershipStatus.OwnerOccupancy }
                     => QuestionFlowStep.OwnershipStatus,
+                { EpcDetailsAreCorrect: true }
+                    => QuestionFlowStep.ReviewEpc,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -84,6 +88,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         }
 
         private QuestionFlowStep SelectAddressBackDestination()
+        {
+            return QuestionFlowStep.Address;
+        }
+
+        private QuestionFlowStep ReviewEpcBackDestination()
         {
             return QuestionFlowStep.Address;
         }
@@ -130,7 +139,12 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire)
         {
-            return QuestionFlowStep.HouseholdIncome;
+            return questionnaire.EpcTooHigh ? QuestionFlowStep.ReviewEpc : QuestionFlowStep.HouseholdIncome;
+        }
+
+        private QuestionFlowStep ReviewEpcForwardDestination(Questionnaire questionnaire)
+        {
+            return questionnaire.EpcDetailsAreCorrect ? QuestionFlowStep.ServiceUnsuitable : QuestionFlowStep.HouseholdIncome;
         }
 
         private QuestionFlowStep ManualAddressForwardDestination(Questionnaire questionnaire)
