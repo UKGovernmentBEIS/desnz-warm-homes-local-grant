@@ -7,6 +7,7 @@ using RichardSzalay.MockHttp;
 using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
 using System.Threading.Tasks;
 using System;
+using HerPublicWebsite.BusinessLogic.Models;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -41,25 +42,10 @@ public class EpbEpcApiTests
         HttpRequestHelper.handler = mockHttpHandler;
     }
 
-    private readonly EpcAssessmentDto correctAssessment = new()
-    {
-        Address = new EpcAddressDto
-        {
-            AddressLine1 = "22 Acacia Avenue",
-            AddressLine2 = "Upper Wellgood",
-            AddressLine3 = "A Building",
-            AddressLine4 = "A Place",
-            Town = "Fulchester",
-            Postcode = "FL23 4JA"
-        },
-        Uprn = "001234567890",
-        LodgementDate = new DateTime(2020, 2, 29),
-        CurrentBand = EpcRating.D
-    };
-
     [Test]
     public async Task GetEpcFromUpn()
     {
+        // Arrange
         mockHttpHandler.Expect("http://test.com/retrofit-funding/assessments")
             .WithHeaders("Authorization", "Bearer foobar")
             .Respond("application/json", @"{
@@ -74,13 +60,36 @@ public class EpbEpcApiTests
                 'postcode': 'FL23 4JA'
               },
               'uprn': '001234567890',
-              'lodgementDate': '2020-02-29',
-              'currentBand': 'D'
+              'lodgementDate': '2020-02-27',
+              'expiryDate': '2030-02-27',
+              'currentBand': 'D',
+              'propertyType': 'Mid-floor flat',
+              'builtForm': 'Flat'
             }
           }
         }");
+        
+        var correctAssessment = new EpcDetails
+        {
+            AddressLine1 = "22 Acacia Avenue",
+            AddressLine2 = "Upper Wellgood",
+            AddressLine3 = "A Building",
+            AddressLine4 = "A Place",
+            AddressTown = "Fulchester",
+            AddressPostcode = "FL23 4JA",
+            LodgementDate = new DateTime(2020, 2, 27),
+            ExpiryDate = new DateTime(2030, 2, 27),
+            EpcRating = EpcRating.D,
+            PropertyType = PropertyType.ApartmentFlatOrMaisonette,
+            HouseType = null,
+            FlatType = FlatType.MiddleFloor,
+            BungalowType = null
+        };
 
+        // Act
         var assessment = await epcApi.EpcFromUprn("001234567890");
-        assessment.Should().Be(correctAssessment);
+        
+        // Assert
+        assessment.Should().BeEquivalentTo(correctAssessment);
     }
 }

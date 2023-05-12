@@ -1,15 +1,13 @@
-﻿using HerPublicWebsite.BusinessLogic.Models.Enums;
-using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
+﻿using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using HerPublicWebsite.BusinessLogic.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
 {
-
-
     public class EpbEpcApi : IEpcApi
     {
         private readonly EpbEpcConfiguration config;
@@ -24,9 +22,8 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
             this.logger = logger;
         }
 
-        public async Task<EpcAssessmentDto> EpcFromUprn(string uprn)
+        public async Task<EpcDetails> EpcFromUprn(string uprn)
         {
-
             string token = null;
             try {
                 token = await RequestTokenIfNeeded();
@@ -45,7 +42,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
 
             try {
                 var response = await HttpRequestHelper.SendGetRequestAsync<EpbEpcDto>(parameters);
-                return response.Data.Assessment;
+                return response.Data.Assessment.Parse();
             }
             catch (Exception e) {
                 logger.LogError("EPB EPC request failed: {}", e.Message);
