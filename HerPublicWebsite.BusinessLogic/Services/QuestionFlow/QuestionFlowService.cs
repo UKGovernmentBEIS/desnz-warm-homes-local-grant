@@ -73,7 +73,10 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                     => QuestionFlowStep.OwnershipStatus,
                 { EpcDetailsAreCorrect: true }
                     => QuestionFlowStep.ReviewEpc,
-                _ => throw new ArgumentOutOfRangeException()
+                // By using the browser back button a user can get to the service unsuitable page when their questionnaire
+                // says that they are suitable. In that case we don't want to show them an error page, so set the back
+                // link to just go to the start of the questionnaire.
+                _ => QuestionFlowStep.GasBoiler
             };
         }
 

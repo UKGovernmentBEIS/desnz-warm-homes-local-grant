@@ -130,6 +130,15 @@ public class QuestionFlowServiceTests
                 epcDetailsAreCorrect: true
             ),
             QuestionFlowStep.ReviewEpc),
+        new(
+            "Service unsuitable goes back to boiler question if the service is actually suitable",
+            new Input(
+                QuestionFlowStep.ServiceUnsuitable,
+                country: Country.England,
+                ownershipStatus: OwnershipStatus.OwnerOccupancy,
+                epcDetailsAreCorrect: false
+            ),
+            QuestionFlowStep.GasBoiler),
     };
 
     private static QuestionFlowServiceTestCase[] ForwardTestCases =
