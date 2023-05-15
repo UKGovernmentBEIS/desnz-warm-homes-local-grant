@@ -1,0 +1,96 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using HerPublicWebsite.Controllers
+
+@model HerPublicWebsite.Models.Questionnaire.ReviewEpcViewModel
+@{
+    ViewBag.Title = "Address";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+           {
+               Text = "Back",
+               Href = Model.BackLink,
+           })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-l">
+            Energy performance certificate
+        </h1>
+
+        <div class="govuk-body epc-blue-bottom printable-area epc-box-container">
+            <div class="epc-box govuk-!-margin-bottom-5">
+                <p class="epc-address govuk-body">
+                    @Html.Raw(Model.AddressRawHtml)
+                </p>
+                <div class="epc-rating-box">
+                    <p class="epc-rating-title govuk-body">
+                        Energy rating
+                    </p>
+                    <p class="epc-rating-result govuk-body">
+                        @Model.EpcBand
+                    </p>
+                </div>
+                <div class="epc-extra-boxes">
+                    <div class="epc-extra-box">
+                        <label>Valid from</label>
+                        <p class="govuk-body govuk-!-font-weight-bold">
+                            @Model.ValidFrom
+                        </p>
+                    </div>
+                    <div class="epc-extra-box">
+                        <label>Valid until</label>
+                        <p class="govuk-body govuk-!-font-weight-bold">
+                            @Model.ValidUntil
+                        </p>
+                    </div>
+                </div>
+            </div>
+        
+            <dl class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key govuk-!-width-one-half">Property type</dt>
+                    <dd class="govuk-summary-list__value govuk-!-width-one-half">
+                        @Model.PropertyType
+                    </dd>
+                </div>
+            </dl>
+        </div>
+
+        <form action="@Url.Action(nameof(QuestionnaireController.ReviewEpc_Post), "Questionnaire")" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+
+            @await Html.GovUkRadiosFor(m => m.EpcIsCorrect,
+                       fieldsetOptions: new FieldsetViewModel()
+                       {
+                           Legend = new LegendViewModel()
+                           {
+                               Text = "Is this correct?",
+                               Classes = "govuk-fieldset__legend--m",
+                               IsPageHeading = true
+                           }
+                       },
+                       hintOptions: new HintViewModel
+                       {
+                           Html = @<text>If your Energy Performance Certificate is wrong you can <a href="https://www.gov.uk/find-energy-certificate" target="_blank">find your property's energy certificate</a>.</text>
+                       }
+                       )
+
+
+            <div class="govuk-button-group">
+                @(await Html.GovUkButton(new ButtonViewModel
+                {
+                    Text = "Continue",
+                }))
+            </div>
+
+        </form>
+
+    </div>
+</div>

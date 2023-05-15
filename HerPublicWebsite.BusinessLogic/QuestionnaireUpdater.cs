@@ -49,6 +49,8 @@ public class QuestionnaireUpdater
             questionnaire.EpcDetails = null;
         }
 
+        questionnaire.EpcDetailsAreCorrect = null;
+
         // Check LSOA eligibility
         questionnaire.IsLsoaProperty = eligiblePostcodeService.IsEligiblePostcode(address.Postcode);
 

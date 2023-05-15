@@ -18,8 +18,8 @@ public record Questionnaire
     public string Uprn { get; set; } // Should be populated for most questionnaires, but not 100% guaranteed
 
     public EpcDetails EpcDetails { get; set; }
-    public bool EpcDetailsAreCorrect { get; set; }
-    public bool IsLsoaProperty { get; set; }
+    public bool? EpcDetailsAreCorrect { get; set; }
+    public bool? IsLsoaProperty { get; set; }
     public HasGasBoiler? HasGasBoiler { get; set; }
     public IncomeBand? IncomeBand { get; set; }
 

@@ -147,7 +147,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep ReviewEpcForwardDestination(Questionnaire questionnaire)
         {
-            return questionnaire.EpcDetailsAreCorrect ? QuestionFlowStep.ServiceUnsuitable : QuestionFlowStep.HouseholdIncome;
+            return questionnaire.EpcDetailsAreCorrect!.Value ? QuestionFlowStep.ServiceUnsuitable : QuestionFlowStep.HouseholdIncome;
         }
 
         private QuestionFlowStep ManualAddressForwardDestination(Questionnaire questionnaire)
