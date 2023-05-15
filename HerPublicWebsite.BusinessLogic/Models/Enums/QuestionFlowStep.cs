@@ -3,13 +3,14 @@
 public enum QuestionFlowStep
 {
     Start,
+    GasBoiler,
+    DirectToEco,
     Country,
     ServiceUnsuitable,
     OwnershipStatus,
     Address,
     SelectAddress,
     ManualAddress,
-    GasBoiler,
     HouseholdIncome,
     CheckAnswers
 }
