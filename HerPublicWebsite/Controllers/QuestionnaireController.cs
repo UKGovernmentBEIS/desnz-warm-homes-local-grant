@@ -231,9 +231,9 @@ public class QuestionnaireController : Controller
         {
             AddressLine1 = viewModel.AddressLine1,
             AddressLine2 = viewModel.AddressLine2,
-            AddressCounty = viewModel.County,
-            AddressTown = viewModel.Town,
-            AddressPostcode = viewModel.Postcode
+            County = viewModel.County,
+            Town = viewModel.Town,
+            Postcode = viewModel.Postcode
         };
 
         var questionnaire = questionnaireService.UpdateAddress(address);
@@ -270,11 +270,38 @@ public class QuestionnaireController : Controller
     [HttpGet("income")]
     public IActionResult HouseholdIncome_Get()
     {
-        return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new HouseholdIncomeViewModel()
+        {
+            BackLink = GetBackUrl(QuestionFlowStep.HouseholdIncome, questionnaire)
+        };
+
+        return View("HouseholdIncome", viewModel);
     }
 
     [HttpPost("income")]
-    public IActionResult HouseholdIncome_Post()
+    public IActionResult HouseholdIncome_Post(HouseholdIncomeViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return HouseholdIncome_Get();
+        }
+
+        var questionnaire = questionnaireService.UpdateHouseholdIncome(viewModel.IncomeBand!.Value);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.HouseholdIncome, questionnaire);
+
+        return RedirectToNextStep(nextStep);
+
+    }
+
+    [HttpGet("check")]
+    public IActionResult CheckAnswers_Get()
+    {
+        return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
+    }
+
+    [HttpPost("check")]
+    public IActionResult CheckAnswers_Post()
     {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
@@ -311,6 +338,7 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.ManualAddress => new PathByActionArguments(nameof(ManualAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.GasBoiler => new PathByActionArguments(nameof(GasBoiler_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.HouseholdIncome => new PathByActionArguments(nameof(HouseholdIncome_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.CheckAnswers => new PathByActionArguments(nameof(CheckAnswers_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

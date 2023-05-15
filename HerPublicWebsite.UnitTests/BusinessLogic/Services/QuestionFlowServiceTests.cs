@@ -89,6 +89,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.ManualAddress),
         new(
+            "Household income goes back to Gas boiler",
+            new Input(
+                QuestionFlowStep.HouseholdIncome
+            ),
+            QuestionFlowStep.GasBoiler),
+        new(
             "Service unsuitable goes back to the country you came from",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
@@ -159,6 +165,12 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.GasBoiler
             ),
             QuestionFlowStep.HouseholdIncome),
+        new(
+            "Household income continues to check answers",
+            new Input(
+                QuestionFlowStep.HouseholdIncome
+            ),
+            QuestionFlowStep.CheckAnswers),
     };
 
     public class QuestionFlowServiceTestCase

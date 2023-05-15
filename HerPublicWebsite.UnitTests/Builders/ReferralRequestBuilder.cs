@@ -7,7 +7,7 @@ namespace Tests.Builders;
 public class ReferralRequestBuilder
 {
     private ReferralRequest referralRequest;
-    
+
     public ReferralRequestBuilder(int id)
     {
         referralRequest = new ReferralRequest
@@ -22,7 +22,7 @@ public class ReferralRequestBuilder
             EpcRating = EpcRating.E,
             HasGasBoiler = HasGasBoiler.No,
             Id = id,
-            IncomeBand = IncomeBand.Under31000,
+            IncomeBand = IncomeBand.UnderOrEqualTo31000,
             Uprn = $"100 111 222 {id:D3}",
             ReferralCreated = false,
             RequestDate = new DateTime(2023, 01, 01, 13, 00, 00),
@@ -33,7 +33,7 @@ public class ReferralRequestBuilder
     {
         return referralRequest;
     }
-    
+
     public ReferralRequestBuilder WithReferralCreated(bool referralCreated)
     {
         referralRequest.ReferralCreated = referralCreated;
