@@ -226,7 +226,8 @@ public class QuestionnaireController : Controller
         try
         {
             var addressResults = JsonSerializer.Deserialize<List<Address>>(TempData["Addresses"] as string ?? throw new InvalidOperationException());
-            var questionnaire = questionnaireService.UpdateAddress(addressResults[Convert.ToInt32(viewModel.SelectedAddressIndex)]);
+            var selectedAddress = addressResults[Convert.ToInt32(viewModel.SelectedAddressIndex)];
+            var questionnaire = await questionnaireService.UpdateAddressAsync(selectedAddress);
 
             var nextStep = questionFlowService.NextStep(QuestionFlowStep.SelectAddress, questionnaire);
             return RedirectToNextStep(nextStep);
@@ -258,7 +259,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("address/manual")]
-    public IActionResult ManualAddress_Post(ManualAddressViewModel viewModel)
+    public async Task<IActionResult> ManualAddress_Post(ManualAddressViewModel viewModel)
     {
         if (viewModel.Postcode is not null && !viewModel.Postcode.IsValidUkPostcodeFormat())
         {
@@ -279,7 +280,7 @@ public class QuestionnaireController : Controller
             Postcode = viewModel.Postcode
         };
 
-        var questionnaire = questionnaireService.UpdateAddress(address);
+        var questionnaire = await questionnaireService.UpdateAddressAsync(address);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.ManualAddress, questionnaire);
         return RedirectToNextStep(nextStep);
     }

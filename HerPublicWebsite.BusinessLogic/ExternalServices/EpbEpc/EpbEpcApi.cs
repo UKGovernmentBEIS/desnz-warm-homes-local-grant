@@ -22,7 +22,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
             this.logger = logger;
         }
 
-        public async Task<EpcDetails> EpcFromUprn(string uprn)
+        public async Task<EpcDetails> EpcFromUprnAsync(string uprn)
         {
             string token = null;
             try {
@@ -48,7 +48,6 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
                 logger.LogError("EPB EPC request failed: {}", e.Message);
                 return null;
             }
-
         }
 
         private async Task<string> RequestTokenIfNeeded()

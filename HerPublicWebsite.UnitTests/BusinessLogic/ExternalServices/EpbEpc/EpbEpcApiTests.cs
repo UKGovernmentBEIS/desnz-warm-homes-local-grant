@@ -87,7 +87,7 @@ public class EpbEpcApiTests
         };
 
         // Act
-        var assessment = await epcApi.EpcFromUprn("001234567890");
+        var assessment = await epcApi.EpcFromUprnAsync("001234567890");
         
         // Assert
         assessment.Should().BeEquivalentTo(correctAssessment);
