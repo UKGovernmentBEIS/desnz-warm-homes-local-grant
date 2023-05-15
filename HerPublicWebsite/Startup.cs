@@ -132,7 +132,7 @@ namespace HerPublicWebsite
         {
             services.Configure<EpbEpcConfiguration>(
                 configuration.GetSection(EpbEpcConfiguration.ConfigSection));
-            services.AddScoped<IEpcApi, EpbEpcApi>();
+            services.AddScoped<IEpcApi, DummyEpbEpcApi>();
         }
 
         private void ConfigureOsPlacesApi(IServiceCollection services)
