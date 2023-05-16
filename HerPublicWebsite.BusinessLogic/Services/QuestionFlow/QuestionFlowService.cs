@@ -27,7 +27,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.Address => AddressBackDestination(),
                 QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
                 QuestionFlowStep.ManualAddress => ManualAddressBackDestination(),
-                QuestionFlowStep.HouseholdIncome => HouseholdIncomeBackDestination(),
+                QuestionFlowStep.HouseholdIncome => HouseholdIncomeBackDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -108,11 +108,6 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return questionnaire.HasGasBoiler is HasGasBoiler.Yes
                 ? QuestionFlowStep.DirectToEco
                 : QuestionFlowStep.Country;
-        }
-
-        private QuestionFlowStep HouseholdIncomeBackDestination()
-        {
-            return QuestionFlowStep.GasBoiler;
         }
 
         private QuestionFlowStep CountryForwardDestination(Questionnaire questionnaire)

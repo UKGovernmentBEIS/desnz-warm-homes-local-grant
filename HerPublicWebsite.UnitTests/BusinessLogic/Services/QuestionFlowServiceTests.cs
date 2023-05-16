@@ -101,12 +101,6 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.ManualAddress),
         new(
-            "Household income goes back to Gas boiler",
-            new Input(
-                QuestionFlowStep.HouseholdIncome
-            ),
-            QuestionFlowStep.GasBoiler),
-        new(
             "Service unsuitable goes back to the country you came from",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
