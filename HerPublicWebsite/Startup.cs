@@ -55,7 +55,7 @@ namespace HerPublicWebsite
 
             services.AddScoped<CsvFileCreator>();
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
-            services.AddScoped<EligiblePostcodeService>();
+            services.AddScoped<IEligiblePostcodeService, EligiblePostcodeService>();
             services.AddScoped<QuestionnaireService>();
             services.AddScoped<QuestionnaireUpdater>();
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();

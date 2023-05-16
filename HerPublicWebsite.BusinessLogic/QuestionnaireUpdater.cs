@@ -8,9 +8,9 @@ namespace HerPublicWebsite.BusinessLogic;
 public class QuestionnaireUpdater
 {
     private readonly IEpcApi epcApi;
-    private readonly EligiblePostcodeService eligiblePostcodeService;
+    private readonly IEligiblePostcodeService eligiblePostcodeService;
     
-    public QuestionnaireUpdater(IEpcApi epcApi, EligiblePostcodeService eligiblePostcodeService)
+    public QuestionnaireUpdater(IEpcApi epcApi, IEligiblePostcodeService eligiblePostcodeService)
     {
         this.epcApi = epcApi;
         this.eligiblePostcodeService = eligiblePostcodeService;
@@ -41,8 +41,7 @@ public class QuestionnaireUpdater
         // Try to find an EPC for this property
         if (address.Uprn != null)
         {
-            var epcDetails = await epcApi.EpcFromUprnAsync(address.Uprn);
-            questionnaire.EpcDetails = epcDetails;
+            questionnaire.EpcDetails = await epcApi.EpcFromUprnAsync(address.Uprn);
         }
         else
         {

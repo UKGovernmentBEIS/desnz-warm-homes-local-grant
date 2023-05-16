@@ -2,6 +2,7 @@
 using FluentAssertions;
 using NUnit.Framework;
 using HerPublicWebsite.BusinessLogic.Models;
+using HerPublicWebsite.BusinessLogic.Models.Enums;
 
 namespace Tests.BusinessLogic.Models;
 
@@ -34,5 +35,51 @@ public class ReferralRequestTests
 
         // Assert
         act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Test]
+    public void ReferralRequest_CreatedWithIncorrectEpc_IgnoresEpcBand()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire()
+        {
+            EpcDetailsAreCorrect = false,
+            EpcDetails = new EpcDetails
+            {
+                EpcRating = EpcRating.A
+            },
+            HasGasBoiler = HasGasBoiler.No,
+            IncomeBand = IncomeBand.Under31000,
+            IsLsoaProperty = false,
+        };
+        
+        // Act
+        var underTest = new ReferralRequest(questionnaire, null);
+        
+        // Assert
+        underTest.EpcRating.Should().Be(EpcRating.Unknown);
+    }
+    
+    [Test]
+    public void ReferralRequest_CreatedWithCorrectEpc_RetainsEpcBand()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire()
+        {
+            EpcDetailsAreCorrect = true,
+            EpcDetails = new EpcDetails
+            {
+                EpcRating = EpcRating.A
+            },
+            HasGasBoiler = HasGasBoiler.No,
+            IncomeBand = IncomeBand.Under31000,
+            IsLsoaProperty = false,
+        };
+        
+        // Act
+        var underTest = new ReferralRequest(questionnaire, null);
+        
+        // Assert
+        underTest.EpcRating.Should().Be(EpcRating.A);
     }
 }
