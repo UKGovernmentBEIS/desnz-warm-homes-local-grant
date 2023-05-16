@@ -78,7 +78,7 @@ public class QuestionnaireUpdaterTests
     
     [TestCase(true)]
     [TestCase(false)]
-    public async Task UpdateAddressAsync_WhenCalled_SetsLsoaStatusCorrectly(bool isEligible)
+    public async Task UpdateAddressAsync_WhenCalled_SetsLsoaStatusToMatchEligibility(bool isEligible)
     {
         // Arrange
         var postcode = "ab1 2cd";

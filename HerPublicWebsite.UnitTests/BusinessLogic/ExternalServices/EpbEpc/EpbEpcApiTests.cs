@@ -43,7 +43,7 @@ public class EpbEpcApiTests
     }
 
     [Test]
-    public async Task GetEpcFromUpn()
+    public async Task EpcFromUprnAsync_CalledWithValidUprn_TranslatesResponseIntoEpcDetailsObject()
     {
         // Arrange
         mockHttpHandler.Expect("http://test.com/retrofit-funding/assessments")

@@ -83,14 +83,10 @@
                        )
 
 
-            <div class="govuk-button-group">
-                @(await Html.GovUkButton(new ButtonViewModel
-                {
-                    Text = "Continue",
-                }))
-            </div>
-
+            @(await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Continue",
+            }))
         </form>
-
     </div>
 </div>
