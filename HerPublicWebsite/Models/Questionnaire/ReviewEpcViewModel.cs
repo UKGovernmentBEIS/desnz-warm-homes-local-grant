@@ -42,8 +42,8 @@ public class ReviewEpcViewModel : QuestionFlowViewModel
 
         AddressRawHtml = string.Join("<br/>", addressParts);
         EpcBand = epcDetails.EpcRating.ToString();
-        ValidFrom = epcDetails.LodgementDate != null ? epcDetails.LodgementDate.Value.ToString("dd MMMM yyyy") : "Unknown";
-        ValidUntil = epcDetails.ExpiryDate != null ? epcDetails.ExpiryDate.Value.ToString("dd MMMM yyyy") : "Unknown";
+        ValidFrom = epcDetails.LodgementDate is not null ? epcDetails.LodgementDate.Value.ToString("dd MMMM yyyy") : "Unknown";
+        ValidUntil = epcDetails.ExpiryDate is not null ? epcDetails.ExpiryDate.Value.ToString("dd MMMM yyyy") : "Unknown";
 
         PropertyType =
             (epcDetails.HouseType?.ForDisplay() ??
