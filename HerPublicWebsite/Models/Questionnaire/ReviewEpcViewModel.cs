@@ -15,7 +15,7 @@ public class ReviewEpcViewModel : QuestionFlowViewModel
         No
     }
 
-    [GovUkValidateRequired(ErrorMessageIfMissing = "Select whether this EPC is correct for you property")]
+    [GovUkValidateRequired(ErrorMessageIfMissing = "Select whether this EPC is correct for your property")]
     public YesOrNo? EpcIsCorrect {get; set;}
     
     public string AddressRawHtml { get; set; }
