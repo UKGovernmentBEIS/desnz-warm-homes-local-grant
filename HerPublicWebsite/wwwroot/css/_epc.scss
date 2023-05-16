@@ -1,0 +1,276 @@
+// This file was copied from the EPC finder tool
+// https://github.com/communitiesuk/epb-prototypes/blob/master/app/assets/sass/epb-frontend/components/_epc-box.scss
+// As used on https://www.gov.uk/find-energy-certificate
+
+@mixin black-bg-if-monochrome {
+  @media print and (monochrome) {
+    background-color: #000;
+  }
+}
+
+.epc-box-summary {
+  background: #1d70b8;
+
+  @include black-bg-if-monochrome;
+
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: start;
+  -moz-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-align-content: stretch;
+  -ms-flex-line-pack: stretch;
+  align-content: stretch;
+  -webkit-box-align: start;
+  -moz-box-align: start;
+  -webkit-align-items: flex-start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+
+  .epc-box-element:nth-child(2n) {
+    border-left: 2px solid #fff;
+  }
+
+  .epc-box-element {
+    height: 100%;
+
+    &.epb-box-element-full-height {
+      padding: 15px;
+      margin-right: -2px;
+      border-right: 2px solid #fff;
+
+      span {
+        display: block;
+      }
+    }
+
+    .epc-extra-box:nth-child(2n) {
+      border-top: 2px solid #fff;
+    }
+
+    .epc-extra-box {
+      padding: 15px;
+
+      text-align: center;
+
+      label {
+        display: block;
+        font-weight: normal;
+      }
+    }
+
+    -webkit-box-ordinal-group: 1;
+    -moz-box-ordinal-group: 1;
+    -webkit-order: 0;
+    -ms-flex-order: 0;
+    order: 0;
+    -webkit-box-flex: 0;
+    -moz-box-flex: 0;
+    -webkit-flex: 0 1 100%;
+    -ms-flex: 0 1 100%;
+    flex: 0 1 100%;
+    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;
+    align-self: auto;
+  }
+
+  .govuk-body {
+    color: #fff;
+    margin-bottom: 0;
+  }
+}
+
+.govuk-summary-list {
+
+  .epc-box-container & {
+    margin-bottom: 0;
+  }
+}
+
+.epc-rating-box {
+  width: 150px;
+  background: #1d70b8;
+  text-align: center;
+  float: right;
+  border: 2px solid #fff;
+  margin: 10px;
+
+  @include black-bg-if-monochrome;
+
+  .epc-rating-title {
+    line-height: 30px;
+    font-size: 20px;
+  }
+
+  .epc-rating-result {
+    line-height: 100px;
+    font-size: 100px;
+    font-weight: bold;
+  }
+
+  .govuk-body {
+    color: #fff;
+  }
+}
+
+.epc-box {
+  color: #fff;
+  background: #1d70b8;
+  padding: 0;
+  overflow: hidden;
+  margin-bottom: 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  @include black-bg-if-monochrome;
+
+  .epc-address {
+    padding-left: 30px;
+    padding-top: 30px;
+    flex-grow: 4;
+  }
+
+  .epc-extra-boxes {
+    width: 100%;
+  }
+
+  .epc-extra-box {
+    border-top: 2px solid #fff;
+    clear: both;
+    line-height: 60px;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    float: left;
+    width: 50%;
+
+    label {
+      display: block;
+    }
+
+    p {
+      display: block;
+      margin-top: -0.9rem;
+    }
+
+    +.epc-extra-box {
+      border-left: 2px solid #fff;
+      box-sizing: border-box;
+      float: right;
+      clear: none;
+    }
+  }
+
+  .govuk-body {
+    color: #fff;
+  }
+}
+
+@-moz-document url-prefix() {
+  .epc-box-summary {
+    width: 100%;
+    -moz-box-sizing: border-box;
+  }
+}
+
+$epc-box-print-base-font-size: 0.8rem;
+$epc-box-gutter: 2px;
+
+@media print {
+  div.epc-box {
+    display: flex;
+    flex-direction: row;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: $epc-box-print-base-font-size;
+
+    .epc-address {
+      flex-shrink: 0;
+      width: 35%;
+      padding-top: 1rem;
+      padding-left: 0;
+      font-size: $epc-box-print-base-font-size;
+    }
+    .epc-rating-box {
+      flex-shrink: 0;
+      width: 15%;
+      border: none;
+      float: none;
+      border-left: $epc-box-gutter solid #fff;
+      margin: 0;
+      padding: 1rem 0 10px;
+
+      .epc-rating-title {
+        font-size: $epc-box-print-base-font-size;
+        margin-bottom: 0;
+        line-height: normal;
+      }
+
+      .epc-rating-result {
+        font-size: 3rem;
+        margin-bottom: 0;
+        line-height: 3.5rem;
+      }
+    }
+    .epc-extra-boxes {
+      flex-shrink: 0;
+      width: 50%;
+      border-left: $epc-box-gutter solid #fff;
+      display: flex;
+      flex-direction: column;
+      padding-top: 1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    .epc-extra-box {
+      border-top: none;
+      width: auto;
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 0 !important;
+      line-height: inherit;
+
+      & + .epc-extra-box {
+        float: none;
+        border-left: none;
+        border-top: 1px solid #fff;
+        padding-top: $epc-box-print-base-font-size + 0.4rem;
+      }
+
+      label, p {
+        font-size: $epc-box-print-base-font-size;
+        text-align: left;
+        margin-top: 0;
+      }
+
+      label {
+        flex: 2;
+        max-width: 100px;
+      }
+
+      p {
+        flex: 3;
+      }
+
+      label:after {
+        content: ":";
+      }
+    }
+  }
+}

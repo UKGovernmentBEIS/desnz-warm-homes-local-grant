@@ -83,6 +83,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Address),
         new(
+            "Review EPC goes back to Address",
+            new Input(
+                QuestionFlowStep.ReviewEpc
+            ),
+            QuestionFlowStep.Address),
+        new(
             "Manual address goes back to Address",
             new Input(
                 QuestionFlowStep.ManualAddress
@@ -108,12 +114,31 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
-            "Service unsuitable goes back to ownership status if country is filled in",
+            "Service unsuitable goes back to ownership status isn't owner occupier",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
-                country: Country.England
+                country: Country.England,
+                ownershipStatus: OwnershipStatus.Landlord
             ),
             QuestionFlowStep.OwnershipStatus),
+        new(
+            "Service unsuitable goes back to review EPC if EPC is filled in",
+            new Input(
+                QuestionFlowStep.ServiceUnsuitable,
+                country: Country.England,
+                ownershipStatus: OwnershipStatus.OwnerOccupancy,
+                epcDetailsAreCorrect: true
+            ),
+            QuestionFlowStep.ReviewEpc),
+        new(
+            "Service unsuitable goes back to boiler question if the service is actually suitable",
+            new Input(
+                QuestionFlowStep.ServiceUnsuitable,
+                country: Country.England,
+                ownershipStatus: OwnershipStatus.OwnerOccupancy,
+                epcDetailsAreCorrect: false
+            ),
+            QuestionFlowStep.GasBoiler),
     };
 
     private static QuestionFlowServiceTestCase[] ForwardTestCases =
@@ -202,11 +227,33 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectAddress),
         new(
-            "Address selection continues to household income",
+            "Address selection continues to household income if EPC is low",
             new Input(
-                QuestionFlowStep.SelectAddress
+                QuestionFlowStep.SelectAddress,
+                epcRating: EpcRating.D
             ),
             QuestionFlowStep.HouseholdIncome),
+        new(
+            "Address selection continues to review EPC if EPC is high",
+            new Input(
+                QuestionFlowStep.SelectAddress,
+                epcRating: EpcRating.C
+            ),
+            QuestionFlowStep.ReviewEpc),
+        new(
+            "Review EPC continues to household income if EPC is incorrect",
+            new Input(
+                QuestionFlowStep.ReviewEpc,
+                epcDetailsAreCorrect: false
+            ),
+            QuestionFlowStep.HouseholdIncome),
+        new(
+            "Review EPC continues to service unsuitable if EPC is correct",
+            new Input(
+                QuestionFlowStep.ReviewEpc,
+                epcDetailsAreCorrect: true
+            ),
+            QuestionFlowStep.ServiceUnsuitable),
         new(
             "Manual address continues to household income",
             new Input(
@@ -250,6 +297,8 @@ public class QuestionFlowServiceTests
             OwnershipStatus? ownershipStatus = null,
             Country? country = null,
             string uprn = null,
+            bool epcDetailsAreCorrect = false,
+            EpcRating? epcRating = null,
             QuestionFlowStep? entryPoint = null)
         {
             Page = page;
@@ -259,6 +308,8 @@ public class QuestionFlowServiceTests
                 Uprn = uprn,
                 OwnershipStatus = ownershipStatus,
                 Country = country,
+                EpcDetailsAreCorrect = epcDetailsAreCorrect,
+                EpcDetails = epcRating == null ? null : new EpcDetails { EpcRating = epcRating },
             };
             EntryPoint = entryPoint;
         }

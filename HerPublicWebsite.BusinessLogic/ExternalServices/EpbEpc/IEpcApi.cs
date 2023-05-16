@@ -1,7 +1,9 @@
-﻿namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
+﻿using HerPublicWebsite.BusinessLogic.Models;
+
+namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
 {
     public interface IEpcApi
     {
-        public Task<EpcAssessmentDto> EpcFromUprn(string uprn);
+        public Task<EpcDetails> EpcFromUprnAsync(string uprn);
     }
 }

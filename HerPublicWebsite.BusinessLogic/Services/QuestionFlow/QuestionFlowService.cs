@@ -26,6 +26,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusBackDestination(),
                 QuestionFlowStep.Address => AddressBackDestination(),
                 QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
+                QuestionFlowStep.ReviewEpc => ReviewEpcBackDestination(),
                 QuestionFlowStep.ManualAddress => ManualAddressBackDestination(),
                 QuestionFlowStep.HouseholdIncome => HouseholdIncomeBackDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException()
@@ -41,6 +42,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusForwardDestination(questionnaire),
                 QuestionFlowStep.Address => AddressForwardDestination(questionnaire),
                 QuestionFlowStep.SelectAddress => SelectAddressForwardDestination(questionnaire),
+                QuestionFlowStep.ReviewEpc => ReviewEpcForwardDestination(questionnaire),
                 QuestionFlowStep.ManualAddress => ManualAddressForwardDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
             };
@@ -69,7 +71,12 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                     => QuestionFlowStep.Country,
                 { OwnershipStatus: not OwnershipStatus.OwnerOccupancy }
                     => QuestionFlowStep.OwnershipStatus,
-                _ => throw new ArgumentOutOfRangeException()
+                { EpcDetailsAreCorrect: true }
+                    => QuestionFlowStep.ReviewEpc,
+                // By using the browser back button a user can get to the service unsuitable page when their questionnaire
+                // says that they are suitable. In that case we don't want to show them an error page, so set the back
+                // link to just go to the start of the questionnaire.
+                _ => QuestionFlowStep.GasBoiler
             };
         }
 
@@ -84,6 +91,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         }
 
         private QuestionFlowStep SelectAddressBackDestination()
+        {
+            return QuestionFlowStep.Address;
+        }
+
+        private QuestionFlowStep ReviewEpcBackDestination()
         {
             return QuestionFlowStep.Address;
         }
@@ -130,7 +142,12 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire)
         {
-            return QuestionFlowStep.HouseholdIncome;
+            return questionnaire.EpcTooHigh ? QuestionFlowStep.ReviewEpc : QuestionFlowStep.HouseholdIncome;
+        }
+
+        private QuestionFlowStep ReviewEpcForwardDestination(Questionnaire questionnaire)
+        {
+            return questionnaire.EpcDetailsAreCorrect!.Value ? QuestionFlowStep.ServiceUnsuitable : QuestionFlowStep.HouseholdIncome;
         }
 
         private QuestionFlowStep ManualAddressForwardDestination(Questionnaire questionnaire)

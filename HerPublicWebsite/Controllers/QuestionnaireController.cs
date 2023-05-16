@@ -1,22 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Extensions;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
-using HerPublicWebsite.BusinessLogic.Services;
 using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
 using HerPublicWebsite.ExternalServices.GoogleAnalytics;
 using HerPublicWebsite.Models.Questionnaire;
 using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace HerPublicWebsite.Controllers;
@@ -189,7 +185,6 @@ public class QuestionnaireController : Controller
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Address, questionnaire);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
-            null,
             extraRouteValues: new Dictionary<string, object>
             {
                 { "postcode", viewModel.Postcode.NormaliseToUkPostcodeFormat() },
@@ -226,7 +221,8 @@ public class QuestionnaireController : Controller
         try
         {
             var addressResults = JsonSerializer.Deserialize<List<Address>>(TempData["Addresses"] as string ?? throw new InvalidOperationException());
-            var questionnaire = questionnaireService.UpdateAddress(addressResults[Convert.ToInt32(viewModel.SelectedAddressIndex)]);
+            var selectedAddress = addressResults[Convert.ToInt32(viewModel.SelectedAddressIndex)];
+            var questionnaire = await questionnaireService.UpdateAddressAsync(selectedAddress);
 
             var nextStep = questionFlowService.NextStep(QuestionFlowStep.SelectAddress, questionnaire);
             return RedirectToNextStep(nextStep);
@@ -236,8 +232,34 @@ public class QuestionnaireController : Controller
             // This shouldn't ever happen unless something has really gone wrong, or someone's messed with the page
             // so just redirect to the beginning of the address entry
             logger.LogError("Couldn't deserialize and retrieve address from selection: {}", e.Message);
-            return RedirectToAction(nameof(QuestionnaireController.Address_Get), "Questionnaire");
+            return RedirectToAction(nameof(Address_Get), "Questionnaire");
         }
+    }
+    
+    [HttpGet("review-epc")]
+    public IActionResult ReviewEpc_Get()
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new ReviewEpcViewModel(questionnaire.EpcDetails, questionnaire.EpcDetailsAreCorrect)
+        {
+            BackLink = GetBackUrl(QuestionFlowStep.ReviewEpc, questionnaire)
+        };
+
+        return View("ReviewEpc", viewModel);
+    }
+    
+    [HttpPost("review-epc")]
+    public IActionResult ReviewEpc_Post(ReviewEpcViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return ReviewEpc_Get();
+        }
+
+        var questionnaire = questionnaireService.UpdateEpcIsCorrect(viewModel.EpcIsCorrect == ReviewEpcViewModel.YesOrNo.Yes);
+
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ReviewEpc, questionnaire);
+        return RedirectToNextStep(nextStep);
     }
 
     [HttpGet("address/manual")]
@@ -258,7 +280,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("address/manual")]
-    public IActionResult ManualAddress_Post(ManualAddressViewModel viewModel)
+    public async Task<IActionResult> ManualAddress_Post(ManualAddressViewModel viewModel)
     {
         if (viewModel.Postcode is not null && !viewModel.Postcode.IsValidUkPostcodeFormat())
         {
@@ -279,7 +301,7 @@ public class QuestionnaireController : Controller
             Postcode = viewModel.Postcode
         };
 
-        var questionnaire = questionnaireService.UpdateAddress(address);
+        var questionnaire = await questionnaireService.UpdateAddressAsync(address);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.ManualAddress, questionnaire);
         return RedirectToNextStep(nextStep);
     }
@@ -327,6 +349,7 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.OwnershipStatus => new PathByActionArguments(nameof(OwnershipStatus_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.Address => new PathByActionArguments(nameof(Address_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.SelectAddress => new PathByActionArguments(nameof(SelectAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.ReviewEpc => new PathByActionArguments(nameof(ReviewEpc_Get), "Questionnaire"),
             QuestionFlowStep.ManualAddress => new PathByActionArguments(nameof(ManualAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.HouseholdIncome => new PathByActionArguments(nameof(HouseholdIncome_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             _ => throw new ArgumentOutOfRangeException()

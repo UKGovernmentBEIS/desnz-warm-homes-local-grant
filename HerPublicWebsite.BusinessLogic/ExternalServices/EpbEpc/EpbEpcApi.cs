@@ -1,62 +1,13 @@
-﻿using HerPublicWebsite.BusinessLogic.Models.Enums;
-using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
+﻿using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using HerPublicWebsite.BusinessLogic.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
 {
-
-    public record class EpcAddressDto
-    {
-        [JsonProperty("addressLine1")]
-        public string AddressLine1 { get; set; }
-
-        [JsonProperty("addressLine2")]
-        public string AddressLine2 { get; set; }
-
-        [JsonProperty("addressLine3")]
-        public string AddressLine3 { get; set; }
-
-        [JsonProperty("addressLine4")]
-        public string AddressLine4 { get; set; }
-
-        [JsonProperty("town")]
-        public string Town { get; set; }
-
-        [JsonProperty("postcode")]
-        public string Postcode { get; set; }
-    }
-
-    public record class EpcAssessmentDto
-    {
-        [JsonProperty("address")]
-        public EpcAddressDto Address { get; set; }
-
-        [JsonProperty("uprn")]
-        public string Uprn { get; set; }
-
-        [JsonProperty("lodgementDate")]
-        public DateTime LodgementDate { get; set; }
-
-        [JsonProperty("currentBand")]
-        public EpcRating CurrentBand { get; set; }
-    }
-
-    public record class EpcDataDto
-    {
-        [JsonProperty("assessment")]
-        public EpcAssessmentDto Assessment { get; set; }
-    }
-
-    public record class EpbEpcDto
-    {
-        [JsonProperty("data", Required = Required.Always)]
-        public EpcDataDto Data { get; set; }
-    }
-
     public class EpbEpcApi : IEpcApi
     {
         private readonly EpbEpcConfiguration config;
@@ -71,9 +22,8 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
             this.logger = logger;
         }
 
-        public async Task<EpcAssessmentDto> EpcFromUprn(string uprn)
+        public async Task<EpcDetails> EpcFromUprnAsync(string uprn)
         {
-
             string token = null;
             try {
                 token = await RequestTokenIfNeeded();
@@ -92,13 +42,12 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
 
             try {
                 var response = await HttpRequestHelper.SendGetRequestAsync<EpbEpcDto>(parameters);
-                return response.Data.Assessment;
+                return response.Data.Assessment.Parse();
             }
             catch (Exception e) {
                 logger.LogError("EPB EPC request failed: {}", e.Message);
                 return null;
             }
-
         }
 
         private async Task<string> RequestTokenIfNeeded()

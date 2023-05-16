@@ -3,7 +3,12 @@ using Microsoft.Extensions.Logging;
 
 namespace HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 
-public class EligiblePostcodeService
+public interface IEligiblePostcodeService
+{
+    public bool IsEligiblePostcode(string postcode);
+}
+
+public class EligiblePostcodeService : IEligiblePostcodeService
 {
     private readonly ILogger<EligiblePostcodeService> logger;
     
