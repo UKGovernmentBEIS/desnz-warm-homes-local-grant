@@ -142,7 +142,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire)
         {
-            return questionnaire.EpcTooHigh ? QuestionFlowStep.ReviewEpc : QuestionFlowStep.HouseholdIncome;
+            return questionnaire.FoundEpcBandIsTooHigh ? QuestionFlowStep.ReviewEpc : QuestionFlowStep.HouseholdIncome;
         }
 
         private QuestionFlowStep ReviewEpcForwardDestination(Questionnaire questionnaire)

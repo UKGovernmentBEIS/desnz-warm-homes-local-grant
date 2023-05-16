@@ -9,5 +9,6 @@ public enum EpcRating
     E,
     F,
     G,
-    Unknown
+    Unknown,
+    Expired
 }
