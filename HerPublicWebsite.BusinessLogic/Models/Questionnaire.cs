@@ -30,6 +30,29 @@ public record Questionnaire
 
     public ContactDetails ContactDetails { get; set; }
 
-    public bool EpcTooHigh => 
+    public bool FoundEpcBandIsTooHigh => 
         EpcDetails is { EpcRating: EpcRating.A or EpcRating.B or EpcRating.C };
+
+    public EpcRating EffectiveEpcBand
+    {
+        get
+        {
+            if (EpcDetails is null)
+            {
+                return EpcRating.Unknown;
+            }
+
+            if (EpcDetailsAreCorrect is not true)
+            {
+                return EpcRating.Unknown;
+            }
+
+            if (EpcDetails.ExpiryDate < DateTime.Now)
+            {
+                return EpcRating.Expired;
+            }
+
+            return EpcDetails.EpcRating ?? EpcRating.Unknown;
+        }
+    }
 }
