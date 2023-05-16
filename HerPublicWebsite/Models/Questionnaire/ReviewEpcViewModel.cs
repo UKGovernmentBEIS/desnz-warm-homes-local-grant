@@ -45,12 +45,13 @@ public class ReviewEpcViewModel : QuestionFlowViewModel
         ValidFrom = epcDetails.LodgementDate is not null ? epcDetails.LodgementDate.Value.ToString("dd MMMM yyyy") : "Unknown";
         ValidUntil = epcDetails.ExpiryDate is not null ? epcDetails.ExpiryDate.Value.ToString("dd MMMM yyyy") : "Unknown";
 
-        PropertyType =
-            (epcDetails.HouseType?.ForDisplay() ??
-             epcDetails.BungalowType?.ForDisplay() ??
-             epcDetails.FlatType?.ForDisplay() ??
-             "") + " " + (epcDetails.PropertyType?.ForDisplay() ?? "Unknown");
+        var propertyDetails = epcDetails.HouseType?.ForDisplay() ??
+                              epcDetails.BungalowType?.ForDisplay() ??
+                              epcDetails.FlatType?.ForDisplay() ??
+                              "";
+        var propertyType = epcDetails.PropertyType?.ForDisplay() ?? "Unknown";
+        PropertyType = $"{propertyDetails} {propertyType}";
 
-        EpcIsCorrect = epcIsCorrect == null ? null : (epcIsCorrect.Value ? YesOrNo.Yes : YesOrNo.No);
+        EpcIsCorrect = epcIsCorrect is null ? null : (epcIsCorrect.Value ? YesOrNo.Yes : YesOrNo.No);
     }
 }

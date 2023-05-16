@@ -43,7 +43,7 @@ public static class EnumExtensions
     {
         return flatType switch
         {
-            FlatType.GroundFloor => "Ground floor",
+            FlatType.GroundFloor => "Ground floor or basement",
             FlatType.MiddleFloor => "Middle floor",
             FlatType.TopFloor => "Top floor",
             _ => flatType.ToString()
