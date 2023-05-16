@@ -54,26 +54,29 @@ public class CsvFileCreator
         public string Postcode { get; set; }
         
         [Index(9)]
+        public string Uprn { get; set; }
+        
+        [Index(10)]
         [Name("EPC Band")]
         public EpcRating EpcBand { get; set; }
         
-        [Index(10)]
+        [Index(11)]
         [Name("Is off gas grid")]
         [BooleanTrueValues("yes")]
         [BooleanFalseValues("no")]
         public string OffGasGrid { get; set; }
         
-        [Index(11)]
+        [Index(12)]
         [Name("Household income band")]
         public string HouseholdIncome { get; set; }
         
-        [Index(12)]
+        [Index(13)]
         [Name("Is eligible postcode")]
         [BooleanTrueValues("yes")]
         [BooleanFalseValues("no")]
         public bool EligiblePostcode { get; set; }
         
-        [Index(13)]
+        [Index(14)]
         public string Tenure { get; set; }
         
         public CsvRow(ReferralRequest request)
@@ -87,6 +90,7 @@ public class CsvFileCreator
             Town = request.AddressTown;
             County = request.AddressCounty;
             Postcode = request.AddressPostcode;
+            Uprn = request.Uprn;
             EpcBand = request.EpcRating;
             OffGasGrid = request.HasGasBoiler switch
             {
