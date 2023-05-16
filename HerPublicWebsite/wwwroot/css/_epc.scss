@@ -1,5 +1,6 @@
 // This file was copied from the EPC finder tool
 // https://github.com/communitiesuk/epb-prototypes/blob/master/app/assets/sass/epb-frontend/components/_epc-box.scss
+// As used on https://www.gov.uk/find-energy-certificate
 
 @mixin black-bg-if-monochrome {
   @media print and (monochrome) {
