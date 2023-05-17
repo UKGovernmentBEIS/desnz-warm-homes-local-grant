@@ -53,7 +53,7 @@ public class QuestionnaireController : Controller
     {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
-    
+
     [HttpGet("boiler")]
     public IActionResult GasBoiler_Get()
     {
@@ -80,7 +80,7 @@ public class QuestionnaireController : Controller
 
         return RedirectToNextStep(nextStep);
     }
-    
+
     [HttpGet("direct-to-eco/")]
     public IActionResult DirectToEco_Get()
     {
@@ -290,6 +290,7 @@ public class QuestionnaireController : Controller
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new HouseholdIncomeViewModel()
         {
+            IncomeBand = questionnaire.IncomeBand,
             BackLink = GetBackUrl(QuestionFlowStep.HouseholdIncome, questionnaire)
         };
 
