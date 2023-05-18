@@ -49,46 +49,48 @@ public class EpbEpcApiTests
         mockHttpHandler.Expect("http://test.com/retrofit-funding/assessments")
             .WithHeaders("Authorization", "Bearer foobar")
             .Respond("application/json", @"{
-          'data': {
-            'assessment': {
-              'address': {
-                'addressLine1': '22 Acacia Avenue',
-                'addressLine2': 'Upper Wellgood',
-                'addressLine3': 'A Building',
-                'addressLine4': 'A Place',
-                'town': 'Fulchester',
-                'postcode': 'FL23 4JA'
-              },
-              'uprn': '001234567890',
-              'lodgementDate': '2020-02-27',
-              'expiryDate': '2030-02-27',
-              'currentBand': 'D',
-              'propertyType': 'Mid-floor flat',
-              'builtForm': 'Flat'
-            }
-          }
-        }");
-        
+  'data': {
+    'assessment': {
+      'address': {
+        'addressLine1': '42 TRURO ROAD',
+        'addressLine2': 'Upper Wellgood',
+        'addressLine3': 'A Building',
+        'addressLine4': 'A Place',
+        'town': 'LIVERPOOL',
+        'postcode': 'L15 9HW'
+      },
+      'uprn': '000038153332',
+      'lodgementDate': '2017-04-08',
+      'expiryDate': '2027-04-07',
+      'currentBand': 'c',
+      'propertyType': 'Detached house',
+      'builtForm': 'Detached'
+    }
+  },
+  'meta': {}
+}"
+        );
+
         var correctAssessment = new EpcDetails
         {
-            AddressLine1 = "22 Acacia Avenue",
+            AddressLine1 = "42 TRURO ROAD",
             AddressLine2 = "Upper Wellgood",
             AddressLine3 = "A Building",
             AddressLine4 = "A Place",
-            AddressTown = "Fulchester",
-            AddressPostcode = "FL23 4JA",
-            LodgementDate = new DateTime(2020, 2, 27),
-            ExpiryDate = new DateTime(2030, 2, 27),
-            EpcRating = EpcRating.D,
-            PropertyType = PropertyType.ApartmentFlatOrMaisonette,
-            HouseType = null,
-            FlatType = FlatType.MiddleFloor,
+            AddressTown = "LIVERPOOL",
+            AddressPostcode = "L15 9HW",
+            LodgementDate = new DateTime(2017, 4, 8),
+            ExpiryDate = new DateTime(2027, 4, 7),
+            EpcRating = EpcRating.C,
+            PropertyType = PropertyType.House,
+            HouseType = HouseType.Detached,
+            FlatType = null,
             BungalowType = null
         };
 
         // Act
-        var assessment = await epcApi.EpcFromUprnAsync("001234567890");
-        
+        var assessment = await epcApi.EpcFromUprnAsync("000038153332");
+
         // Assert
         assessment.Should().BeEquivalentTo(correctAssessment);
     }
