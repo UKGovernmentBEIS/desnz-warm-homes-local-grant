@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using HerPublicWebsite.BusinessLogic;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
@@ -45,19 +46,28 @@ public class QuestionnaireService
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
-
-    public Questionnaire UpdateAddress(Address address)
-    {
-        var questionnaire = GetQuestionnaire();
-        questionnaire = questionnaireUpdater.UpdateAddress(questionnaire, address);
-        SaveQuestionnaireToSession(questionnaire);
-        return questionnaire;
-    }
-
+  
     public Questionnaire UpdateOwnershipStatus(OwnershipStatus ownershipStatus)
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = questionnaireUpdater.UpdateOwnershipStatus(questionnaire, ownershipStatus);
+        SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+    
+    public async Task<Questionnaire> UpdateAddressAsync(Address address)
+
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = await questionnaireUpdater.UpdateAddressAsync(questionnaire, address);
+        SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+
+    public Questionnaire UpdateEpcDetails(EpcDetails epcDetails)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdateEpcDetails(questionnaire, epcDetails);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
@@ -78,10 +88,17 @@ public class QuestionnaireService
         return questionnaire;
     }
 
+    public Questionnaire UpdateEpcIsCorrect(bool epcIsCorrect)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdateEpcIsCorrect(questionnaire, epcIsCorrect);
+        SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+    
     private void SaveQuestionnaireToSession(Questionnaire questionnaire)
     {
         var questionnaireString = JsonSerializer.Serialize(questionnaire, JsonSerializerOptions);
         httpContextAccessor.HttpContext!.Session.SetString(SessionKeyQuestionnaire, questionnaireString);
     }
-
 }

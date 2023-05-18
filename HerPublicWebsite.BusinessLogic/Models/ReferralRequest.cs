@@ -42,8 +42,8 @@ public class ReferralRequest
         AddressPostcode = questionnaire.AddressPostcode;
         CustodianCode = questionnaire.CustodianCode;
         Uprn = questionnaire.Uprn;
-        EpcRating = questionnaire.EpcRating;
-        IsLsoaProperty = questionnaire.IsLsoaProperty;
+        EpcRating = questionnaire.EffectiveEpcBand;
+        IsLsoaProperty = questionnaire.IsLsoaProperty!.Value;
         HasGasBoiler = questionnaire.HasGasBoiler!.Value;
         IncomeBand = questionnaire.IncomeBand!.Value;
         ContactDetails = questionnaire.ContactDetails;

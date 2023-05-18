@@ -55,7 +55,7 @@ namespace HerPublicWebsite
 
             services.AddScoped<CsvFileCreator>();
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
-            services.AddScoped<EligiblePostcodeService>();
+            services.AddScoped<IEligiblePostcodeService, EligiblePostcodeService>();
             services.AddScoped<QuestionnaireService>();
             services.AddScoped<QuestionnaireUpdater>();
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
@@ -132,7 +132,7 @@ namespace HerPublicWebsite
         {
             services.Configure<EpbEpcConfiguration>(
                 configuration.GetSection(EpbEpcConfiguration.ConfigSection));
-            services.AddScoped<IEpcApi, EpbEpcApi>();
+            services.AddScoped<IEpcApi, DummyEpbEpcApi>();
         }
 
         private void ConfigureOsPlacesApi(IServiceCollection services)

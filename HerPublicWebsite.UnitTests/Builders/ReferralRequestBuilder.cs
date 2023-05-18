@@ -25,7 +25,7 @@ public class ReferralRequestBuilder
             IncomeBand = IncomeBand.UnderOrEqualTo31000,
             Uprn = $"100 111 222 {id:D3}",
             ReferralCreated = false,
-            RequestDate = new DateTime(2023, 01, 01, 13, 00, 00),
+            RequestDate = new DateTime(2023, 01, 01, 13, 00, id),
             IsLsoaProperty = false
         };
     }

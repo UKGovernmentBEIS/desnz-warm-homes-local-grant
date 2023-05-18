@@ -2,6 +2,7 @@
 using FluentAssertions;
 using NUnit.Framework;
 using HerPublicWebsite.BusinessLogic.Models;
+using HerPublicWebsite.BusinessLogic.Models.Enums;
 
 namespace Tests.BusinessLogic.Models;
 

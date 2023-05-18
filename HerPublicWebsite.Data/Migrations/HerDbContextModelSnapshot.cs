@@ -102,6 +102,9 @@ namespace HerPublicWebsite.Data.Migrations
                     b.Property<bool>("IsLsoaProperty")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("ReferralCode")
+                        .HasColumnType("text");
+
                     b.Property<bool>("ReferralCreated")
                         .HasColumnType("boolean");
 

@@ -26,58 +26,67 @@ public class CsvFileCreator
     private class CsvRow
     {
         [Index(0)]
-        public string Name { get; set; }
+        [Name("Referral date")]
+        public string ReferralDate { get; set; }
         
         [Index(1)]
-        public string Email { get; set; }
+        public string Name { get; set; }
         
         [Index(2)]
-        public string Telephone { get; set; }
+        public string Email { get; set; }
         
         [Index(3)]
+        public string Telephone { get; set; }
+        
+        [Index(4)]
         [Name("Preferred contact method")]
         public ContactPreference ContactPreferrence { get; set; }
         
-        [Index(4)]
+        [Index(5)]
         public string Address1 { get; set; }
         
-        [Index(5)]
+        [Index(6)]
         public string Address2 { get; set; }
         
-        [Index(6)]
+        [Index(7)]
         public string Town { get; set; }
         
-        [Index(7)]
+        [Index(8)]
         public string County { get; set; }
         
-        [Index(8)]
+        [Index(9)]
         public string Postcode { get; set; }
         
-        [Index(9)]
+        [Index(10)]
+        [Name("UPRN")]
+        public string Uprn { get; set; }
+        
+        [Index(11)]
         [Name("EPC Band")]
         public EpcRating EpcBand { get; set; }
         
-        [Index(10)]
+        [Index(12)]
         [Name("Is off gas grid")]
         [BooleanTrueValues("yes")]
         [BooleanFalseValues("no")]
         public string OffGasGrid { get; set; }
         
-        [Index(11)]
+        [Index(13)]
         [Name("Household income band")]
         public string HouseholdIncome { get; set; }
         
-        [Index(12)]
+        [Index(14)]
         [Name("Is eligible postcode")]
         [BooleanTrueValues("yes")]
         [BooleanFalseValues("no")]
         public bool EligiblePostcode { get; set; }
         
-        [Index(13)]
+        [Index(15)]
         public string Tenure { get; set; }
         
         public CsvRow(ReferralRequest request)
         {
+            ReferralDate = request.RequestDate.ToString("yyyy-MM-dd HH:mm:ss");
             Name = request.ContactDetails.FullName;
             Email = request.ContactDetails.Email;
             Telephone = request.ContactDetails.Telephone;
@@ -87,6 +96,7 @@ public class CsvFileCreator
             Town = request.AddressTown;
             County = request.AddressCounty;
             Postcode = request.AddressPostcode;
+            Uprn = request.Uprn;
             EpcBand = request.EpcRating;
             OffGasGrid = request.HasGasBoiler switch
             {
