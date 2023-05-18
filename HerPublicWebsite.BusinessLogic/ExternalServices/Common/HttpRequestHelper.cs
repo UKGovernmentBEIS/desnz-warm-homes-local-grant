@@ -5,7 +5,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.Common
 {
     public static class HttpRequestHelper
     {
-        public static HttpMessageHandler handler {get; set;}
+        public static HttpMessageHandler handler { get; set; }
 
         public static Task<T> SendGetRequestAsync<T>(RequestParameters parameters)
         {
@@ -48,7 +48,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.Common
             if (!response.IsSuccessStatusCode)
             {
                 throw new ApiException($"Request to {response.RequestMessage?.RequestUri} failed. " +
-                                       $"Error message: {response.StatusCode}; {response.ReasonPhrase}", response.StatusCode);
+                                       $"Error message: {response.StatusCode}; {response.ReasonPhrase}; {response.Content}", response.StatusCode, response.Content);
             }
 
             var bodyString = response.Content.ReadAsStringAsync().Result;

@@ -49,7 +49,7 @@ public class QuestionnaireController : Controller
     {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
-    
+
     [HttpGet("boiler")]
     public IActionResult GasBoiler_Get()
     {
@@ -76,7 +76,7 @@ public class QuestionnaireController : Controller
 
         return RedirectToNextStep(nextStep);
     }
-    
+
     [HttpGet("direct-to-eco/")]
     public IActionResult DirectToEco_Get()
     {
@@ -235,7 +235,7 @@ public class QuestionnaireController : Controller
             return RedirectToAction(nameof(Address_Get), "Questionnaire");
         }
     }
-    
+
     [HttpGet("review-epc")]
     public IActionResult ReviewEpc_Get()
     {
@@ -247,7 +247,7 @@ public class QuestionnaireController : Controller
 
         return View("ReviewEpc", viewModel);
     }
-    
+
     [HttpPost("review-epc")]
     public IActionResult ReviewEpc_Post(ReviewEpcViewModel viewModel)
     {

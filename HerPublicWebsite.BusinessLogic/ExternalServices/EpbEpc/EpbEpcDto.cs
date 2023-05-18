@@ -47,16 +47,16 @@ public record class EpcAssessmentDto
 
     [JsonProperty("lodgementDate")]
     public string LodgementDate { get; set; }
-    
+
     [JsonProperty("expiryDate")]
     public string ExpiryDate { get; set; }
 
     [JsonProperty("currentBand")]
     public string CurrentBand { get; set; }
-    
+
     [JsonProperty("propertyType")]
     public string PropertyType { get; set; }
-    
+
     [JsonProperty("builtForm")]
     public string BuiltForm { get; set; }
 
@@ -79,21 +79,21 @@ public record class EpcAssessmentDto
             FlatType = ParseFlatType(),
         };
     }
-    
+
     private DateTime? ParseDate(string dateString)
     {
         if (dateString is null)
         {
             return null;
         }
-        
+
         var date = DateTime.Parse(dateString);
         return DateTime.SpecifyKind(date, DateTimeKind.Utc);
     }
-    
+
     private EpcRating ParseBand()
     {
-        return CurrentBand switch
+        return CurrentBand?.ToUpper() switch
         {
             "A" => EpcRating.A,
             "B" => EpcRating.B,
@@ -105,14 +105,14 @@ public record class EpcAssessmentDto
             _ => EpcRating.Unknown
         };
     }
-    
+
     private PropertyType? ParsePropertyType()
     {
         if (PropertyType is null)
         {
             return null;
         }
-        
+
         if (PropertyType.Contains("House", StringComparison.OrdinalIgnoreCase))
         {
             return HerPublicWebsite.BusinessLogic.Models.Enums.PropertyType.House;
@@ -131,7 +131,7 @@ public record class EpcAssessmentDto
 
         return null;
     }
-    
+
     private HouseType? ParseHouseType()
     {
         if (ParsePropertyType() is not HerPublicWebsite.BusinessLogic.Models.Enums.PropertyType.House)
@@ -143,7 +143,7 @@ public record class EpcAssessmentDto
         {
             return HouseType.SemiDetached;
         }
-        
+
         if (PropertyType.Contains("detached", StringComparison.OrdinalIgnoreCase))
         {
             return HouseType.Detached;
@@ -153,7 +153,7 @@ public record class EpcAssessmentDto
         {
             return HouseType.Terraced;
         }
-        
+
         if (PropertyType.Contains("end-terrace", StringComparison.OrdinalIgnoreCase))
         {
             return HouseType.EndTerrace;
@@ -161,7 +161,7 @@ public record class EpcAssessmentDto
 
         return null;
     }
-    
+
     private BungalowType? ParseBungalowType()
     {
         if (ParsePropertyType() is not HerPublicWebsite.BusinessLogic.Models.Enums.PropertyType.Bungalow)
@@ -173,7 +173,7 @@ public record class EpcAssessmentDto
         {
             return BungalowType.SemiDetached;
         }
-        
+
         if (PropertyType.Contains("detached", StringComparison.OrdinalIgnoreCase))
         {
             return BungalowType.Detached;
@@ -183,7 +183,7 @@ public record class EpcAssessmentDto
         {
             return BungalowType.Terraced;
         }
-        
+
         if (PropertyType.Contains("end-terrace", StringComparison.OrdinalIgnoreCase))
         {
             return BungalowType.EndTerrace;
@@ -191,14 +191,14 @@ public record class EpcAssessmentDto
 
         return null;
     }
-    
+
     private FlatType? ParseFlatType()
     {
         if (ParsePropertyType() is not HerPublicWebsite.BusinessLogic.Models.Enums.PropertyType.ApartmentFlatOrMaisonette)
         {
             return null;
         }
-        
+
         if (PropertyType.Contains("basement", StringComparison.OrdinalIgnoreCase) ||
             PropertyType.Contains("ground", StringComparison.OrdinalIgnoreCase))
         {
@@ -209,7 +209,7 @@ public record class EpcAssessmentDto
         {
             return FlatType.MiddleFloor;
         }
-        
+
         if (PropertyType.Contains("top", StringComparison.OrdinalIgnoreCase))
         {
             return FlatType.TopFloor;

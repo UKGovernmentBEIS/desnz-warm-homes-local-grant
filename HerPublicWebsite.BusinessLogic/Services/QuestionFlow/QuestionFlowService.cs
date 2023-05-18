@@ -47,7 +47,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
             };
         }
-        
+
         private QuestionFlowStep GasBoilerBackDestination()
         {
             return QuestionFlowStep.Start;
@@ -113,7 +113,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 _ => QuestionFlowStep.Address
             };
         }
-        
+
         private QuestionFlowStep GasBoilerForwardDestination(Questionnaire questionnaire)
         {
             return questionnaire.HasGasBoiler is HasGasBoiler.Yes
