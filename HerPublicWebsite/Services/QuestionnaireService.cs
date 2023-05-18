@@ -17,9 +17,9 @@ public class QuestionnaireService
     {
         Converters = { new JsonStringEnumConverter() }
     };
-    
+
     private static string SessionKeyQuestionnaire = "_Questionnaire";
-    
+
     public QuestionnaireService(
         QuestionnaireUpdater questionnaireUpdater,
         IHttpContextAccessor httpContextAccessor)
@@ -27,7 +27,7 @@ public class QuestionnaireService
         this.questionnaireUpdater = questionnaireUpdater;
         this.httpContextAccessor = httpContextAccessor;
     }
-    
+
     public Questionnaire GetQuestionnaire()
     {
         var questionnaireString = httpContextAccessor.HttpContext!.Session.GetString(SessionKeyQuestionnaire);
@@ -35,10 +35,10 @@ public class QuestionnaireService
         var questionnaire = questionnaireString == null
             ? new Questionnaire()
             : JsonSerializer.Deserialize<Questionnaire>(questionnaireString, JsonSerializerOptions);
-        
+
         return questionnaire;
     }
-    
+
     public Questionnaire UpdateCountry(Country country)
     {
         var questionnaire = GetQuestionnaire();
@@ -46,7 +46,7 @@ public class QuestionnaireService
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
-    
+  
     public Questionnaire UpdateOwnershipStatus(OwnershipStatus ownershipStatus)
     {
         var questionnaire = GetQuestionnaire();
@@ -56,6 +56,7 @@ public class QuestionnaireService
     }
     
     public async Task<Questionnaire> UpdateAddressAsync(Address address)
+
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = await questionnaireUpdater.UpdateAddressAsync(questionnaire, address);
@@ -71,11 +72,18 @@ public class QuestionnaireService
         return questionnaire;
     }
 
-    
     public Questionnaire UpdateGasBoiler(HasGasBoiler hasGasBoiler)
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = questionnaireUpdater.UpdateGasBoiler(questionnaire, hasGasBoiler);
+        SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+
+    public Questionnaire UpdateHouseholdIncome(IncomeBand incomeBand)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdateHouseholdIncome(questionnaire, incomeBand);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }

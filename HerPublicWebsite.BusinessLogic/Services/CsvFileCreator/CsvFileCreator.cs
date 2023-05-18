@@ -107,8 +107,8 @@ public class CsvFileCreator
             };
             HouseholdIncome = request.IncomeBand switch
             {
-                IncomeBand.Under31000 => "Below £31k",
-                IncomeBand.GreaterOrEqualTo31000 => "£31k or above",
+                IncomeBand.UnderOrEqualTo31000 => "Below £31k",
+                IncomeBand.GreaterThan31000 => "£31k or above",
                 _ => throw new ArgumentOutOfRangeException("request.IncomeBand", "Unrecognised IncomeBand value: " + request.IncomeBand)
             };
             EligiblePostcode = request.IsLsoaProperty;

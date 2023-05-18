@@ -260,6 +260,12 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.ManualAddress
             ),
             QuestionFlowStep.HouseholdIncome),
+        new(
+            "Household income continues to check answers",
+            new Input(
+                QuestionFlowStep.HouseholdIncome
+            ),
+            QuestionFlowStep.CheckAnswers),
     };
 
     public class QuestionFlowServiceTestCase

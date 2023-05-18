@@ -44,10 +44,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.SelectAddress => SelectAddressForwardDestination(questionnaire),
                 QuestionFlowStep.ReviewEpc => ReviewEpcForwardDestination(questionnaire),
                 QuestionFlowStep.ManualAddress => ManualAddressForwardDestination(questionnaire),
+                QuestionFlowStep.HouseholdIncome => HouseholdIncomeForwardDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
             };
         }
-        
+
         private QuestionFlowStep GasBoilerBackDestination()
         {
             return QuestionFlowStep.Start;
@@ -113,7 +114,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 _ => QuestionFlowStep.Address
             };
         }
-        
+
         private QuestionFlowStep GasBoilerForwardDestination(Questionnaire questionnaire)
         {
             return questionnaire.HasGasBoiler is HasGasBoiler.Yes
@@ -153,6 +154,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         private QuestionFlowStep ManualAddressForwardDestination(Questionnaire questionnaire)
         {
             return QuestionFlowStep.HouseholdIncome;
+        }
+
+        private QuestionFlowStep HouseholdIncomeForwardDestination(Questionnaire questionnaire)
+        {
+            return QuestionFlowStep.CheckAnswers;
         }
     }
 }

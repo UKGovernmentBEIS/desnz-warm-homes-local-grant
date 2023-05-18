@@ -1,0 +1,71 @@
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using HerPublicWebsite.BusinessLogic.Models.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using HerPublicWebsite.Controllers
+
+@model HerPublicWebsite.Models.Questionnaire.HouseholdIncomeViewModel
+
+@{
+    ViewBag.Title = "Household Income";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+           {
+               Text = "Back",
+               Href = Model.BackLink,
+           })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <form action="@Url.Action(nameof(QuestionnaireController.HouseholdIncome_Post), "Questionnaire")" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+
+            @await Html.GovUkRadiosFor(m => m.IncomeBand,
+                       fieldsetOptions: new FieldsetViewModel
+                       {
+                           Legend = new LegendViewModel
+                           {
+                               Text = "What is your household income?",
+                               Classes = "govuk-fieldset__legend--l",
+                               IsPageHeading = true
+                           }
+                       },
+                       new HintViewModel
+                       {
+                           Html = @<text>
+                                <p class="govuk-body">Please tell us your annual household annual income, before tax:</p>
+
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>
+                                        from every household member (over 18) combined
+                                    </li>
+                                    <li>
+                                        including all benefits except Personal Independence Payment, Attendance Allowance and Disability Living Allowance
+                                    </li>
+                                </ul>
+
+                                <p class="govuk-body">We will only use this information to determine eligibility.</p>
+
+                                @await Html.GovUkWarningText(new WarningTextViewModel()
+                                       {
+                                           Text = "Your local authority will ask for income evidence if you seem eligible"
+                                       })
+                               </text>
+                               
+                       }
+                     )
+
+            @(await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Continue",
+            }))
+
+        </form>
+        
+    </div>
+</div>

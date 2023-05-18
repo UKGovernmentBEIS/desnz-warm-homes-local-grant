@@ -73,4 +73,11 @@ public class QuestionnaireUpdater
         questionnaire.EpcDetailsAreCorrect = epcIsCorrect;
         return questionnaire;
     }
+
+    public Questionnaire UpdateHouseholdIncome(Questionnaire questionnaire, IncomeBand incomeBand)
+    {
+        questionnaire.IncomeBand = incomeBand;
+
+        return questionnaire;
+    }
 }

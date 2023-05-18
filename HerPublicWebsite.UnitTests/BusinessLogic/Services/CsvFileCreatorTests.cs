@@ -74,7 +74,7 @@ public class CsvFileCreatorTests
     {
         // Arrange
         var underTest = new CsvFileCreator();
-        var referralRequest = new ReferralRequestBuilder(1).WithIncomeBand(IncomeBand.GreaterOrEqualTo31000).Build();
+        var referralRequest = new ReferralRequestBuilder(1).WithIncomeBand(IncomeBand.GreaterThan31000).Build();
         var referralRequests = new List<ReferralRequest>() { referralRequest };
 
         // Act
