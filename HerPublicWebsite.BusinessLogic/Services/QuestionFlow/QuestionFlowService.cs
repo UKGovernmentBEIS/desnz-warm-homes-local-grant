@@ -108,6 +108,10 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep HouseholdIncomeBackDestination(Questionnaire questionnaire)
         {
+            if (questionnaire.FoundEpcBandIsTooHigh)
+            {
+                return QuestionFlowStep.ReviewEpc;
+            }
             return questionnaire.Uprn switch
             {
                 null => QuestionFlowStep.ManualAddress,
