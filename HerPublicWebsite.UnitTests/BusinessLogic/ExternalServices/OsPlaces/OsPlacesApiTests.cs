@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Models;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -18,7 +17,6 @@ namespace Tests.BusinessLogic.ExternalServices.OsPlaces;
 public class OsPlacesApiTests
 {
     private OsPlacesApi underTest;
-    private IMemoryCache memoryCache;
     private ILogger<OsPlacesApi> logger;
     private MockHttpMessageHandler mockHttpHandler;
 
@@ -32,8 +30,6 @@ public class OsPlacesApiTests
         };
 
         logger = new NullLogger<OsPlacesApi>();
-        memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
-        memoryCache.Set("EpbEpcToken", "foobar");
 
         underTest = new OsPlacesApi(Options.Create(config), logger);
 
