@@ -1,4 +1,5 @@
 using System;
+using Community.Microsoft.Extensions.Caching.PostgreSql;
 using GovUkDesignSystem.ModelBinders;
 using Hangfire;
 using Hangfire.PostgreSql;
@@ -88,8 +89,12 @@ namespace HerPublicWebsite
                 options.ModelMetadataDetailsProviders.Add(new GovUkDataBindingErrorTextProvider());
             });
 
-            // TODO: Replace this with a database based cache
-            services.AddDistributedMemoryCache();
+            services.AddDistributedPostgreSqlCache(setup =>
+            {
+                setup.ConnectionString = configuration.GetConnectionString("PostgreSQLConnection");
+                setup.TableName = configuration.GetSection("SessionCache")["TableName"];
+                setup.SchemaName = configuration.GetSection("SessionCache")["SchemaName"];
+            });
 
             services.AddSession(options =>
             {
@@ -111,10 +116,6 @@ namespace HerPublicWebsite
         private void ConfigureDatabaseContext(IServiceCollection services)
         {
             var databaseConnectionString = configuration.GetConnectionString("PostgreSQLConnection");
-            if (!webHostEnvironment.IsDevelopment())
-            {
-                databaseConnectionString = "TODO Get Azure DB string";
-            }
             services.AddDbContext<HerDbContext>(opt =>
                 opt.UseNpgsql(databaseConnectionString));
         }
