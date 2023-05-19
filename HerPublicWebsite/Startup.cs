@@ -137,7 +137,8 @@ namespace HerPublicWebsite
 
         private void ConfigureOsPlacesApi(IServiceCollection services)
         {
-            //TODO BEISHER-248: Set up OS Places properly
+            services.Configure<OsPlacesConfiguration>(
+                configuration.GetSection(OsPlacesConfiguration.ConfigSection));
             services.AddScoped<IOsPlacesApi, OsPlacesApi>();
         }
 
