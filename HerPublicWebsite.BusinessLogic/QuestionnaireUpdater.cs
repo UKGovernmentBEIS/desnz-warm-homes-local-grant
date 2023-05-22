@@ -9,13 +9,13 @@ public class QuestionnaireUpdater
 {
     private readonly IEpcApi epcApi;
     private readonly IEligiblePostcodeService eligiblePostcodeService;
-    
+
     public QuestionnaireUpdater(IEpcApi epcApi, IEligiblePostcodeService eligiblePostcodeService)
     {
         this.epcApi = epcApi;
         this.eligiblePostcodeService = eligiblePostcodeService;
     }
-    
+
     public Questionnaire UpdateCountry(Questionnaire questionnaire, Country country)
     {
         questionnaire.Country = country;
@@ -37,7 +37,7 @@ public class QuestionnaireUpdater
         questionnaire.AddressLine2 = address.AddressLine2;
         questionnaire.AddressTown = address.Town;
         questionnaire.AddressCounty = address.County;
-        
+
         // Try to find an EPC for this property
         if (address.Uprn != null)
         {
@@ -55,7 +55,7 @@ public class QuestionnaireUpdater
 
         return questionnaire;
     }
-    
+
     public Questionnaire UpdateEpcDetails(Questionnaire questionnaire, EpcDetails epcDetails)
     {
         questionnaire.EpcDetails = epcDetails;
@@ -67,7 +67,7 @@ public class QuestionnaireUpdater
         questionnaire.HasGasBoiler = hasGasBoiler;
         return questionnaire;
     }
-    
+
     public Questionnaire UpdateEpcIsCorrect(Questionnaire questionnaire, bool epcIsCorrect)
     {
         questionnaire.EpcDetailsAreCorrect = epcIsCorrect;

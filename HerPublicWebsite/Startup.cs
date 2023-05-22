@@ -34,7 +34,7 @@ namespace HerPublicWebsite
     {
         private readonly IConfiguration configuration;
         private readonly IWebHostEnvironment webHostEnvironment;
-        
+
         public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             this.configuration = configuration;
@@ -63,7 +63,7 @@ namespace HerPublicWebsite
             services.AddScoped<IRegularJobsService, RegularJobsService>();
             services.AddScoped<IS3FileWriter, S3FileWriter>();
             services.AddScoped<S3ReferralFileKeyGenerator>();
-            
+
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();
             // This allows encrypted cookies to be understood across multiple web server instances
@@ -133,7 +133,7 @@ namespace HerPublicWebsite
         {
             services.Configure<EpbEpcConfiguration>(
                 configuration.GetSection(EpbEpcConfiguration.ConfigSection));
-            services.AddScoped<IEpcApi, DummyEpbEpcApi>();
+            services.AddScoped<IEpcApi, EpbEpcApi>();
         }
 
         private void ConfigureOsPlacesApi(IServiceCollection services)

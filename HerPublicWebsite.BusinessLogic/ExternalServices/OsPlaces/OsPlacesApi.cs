@@ -12,10 +12,10 @@ public class OsPlacesApi : IOsPlacesApi
                 DisplayAddress = "82 My House, My Area, A Special Location, LB6 420",
                 AddressLine1 = "82 My House",
                 AddressLine2 = "My Area",
-                Postcode = "LB6 420",
+                Postcode = "NW5 1TL",
                 County = "A County",
                 Town = "Camdoon",
-                Uprn = "023232323",
+                Uprn = "000038153332",
                 LocalCustodianCode = "2323",
             },
             new ()
@@ -23,9 +23,10 @@ public class OsPlacesApi : IOsPlacesApi
                 DisplayAddress = "88 My House, My Area, A Special Location, LB6 420",
                 AddressLine1 = "88 My House",
                 AddressLine2 = "My Area",
-                Postcode = "LB6 420",
+                Postcode = "PL13 2FN",
                 County = "A County",
                 Town = "Camdoon",
+                Uprn = "100070672776",
                 LocalCustodianCode = "2323",
             }
         };
