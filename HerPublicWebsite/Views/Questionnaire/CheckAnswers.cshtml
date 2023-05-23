@@ -29,6 +29,14 @@
             
             @{ var values = new Dictionary<string, object> { { "entryPoint", QuestionFlowStep.CheckAnswers } }; }
 
+            
+            <h1 class="govuk-heading-l">
+                Check your answers
+            </h1>
+            
+            <p class="govuk-body">
+                Please review the information we have gathered. You can still change your answers if anything looks wrong. 
+            </p>
 
             @await Html.GovUkSummaryList( new SummaryListViewModel()
                    {
