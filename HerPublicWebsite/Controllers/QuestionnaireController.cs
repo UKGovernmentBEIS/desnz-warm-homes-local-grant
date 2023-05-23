@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 namespace HerPublicWebsite.Controllers;
 
 [Route("questionnaire")]
+[SessionExpiry]
 public class QuestionnaireController : Controller
 {
     private readonly IQuestionFlowService questionFlowService;
@@ -46,12 +47,14 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("")]
+    [ExcludeFromSessionExpiry]
     public IActionResult Index()
     {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
 
     [HttpGet("boiler")]
+    [ExcludeFromSessionExpiry]
     public IActionResult GasBoiler_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
@@ -65,6 +68,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("boiler")]
+    [ExcludeFromSessionExpiry]
     public IActionResult GasBoiler_Post(GasBoilerViewModel viewModel)
     {
         if (!ModelState.IsValid)
@@ -79,7 +83,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("direct-to-eco/")]
-    [SessionExpiry]
     public IActionResult DirectToEco_Get()
     {
         var viewModel = new DirectToEcoViewModel
@@ -91,7 +94,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("country/")]
-    [SessionExpiry]
     public IActionResult Country_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
@@ -105,7 +107,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("country/")]
-    [SessionExpiry]
     public IActionResult Country_Post(CountryViewModel viewModel)
     {
         if (!ModelState.IsValid)
@@ -120,7 +121,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("service-unsuitable/")]
-    [SessionExpiry]
     public IActionResult ServiceUnsuitable_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
@@ -134,7 +134,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("ownership-status/")]
-    [SessionExpiry]
     public IActionResult OwnershipStatus_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
@@ -149,7 +148,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("ownership-status/")]
-    [SessionExpiry]
     public IActionResult OwnershipStatus_Post(OwnershipStatusViewModel viewModel)
     {
         if (!ModelState.IsValid)
@@ -164,7 +162,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("address/")]
-    [SessionExpiry]
     public IActionResult Address_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
@@ -178,7 +175,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("address/")]
-    [SessionExpiry]
     public IActionResult Address_Post(AddressViewModel viewModel)
     {
         if (viewModel.Postcode is not null && !viewModel.Postcode.IsValidUkPostcodeFormat())
@@ -205,7 +201,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("address/{postcode}/{buildingNameOrNumber}")]
-    [SessionExpiry]
     public async Task<IActionResult> SelectAddress_Get(string postcode, string buildingNameOrNumber)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
@@ -221,7 +216,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("address/{postcode}/{buildingNameOrNumber}")]
-    [SessionExpiry]
     public async Task<IActionResult> SelectAddress_Post(SelectAddressViewModel viewModel, string postcode, string buildingNameOrNumber)
     {
         if (!ModelState.IsValid)
@@ -248,7 +242,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("review-epc")]
-    [SessionExpiry]
     public IActionResult ReviewEpc_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
@@ -261,7 +254,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("review-epc")]
-    [SessionExpiry]
     public IActionResult ReviewEpc_Post(ReviewEpcViewModel viewModel)
     {
         if (!ModelState.IsValid)
@@ -276,7 +268,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("address/manual")]
-    [SessionExpiry]
     public IActionResult ManualAddress_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
@@ -294,7 +285,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("address/manual")]
-    [SessionExpiry]
     public async Task<IActionResult> ManualAddress_Post(ManualAddressViewModel viewModel)
     {
         if (viewModel.Postcode is not null && !viewModel.Postcode.IsValidUkPostcodeFormat())
@@ -322,7 +312,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("income")]
-    [SessionExpiry]
     public IActionResult HouseholdIncome_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
@@ -336,7 +325,6 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("income")]
-    [SessionExpiry]
     public IActionResult HouseholdIncome_Post(HouseholdIncomeViewModel viewModel)
     {
         if (!ModelState.IsValid)
@@ -352,14 +340,12 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("check")]
-    [SessionExpiry]
     public IActionResult CheckAnswers_Get()
     {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
 
     [HttpPost("check")]
-    [SessionExpiry]
     public IActionResult CheckAnswers_Post()
     {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
