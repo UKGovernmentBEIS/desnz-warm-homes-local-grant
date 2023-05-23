@@ -34,11 +34,8 @@ public class S3FileWriter : IS3FileWriter
         
         try
         {
-            // TODO: BEISHER-240 do we need a username/password at all - or is the user this is running as get given permissions externally?
-            // https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/creds-assign.html
-            // https://stackoverflow.com/questions/47124876/how-to-specify-aws-credentials-in-c-sharp-net-core-console-program
-            var s3Client = new AmazonS3Client(RegionEndpoint.EUWest2); // London
-            
+            var s3Client = new AmazonS3Client(config.Region);
+
             var fileTransferUtility = new TransferUtility(s3Client);
 
             await fileTransferUtility.UploadAsync(fileContent, config.BucketName, keyName);
