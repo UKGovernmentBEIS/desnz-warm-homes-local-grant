@@ -61,14 +61,13 @@ namespace HerPublicWebsite
             services.AddScoped<QuestionnaireUpdater>();
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
             services.AddScoped<IRegularJobsService, RegularJobsService>();
-            services.AddScoped<IS3FileWriter, S3FileWriter>();
-            services.AddScoped<S3ReferralFileKeyGenerator>();
 
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();
             // This allows encrypted cookies to be understood across multiple web server instances
             services.AddDataProtection().PersistKeysToDbContext<HerDbContext>();
 
+            ConfigureS3FileWriter(services);
             ConfigureEpcApi(services);
             ConfigureOsPlacesApi(services);
             ConfigureGovUkNotify(services);
@@ -147,6 +146,14 @@ namespace HerPublicWebsite
             services.AddScoped<IEmailSender, GovUkNotifyApi>();
             services.Configure<GovUkNotifyConfiguration>(
                 configuration.GetSection(GovUkNotifyConfiguration.ConfigSection));
+        }
+
+        private void ConfigureS3FileWriter(IServiceCollection services)
+        {
+            services.Configure<S3FileWriterConfiguration>(
+                configuration.GetSection(S3FileWriterConfiguration.ConfigSection));
+            services.AddScoped<IS3FileWriter, S3FileWriter>();
+            services.AddScoped<S3ReferralFileKeyGenerator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
