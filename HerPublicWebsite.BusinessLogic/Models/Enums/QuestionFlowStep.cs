@@ -13,5 +13,7 @@ public enum QuestionFlowStep
     ReviewEpc,
     ManualAddress,
     HouseholdIncome,
-    CheckAnswers
+    CheckAnswers,
+    Eligible,
+    Ineligible,
 }

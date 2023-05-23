@@ -351,6 +351,21 @@ public class QuestionnaireController : Controller
     [HttpPost("check")]
     public IActionResult CheckAnswers_Post()
     {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.CheckAnswers, questionnaire);
+
+        return RedirectToNextStep(nextStep);
+    }
+
+    [HttpGet("eligible")]
+    public IActionResult Eligible_Get()
+    {
+        return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
+    }
+
+    [HttpGet("ineligible")]
+    public IActionResult Ineligible_Get()
+    {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
 
@@ -389,6 +404,8 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.ManualAddress => new PathByActionArguments(nameof(ManualAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.HouseholdIncome => new PathByActionArguments(nameof(HouseholdIncome_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.CheckAnswers => new PathByActionArguments(nameof(CheckAnswers_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.Ineligible => new PathByActionArguments(nameof(Ineligible_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.Eligible => new PathByActionArguments(nameof(Eligible_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

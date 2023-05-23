@@ -46,6 +46,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.ReviewEpc => ReviewEpcForwardDestination(questionnaire, entryPoint),
                 QuestionFlowStep.ManualAddress => ManualAddressForwardDestination(questionnaire, entryPoint),
                 QuestionFlowStep.HouseholdIncome => HouseholdIncomeForwardDestination(questionnaire),
+                QuestionFlowStep.CheckAnswers => CheckAnswersForwardDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
             };
         }
@@ -206,6 +207,18 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         private QuestionFlowStep HouseholdIncomeForwardDestination(Questionnaire questionnaire)
         {
             return QuestionFlowStep.CheckAnswers;
+        }
+
+        private QuestionFlowStep CheckAnswersForwardDestination(Questionnaire questionnaire)
+        {
+            return (questionnaire.IncomeBand, questionnaire.HasGasBoiler, questionnaire.FoundEpcBandIsTooHigh, questionnaire.EpcDetailsAreCorrect, questionnaire.Country, questionnaire.OwnershipStatus, questionnaire.IsLsoaProperty) switch
+            {
+                (IncomeBand.UnderOrEqualTo31000, not HasGasBoiler.Yes, false, _, Country.England, OwnershipStatus.OwnerOccupancy, _) => QuestionFlowStep.Eligible,
+                (IncomeBand.UnderOrEqualTo31000, not HasGasBoiler.Yes, _, false, Country.England, OwnershipStatus.OwnerOccupancy, _) => QuestionFlowStep.Eligible,
+                (IncomeBand.GreaterThan31000, not HasGasBoiler.Yes, false, _, Country.England, OwnershipStatus.OwnerOccupancy, true) => QuestionFlowStep.Eligible,
+                (IncomeBand.GreaterThan31000, not HasGasBoiler.Yes, _, false, Country.England, OwnershipStatus.OwnerOccupancy, true) => QuestionFlowStep.Eligible,
+                _ => QuestionFlowStep.Ineligible,
+            };
         }
     }
 }
