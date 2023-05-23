@@ -1,0 +1,198 @@
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using HerPublicWebsite.BusinessLogic.Models.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using HerPublicWebsite.Controllers
+@using System.Runtime.CompilerServices
+@using GovUkDesignSystem.Attributes
+
+@model HerPublicWebsite.Models.Questionnaire.CheckAnswersViewModel
+
+@{
+    ViewBag.Title = "Check your answers";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+           {
+               Text = "Back",
+               Href = Model.BackLink,
+           })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <form action="@Url.Action(nameof(QuestionnaireController.CheckAnswers_Post), "Questionnaire")" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+            
+            @{ var values = new Dictionary<string, object> { { "entryPoint", QuestionFlowStep.CheckAnswers } }; }
+
+
+            @await Html.GovUkSummaryList( new SummaryListViewModel()
+                   {
+                       Rows = new List<SummaryListRowViewModel>
+                       {
+                           new()
+                           {
+                               Key = new SummaryListRowKey
+                               {
+                                   Text = "Do you have a gas boiler?"
+                               },
+                               Value = new SummaryListRowValue
+                               {
+                                   Text = Model.Questionnaire.HasGasBoiler switch{
+                                       HasGasBoiler.No => "No",
+                                       HasGasBoiler.Yes => "Yes",
+                                       HasGasBoiler.Unknown => "I don't know",
+                                       _ => ""
+                                       }
+                               },
+                               Actions = new SummaryListRowActionViewModel()
+                               {
+                                   Items = new List<SummaryListRowActionItemViewModel>
+                                   {
+                                       new()
+                                       {
+                                           Text = "Change",
+                                           Href = @Url.Action(nameof(QuestionnaireController.GasBoiler_Get), controller: "Questionnaire", values: values )
+                                       }
+                                   }
+                               },
+                               ShowActions = true,
+                           },
+                           new()
+                           {
+                               Key = new SummaryListRowKey
+                               {
+                                   Text = "Where is your property?"
+                               },
+                               Value = new SummaryListRowValue
+                               {
+                                   Text = Model.Questionnaire.Country switch {
+                                       Country.England => "England",
+                                       Country.Wales => "Wales",
+                                       Country.Scotland => "Scotland",
+                                       Country.NorthernIreland => "Northern Ireland",
+                                       Country.Other => "Other",
+                                       _ => ""
+                                       }
+                               },
+                               Actions = new SummaryListRowActionViewModel()
+                               {
+                                   Items = new List<SummaryListRowActionItemViewModel>
+                                   {
+                                       new()
+                                       {
+                                           Text = "Change",
+                                           Href = @Url.Action(nameof(QuestionnaireController.Country_Get), controller: "Questionnaire", values: values )
+                                       }
+                                   }
+                               },
+                               ShowActions = true,
+                           },
+                           new()
+                           {
+                               Key = new SummaryListRowKey
+                               {
+                                   Text = "Do you own your property?"
+                               },
+                               Value = new SummaryListRowValue
+                               {
+                                   Text = Model.Questionnaire.OwnershipStatus switch {
+                                       OwnershipStatus.OwnerOccupancy => "Yes",
+                                       OwnershipStatus.PrivateTenancy => "No", // The following options shouldn't be possible, since you get taken to the service unsuitable page if you're not living in your own property
+                                       OwnershipStatus.Landlord => "Yes, but I don't live in it",
+                                       _ => ""
+                                       }
+                               },
+                               Actions = new SummaryListRowActionViewModel()
+                               {
+                                   Items = new List<SummaryListRowActionItemViewModel>
+                                   {
+                                       new()
+                                       {
+                                           Text = "Change",
+                                           Href = @Url.Action(nameof(QuestionnaireController.OwnershipStatus_Get), controller: "Questionnaire", values: values )
+                                       }
+                                   }
+                               },
+                               ShowActions = true,
+                           },
+                           new()
+                           {
+                               Key = new SummaryListRowKey
+                               {
+                                   Text = "What is the property address?"
+                               },
+                               Value = new SummaryListRowValue
+                               {
+                                   Html = @<text>@Html.Raw(
+                                                     string.Join("<br/>",
+                                                         new List<string>{
+                                                             Model.Questionnaire.AddressLine1,
+                                                             Model.Questionnaire.AddressLine2,
+                                                             Model.Questionnaire.AddressCounty,
+                                                             Model.Questionnaire.AddressTown,
+                                                             Model.Questionnaire.AddressPostcode
+                                                         }.Where(x => x is not null).Select(x => Html.Encode(x))))
+                                           </text>
+                               },
+                               Actions = new SummaryListRowActionViewModel()
+                               {
+                                   Items = new List<SummaryListRowActionItemViewModel>
+                                   {
+                                       new()
+                                       {
+                                           Text = "Change",
+                                           Href = Url.Action(Model.Questionnaire.Uprn switch
+                                           {
+                                               null => nameof(QuestionnaireController.ManualAddress_Get),
+                                               _ => nameof(QuestionnaireController.Address_Get)
+                                            }, controller: "Questionnaire", values: values )
+                                       }
+                                   }
+                               },
+                               ShowActions = true,
+
+                           },
+                           new()
+                           {
+                               Key = new SummaryListRowKey
+                               {
+                                   Text = "What is your household income?"
+                               },
+                               Value = new SummaryListRowValue
+                               {
+                                   Text = Model.Questionnaire.IncomeBand switch {
+                                       IncomeBand.GreaterThan31000 => "More than £31,000",
+                                       IncomeBand.UnderOrEqualTo31000 => "£31,000 or less",
+                                       _ => ""
+                                       }
+                               },
+                               Actions = new SummaryListRowActionViewModel()
+                               {
+                                   Items = new List<SummaryListRowActionItemViewModel>
+                                   {
+                                       new()
+                                       {
+                                           Text = "Change",
+                                           Href = @Url.Action(nameof(QuestionnaireController.HouseholdIncome_Get), controller: "Questionnaire", values: values )
+                                       }
+                                   }
+                               },
+                               ShowActions = true,
+                           }
+                       }
+                   })
+
+            @(await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Continue",
+            }))
+
+        </form>
+        
+    </div>
+</div>

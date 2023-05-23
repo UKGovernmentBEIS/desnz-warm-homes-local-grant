@@ -19,16 +19,17 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         {
             return page switch
             {
-                QuestionFlowStep.GasBoiler => GasBoilerBackDestination(),
+                QuestionFlowStep.GasBoiler => GasBoilerBackDestination(entryPoint),
                 QuestionFlowStep.DirectToEco => DirectToEcoBackDestination(),
-                QuestionFlowStep.Country => CountryBackDestination(),
+                QuestionFlowStep.Country => CountryBackDestination(entryPoint),
                 QuestionFlowStep.ServiceUnsuitable => ServiceUnsuitableBackDestination(questionnaire),
-                QuestionFlowStep.OwnershipStatus => OwnershipStatusBackDestination(),
-                QuestionFlowStep.Address => AddressBackDestination(),
+                QuestionFlowStep.OwnershipStatus => OwnershipStatusBackDestination(entryPoint),
+                QuestionFlowStep.Address => AddressBackDestination(entryPoint),
                 QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
                 QuestionFlowStep.ReviewEpc => ReviewEpcBackDestination(),
                 QuestionFlowStep.ManualAddress => ManualAddressBackDestination(),
-                QuestionFlowStep.HouseholdIncome => HouseholdIncomeBackDestination(questionnaire),
+                QuestionFlowStep.HouseholdIncome => HouseholdIncomeBackDestination(questionnaire, entryPoint),
+                QuestionFlowStep.CheckAnswers => CheckAnswersBackDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -37,21 +38,25 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         {
             return page switch
             {
-                QuestionFlowStep.GasBoiler => GasBoilerForwardDestination(questionnaire),
-                QuestionFlowStep.Country => CountryForwardDestination(questionnaire),
-                QuestionFlowStep.OwnershipStatus => OwnershipStatusForwardDestination(questionnaire),
+                QuestionFlowStep.GasBoiler => GasBoilerForwardDestination(questionnaire, entryPoint),
+                QuestionFlowStep.Country => CountryForwardDestination(questionnaire, entryPoint),
+                QuestionFlowStep.OwnershipStatus => OwnershipStatusForwardDestination(questionnaire, entryPoint),
                 QuestionFlowStep.Address => AddressForwardDestination(questionnaire),
-                QuestionFlowStep.SelectAddress => SelectAddressForwardDestination(questionnaire),
-                QuestionFlowStep.ReviewEpc => ReviewEpcForwardDestination(questionnaire),
-                QuestionFlowStep.ManualAddress => ManualAddressForwardDestination(questionnaire),
+                QuestionFlowStep.SelectAddress => SelectAddressForwardDestination(questionnaire, entryPoint),
+                QuestionFlowStep.ReviewEpc => ReviewEpcForwardDestination(questionnaire, entryPoint),
+                QuestionFlowStep.ManualAddress => ManualAddressForwardDestination(questionnaire, entryPoint),
                 QuestionFlowStep.HouseholdIncome => HouseholdIncomeForwardDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
             };
         }
 
-        private QuestionFlowStep GasBoilerBackDestination()
+        private QuestionFlowStep GasBoilerBackDestination(QuestionFlowStep? entryPoint)
         {
-            return QuestionFlowStep.Start;
+            return entryPoint switch
+            {
+                QuestionFlowStep.CheckAnswers => QuestionFlowStep.CheckAnswers,
+                _ => QuestionFlowStep.Start
+            };
         }
 
         private QuestionFlowStep DirectToEcoBackDestination()
@@ -59,9 +64,13 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return QuestionFlowStep.GasBoiler;
         }
 
-        private QuestionFlowStep CountryBackDestination()
+        private QuestionFlowStep CountryBackDestination(QuestionFlowStep? entryPoint)
         {
-            return QuestionFlowStep.GasBoiler;
+            return entryPoint switch
+            {
+                QuestionFlowStep.CheckAnswers => QuestionFlowStep.CheckAnswers,
+                _ => QuestionFlowStep.GasBoiler
+            };
         }
 
         private QuestionFlowStep ServiceUnsuitableBackDestination(Questionnaire questionnaire)
@@ -81,14 +90,23 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             };
         }
 
-        private QuestionFlowStep OwnershipStatusBackDestination()
+        private QuestionFlowStep OwnershipStatusBackDestination(QuestionFlowStep? entryPoint)
         {
-            return QuestionFlowStep.Country;
+            return entryPoint switch
+            {
+                QuestionFlowStep.CheckAnswers => QuestionFlowStep.CheckAnswers,
+                _ => QuestionFlowStep.Country
+            };
         }
 
-        private QuestionFlowStep AddressBackDestination()
+        private QuestionFlowStep AddressBackDestination(QuestionFlowStep? entryPoint)
         {
-            return QuestionFlowStep.OwnershipStatus;
+
+            return entryPoint switch
+            {
+                QuestionFlowStep.CheckAnswers => QuestionFlowStep.CheckAnswers,
+                _ => QuestionFlowStep.OwnershipStatus
+            };
         }
 
         private QuestionFlowStep SelectAddressBackDestination()
@@ -106,34 +124,49 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return QuestionFlowStep.Address;
         }
 
-        private QuestionFlowStep HouseholdIncomeBackDestination(Questionnaire questionnaire)
+        private QuestionFlowStep HouseholdIncomeBackDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
-            return questionnaire.Uprn switch
+            return (entryPoint, questionnaire.Uprn) switch
             {
-                null => QuestionFlowStep.ManualAddress,
+                (QuestionFlowStep.CheckAnswers, _) => QuestionFlowStep.CheckAnswers,
+                (_, null) => QuestionFlowStep.ManualAddress,
                 _ => QuestionFlowStep.Address
             };
         }
 
-        private QuestionFlowStep GasBoilerForwardDestination(Questionnaire questionnaire)
+        private QuestionFlowStep CheckAnswersBackDestination(Questionnaire questionnaire)
         {
-            return questionnaire.HasGasBoiler is HasGasBoiler.Yes
-                ? QuestionFlowStep.DirectToEco
-                : QuestionFlowStep.Country;
+            return QuestionFlowStep.HouseholdIncome;
         }
 
-        private QuestionFlowStep CountryForwardDestination(Questionnaire questionnaire)
+        private QuestionFlowStep GasBoilerForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
-            return questionnaire.Country is not Country.England
-                ? QuestionFlowStep.ServiceUnsuitable
-                : QuestionFlowStep.OwnershipStatus;
+            return (entryPoint, questionnaire.HasGasBoiler) switch
+            {
+                (_, HasGasBoiler.Yes) => QuestionFlowStep.DirectToEco,
+                (QuestionFlowStep.CheckAnswers, _) => QuestionFlowStep.CheckAnswers,
+                _ => QuestionFlowStep.Country
+            };
         }
 
-        private QuestionFlowStep OwnershipStatusForwardDestination(Questionnaire questionnaire)
+        private QuestionFlowStep CountryForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
-            return questionnaire.OwnershipStatus is not OwnershipStatus.OwnerOccupancy
-                ? QuestionFlowStep.ServiceUnsuitable
-                : QuestionFlowStep.Address;
+            return (entryPoint, questionnaire.Country) switch
+            {
+                (_, not Country.England) => QuestionFlowStep.ServiceUnsuitable,
+                (QuestionFlowStep.CheckAnswers, _) => QuestionFlowStep.CheckAnswers,
+                _ => QuestionFlowStep.OwnershipStatus
+            };
+        }
+
+        private QuestionFlowStep OwnershipStatusForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
+        {
+            return (entryPoint, questionnaire.OwnershipStatus) switch
+            {
+                (_, not OwnershipStatus.OwnerOccupancy) => QuestionFlowStep.ServiceUnsuitable,
+                (QuestionFlowStep.CheckAnswers, _) => QuestionFlowStep.CheckAnswers,
+                _ => QuestionFlowStep.Address
+            };
         }
 
         private QuestionFlowStep AddressForwardDestination(Questionnaire questionnaire)
@@ -141,19 +174,33 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return QuestionFlowStep.SelectAddress;
         }
 
-        private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire)
+        private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
-            return questionnaire.FoundEpcBandIsTooHigh ? QuestionFlowStep.ReviewEpc : QuestionFlowStep.HouseholdIncome;
+            return (entryPoint, questionnaire.FoundEpcBandIsTooHigh) switch
+            {
+                (_, true) => QuestionFlowStep.ReviewEpc,
+                (QuestionFlowStep.CheckAnswers, _) => QuestionFlowStep.CheckAnswers,
+                _ => QuestionFlowStep.HouseholdIncome
+            };
         }
 
-        private QuestionFlowStep ReviewEpcForwardDestination(Questionnaire questionnaire)
+        private QuestionFlowStep ReviewEpcForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
-            return questionnaire.EpcDetailsAreCorrect!.Value ? QuestionFlowStep.ServiceUnsuitable : QuestionFlowStep.HouseholdIncome;
+            return (entryPoint, questionnaire.EpcDetailsAreCorrect!.Value) switch
+            {
+                (_, true) => QuestionFlowStep.ServiceUnsuitable,
+                (QuestionFlowStep.CheckAnswers, _) => QuestionFlowStep.CheckAnswers,
+                _ => QuestionFlowStep.HouseholdIncome
+            };
         }
 
-        private QuestionFlowStep ManualAddressForwardDestination(Questionnaire questionnaire)
+        private QuestionFlowStep ManualAddressForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
-            return QuestionFlowStep.HouseholdIncome;
+            return entryPoint switch
+            {
+                QuestionFlowStep.CheckAnswers => QuestionFlowStep.CheckAnswers,
+                _ => QuestionFlowStep.HouseholdIncome
+            };
         }
 
         private QuestionFlowStep HouseholdIncomeForwardDestination(Questionnaire questionnaire)
