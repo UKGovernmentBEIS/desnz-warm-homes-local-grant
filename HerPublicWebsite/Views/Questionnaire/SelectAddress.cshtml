@@ -20,44 +20,52 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <form action="@Url.Action(nameof(QuestionnaireController.SelectAddress_Post), "Questionnaire")" method="post" novalidate>
-            @(Html.HiddenFor(m => m.EntryPoint))
-            @Html.AntiForgeryToken()
+        @if (Model.Addresses.Count > 0)
+        {
+            <form action="@Url.Action(nameof(QuestionnaireController.SelectAddress_Post), "Questionnaire")" method="post" novalidate>
+                @(Html.HiddenFor(m => m.EntryPoint))
+                @Html.AntiForgeryToken()
 
-            @await Html.GovUkRadiosFromStringsFor(m => m.SelectedAddressIndex,
-                       radioOptions: new Dictionary<string, LabelViewModel>(
-                           Model.Addresses.Select(
-                               (result, i) => new KeyValuePair<string, LabelViewModel>(
-                                   i.ToString(),
-                                   new LabelViewModel
-                                   {
-                                       Text = result.DisplayAddress,
-                                   }
+
+                @await Html.GovUkRadiosFromStringsFor(m => m.SelectedAddressIndex,
+                           radioOptions: new Dictionary<string, LabelViewModel>(
+                               Model.Addresses.Select(
+                                   (result, i) => new KeyValuePair<string, LabelViewModel>(
+                                       i.ToString(),
+                                       new LabelViewModel
+                                       {
+                                           Text = result.DisplayAddress,
+                                       }
+                                       )
                                    )
-                               )
-                           ),
-                       fieldsetOptions: new FieldsetViewModel()
-                       {
-                           Legend = new LegendViewModel()
+                               ),
+                           fieldsetOptions: new FieldsetViewModel()
                            {
-                               Text = "Select your address",
-                               Classes = "govuk-fieldset__legend--l",
-                               IsPageHeading = true
+                               Legend = new LegendViewModel()
+                               {
+                                   Text = "Select your address",
+                                   Classes = "govuk-fieldset__legend--l",
+                                   IsPageHeading = true
+                               }
                            }
-                       }
-                   )
+                           )
 
 
-            <div class="govuk-button-group">
-                @(await Html.GovUkButton(new ButtonViewModel
-                {
-                    Text = "Continue",
-                }))
+                <div class="govuk-button-group">
+                    @(await Html.GovUkButton(new ButtonViewModel
+                    {
+                        Text = "Continue",
+                    }))
 
-                <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.ManualAddress_Get), "Questionnaire")">Address not listed above</a>
-            </div>
+                    <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.ManualAddress_Get), "Questionnaire")">Address not listed above</a>
+                </div>
 
-        </form>
-
+            </form>
+        }
+        else
+        {
+            <h1 class="govuk-heading-l">No Addresses Found</h1>
+            <p class="govuk-body">You can go back and try another postcode, or <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.ManualAddress_Get), "Questionnaire")">enter your full address</a>.</p>
+        }
     </div>
 </div>

@@ -62,7 +62,7 @@ public class OsPlacesApi : IOsPlacesApi
         }
         catch (Exception e) {
             logger.LogError("OS Places postcode request failed: {}", e.Message);
-            throw;
+            return new List<Address>();
         }
     }
 
