@@ -8,6 +8,7 @@ using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
 using HerPublicWebsite.ExternalServices.GoogleAnalytics;
+using HerPublicWebsite.Filters;
 using HerPublicWebsite.Models.Questionnaire;
 using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
@@ -18,6 +19,7 @@ using Microsoft.Extensions.Logging;
 namespace HerPublicWebsite.Controllers;
 
 [Route("questionnaire")]
+[SessionExpiry]
 public class QuestionnaireController : Controller
 {
     private readonly IQuestionFlowService questionFlowService;
@@ -45,12 +47,14 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("")]
+    [ExcludeFromSessionExpiry]
     public IActionResult Index()
     {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
 
     [HttpGet("boiler")]
+    [ExcludeFromSessionExpiry]
     public IActionResult GasBoiler_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
@@ -64,6 +68,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("boiler")]
+    [ExcludeFromSessionExpiry]
     public IActionResult GasBoiler_Post(GasBoilerViewModel viewModel)
     {
         if (!ModelState.IsValid)
@@ -235,7 +240,7 @@ public class QuestionnaireController : Controller
             return RedirectToAction(nameof(Address_Get), "Questionnaire");
         }
     }
-    
+
     [HttpGet("review-epc")]
     public IActionResult ReviewEpc_Get()
     {
@@ -247,7 +252,7 @@ public class QuestionnaireController : Controller
 
         return View("ReviewEpc", viewModel);
     }
-    
+
     [HttpPost("review-epc")]
     public IActionResult ReviewEpc_Post(ReviewEpcViewModel viewModel)
     {

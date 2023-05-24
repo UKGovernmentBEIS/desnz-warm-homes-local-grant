@@ -25,10 +25,12 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
         public async Task<EpcDetails> EpcFromUprnAsync(string uprn)
         {
             string token = null;
-            try {
+            try
+            {
                 token = await RequestTokenIfNeeded();
             }
-            catch(Exception e) {
+            catch (Exception e)
+            {
                 logger.LogError("Unable to get EPB API Token: {}", e.Message);
                 return null;
             }
@@ -36,15 +38,17 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
             var parameters = new RequestParameters
             {
                 BaseAddress = config.BaseUrl,
-                Path = $"/retrofit-funding/assessments?uprn={uprn}",
+                Path = $"retrofit-funding/assessments?uprn={uprn}",
                 Auth = new AuthenticationHeaderValue("Bearer", token)
             };
 
-            try {
+            try
+            {
                 var response = await HttpRequestHelper.SendGetRequestAsync<EpbEpcDto>(parameters);
                 return response.Data.Assessment.Parse();
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 logger.LogError("EPB EPC request failed: {}", e.Message);
                 return null;
             }

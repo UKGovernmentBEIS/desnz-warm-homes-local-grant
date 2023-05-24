@@ -1,4 +1,5 @@
 using System;
+using Community.Microsoft.Extensions.Caching.PostgreSql;
 using GovUkDesignSystem.ModelBinders;
 using Hangfire;
 using Hangfire.PostgreSql;
@@ -33,7 +34,7 @@ namespace HerPublicWebsite
     {
         private readonly IConfiguration configuration;
         private readonly IWebHostEnvironment webHostEnvironment;
-        
+
         public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             this.configuration = configuration;
@@ -60,14 +61,13 @@ namespace HerPublicWebsite
             services.AddScoped<QuestionnaireUpdater>();
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
             services.AddScoped<IRegularJobsService, RegularJobsService>();
-            services.AddScoped<IS3FileWriter, S3FileWriter>();
-            services.AddScoped<S3ReferralFileKeyGenerator>();
-            
+
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();
             // This allows encrypted cookies to be understood across multiple web server instances
             services.AddDataProtection().PersistKeysToDbContext<HerDbContext>();
 
+            ConfigureS3FileWriter(services);
             ConfigureEpcApi(services);
             ConfigureOsPlacesApi(services);
             ConfigureGovUkNotify(services);
@@ -88,12 +88,17 @@ namespace HerPublicWebsite
                 options.ModelMetadataDetailsProviders.Add(new GovUkDataBindingErrorTextProvider());
             });
 
-            // TODO: Replace this with a database based cache
-            services.AddDistributedMemoryCache();
+            services.AddDistributedPostgreSqlCache(setup =>
+            {
+                setup.ConnectionString = configuration.GetConnectionString("PostgreSQLConnection");
+                setup.TableName = configuration.GetSection("SessionCache")["TableName"];
+                setup.SchemaName = configuration.GetSection("SessionCache")["SchemaName"];
+            });
 
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(10);
+                // If this changes, make sure to update the message on the session expiry page
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
@@ -111,10 +116,6 @@ namespace HerPublicWebsite
         private void ConfigureDatabaseContext(IServiceCollection services)
         {
             var databaseConnectionString = configuration.GetConnectionString("PostgreSQLConnection");
-            if (!webHostEnvironment.IsDevelopment())
-            {
-                databaseConnectionString = "TODO Get Azure DB string";
-            }
             services.AddDbContext<HerDbContext>(opt =>
                 opt.UseNpgsql(databaseConnectionString));
         }
@@ -132,7 +133,7 @@ namespace HerPublicWebsite
         {
             services.Configure<EpbEpcConfiguration>(
                 configuration.GetSection(EpbEpcConfiguration.ConfigSection));
-            services.AddScoped<IEpcApi, DummyEpbEpcApi>();
+            services.AddScoped<IEpcApi, EpbEpcApi>();
         }
 
         private void ConfigureOsPlacesApi(IServiceCollection services)
@@ -147,6 +148,14 @@ namespace HerPublicWebsite
             services.AddScoped<IEmailSender, GovUkNotifyApi>();
             services.Configure<GovUkNotifyConfiguration>(
                 configuration.GetSection(GovUkNotifyConfiguration.ConfigSection));
+        }
+
+        private void ConfigureS3FileWriter(IServiceCollection services)
+        {
+            services.Configure<S3FileWriterConfiguration>(
+                configuration.GetSection(S3FileWriterConfiguration.ConfigSection));
+            services.AddScoped<IS3FileWriter, S3FileWriter>();
+            services.AddScoped<S3ReferralFileKeyGenerator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

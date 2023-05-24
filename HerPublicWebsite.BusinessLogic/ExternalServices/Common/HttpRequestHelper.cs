@@ -5,7 +5,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.Common
 {
     public static class HttpRequestHelper
     {
-        public static HttpMessageHandler handler {get; set;}
+        public static HttpMessageHandler handler { get; set; }
 
         public static Task<T> SendGetRequestAsync<T>(RequestParameters parameters)
         {
@@ -49,13 +49,14 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.Common
 
         private static T ConvertResponseToObject<T>(HttpResponseMessage response)
         {
+            var bodyString = response.Content.ReadAsStringAsync().Result;
+
             if (!response.IsSuccessStatusCode)
             {
                 throw new ApiException($"Request to {response.RequestMessage?.RequestUri} failed. " +
-                                       $"Error message: {response.StatusCode}; {response.ReasonPhrase}", response.StatusCode);
+                                       $"Error message: {response.StatusCode}; {response.ReasonPhrase}; {bodyString}", response.StatusCode, bodyString);
             }
 
-            var bodyString = response.Content.ReadAsStringAsync().Result;
             return JsonConvert.DeserializeObject<T>(bodyString);
         }
     }

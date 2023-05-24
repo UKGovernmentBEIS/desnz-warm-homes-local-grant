@@ -2,7 +2,7 @@
 
 namespace HerPublicWebsite.BusinessLogic.Models;
 
-public class EpcDetails
+public record EpcDetails
 {
     public string AddressLine1 { get; set; }
     public string AddressLine2 { get; set; }
