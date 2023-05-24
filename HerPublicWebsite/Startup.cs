@@ -95,6 +95,8 @@ namespace HerPublicWebsite
                 setup.SchemaName = configuration.GetSection("SessionCache")["SchemaName"];
             });
 
+            services.AddMvc().AddSessionStateTempDataProvider();
+
             services.AddSession(options =>
             {
                 // If this changes, make sure to update the message on the session expiry page
