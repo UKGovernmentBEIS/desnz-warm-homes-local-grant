@@ -95,17 +95,29 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Address),
         new(
+            "Select local authority goes back to Manual address",
+            new Input(
+                QuestionFlowStep.SelectLocalAuthority
+            ),
+            QuestionFlowStep.ManualAddress),
+        new(
+            "Confirm local authority goes back to select local authority",
+            new Input(
+                QuestionFlowStep.ConfirmLocalAuthority
+            ),
+            QuestionFlowStep.SelectLocalAuthority),
+        new(
             "Household income goes back to Address if UPRN found",
             new Input(
                 QuestionFlowStep.HouseholdIncome, uprn: "100023336956"
             ),
             QuestionFlowStep.Address),
         new(
-            "Household income goes back to Manual address if no UPRN found",
+            "Household income goes back to confirm local authority if no UPRN found",
             new Input(
                 QuestionFlowStep.HouseholdIncome, uprn: null
             ),
-            QuestionFlowStep.ManualAddress),
+            QuestionFlowStep.ConfirmLocalAuthority),
         new(
             "Service unsuitable goes back to the country you came from",
             new Input(
@@ -261,6 +273,26 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectLocalAuthority),
         new(
+            "Select local authority continues to confirm local authority",
+            new Input(
+                QuestionFlowStep.SelectLocalAuthority
+            ),
+            QuestionFlowStep.ConfirmLocalAuthority),
+        new(
+            "Confirm local authority continues to select local authority if authority is incorrect",
+            new Input(
+                QuestionFlowStep.ConfirmLocalAuthority,
+                localAuthorityIsCorrect: false
+            ),
+            QuestionFlowStep.SelectLocalAuthority),
+        new(
+            "Confirm local authority continues to household income if authority is correct",
+            new Input(
+                QuestionFlowStep.ConfirmLocalAuthority,
+                localAuthorityIsCorrect: true
+            ),
+            QuestionFlowStep.HouseholdIncome),
+        new(
             "Household income continues to check answers",
             new Input(
                 QuestionFlowStep.HouseholdIncome
@@ -305,6 +337,7 @@ public class QuestionFlowServiceTests
             string uprn = null,
             bool epcDetailsAreCorrect = false,
             EpcRating? epcRating = null,
+            bool localAuthorityIsCorrect = false,
             QuestionFlowStep? entryPoint = null)
         {
             Page = page;
@@ -316,6 +349,7 @@ public class QuestionFlowServiceTests
                 Country = country,
                 EpcDetailsAreCorrect = epcDetailsAreCorrect,
                 EpcDetails = epcRating == null ? null : new EpcDetails { EpcRating = epcRating },
+                LocalAuthorityConfirmed = localAuthorityIsCorrect,
             };
             EntryPoint = entryPoint;
         }

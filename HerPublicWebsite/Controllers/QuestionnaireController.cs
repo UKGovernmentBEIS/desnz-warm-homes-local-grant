@@ -7,8 +7,10 @@ using HerPublicWebsite.BusinessLogic.Extensions;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
+using HerPublicWebsite.Extensions;
 using HerPublicWebsite.ExternalServices.GoogleAnalytics;
 using HerPublicWebsite.Filters;
+using HerPublicWebsite.Models.Enums;
 using HerPublicWebsite.Models.Questionnaire;
 using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
@@ -261,7 +263,7 @@ public class QuestionnaireController : Controller
             return ReviewEpc_Get();
         }
 
-        var questionnaire = questionnaireService.UpdateEpcIsCorrect(viewModel.EpcIsCorrect == ReviewEpcViewModel.YesOrNo.Yes);
+        var questionnaire = questionnaireService.UpdateEpcIsCorrect(viewModel.EpcIsCorrect == YesOrNo.Yes);
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.ReviewEpc, questionnaire);
         return RedirectToNextStep(nextStep);
@@ -311,7 +313,7 @@ public class QuestionnaireController : Controller
         return RedirectToNextStep(nextStep);
     }
     
-    [HttpGet("local-authority/")]
+    [HttpGet("select-local-authority")]
     public IActionResult SelectLocalAuthority_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
@@ -321,6 +323,50 @@ public class QuestionnaireController : Controller
         };
 
         return View("SelectLocalAuthority", viewModel);
+    }
+    
+    [HttpGet("select-local-authority/{custodianCode}")]
+    public IActionResult LocalAuthoritySelected_Get(string custodianCode)
+    {
+        if (!LocalAuthorityData.LocalAuthorityDetailsByCustodianCode.ContainsKey(custodianCode))
+        {
+            // This should only happen if someone messes with the URL
+            logger.LogError("Unrecognised custodian code received: " + custodianCode);
+            return SelectLocalAuthority_Get();
+        }
+        
+        var questionnaire = questionnaireService.UpdateLocalAuthority(custodianCode);
+        
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.SelectLocalAuthority, questionnaire);
+        return RedirectToNextStep(nextStep);
+    }
+    
+    [HttpGet("confirm-local-authority")]
+    public IActionResult ConfirmLocalAuthority_Get()
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new ConfirmLocalAuthorityViewModel()
+        {
+            LocalAuthorityName = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[questionnaire.CustodianCode].Name,
+            LaIsCorrect = questionnaire.LocalAuthorityConfirmed.ToNullableYesOrNo(),
+            BackLink = GetBackUrl(QuestionFlowStep.ConfirmLocalAuthority, questionnaire)
+        };
+
+        return View("ConfirmLocalAuthority", viewModel);
+    }
+    
+    [HttpPost("confirm-local-authority")]
+    public IActionResult ConfirmLocalAuthority_Post(ConfirmLocalAuthorityViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return ConfirmLocalAuthority_Get();
+        }
+
+        var questionnaire = questionnaireService.UpdateLocalAuthorityIsCorrect(viewModel.LaIsCorrect == YesOrNo.Yes);
+
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ConfirmLocalAuthority, questionnaire);
+        return RedirectToNextStep(nextStep);
     }
 
     [HttpGet("income")]
@@ -388,14 +434,16 @@ public class QuestionnaireController : Controller
         {
             QuestionFlowStep.Start => new PathByActionArguments(nameof(Index), "Questionnaire"),
             QuestionFlowStep.GasBoiler => new PathByActionArguments(nameof(GasBoiler_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
-            QuestionFlowStep.DirectToEco => new PathByActionArguments(nameof(DirectToEco_Get), "Questionnaire"),
+            QuestionFlowStep.DirectToEco => new PathByActionArguments(nameof(DirectToEco_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.Country => new PathByActionArguments(nameof(Country_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.ServiceUnsuitable => new PathByActionArguments(nameof(ServiceUnsuitable_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.OwnershipStatus => new PathByActionArguments(nameof(OwnershipStatus_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.Address => new PathByActionArguments(nameof(Address_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.SelectAddress => new PathByActionArguments(nameof(SelectAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
-            QuestionFlowStep.ReviewEpc => new PathByActionArguments(nameof(ReviewEpc_Get), "Questionnaire"),
+            QuestionFlowStep.ReviewEpc => new PathByActionArguments(nameof(ReviewEpc_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.ManualAddress => new PathByActionArguments(nameof(ManualAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.SelectLocalAuthority => new PathByActionArguments(nameof(SelectLocalAuthority_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.ConfirmLocalAuthority => new PathByActionArguments(nameof(ConfirmLocalAuthority_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.HouseholdIncome => new PathByActionArguments(nameof(HouseholdIncome_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.CheckAnswers => new PathByActionArguments(nameof(CheckAnswers_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             _ => throw new ArgumentOutOfRangeException()

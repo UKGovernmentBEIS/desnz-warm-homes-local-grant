@@ -4,7 +4,7 @@
 
 @model HerPublicWebsite.Models.Questionnaire.SelectLocalAuthorityViewModel
 @{
-    ViewBag.Title = "Address";
+    ViewBag.Title = "Select your local authority";
 }
 
 @section BeforeMain {
@@ -56,14 +56,14 @@
                     <div class="govuk-grid-column-one-half">
                         @foreach (var laDetails in orderedLaDetails.Take(linksInFirstColumn))
                         {
-                            <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.ConfirmLocalAuthority_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode })">@laDetails.Name</a>
+                            <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode })">@laDetails.Name</a>
                             <br/>
                         }
                     </div>
                     <div class="govuk-grid-column-one-half">
                         @foreach (var laDetails in orderedLaDetails.Skip(linksInFirstColumn))
                         {
-                            <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.ConfirmLocalAuthority_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode })">@laDetails.Name</a>
+                            <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode })">@laDetails.Name</a>
                             <br/>
                         }
                     </div>

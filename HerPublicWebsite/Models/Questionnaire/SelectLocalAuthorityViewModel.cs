@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using GovUkDesignSystem.Attributes.ValidationAttributes;
-using Microsoft.AspNetCore.Mvc;
 using HerPublicWebsite.BusinessLogic.Models;
 
 namespace HerPublicWebsite.Models.Questionnaire;
