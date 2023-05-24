@@ -349,8 +349,9 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("check")]
-    public IActionResult CheckAnswers_Post()
+    public async Task<IActionResult> CheckAnswers_Post()
     {
+        await googleAnalyticsService.SendQuestionnaireCompletedEvent(Request);
         var questionnaire = questionnaireService.GetQuestionnaire();
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.CheckAnswers, questionnaire);
 

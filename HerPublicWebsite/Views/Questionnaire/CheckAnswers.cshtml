@@ -29,7 +29,6 @@
             
             @{ var values = new Dictionary<string, object> { { "entryPoint", QuestionFlowStep.CheckAnswers } }; }
 
-            
             <h1 class="govuk-heading-l">
                 Check your answers
             </h1>
@@ -50,12 +49,7 @@
                                },
                                Value = new SummaryListRowValue
                                {
-                                   Text = Model.Questionnaire.HasGasBoiler switch{
-                                       HasGasBoiler.No => "No",
-                                       HasGasBoiler.Yes => "Yes",
-                                       HasGasBoiler.Unknown => "I don't know",
-                                       _ => ""
-                                       }
+                                   Text = GovUkRadioCheckboxLabelTextAttribute.GetLabelText(Model.Questionnaire.HasGasBoiler)
                                },
                                Actions = new SummaryListRowActionViewModel()
                                {
@@ -78,14 +72,7 @@
                                },
                                Value = new SummaryListRowValue
                                {
-                                   Text = Model.Questionnaire.Country switch {
-                                       Country.England => "England",
-                                       Country.Wales => "Wales",
-                                       Country.Scotland => "Scotland",
-                                       Country.NorthernIreland => "Northern Ireland",
-                                       Country.Other => "Other",
-                                       _ => ""
-                                       }
+                                   Text = GovUkRadioCheckboxLabelTextAttribute.GetLabelText(Model.Questionnaire.Country)
                                },
                                Actions = new SummaryListRowActionViewModel()
                                {
@@ -108,12 +95,7 @@
                                },
                                Value = new SummaryListRowValue
                                {
-                                   Text = Model.Questionnaire.OwnershipStatus switch {
-                                       OwnershipStatus.OwnerOccupancy => "Yes",
-                                       OwnershipStatus.PrivateTenancy => "No", // The following options shouldn't be possible, since you get taken to the service unsuitable page if you're not living in your own property
-                                       OwnershipStatus.Landlord => "Yes, but I don't live in it",
-                                       _ => ""
-                                       }
+                                   Text = GovUkRadioCheckboxLabelTextAttribute.GetLabelText(Model.Questionnaire.OwnershipStatus)
                                },
                                Actions = new SummaryListRowActionViewModel()
                                {
@@ -173,11 +155,7 @@
                                },
                                Value = new SummaryListRowValue
                                {
-                                   Text = Model.Questionnaire.IncomeBand switch {
-                                       IncomeBand.GreaterThan31000 => "More than £31,000",
-                                       IncomeBand.UnderOrEqualTo31000 => "£31,000 or less",
-                                       _ => ""
-                                       }
+                                   Text = GovUkRadioCheckboxLabelTextAttribute.GetLabelText(Model.Questionnaire.IncomeBand)
                                },
                                Actions = new SummaryListRowActionViewModel()
                                {
@@ -197,7 +175,7 @@
 
             @(await Html.GovUkButton(new ButtonViewModel
             {
-                Text = "Continue",
+                Text = "See Results",
             }))
 
         </form>
