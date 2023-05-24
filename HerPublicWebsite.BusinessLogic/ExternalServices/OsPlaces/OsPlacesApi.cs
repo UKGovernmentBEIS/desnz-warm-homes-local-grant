@@ -68,7 +68,7 @@ public class OsPlacesApi : IOsPlacesApi
 
     private RequestParameters GetRequestParameters(string postcode, int? offset = null)
     {
-        var path = $"/search/places/v1/postcode?maxresults={MaxResults}&postcode={postcode}";
+        var path = $"/search/places/v1/postcode?maxresults={MaxResults}&postcode={postcode}&lr=EN";
         if (offset is not null)
         {
             path += $"&offset={offset}";
