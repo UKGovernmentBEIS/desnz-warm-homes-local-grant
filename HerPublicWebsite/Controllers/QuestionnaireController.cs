@@ -310,6 +310,18 @@ public class QuestionnaireController : Controller
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.ManualAddress, questionnaire);
         return RedirectToNextStep(nextStep);
     }
+    
+    [HttpGet("local-authority/")]
+    public IActionResult SelectLocalAuthority_Get()
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new SelectLocalAuthorityViewModel()
+        {
+            BackLink = GetBackUrl(QuestionFlowStep.SelectLocalAuthority, questionnaire)
+        };
+
+        return View("SelectLocalAuthority", viewModel);
+    }
 
     [HttpGet("income")]
     public IActionResult HouseholdIncome_Get()

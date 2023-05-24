@@ -28,6 +28,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
                 QuestionFlowStep.ReviewEpc => ReviewEpcBackDestination(),
                 QuestionFlowStep.ManualAddress => ManualAddressBackDestination(),
+                QuestionFlowStep.SelectLocalAuthority => SelectLocalAuthorityBackDestination(),
                 QuestionFlowStep.HouseholdIncome => HouseholdIncomeBackDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException()
             };
@@ -106,6 +107,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return QuestionFlowStep.Address;
         }
 
+        private QuestionFlowStep SelectLocalAuthorityBackDestination()
+        {
+            return QuestionFlowStep.ManualAddress;
+        }
+
         private QuestionFlowStep HouseholdIncomeBackDestination(Questionnaire questionnaire)
         {
             return questionnaire.Uprn switch
@@ -153,7 +159,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep ManualAddressForwardDestination(Questionnaire questionnaire)
         {
-            return QuestionFlowStep.HouseholdIncome;
+            return QuestionFlowStep.SelectLocalAuthority;
         }
 
         private QuestionFlowStep HouseholdIncomeForwardDestination(Questionnaire questionnaire)

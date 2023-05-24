@@ -255,11 +255,11 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.ServiceUnsuitable),
         new(
-            "Manual address continues to household income",
+            "Manual address continues to select local authority",
             new Input(
                 QuestionFlowStep.ManualAddress
             ),
-            QuestionFlowStep.HouseholdIncome),
+            QuestionFlowStep.SelectLocalAuthority),
         new(
             "Household income continues to check answers",
             new Input(

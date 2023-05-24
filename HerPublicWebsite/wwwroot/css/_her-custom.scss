@@ -19,3 +19,22 @@
 .govuk-warning-text__icon {
     top: 33.3%;
 }
+
+.her_alphabet_links {
+    @include govuk-responsive-padding(6, "bottom");
+}
+
+.her_alphabet_links__row {
+    display: flex;
+    flex-direction: row;
+    @include govuk-responsive-padding(4, "bottom");
+}
+
+.her_alphabet_links__letter {
+    flex-grow: 1;
+    width: 2em;
+}
+
+.her_local_authority_section {
+    @include govuk-responsive-padding(6, "bottom");
+}
