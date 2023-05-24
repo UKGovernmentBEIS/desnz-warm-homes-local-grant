@@ -30,10 +30,37 @@ public class OsPlacesDpaDto
     private static readonly TextInfo GbTextInfo = new CultureInfo("en-GB").TextInfo;
     public Address Parse()
     {
+        var line1Parts = new List<string>
+        {
+            ToTitleCase(DepartmentName),
+            ToTitleCase(OrganisationName),
+            ToTitleCase(SubBuildingName),
+            ToTitleCase(BuildingName),
+            BuildingNumber
+        };
+        var line2Parts = new List<string>
+        {
+            ToTitleCase(DoubleDependentLocality),
+            ToTitleCase(DependentLocality)
+        };
+
+        if (string.IsNullOrEmpty(DependentThoroughFareName))
+        {
+            line1Parts.Add(ToTitleCase(ThoroughFareName));
+        }
+        else
+        {
+            line1Parts.Add(ToTitleCase(DependentThoroughFareName));
+            line2Parts.Insert(0, ToTitleCase(ThoroughFareName));
+        }
+
+        var line1 = string.Join(", ", line1Parts.Where(p => !string.IsNullOrEmpty(p)));
+        var line2 = string.Join(", ", line2Parts.Where(p => !string.IsNullOrEmpty(p)));
+        
         return new Address()
         {
-            AddressLine1 = $"{BuildingNumber ?? ToTitleCase(BuildingName)} {ToTitleCase(DependentThoroughFareName) ?? ToTitleCase(ThoroughFareName)}",
-            AddressLine2 = DependentThoroughFareName is not null ? ToTitleCase(ThoroughFareName) : null,
+            AddressLine1 = line1,
+            AddressLine2 = line2,
             Town = ToTitleCase(PostTown),
             Postcode = Postcode,
             LocalCustodianCode = LocalCustodianCode,
@@ -73,7 +100,7 @@ public class OsPlacesDpaDto
     public string DepartmentName { get; set; }
 
     [JsonProperty("SUB_BUILDING_NAME")]
-    public string SubBuildingNumber { get; set; }
+    public string SubBuildingName { get; set; }
     
     [JsonProperty("BUILDING_NAME")]
     public string BuildingName { get; set; }
