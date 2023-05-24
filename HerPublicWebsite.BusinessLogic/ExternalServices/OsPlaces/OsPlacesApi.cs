@@ -10,6 +10,7 @@ public class OsPlacesApi : IOsPlacesApi
 {
     private readonly OsPlacesConfiguration config;
     private readonly ILogger<OsPlacesApi> logger;
+    private const int MaxResults = 100;
 
     public OsPlacesApi(IOptions<OsPlacesConfiguration> options, ILogger<OsPlacesApi> logger)
     {
@@ -24,22 +25,37 @@ public class OsPlacesApi : IOsPlacesApi
             return new List<Address>();
         }
         
-        var parameters = new RequestParameters
-        {
-            BaseAddress = config.BaseUrl,
-            Path = $"/search/places/v1/postcode?postcode={postcode}",
-            Headers = new Dictionary<string, string> { { "Key", config.Key } }
-        };
+        var parameters = GetRequestParameters(postcode);
 
         try {
             var response = await HttpRequestHelper.SendGetRequestAsync<OsPlacesPostcodeResponseDto>(parameters);
 
-            var filteredResults = response.Results.Where(r => r.Dpa.BuildingNumber == buildingNameOrNumber || r.Dpa.BuildingName?.ToLower() == buildingNameOrNumber.ToLower()).ToList();
+            var results = response.Results ?? new List<OsPlacesPostcodeResultDto>();
+
+            var totalNumberOfResultsFound = response.Header.TotalResults;
+
+            if (totalNumberOfResultsFound > MaxResults)
+            {
+                var resultsRequested = MaxResults;
+                while (resultsRequested < totalNumberOfResultsFound)
+                {
+                    parameters = GetRequestParameters(postcode, resultsRequested);
+                    response = await HttpRequestHelper.SendGetRequestAsync<OsPlacesPostcodeResponseDto>(parameters);
+                    results = results.Concat(response.Results).ToList();
+                    resultsRequested += MaxResults;
+                }
+            }
+
+            var filteredResults = results.Where(r =>
+                    r.Dpa.BuildingNumber == buildingNameOrNumber
+                    || r.Dpa.BuildingName?.ToLower() == buildingNameOrNumber.ToLower()
+                    || r.Dpa.SubBuildingName?.ToLower() == buildingNameOrNumber.ToLower())
+                .ToList();
 
             // If the filter doesn't match then show all the results we found.
             if (!filteredResults.Any())
             {
-                filteredResults = response.Results;
+                filteredResults = results;
             }
             
             return filteredResults.Select(r => r.Dpa.Parse()).ToList();
@@ -48,5 +64,21 @@ public class OsPlacesApi : IOsPlacesApi
             logger.LogError("OS Places postcode request failed: {}", e.Message);
             throw;
         }
+    }
+
+    private RequestParameters GetRequestParameters(string postcode, int? offset = null)
+    {
+        var path = $"/search/places/v1/postcode?maxresults={MaxResults}&postcode={postcode}";
+        if (offset is not null)
+        {
+            path += $"&offset={offset}";
+        }
+        
+        return new RequestParameters
+        {
+            BaseAddress = config.BaseUrl,
+            Path = path,
+            Headers = new Dictionary<string, string> { { "Key", config.Key } }
+        };
     }
 }
