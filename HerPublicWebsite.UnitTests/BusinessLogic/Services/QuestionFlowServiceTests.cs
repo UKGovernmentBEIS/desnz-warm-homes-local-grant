@@ -143,63 +143,63 @@ public class QuestionFlowServiceTests
             "Gas boiler goes back to check answers if was changing answer",
             new Input(
                 QuestionFlowStep.GasBoiler,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.GasBoiler
             ),
             QuestionFlowStep.CheckAnswers),
         new(
             "Direct to ECO goes back to gas boiler if was changing answer",
             new Input(
                 QuestionFlowStep.DirectToEco,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.GasBoiler
             ),
             QuestionFlowStep.GasBoiler),
         new(
             "Country goes back to check answers if was changing answer",
             new Input(
                 QuestionFlowStep.Country,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Country
             ),
             QuestionFlowStep.CheckAnswers),
         new(
-            "Ownership status goes back to Country if was changing answer",
+            "Ownership status goes back to check answers if was changing answer",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.OwnershipStatus
             ),
             QuestionFlowStep.CheckAnswers),
         new(
             "Address goes back to check answers if was changing answer",
             new Input(
                 QuestionFlowStep.Address,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.CheckAnswers),
         new(
             "Select address goes back to Address if was changing answer",
             new Input(
                 QuestionFlowStep.SelectAddress,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.Address),
         new(
             "Review EPC goes back to Address if was changing answer",
             new Input(
                 QuestionFlowStep.ReviewEpc,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.Address),
         new(
             "Manual address goes back to Address if was changing answer",
             new Input(
                 QuestionFlowStep.ManualAddress,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.Address),
         new(
             "Household income goes back to check answers if was changing answer",
             new Input(
                 QuestionFlowStep.HouseholdIncome,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.HouseholdIncome
             ),
             QuestionFlowStep.CheckAnswers),
         new(
@@ -207,7 +207,7 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
                 country: Country.Other,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Country
             ),
             QuestionFlowStep.Country),
         new(
@@ -216,7 +216,7 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.ServiceUnsuitable,
                 country: Country.England,
                 ownershipStatus: OwnershipStatus.Landlord,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.OwnershipStatus
             ),
             QuestionFlowStep.OwnershipStatus),
         new(
@@ -226,7 +226,7 @@ public class QuestionFlowServiceTests
                 country: Country.England,
                 ownershipStatus: OwnershipStatus.OwnerOccupancy,
                 epcDetailsAreCorrect: true,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.ReviewEpc),
         new(
@@ -236,7 +236,7 @@ public class QuestionFlowServiceTests
                 country: Country.England,
                 ownershipStatus: OwnershipStatus.OwnerOccupancy,
                 epcDetailsAreCorrect: false,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.GasBoiler
             ),
             QuestionFlowStep.GasBoiler),
     };
@@ -371,7 +371,7 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.GasBoiler,
                 hasGasBoiler: HasGasBoiler.Yes,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.GasBoiler
             ),
             QuestionFlowStep.DirectToEco),
         new(
@@ -379,7 +379,7 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.GasBoiler,
                 hasGasBoiler: HasGasBoiler.No,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.GasBoiler
             ),
             QuestionFlowStep.CheckAnswers),
         new(
@@ -387,7 +387,7 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.GasBoiler,
                 hasGasBoiler: HasGasBoiler.Unknown,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.GasBoiler
             ),
             QuestionFlowStep.CheckAnswers),
         new(
@@ -395,7 +395,7 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.Country,
                 country: Country.Wales,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Country
             ),
             QuestionFlowStep.ServiceUnsuitable),
         new(
@@ -403,7 +403,7 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.Country,
                 country: Country.Scotland,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Country
             ),
             QuestionFlowStep.ServiceUnsuitable),
         new(
@@ -411,7 +411,7 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.Country,
                 country: Country.NorthernIreland,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Country
             ),
             QuestionFlowStep.ServiceUnsuitable),
         new(
@@ -419,7 +419,7 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.Country,
                 country: Country.Other,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Country
             ),
             QuestionFlowStep.ServiceUnsuitable),
         new(
@@ -427,7 +427,7 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.Country,
                 country: Country.England,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Country
             ),
             QuestionFlowStep.CheckAnswers),
         new(
@@ -435,7 +435,7 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.OwnershipStatus,
                 ownershipStatus: OwnershipStatus.PrivateTenancy,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.OwnershipStatus
             ),
             QuestionFlowStep.ServiceUnsuitable),
         new(
@@ -443,7 +443,7 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.OwnershipStatus,
                 ownershipStatus: OwnershipStatus.Landlord,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.OwnershipStatus
             ),
             QuestionFlowStep.ServiceUnsuitable),
         new(
@@ -451,14 +451,14 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.OwnershipStatus,
                 ownershipStatus: OwnershipStatus.OwnerOccupancy,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.OwnershipStatus
             ),
             QuestionFlowStep.CheckAnswers),
         new(
             "Address continues to address selection if was changing answer",
             new Input(
                 QuestionFlowStep.Address,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.SelectAddress),
         new(
@@ -466,7 +466,7 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.SelectAddress,
                 epcRating: EpcRating.D,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.CheckAnswers),
         new(
@@ -474,7 +474,7 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.SelectAddress,
                 epcRating: EpcRating.C,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.ReviewEpc),
         new(
@@ -482,7 +482,7 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.ReviewEpc,
                 epcDetailsAreCorrect: false,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.CheckAnswers),
         new(
@@ -490,21 +490,21 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.ReviewEpc,
                 epcDetailsAreCorrect: true,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.ServiceUnsuitable),
         new(
             "Manual address returns to check answers if was changing answer",
             new Input(
                 QuestionFlowStep.ManualAddress,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.CheckAnswers),
         new(
             "Household income continues to check answers if was changing answer",
             new Input(
                 QuestionFlowStep.HouseholdIncome,
-                entryPoint: QuestionFlowStep.CheckAnswers
+                entryPoint: QuestionFlowStep.HouseholdIncome
             ),
             QuestionFlowStep.CheckAnswers),
     };

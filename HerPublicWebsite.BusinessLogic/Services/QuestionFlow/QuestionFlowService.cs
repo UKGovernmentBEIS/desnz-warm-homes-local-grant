@@ -55,7 +55,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         {
             return entryPoint switch
             {
-                QuestionFlowStep.CheckAnswers => QuestionFlowStep.CheckAnswers,
+                QuestionFlowStep.GasBoiler => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.Start
             };
         }
@@ -69,7 +69,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         {
             return entryPoint switch
             {
-                QuestionFlowStep.CheckAnswers => QuestionFlowStep.CheckAnswers,
+                QuestionFlowStep.Country => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.GasBoiler
             };
         }
@@ -95,7 +95,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         {
             return entryPoint switch
             {
-                QuestionFlowStep.CheckAnswers => QuestionFlowStep.CheckAnswers,
+                QuestionFlowStep.OwnershipStatus => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.Country
             };
         }
@@ -105,7 +105,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
             return entryPoint switch
             {
-                QuestionFlowStep.CheckAnswers => QuestionFlowStep.CheckAnswers,
+                QuestionFlowStep.Address => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.OwnershipStatus
             };
         }
@@ -129,7 +129,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         {
             return (entryPoint, questionnaire.Uprn) switch
             {
-                (QuestionFlowStep.CheckAnswers, _) => QuestionFlowStep.CheckAnswers,
+                (QuestionFlowStep.HouseholdIncome, _) => QuestionFlowStep.CheckAnswers,
                 (_, null) => QuestionFlowStep.ManualAddress,
                 _ => QuestionFlowStep.Address
             };
@@ -145,7 +145,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return (entryPoint, questionnaire.HasGasBoiler) switch
             {
                 (_, HasGasBoiler.Yes) => QuestionFlowStep.DirectToEco,
-                (QuestionFlowStep.CheckAnswers, _) => QuestionFlowStep.CheckAnswers,
+                (QuestionFlowStep.GasBoiler, _) => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.Country
             };
         }
@@ -155,7 +155,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return (entryPoint, questionnaire.Country) switch
             {
                 (_, not Country.England) => QuestionFlowStep.ServiceUnsuitable,
-                (QuestionFlowStep.CheckAnswers, _) => QuestionFlowStep.CheckAnswers,
+                (QuestionFlowStep.Country, _) => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.OwnershipStatus
             };
         }
@@ -165,7 +165,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return (entryPoint, questionnaire.OwnershipStatus) switch
             {
                 (_, not OwnershipStatus.OwnerOccupancy) => QuestionFlowStep.ServiceUnsuitable,
-                (QuestionFlowStep.CheckAnswers, _) => QuestionFlowStep.CheckAnswers,
+                (QuestionFlowStep.OwnershipStatus, _) => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.Address
             };
         }
@@ -180,7 +180,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return (entryPoint, questionnaire.FoundEpcBandIsTooHigh) switch
             {
                 (_, true) => QuestionFlowStep.ReviewEpc,
-                (QuestionFlowStep.CheckAnswers, _) => QuestionFlowStep.CheckAnswers,
+                (QuestionFlowStep.Address, _) => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.HouseholdIncome
             };
         }
@@ -190,7 +190,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return (entryPoint, questionnaire.EpcDetailsAreCorrect!.Value) switch
             {
                 (_, true) => QuestionFlowStep.ServiceUnsuitable,
-                (QuestionFlowStep.CheckAnswers, _) => QuestionFlowStep.CheckAnswers,
+                (QuestionFlowStep.Address, _) => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.HouseholdIncome
             };
         }
@@ -199,7 +199,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         {
             return entryPoint switch
             {
-                QuestionFlowStep.CheckAnswers => QuestionFlowStep.CheckAnswers,
+                QuestionFlowStep.Address => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.HouseholdIncome
             };
         }

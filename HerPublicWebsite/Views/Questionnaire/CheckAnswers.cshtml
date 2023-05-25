@@ -58,7 +58,7 @@
                                        new()
                                        {
                                            Text = "Change",
-                                           Href = @Url.Action(nameof(QuestionnaireController.GasBoiler_Get), controller: "Questionnaire", values: values )
+                                           Href = @Url.Action(nameof(QuestionnaireController.GasBoiler_Get), controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.GasBoiler } )
                                        }
                                    }
                                },
@@ -81,7 +81,7 @@
                                        new()
                                        {
                                            Text = "Change",
-                                           Href = @Url.Action(nameof(QuestionnaireController.Country_Get), controller: "Questionnaire", values: values )
+                                           Href = @Url.Action(nameof(QuestionnaireController.Country_Get), controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.Country } )
                                        }
                                    }
                                },
@@ -104,7 +104,7 @@
                                        new()
                                        {
                                            Text = "Change",
-                                           Href = @Url.Action(nameof(QuestionnaireController.OwnershipStatus_Get), controller: "Questionnaire", values: values )
+                                           Href = @Url.Action(nameof(QuestionnaireController.OwnershipStatus_Get), controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.OwnershipStatus } )
                                        }
                                    }
                                },
@@ -140,7 +140,7 @@
                                            {
                                                null => nameof(QuestionnaireController.ManualAddress_Get),
                                                _ => nameof(QuestionnaireController.Address_Get)
-                                            }, controller: "Questionnaire", values: values )
+                                            }, controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.Address } )
                                        }
                                    }
                                },
@@ -164,7 +164,7 @@
                                        new()
                                        {
                                            Text = "Change",
-                                           Href = @Url.Action(nameof(QuestionnaireController.HouseholdIncome_Get), controller: "Questionnaire", values: values )
+                                           Href = @Url.Action(nameof(QuestionnaireController.HouseholdIncome_Get), controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.HouseholdIncome } )
                                        }
                                    }
                                },
