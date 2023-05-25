@@ -97,4 +97,22 @@ public class QuestionnaireUpdaterTests
         // Assert
         result.IsLsoaProperty.Should().Be(isEligible);
     }
+
+    [Test]
+    public void UpdateLocalAuthority_WhenCalled_ResetsLocalAuthorityConfirmed()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire()
+        {
+            CustodianCode = "old code",
+            LocalAuthorityConfirmed = true
+        };
+        
+        // Act
+        var result = underTest.UpdateLocalAuthority(questionnaire, "new code");
+        
+        // Assert
+        result.LocalAuthorityConfirmed.Should().BeNull();
+        result.CustodianCode.Should().Be("new code");
+    }
 }

@@ -37,6 +37,8 @@ public class QuestionnaireUpdater
         questionnaire.AddressLine2 = address.AddressLine2;
         questionnaire.AddressTown = address.Town;
         questionnaire.AddressCounty = address.County;
+        questionnaire.CustodianCode = address.LocalCustodianCode;
+        questionnaire.LocalAuthorityConfirmed = string.IsNullOrEmpty(address.LocalCustodianCode) ? null : true;
 
         // Try to find an EPC for this property
         if (address.Uprn != null)
@@ -56,12 +58,6 @@ public class QuestionnaireUpdater
         return questionnaire;
     }
 
-    public Questionnaire UpdateEpcDetails(Questionnaire questionnaire, EpcDetails epcDetails)
-    {
-        questionnaire.EpcDetails = epcDetails;
-        return questionnaire;
-    }
-
     public Questionnaire UpdateGasBoiler(Questionnaire questionnaire, HasGasBoiler hasGasBoiler)
     {
         questionnaire.HasGasBoiler = hasGasBoiler;
@@ -71,6 +67,19 @@ public class QuestionnaireUpdater
     public Questionnaire UpdateEpcIsCorrect(Questionnaire questionnaire, bool epcIsCorrect)
     {
         questionnaire.EpcDetailsAreCorrect = epcIsCorrect;
+        return questionnaire;
+    }
+
+    public Questionnaire UpdateLocalAuthority(Questionnaire questionnaire, string custodianCode)
+    {
+        questionnaire.CustodianCode = custodianCode;
+        questionnaire.LocalAuthorityConfirmed = null;
+        return questionnaire;
+    }
+    
+    public Questionnaire UpdateLocalAuthorityIsCorrect(Questionnaire questionnaire, bool? confirmed)
+    {
+        questionnaire.LocalAuthorityConfirmed = confirmed;
         return questionnaire;
     }
 

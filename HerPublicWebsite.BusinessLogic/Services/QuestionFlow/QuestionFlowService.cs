@@ -28,6 +28,8 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
                 QuestionFlowStep.ReviewEpc => ReviewEpcBackDestination(),
                 QuestionFlowStep.ManualAddress => ManualAddressBackDestination(),
+                QuestionFlowStep.SelectLocalAuthority => SelectLocalAuthorityBackDestination(),
+                QuestionFlowStep.ConfirmLocalAuthority => ConfirmLocalAuthorityBackDestination(),
                 QuestionFlowStep.HouseholdIncome => HouseholdIncomeBackDestination(questionnaire, entryPoint),
                 QuestionFlowStep.CheckAnswers => CheckAnswersBackDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException()
@@ -44,7 +46,9 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.Address => AddressForwardDestination(questionnaire),
                 QuestionFlowStep.SelectAddress => SelectAddressForwardDestination(questionnaire, entryPoint),
                 QuestionFlowStep.ReviewEpc => ReviewEpcForwardDestination(questionnaire, entryPoint),
-                QuestionFlowStep.ManualAddress => ManualAddressForwardDestination(questionnaire, entryPoint),
+                QuestionFlowStep.ManualAddress => ManualAddressForwardDestination(questionnaire),
+                QuestionFlowStep.SelectLocalAuthority => SelectLocalAuthorityForwardDestination(questionnaire),
+                QuestionFlowStep.ConfirmLocalAuthority => ConfirmLocalAuthorityForwardDestination(questionnaire, entryPoint),
                 QuestionFlowStep.HouseholdIncome => HouseholdIncomeForwardDestination(questionnaire),
                 QuestionFlowStep.CheckAnswers => CheckAnswersForwardDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
@@ -125,12 +129,26 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return QuestionFlowStep.Address;
         }
 
+        private QuestionFlowStep SelectLocalAuthorityBackDestination()
+        {
+            return QuestionFlowStep.ManualAddress;
+        }
+
+        private QuestionFlowStep ConfirmLocalAuthorityBackDestination()
+        {
+            return QuestionFlowStep.SelectLocalAuthority;
+        }
+
         private QuestionFlowStep HouseholdIncomeBackDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
+            if (questionnaire.FoundEpcBandIsTooHigh)
+            {
+                return QuestionFlowStep.ReviewEpc;
+            }
             return (entryPoint, questionnaire.Uprn) switch
             {
                 (QuestionFlowStep.HouseholdIncome, _) => QuestionFlowStep.CheckAnswers,
-                (_, null) => QuestionFlowStep.ManualAddress,
+                (_, null) => QuestionFlowStep.ConfirmLocalAuthority,
                 _ => QuestionFlowStep.Address
             };
         }
@@ -195,11 +213,22 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             };
         }
 
-        private QuestionFlowStep ManualAddressForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
+        private QuestionFlowStep ManualAddressForwardDestination(Questionnaire questionnaire)
         {
-            return entryPoint switch
+            return QuestionFlowStep.SelectLocalAuthority;
+        }
+
+        private QuestionFlowStep SelectLocalAuthorityForwardDestination(Questionnaire questionnaire)
+        {
+            return QuestionFlowStep.ConfirmLocalAuthority;
+        }
+
+        private QuestionFlowStep ConfirmLocalAuthorityForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
+        {
+            return (entryPoint, questionnaire.LocalAuthorityConfirmed) switch
             {
-                QuestionFlowStep.Address => QuestionFlowStep.CheckAnswers,
+                (_, not true) => QuestionFlowStep.SelectLocalAuthority,
+                (QuestionFlowStep.Address, _) => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.HouseholdIncome
             };
         }

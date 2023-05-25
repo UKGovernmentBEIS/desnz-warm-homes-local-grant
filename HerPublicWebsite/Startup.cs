@@ -61,14 +61,13 @@ namespace HerPublicWebsite
             services.AddScoped<QuestionnaireUpdater>();
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
             services.AddScoped<IRegularJobsService, RegularJobsService>();
-            services.AddScoped<IS3FileWriter, S3FileWriter>();
-            services.AddScoped<S3ReferralFileKeyGenerator>();
 
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();
             // This allows encrypted cookies to be understood across multiple web server instances
             services.AddDataProtection().PersistKeysToDbContext<HerDbContext>();
 
+            ConfigureS3FileWriter(services);
             ConfigureEpcApi(services);
             ConfigureOsPlacesApi(services);
             ConfigureGovUkNotify(services);
@@ -87,7 +86,8 @@ namespace HerPublicWebsite
                 options.Filters.Add<ErrorHandlingFilter>();
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 options.ModelMetadataDetailsProviders.Add(new GovUkDataBindingErrorTextProvider());
-            });
+            })
+                .AddSessionStateTempDataProvider();
 
             services.AddDistributedPostgreSqlCache(setup =>
             {
@@ -98,7 +98,8 @@ namespace HerPublicWebsite
 
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(10);
+                // If this changes, make sure to update the message on the session expiry page
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
@@ -138,7 +139,8 @@ namespace HerPublicWebsite
 
         private void ConfigureOsPlacesApi(IServiceCollection services)
         {
-            //TODO BEISHER-248: Set up OS Places properly
+            services.Configure<OsPlacesConfiguration>(
+                configuration.GetSection(OsPlacesConfiguration.ConfigSection));
             services.AddScoped<IOsPlacesApi, OsPlacesApi>();
         }
 
@@ -147,6 +149,14 @@ namespace HerPublicWebsite
             services.AddScoped<IEmailSender, GovUkNotifyApi>();
             services.Configure<GovUkNotifyConfiguration>(
                 configuration.GetSection(GovUkNotifyConfiguration.ConfigSection));
+        }
+
+        private void ConfigureS3FileWriter(IServiceCollection services)
+        {
+            services.Configure<S3FileWriterConfiguration>(
+                configuration.GetSection(S3FileWriterConfiguration.ConfigSection));
+            services.AddScoped<IS3FileWriter, S3FileWriter>();
+            services.AddScoped<S3ReferralFileKeyGenerator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

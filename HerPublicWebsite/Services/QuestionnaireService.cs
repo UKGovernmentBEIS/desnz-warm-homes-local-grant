@@ -38,6 +38,14 @@ public class QuestionnaireService
 
         return questionnaire;
     }
+    
+    public Questionnaire UpdateGasBoiler(HasGasBoiler hasGasBoiler)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdateGasBoiler(questionnaire, hasGasBoiler);
+        SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
 
     public Questionnaire UpdateCountry(Country country)
     {
@@ -64,34 +72,34 @@ public class QuestionnaireService
         return questionnaire;
     }
 
-    public Questionnaire UpdateEpcDetails(EpcDetails epcDetails)
-    {
-        var questionnaire = GetQuestionnaire();
-        questionnaire = questionnaireUpdater.UpdateEpcDetails(questionnaire, epcDetails);
-        SaveQuestionnaireToSession(questionnaire);
-        return questionnaire;
-    }
-
-    public Questionnaire UpdateGasBoiler(HasGasBoiler hasGasBoiler)
-    {
-        var questionnaire = GetQuestionnaire();
-        questionnaire = questionnaireUpdater.UpdateGasBoiler(questionnaire, hasGasBoiler);
-        SaveQuestionnaireToSession(questionnaire);
-        return questionnaire;
-    }
-
-    public Questionnaire UpdateHouseholdIncome(IncomeBand incomeBand)
-    {
-        var questionnaire = GetQuestionnaire();
-        questionnaire = questionnaireUpdater.UpdateHouseholdIncome(questionnaire, incomeBand);
-        SaveQuestionnaireToSession(questionnaire);
-        return questionnaire;
-    }
-
     public Questionnaire UpdateEpcIsCorrect(bool epcIsCorrect)
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = questionnaireUpdater.UpdateEpcIsCorrect(questionnaire, epcIsCorrect);
+        SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+
+    public Questionnaire UpdateLocalAuthority(string custodianCode)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdateLocalAuthority(questionnaire, custodianCode);
+        SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+    
+    public Questionnaire UpdateLocalAuthorityIsCorrect(bool laIsCorrect)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdateLocalAuthorityIsCorrect(questionnaire, laIsCorrect);
+        SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+    
+    public Questionnaire UpdateHouseholdIncome(IncomeBand incomeBand)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdateHouseholdIncome(questionnaire, incomeBand);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }

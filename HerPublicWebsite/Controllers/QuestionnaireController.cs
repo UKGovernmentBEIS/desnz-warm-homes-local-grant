@@ -7,7 +7,10 @@ using HerPublicWebsite.BusinessLogic.Extensions;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
+using HerPublicWebsite.Extensions;
 using HerPublicWebsite.ExternalServices.GoogleAnalytics;
+using HerPublicWebsite.Filters;
+using HerPublicWebsite.Models.Enums;
 using HerPublicWebsite.Models.Questionnaire;
 using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
@@ -18,6 +21,7 @@ using Microsoft.Extensions.Logging;
 namespace HerPublicWebsite.Controllers;
 
 [Route("questionnaire")]
+[SessionExpiry]
 public class QuestionnaireController : Controller
 {
     private readonly IQuestionFlowService questionFlowService;
@@ -45,12 +49,14 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("")]
+    [ExcludeFromSessionExpiry]
     public IActionResult Index()
     {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
 
     [HttpGet("boiler")]
+    [ExcludeFromSessionExpiry]
     public IActionResult GasBoiler_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
@@ -64,6 +70,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("boiler")]
+    [ExcludeFromSessionExpiry]
     public IActionResult GasBoiler_Post(GasBoilerViewModel viewModel, QuestionFlowStep? entryPoint)
     {
         if (!ModelState.IsValid)
@@ -257,7 +264,7 @@ public class QuestionnaireController : Controller
             return ReviewEpc_Get(entryPoint);
         }
 
-        var questionnaire = questionnaireService.UpdateEpcIsCorrect(viewModel.EpcIsCorrect == ReviewEpcViewModel.YesOrNo.Yes);
+        var questionnaire = questionnaireService.UpdateEpcIsCorrect(viewModel.EpcIsCorrect == YesOrNo.Yes);
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.ReviewEpc, questionnaire, entryPoint);
         return RedirectToNextStep(nextStep, entryPoint);
@@ -304,6 +311,62 @@ public class QuestionnaireController : Controller
 
         var questionnaire = await questionnaireService.UpdateAddressAsync(address);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.ManualAddress, questionnaire, entryPoint);
+        return RedirectToNextStep(nextStep, entryPoint);
+    }
+
+    [HttpGet("select-local-authority")]
+    public IActionResult SelectLocalAuthority_Get(QuestionFlowStep? entryPoint)
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new SelectLocalAuthorityViewModel()
+        {
+            BackLink = GetBackUrl(QuestionFlowStep.SelectLocalAuthority, questionnaire, entryPoint)
+        };
+
+        return View("SelectLocalAuthority", viewModel);
+    }
+
+    [HttpGet("select-local-authority/{custodianCode}")]
+    public IActionResult LocalAuthoritySelected_Get(string custodianCode, QuestionFlowStep? entryPoint)
+    {
+        if (!LocalAuthorityData.LocalAuthorityDetailsByCustodianCode.ContainsKey(custodianCode))
+        {
+            // This should only happen if someone messes with the URL
+            logger.LogError("Unrecognised custodian code received: " + custodianCode);
+            return SelectLocalAuthority_Get(entryPoint);
+        }
+
+        var questionnaire = questionnaireService.UpdateLocalAuthority(custodianCode);
+
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.SelectLocalAuthority, questionnaire, entryPoint);
+        return RedirectToNextStep(nextStep, entryPoint);
+    }
+
+    [HttpGet("confirm-local-authority")]
+    public IActionResult ConfirmLocalAuthority_Get(QuestionFlowStep? entryPoint)
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new ConfirmLocalAuthorityViewModel()
+        {
+            LocalAuthorityName = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[questionnaire.CustodianCode].Name,
+            LaIsCorrect = questionnaire.LocalAuthorityConfirmed.ToNullableYesOrNo(),
+            BackLink = GetBackUrl(QuestionFlowStep.ConfirmLocalAuthority, questionnaire, entryPoint)
+        };
+
+        return View("ConfirmLocalAuthority", viewModel);
+    }
+
+    [HttpPost("confirm-local-authority")]
+    public IActionResult ConfirmLocalAuthority_Post(ConfirmLocalAuthorityViewModel viewModel, QuestionFlowStep? entryPoint)
+    {
+        if (!ModelState.IsValid)
+        {
+            return ConfirmLocalAuthority_Get(entryPoint);
+        }
+
+        var questionnaire = questionnaireService.UpdateLocalAuthorityIsCorrect(viewModel.LaIsCorrect == YesOrNo.Yes);
+
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ConfirmLocalAuthority, questionnaire, entryPoint);
         return RedirectToNextStep(nextStep, entryPoint);
     }
 
@@ -403,6 +466,8 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.SelectAddress => new PathByActionArguments(nameof(SelectAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.ReviewEpc => new PathByActionArguments(nameof(ReviewEpc_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.ManualAddress => new PathByActionArguments(nameof(ManualAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.SelectLocalAuthority => new PathByActionArguments(nameof(SelectLocalAuthority_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.ConfirmLocalAuthority => new PathByActionArguments(nameof(ConfirmLocalAuthority_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.HouseholdIncome => new PathByActionArguments(nameof(HouseholdIncome_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.CheckAnswers => new PathByActionArguments(nameof(CheckAnswers_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.Ineligible => new PathByActionArguments(nameof(Ineligible_Get), "Questionnaire", GetRouteValues(extraRouteValues)),

@@ -21,4 +21,10 @@ public class StaticPagesController : Controller
     {
         return View("PrivacyPolicy");
     }
+
+    [HttpGet("/session-expired")]
+    public IActionResult SessionExpired()
+    {
+        return View("SessionExpired");
+    }
 }

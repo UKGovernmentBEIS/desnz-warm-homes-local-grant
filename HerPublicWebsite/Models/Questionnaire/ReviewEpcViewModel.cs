@@ -4,17 +4,12 @@ using System.Net;
 using GovUkDesignSystem.Attributes.ValidationAttributes;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.Extensions;
+using HerPublicWebsite.Models.Enums;
 
 namespace HerPublicWebsite.Models.Questionnaire;
 
 public class ReviewEpcViewModel : QuestionFlowViewModel
 {
-    public enum YesOrNo
-    {
-        Yes,
-        No
-    }
-
     [GovUkValidateRequired(ErrorMessageIfMissing = "Select whether this EPC is correct for your property")]
     public YesOrNo? EpcIsCorrect {get; set;}
     
@@ -52,6 +47,6 @@ public class ReviewEpcViewModel : QuestionFlowViewModel
         var propertyType = epcDetails.PropertyType?.ForDisplay() ?? "Unknown";
         PropertyType = $"{propertyDetails} {propertyType}";
 
-        EpcIsCorrect = epcIsCorrect is null ? null : (epcIsCorrect.Value ? YesOrNo.Yes : YesOrNo.No);
+        EpcIsCorrect = epcIsCorrect.ToNullableYesOrNo();
     }
 }
