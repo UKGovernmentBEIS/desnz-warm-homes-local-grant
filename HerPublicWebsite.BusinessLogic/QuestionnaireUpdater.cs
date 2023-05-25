@@ -9,11 +9,16 @@ public class QuestionnaireUpdater
 {
     private readonly IEpcApi epcApi;
     private readonly IEligiblePostcodeService eligiblePostcodeService;
+    private readonly IDataAccessProvider dataAccessProvider;
 
-    public QuestionnaireUpdater(IEpcApi epcApi, IEligiblePostcodeService eligiblePostcodeService)
+    public QuestionnaireUpdater(
+        IEpcApi epcApi, 
+        IEligiblePostcodeService eligiblePostcodeService,
+        IDataAccessProvider dataAccessProvider)
     {
         this.epcApi = epcApi;
         this.eligiblePostcodeService = eligiblePostcodeService;
+        this.dataAccessProvider = dataAccessProvider;
     }
 
     public Questionnaire UpdateCountry(Questionnaire questionnaire, Country country)
@@ -86,6 +91,23 @@ public class QuestionnaireUpdater
     public Questionnaire UpdateHouseholdIncome(Questionnaire questionnaire, IncomeBand incomeBand)
     {
         questionnaire.IncomeBand = incomeBand;
+
+        return questionnaire;
+    }
+
+    public async Task<Questionnaire> GenerateReferralAsync(Questionnaire questionnaire, string name, string emailAddress, string telephone)
+    {
+        questionnaire.ContactDetails ??= new ContactDetails();
+
+        questionnaire.ContactDetails.FullName = name;
+        questionnaire.ContactDetails.LaContactEmailAddress = emailAddress;
+        questionnaire.ContactDetails.LaContactTelephone = telephone;
+
+        var referralRequest = new ReferralRequest(questionnaire);
+        await dataAccessProvider.PersistNewReferralRequestAsync(referralRequest);
+        
+        questionnaire.Hug2ReferralId = referralRequest.ReferralCode;
+        questionnaire.ReferralCreated = referralRequest.RequestDate;
 
         return questionnaire;
     }

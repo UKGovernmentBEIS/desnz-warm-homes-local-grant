@@ -17,7 +17,7 @@ namespace HerPublicWebsite.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.4")
+                .HasAnnotation("ProductVersion", "6.0.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -30,25 +30,13 @@ namespace HerPublicWebsite.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("ConsentedToAnswerEmail")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("ConsentedToReferral")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("ConsentedToSchemeNotificationEmails")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("ContactPreference")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
                     b.Property<string>("FullName")
                         .HasColumnType("text");
 
-                    b.Property<string>("Telephone")
+                    b.Property<string>("LaContactEmailAddress")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LaContactTelephone")
                         .HasColumnType("text");
 
                     b.Property<uint>("xmin")
@@ -105,11 +93,11 @@ namespace HerPublicWebsite.Data.Migrations
                     b.Property<string>("ReferralCode")
                         .HasColumnType("text");
 
-                    b.Property<bool>("ReferralCreated")
+                    b.Property<bool>("ReferralWrittenToCsv")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime>("RequestDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Uprn")
                         .HasColumnType("text");

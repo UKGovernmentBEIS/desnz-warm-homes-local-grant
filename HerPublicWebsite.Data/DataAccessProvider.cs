@@ -23,7 +23,7 @@ public class DataAccessProvider : IDataAccessProvider
     public async Task<IList<ReferralRequest>> GetUnsubmittedReferralRequestsAsync()
     {
         return await context.ReferralRequests
-            .Where(rr => !rr.ReferralCreated)
+            .Where(rr => !rr.ReferralWrittenToCsv)
             .ToListAsync();
     }
     

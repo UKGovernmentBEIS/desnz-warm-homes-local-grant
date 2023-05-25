@@ -39,7 +39,7 @@ public class RegularJobsService : IRegularJobsService
 
             foreach (var referralRequest in referralsForFile)
             {
-                referralRequest.ReferralCreated = true;
+                referralRequest.ReferralWrittenToCsv = true;
             }
 
             await dataProvider.PersistAllChangesAsync();

@@ -52,6 +52,19 @@ public record Questionnaire
 
     public bool FoundEpcBandIsTooHigh => 
         EpcDetails is { EpcRating: EpcRating.A or EpcRating.B or EpcRating.C };
+    
+    public string LocalAuthorityName
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(CustodianCode) || !LocalAuthorityData.LocalAuthorityDetailsByCustodianCode.ContainsKey(CustodianCode))
+            {
+                return "unrecognised local authority";
+            }
+
+            return LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[CustodianCode].Name;
+        }
+    }
 
     public EpcRating EffectiveEpcBand
     {

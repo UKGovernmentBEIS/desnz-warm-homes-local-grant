@@ -104,6 +104,14 @@ public class QuestionnaireService
         return questionnaire;
     }
     
+    public async Task<Questionnaire> GenerateReferralAsync(string name, string emailAddress, string telephone)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = await questionnaireUpdater.GenerateReferralAsync(questionnaire, name, emailAddress, telephone);
+        SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+    
     private void SaveQuestionnaireToSession(Questionnaire questionnaire)
     {
         var questionnaireString = JsonSerializer.Serialize(questionnaire, JsonSerializerOptions);

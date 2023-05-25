@@ -17,5 +17,6 @@ public enum QuestionFlowStep
     HouseholdIncome,
     CheckAnswers,
     Eligible,
+    Confirmation,
     Ineligible,
 }

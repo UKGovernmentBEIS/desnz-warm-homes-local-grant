@@ -15,6 +15,7 @@ public class QuestionnaireUpdaterTests
     private QuestionnaireUpdater underTest;
     private Mock<IEpcApi> mockEpcApi;
     private Mock<IEligiblePostcodeService> mockPostCodeService;
+    private Mock<IDataAccessProvider> mockDataAccessProvider;
     
     
     [SetUp]
@@ -22,7 +23,8 @@ public class QuestionnaireUpdaterTests
     {
         mockEpcApi = new Mock<IEpcApi>();
         mockPostCodeService = new Mock<IEligiblePostcodeService>();
-        underTest = new QuestionnaireUpdater(mockEpcApi.Object, mockPostCodeService.Object);
+        mockDataAccessProvider = new Mock<IDataAccessProvider>();
+        underTest = new QuestionnaireUpdater(mockEpcApi.Object, mockPostCodeService.Object, mockDataAccessProvider.Object);
     }
     
     [Test]
