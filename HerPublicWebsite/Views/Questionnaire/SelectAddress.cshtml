@@ -64,8 +64,9 @@
         }
         else
         {
-            <h1 class="govuk-heading-l">No Addresses Found</h1>
-            <p class="govuk-body">You can go back and try another postcode, or <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.ManualAddress_Get), "Questionnaire")">enter your full address</a>.</p>
+            <h1 class="govuk-heading-l">No address found</h1>
+            <p class="govuk-body">There are no results for this postcode. If you think you made a mistake you can <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.Address_Get), "Questionnaire")">search again</a>.</p>
+            <p class="govuk-body">If you think you entered your address correctly you can <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.ManualAddress_Get), "Questionnaire")">enter your full address</a>.</p>
         }
     </div>
 </div>
