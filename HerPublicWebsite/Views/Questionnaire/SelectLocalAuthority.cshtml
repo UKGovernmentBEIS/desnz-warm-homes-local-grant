@@ -56,14 +56,14 @@
                     <div class="govuk-grid-column-one-half">
                         @foreach (var laDetails in orderedLaDetails.Take(linksInFirstColumn))
                         {
-                            <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode })">@laDetails.Name</a>
+                            <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode, entryPoint = Model.EntryPoint })">@laDetails.Name</a>
                             <br/>
                         }
                     </div>
                     <div class="govuk-grid-column-one-half">
                         @foreach (var laDetails in orderedLaDetails.Skip(linksInFirstColumn))
                         {
-                            <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode })">@laDetails.Name</a>
+                            <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode, entryPoint = Model.EntryPoint })">@laDetails.Name</a>
                             <br/>
                         }
                     </div>

@@ -71,17 +71,17 @@ public class QuestionnaireController : Controller
 
     [HttpPost("boiler")]
     [ExcludeFromSessionExpiry]
-    public IActionResult GasBoiler_Post(GasBoilerViewModel viewModel, QuestionFlowStep? entryPoint)
+    public IActionResult GasBoiler_Post(GasBoilerViewModel viewModel)
     {
         if (!ModelState.IsValid)
         {
-            return GasBoiler_Get(entryPoint);
+            return GasBoiler_Get(viewModel.EntryPoint);
         }
 
         var questionnaire = questionnaireService.UpdateGasBoiler(viewModel.HasGasBoiler!.Value);
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.GasBoiler, questionnaire, entryPoint);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.GasBoiler, questionnaire, viewModel.EntryPoint);
 
-        return RedirectToNextStep(nextStep, entryPoint);
+        return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
 
     [HttpGet("direct-to-eco/")]
@@ -109,17 +109,17 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("country/")]
-    public IActionResult Country_Post(CountryViewModel viewModel, QuestionFlowStep? entryPoint)
+    public IActionResult Country_Post(CountryViewModel viewModel)
     {
         if (!ModelState.IsValid)
         {
-            return Country_Get(entryPoint);
+            return Country_Get(viewModel.EntryPoint);
         }
 
         var questionnaire = questionnaireService.UpdateCountry(viewModel.Country!.Value);
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.Country, questionnaire, entryPoint);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.Country, questionnaire, viewModel.EntryPoint);
 
-        return RedirectToNextStep(nextStep, entryPoint);
+        return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
 
     [HttpGet("service-unsuitable/")]
@@ -150,17 +150,17 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("ownership-status/")]
-    public IActionResult OwnershipStatus_Post(OwnershipStatusViewModel viewModel, QuestionFlowStep? entryPoint)
+    public IActionResult OwnershipStatus_Post(OwnershipStatusViewModel viewModel)
     {
         if (!ModelState.IsValid)
         {
-            return OwnershipStatus_Get(entryPoint);
+            return OwnershipStatus_Get(viewModel.EntryPoint);
         }
 
         var questionnaire = questionnaireService.UpdateOwnershipStatus(viewModel.OwnershipStatus!.Value);
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.OwnershipStatus, questionnaire, entryPoint);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.OwnershipStatus, questionnaire, viewModel.EntryPoint);
 
-        return RedirectToNextStep(nextStep, entryPoint);
+        return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
 
     [HttpGet("address/")]
@@ -177,7 +177,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("address/")]
-    public IActionResult Address_Post(AddressViewModel viewModel, QuestionFlowStep? entryPoint)
+    public IActionResult Address_Post(AddressViewModel viewModel)
     {
         if (viewModel.Postcode is not null && !viewModel.Postcode.IsValidUkPostcodeFormat())
         {
@@ -186,13 +186,13 @@ public class QuestionnaireController : Controller
 
         if (!ModelState.IsValid)
         {
-            return Address_Get(entryPoint);
+            return Address_Get(viewModel.EntryPoint);
         }
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.Address, questionnaire, entryPoint);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.Address, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
-            entryPoint,
+            viewModel.EntryPoint,
             extraRouteValues: new Dictionary<string, object>
             {
                 { "postcode", viewModel.Postcode.NormaliseToUkPostcodeFormat() },
@@ -219,11 +219,11 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("address/{postcode}/{buildingNameOrNumber}")]
-    public async Task<IActionResult> SelectAddress_Post(SelectAddressViewModel viewModel, string postcode, string buildingNameOrNumber, QuestionFlowStep? entryPoint)
+    public async Task<IActionResult> SelectAddress_Post(SelectAddressViewModel viewModel, string postcode, string buildingNameOrNumber)
     {
         if (!ModelState.IsValid)
         {
-            return await SelectAddress_Get(postcode, buildingNameOrNumber, entryPoint);
+            return await SelectAddress_Get(postcode, buildingNameOrNumber, viewModel.EntryPoint);
         }
 
         try
@@ -232,8 +232,8 @@ public class QuestionnaireController : Controller
             var selectedAddress = addressResults[Convert.ToInt32(viewModel.SelectedAddressIndex)];
             var questionnaire = await questionnaireService.UpdateAddressAsync(selectedAddress);
 
-            var nextStep = questionFlowService.NextStep(QuestionFlowStep.SelectAddress, questionnaire, entryPoint);
-            return RedirectToNextStep(nextStep, entryPoint);
+            var nextStep = questionFlowService.NextStep(QuestionFlowStep.SelectAddress, questionnaire, viewModel.EntryPoint);
+            return RedirectToNextStep(nextStep, viewModel.EntryPoint);
         }
         catch (Exception e)
         {
@@ -257,17 +257,17 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("review-epc")]
-    public IActionResult ReviewEpc_Post(ReviewEpcViewModel viewModel, QuestionFlowStep? entryPoint)
+    public IActionResult ReviewEpc_Post(ReviewEpcViewModel viewModel)
     {
         if (!ModelState.IsValid)
         {
-            return ReviewEpc_Get(entryPoint);
+            return ReviewEpc_Get(viewModel.EntryPoint);
         }
 
         var questionnaire = questionnaireService.UpdateEpcIsCorrect(viewModel.EpcIsCorrect == YesOrNo.Yes);
 
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ReviewEpc, questionnaire, entryPoint);
-        return RedirectToNextStep(nextStep, entryPoint);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ReviewEpc, questionnaire, viewModel.EntryPoint);
+        return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
 
     [HttpGet("address/manual")]
@@ -288,7 +288,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("address/manual")]
-    public async Task<IActionResult> ManualAddress_Post(ManualAddressViewModel viewModel, QuestionFlowStep? entryPoint)
+    public async Task<IActionResult> ManualAddress_Post(ManualAddressViewModel viewModel)
     {
         if (viewModel.Postcode is not null && !viewModel.Postcode.IsValidUkPostcodeFormat())
         {
@@ -297,7 +297,7 @@ public class QuestionnaireController : Controller
 
         if (!ModelState.IsValid)
         {
-            return ManualAddress_Get(entryPoint);
+            return ManualAddress_Get(viewModel.EntryPoint);
         }
 
         var address = new Address
@@ -310,8 +310,8 @@ public class QuestionnaireController : Controller
         };
 
         var questionnaire = await questionnaireService.UpdateAddressAsync(address);
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ManualAddress, questionnaire, entryPoint);
-        return RedirectToNextStep(nextStep, entryPoint);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ManualAddress, questionnaire, viewModel.EntryPoint);
+        return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
 
     [HttpGet("select-local-authority")]
@@ -320,7 +320,8 @@ public class QuestionnaireController : Controller
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new SelectLocalAuthorityViewModel()
         {
-            BackLink = GetBackUrl(QuestionFlowStep.SelectLocalAuthority, questionnaire, entryPoint)
+            BackLink = GetBackUrl(QuestionFlowStep.SelectLocalAuthority, questionnaire, entryPoint),
+            EntryPoint = entryPoint
         };
 
         return View("SelectLocalAuthority", viewModel);
@@ -350,6 +351,7 @@ public class QuestionnaireController : Controller
         {
             LocalAuthorityName = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[questionnaire.CustodianCode].Name,
             LaIsCorrect = questionnaire.LocalAuthorityConfirmed.ToNullableYesOrNo(),
+            EntryPoint = entryPoint,
             BackLink = GetBackUrl(QuestionFlowStep.ConfirmLocalAuthority, questionnaire, entryPoint)
         };
 
@@ -357,17 +359,17 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("confirm-local-authority")]
-    public IActionResult ConfirmLocalAuthority_Post(ConfirmLocalAuthorityViewModel viewModel, QuestionFlowStep? entryPoint)
+    public IActionResult ConfirmLocalAuthority_Post(ConfirmLocalAuthorityViewModel viewModel)
     {
         if (!ModelState.IsValid)
         {
-            return ConfirmLocalAuthority_Get(entryPoint);
+            return ConfirmLocalAuthority_Get(viewModel.EntryPoint);
         }
 
         var questionnaire = questionnaireService.UpdateLocalAuthorityIsCorrect(viewModel.LaIsCorrect == YesOrNo.Yes);
 
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ConfirmLocalAuthority, questionnaire, entryPoint);
-        return RedirectToNextStep(nextStep, entryPoint);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ConfirmLocalAuthority, questionnaire, viewModel.EntryPoint);
+        return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
 
     [HttpGet("income")]
@@ -384,17 +386,17 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("income")]
-    public IActionResult HouseholdIncome_Post(HouseholdIncomeViewModel viewModel, QuestionFlowStep? entryPoint)
+    public IActionResult HouseholdIncome_Post(HouseholdIncomeViewModel viewModel)
     {
         if (!ModelState.IsValid)
         {
-            return HouseholdIncome_Get(entryPoint);
+            return HouseholdIncome_Get(viewModel.EntryPoint);
         }
 
         var questionnaire = questionnaireService.UpdateHouseholdIncome(viewModel.IncomeBand!.Value);
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.HouseholdIncome, questionnaire, entryPoint);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.HouseholdIncome, questionnaire, viewModel.EntryPoint);
 
-        return RedirectToNextStep(nextStep, entryPoint);
+        return RedirectToNextStep(nextStep, viewModel.EntryPoint);
 
     }
 
