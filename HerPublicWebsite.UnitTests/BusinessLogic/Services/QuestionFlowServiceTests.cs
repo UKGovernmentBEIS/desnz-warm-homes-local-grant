@@ -214,6 +214,20 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Address),
         new(
+            "Select local authority goes back to Manual address if was changing answer",
+            new Input(
+                QuestionFlowStep.SelectLocalAuthority,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.ManualAddress),
+        new(
+            "Confirm local authority goes back to select local authority if was changing answer",
+            new Input(
+                QuestionFlowStep.ConfirmLocalAuthority,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.SelectLocalAuthority),
+        new(
             "Household income goes back to check answers if was changing answer",
             new Input(
                 QuestionFlowStep.HouseholdIncome,
@@ -532,12 +546,36 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.ServiceUnsuitable),
         new(
-            "Manual address returns to check answers if was changing answer",
+            "Manual address continues to select local authority if was changing answer",
             new Input(
                 QuestionFlowStep.ManualAddress,
                 entryPoint: QuestionFlowStep.Address
             ),
+            QuestionFlowStep.SelectLocalAuthority),
+        new(
+            "Select local authority continues to confirm local authority if was changing answer",
+            new Input(
+                QuestionFlowStep.SelectLocalAuthority,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.ConfirmLocalAuthority),
+        new(
+            "Confirm local authority continues to select local authority if authority is incorrect if was changing answer",
+            new Input(
+                QuestionFlowStep.ConfirmLocalAuthority,
+                localAuthorityIsCorrect: false,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.SelectLocalAuthority),
+        new(
+            "Confirm local authority continues to check answers if authority is correct if was changing answer",
+            new Input(
+                QuestionFlowStep.ConfirmLocalAuthority,
+                localAuthorityIsCorrect: true,
+                entryPoint: QuestionFlowStep.Address
+            ),
             QuestionFlowStep.CheckAnswers),
+
         new(
             "Household income continues to check answers if was changing answer",
             new Input(
