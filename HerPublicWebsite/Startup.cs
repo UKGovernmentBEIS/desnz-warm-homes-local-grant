@@ -86,7 +86,8 @@ namespace HerPublicWebsite
                 options.Filters.Add<ErrorHandlingFilter>();
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 options.ModelMetadataDetailsProviders.Add(new GovUkDataBindingErrorTextProvider());
-            });
+            })
+                .AddSessionStateTempDataProvider();
 
             services.AddDistributedPostgreSqlCache(setup =>
             {
@@ -94,8 +95,6 @@ namespace HerPublicWebsite
                 setup.TableName = configuration.GetSection("SessionCache")["TableName"];
                 setup.SchemaName = configuration.GetSection("SessionCache")["SchemaName"];
             });
-
-            services.AddMvc().AddSessionStateTempDataProvider();
 
             services.AddSession(options =>
             {
