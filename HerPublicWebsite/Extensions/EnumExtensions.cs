@@ -1,4 +1,5 @@
 ﻿using HerPublicWebsite.BusinessLogic.Models.Enums;
+using HerPublicWebsite.Models.Enums;
 
 namespace HerPublicWebsite.Extensions;
 
@@ -48,5 +49,10 @@ public static class EnumExtensions
             FlatType.TopFloor => "Top floor",
             _ => flatType.ToString()
         };
+    }
+
+    public static YesOrNo? ToNullableYesOrNo(this bool? boolean)
+    {
+        return boolean is null ? null : (boolean.Value ? YesOrNo.Yes : YesOrNo.No);
     }
 }

@@ -12,6 +12,8 @@ public enum QuestionFlowStep
     SelectAddress,
     ReviewEpc,
     ManualAddress,
+    SelectLocalAuthority,
+    ConfirmLocalAuthority,
     HouseholdIncome,
     CheckAnswers
 }
