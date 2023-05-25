@@ -40,6 +40,10 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.Common
             httpClient.BaseAddress = new Uri(parameters.BaseAddress);
             httpClient.DefaultRequestHeaders.Authorization = parameters.Auth;
             httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            foreach (var headerDetails in parameters.Headers)
+            {
+                httpClient.DefaultRequestHeaders.Add(headerDetails.Key, headerDetails.Value);
+            }
             return httpClient;
         }
 
@@ -63,6 +67,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.Common
         public string Path { get; set; }
         public AuthenticationHeaderValue Auth { get; set; }
         public HttpContent Body { get; set; }
+        public Dictionary<string, string> Headers { get; set; } = new();
     }
 
     internal enum RequestType

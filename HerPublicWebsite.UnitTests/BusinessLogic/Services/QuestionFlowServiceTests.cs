@@ -107,6 +107,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.ManualAddress),
         new(
+            "Household income goes back to review EPC if EPC is too high",
+            new Input(
+                QuestionFlowStep.HouseholdIncome, epcRating: EpcRating.B
+            ),
+            QuestionFlowStep.ReviewEpc),
+        new(
             "Service unsuitable goes back to the country you came from",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,

@@ -86,7 +86,8 @@ namespace HerPublicWebsite
                 options.Filters.Add<ErrorHandlingFilter>();
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 options.ModelMetadataDetailsProviders.Add(new GovUkDataBindingErrorTextProvider());
-            });
+            })
+                .AddSessionStateTempDataProvider();
 
             services.AddDistributedPostgreSqlCache(setup =>
             {
@@ -138,7 +139,8 @@ namespace HerPublicWebsite
 
         private void ConfigureOsPlacesApi(IServiceCollection services)
         {
-            //TODO BEISHER-248: Set up OS Places properly
+            services.Configure<OsPlacesConfiguration>(
+                configuration.GetSection(OsPlacesConfiguration.ConfigSection));
             services.AddScoped<IOsPlacesApi, OsPlacesApi>();
         }
 

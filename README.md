@@ -95,7 +95,11 @@ Fill in the opened `secrets.json` file with:
     "GoogleAnalytics": {
         "ApiSecret": "REAL_VALUE_HERE",
         "MeasurementId": "REAL_VALUE_HERE"
-    }
+    },
+   
+   "OsPlaces": {
+      "Key": "REAL_VALUE_HERE"
+   }
 }
 ```
 
