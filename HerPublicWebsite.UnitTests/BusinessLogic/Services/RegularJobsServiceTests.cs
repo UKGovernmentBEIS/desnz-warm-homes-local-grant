@@ -45,7 +45,7 @@ public class RegularJobsServiceTests
         await regularJobsService.RunNightlyTasksAsync();
 
         // Assert
-        newReferralList.Should().AllSatisfy(rr => rr.ReferralCreated.Should().BeTrue());
+        newReferralList.Should().AllSatisfy(rr => rr.ReferralWrittenToCsv.Should().BeTrue());
         mockDataAccessProvider.Verify(dap => dap.PersistAllChangesAsync());
     }
     
@@ -98,7 +98,7 @@ public class RegularJobsServiceTests
         await regularJobsService.RunNightlyTasksAsync();
 
         // Assert
-        allReferralList.Should().AllSatisfy(rr => rr.ReferralCreated.Should().BeTrue());
+        allReferralList.Should().AllSatisfy(rr => rr.ReferralWrittenToCsv.Should().BeTrue());
         mockDataAccessProvider.Verify(dap => dap.PersistAllChangesAsync());
     }
     
@@ -176,8 +176,8 @@ public class RegularJobsServiceTests
         // Assert
         mockS3FileWriter.Verify(fw =>
             fw.WriteFileAsync("5", 3, 2023, It.IsAny<MemoryStream>()));
-        allReferralListForCustodianCode5.Should().AllSatisfy(rr => rr.ReferralCreated.Should().BeTrue());
-        allReferralListForCustodianCode6.Should().AllSatisfy(rr => rr.ReferralCreated.Should().BeFalse());
+        allReferralListForCustodianCode5.Should().AllSatisfy(rr => rr.ReferralWrittenToCsv.Should().BeTrue());
+        allReferralListForCustodianCode6.Should().AllSatisfy(rr => rr.ReferralWrittenToCsv.Should().BeFalse());
         mockDataAccessProvider.Verify(dap => dap.PersistAllChangesAsync());
     }
 }

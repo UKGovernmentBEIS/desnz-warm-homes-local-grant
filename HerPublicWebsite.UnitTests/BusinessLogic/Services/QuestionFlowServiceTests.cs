@@ -125,6 +125,18 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.ReviewEpc),
         new(
+            "Check answers goes back to household income",
+            new Input(
+                QuestionFlowStep.CheckAnswers
+            ),
+            QuestionFlowStep.HouseholdIncome),
+        new(
+            "Eligible goes back to check answers",
+            new Input(
+                QuestionFlowStep.Eligible
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
             "Service unsuitable goes back to the country you came from",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
@@ -426,6 +438,30 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.CheckAnswers),
         new(
+            "Check answers continues to eligible if eligible",
+            new Input(
+                QuestionFlowStep.CheckAnswers,
+                HasGasBoiler.No,
+                OwnershipStatus.OwnerOccupancy,
+                Country.England,
+                epcDetailsAreCorrect: false,
+                incomeBand: IncomeBand.UnderOrEqualTo31000
+            ),
+            QuestionFlowStep.Eligible),
+        new(
+            "Check answers continues to ineligible if ineligible",
+            new Input(
+                QuestionFlowStep.CheckAnswers,
+                HasGasBoiler.Yes
+            ),
+            QuestionFlowStep.Ineligible),
+        new(
+            "Eligible continues to confirmation",
+            new Input(
+                QuestionFlowStep.Eligible
+            ),
+            QuestionFlowStep.Confirmation),
+        new(
             "Gas boiler continues to direct to ECO if the user has a boiler and was changing answer",
             new Input(
                 QuestionFlowStep.GasBoiler,
@@ -629,6 +665,7 @@ public class QuestionFlowServiceTests
             string uprn = null,
             bool epcDetailsAreCorrect = false,
             EpcRating? epcRating = null,
+            IncomeBand? incomeBand = null,
             bool localAuthorityIsCorrect = false,
             QuestionFlowStep? entryPoint = null)
         {
@@ -641,6 +678,7 @@ public class QuestionFlowServiceTests
                 Country = country,
                 EpcDetailsAreCorrect = epcDetailsAreCorrect,
                 EpcDetails = epcRating == null ? null : new EpcDetails { EpcRating = epcRating },
+                IncomeBand = incomeBand,
                 LocalAuthorityConfirmed = localAuthorityIsCorrect,
             };
             EntryPoint = entryPoint;

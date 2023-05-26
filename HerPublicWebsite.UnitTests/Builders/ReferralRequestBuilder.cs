@@ -24,7 +24,7 @@ public class ReferralRequestBuilder
             Id = id,
             IncomeBand = IncomeBand.UnderOrEqualTo31000,
             Uprn = $"100 111 222 {id:D3}",
-            ReferralCreated = false,
+            ReferralWrittenToCsv = false,
             RequestDate = new DateTime(2023, 01, 01, 13, 00, id),
             IsLsoaProperty = false
         };
@@ -36,7 +36,7 @@ public class ReferralRequestBuilder
 
     public ReferralRequestBuilder WithReferralCreated(bool referralCreated)
     {
-        referralRequest.ReferralCreated = referralCreated;
+        referralRequest.ReferralWrittenToCsv = referralCreated;
         return this;
     }
 

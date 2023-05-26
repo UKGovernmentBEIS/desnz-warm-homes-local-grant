@@ -1,4 +1,5 @@
-﻿using HerPublicWebsite.BusinessLogic.Models.Enums;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using HerPublicWebsite.BusinessLogic.Models.Enums;
 
 namespace HerPublicWebsite.BusinessLogic.Models;
 
@@ -22,7 +23,7 @@ public class ReferralRequest
 
     public DateTime RequestDate { get; set; }
 
-    public bool ReferralCreated { get; set; } = false;
+    public bool ReferralWrittenToCsv { get; set; } = false;
 
     public string ReferralCode { get; set; }
 
@@ -32,9 +33,8 @@ public class ReferralRequest
     {
     }
 
-    public ReferralRequest(Questionnaire questionnaire, ContactDetails contactDetails)
+    public ReferralRequest(Questionnaire questionnaire)
     {
-        ContactDetails = contactDetails;
         AddressLine1 = questionnaire.AddressLine1;
         AddressLine2 = questionnaire.AddressLine2;
         AddressTown = questionnaire.AddressTown;
@@ -47,6 +47,7 @@ public class ReferralRequest
         HasGasBoiler = questionnaire.HasGasBoiler!.Value;
         IncomeBand = questionnaire.IncomeBand!.Value;
         ContactDetails = questionnaire.ContactDetails;
+        RequestDate = DateTime.Now;
     }
 
     public void UpdateReferralCode()

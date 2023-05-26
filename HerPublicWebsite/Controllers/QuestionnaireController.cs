@@ -417,6 +417,7 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> CheckAnswers_Post()
     {
         await googleAnalyticsService.SendQuestionnaireCompletedEvent(Request);
+        //TODO BEISHER-257 add ConfirmQuestionnaireAnswers() method to questionnaireService and use that to record reporting data.
         var questionnaire = questionnaireService.GetQuestionnaire();
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.CheckAnswers, questionnaire);
 
@@ -425,6 +426,36 @@ public class QuestionnaireController : Controller
 
     [HttpGet("eligible")]
     public IActionResult Eligible_Get()
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new EligibleViewModel()
+        {
+            LocalAuthorityName = questionnaire.LocalAuthorityName,
+            BackLink = GetBackUrl(QuestionFlowStep.Eligible, questionnaire)
+        };
+
+        return View("Eligible", viewModel);
+    }
+    
+    [HttpPost("eligible")]
+    public async Task<IActionResult> Eligible_Post(EligibleViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return Eligible_Get();
+        }
+
+        var questionnaire = await questionnaireService.GenerateReferralAsync(
+            viewModel.Name,
+            viewModel.CanContactByEmail is YesOrNo.Yes ? viewModel.EmailAddress : null,
+            viewModel.CanContactByPhone is YesOrNo.Yes ? viewModel.Telephone : null);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.Eligible, questionnaire, viewModel.EntryPoint);
+
+        return RedirectToNextStep(nextStep, viewModel.EntryPoint);
+    }
+    
+    [HttpGet("confirmation")]
+    public IActionResult Confirmation_Get()
     {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
     }
@@ -474,6 +505,7 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.CheckAnswers => new PathByActionArguments(nameof(CheckAnswers_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.Ineligible => new PathByActionArguments(nameof(Ineligible_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.Eligible => new PathByActionArguments(nameof(Eligible_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.Confirmation => new PathByActionArguments(nameof(Confirmation_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

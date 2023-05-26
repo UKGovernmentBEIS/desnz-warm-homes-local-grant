@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using HerPublicWebsite.BusinessLogic;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using HerPublicWebsite.BusinessLogic.Models;
+using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 using Moq;
 using NUnit.Framework;
@@ -15,6 +17,7 @@ public class QuestionnaireUpdaterTests
     private QuestionnaireUpdater underTest;
     private Mock<IEpcApi> mockEpcApi;
     private Mock<IEligiblePostcodeService> mockPostCodeService;
+    private Mock<IDataAccessProvider> mockDataAccessProvider;
     
     
     [SetUp]
@@ -22,7 +25,8 @@ public class QuestionnaireUpdaterTests
     {
         mockEpcApi = new Mock<IEpcApi>();
         mockPostCodeService = new Mock<IEligiblePostcodeService>();
-        underTest = new QuestionnaireUpdater(mockEpcApi.Object, mockPostCodeService.Object);
+        mockDataAccessProvider = new Mock<IDataAccessProvider>();
+        underTest = new QuestionnaireUpdater(mockEpcApi.Object, mockPostCodeService.Object, mockDataAccessProvider.Object);
     }
     
     [Test]
@@ -114,5 +118,74 @@ public class QuestionnaireUpdaterTests
         // Assert
         result.LocalAuthorityConfirmed.Should().BeNull();
         result.CustodianCode.Should().Be("new code");
+    }
+
+    [Test]
+    public async Task GenerateReferralAsync_WhenCalled_PersistReferral()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire
+        {
+            IsLsoaProperty = false,
+            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            HasGasBoiler = HasGasBoiler.No
+        };
+        mockDataAccessProvider.Setup(dap =>
+            dap.PersistNewReferralRequestAsync(It.IsAny<ReferralRequest>())).ReturnsAsync(new ReferralRequest());
+        
+        // Act
+        await underTest.GenerateReferralAsync(questionnaire, "name", "email", "telephone");
+        
+        // Assert
+        mockDataAccessProvider.Verify(dap => dap.PersistNewReferralRequestAsync(It.IsAny<ReferralRequest>()));
+    }
+    
+    [Test]
+    public async Task GenerateReferralAsync_WhenCalled_UpdatesQuestionnaireContactDetails()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire
+        {
+            IsLsoaProperty = false,
+            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            HasGasBoiler = HasGasBoiler.No
+        };
+        mockDataAccessProvider.Setup(dap =>
+            dap.PersistNewReferralRequestAsync(It.IsAny<ReferralRequest>())).ReturnsAsync(new ReferralRequest());
+        
+        // Act
+        var result = await underTest.GenerateReferralAsync(questionnaire, "name", "email", "telephone");
+        
+        // Assert
+        result.ContactDetails.FullName.Should().Be("name");
+        result.ContactDetails.LaContactEmailAddress.Should().Be("email");
+        result.ContactDetails.LaContactTelephone.Should().Be("telephone");
+    }
+    
+    [Test]
+    public async Task GenerateReferralAsync_WhenCalled_UpdatesQuestionnaireReferralData()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire
+        {
+            IsLsoaProperty = false,
+            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            HasGasBoiler = HasGasBoiler.No
+        };
+        var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
+        var referral = new ReferralRequest
+        {
+            ReferralCode = "code",
+            RequestDate = creationDate
+        };
+        mockDataAccessProvider.Setup(dap =>
+            dap.PersistNewReferralRequestAsync(It.IsAny<ReferralRequest>())).ReturnsAsync(referral);
+        
+        // Act
+        var result = await underTest.GenerateReferralAsync(questionnaire, "name", "email", "telephone");
+        
+        // Assert
+        result.Hug2ReferralId.Should().Be("code");
+        result.ReferralCreated.Should().Be(creationDate);
     }
 }

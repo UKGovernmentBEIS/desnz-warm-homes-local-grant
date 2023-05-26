@@ -1,0 +1,125 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using HerPublicWebsite.Controllers
+@using HerPublicWebsite.Models.Enums
+
+@model HerPublicWebsite.Models.Questionnaire.EligibleViewModel
+
+@{
+    ViewBag.Title = "You may be eligible";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+           {
+               Text = "Back",
+               Href = Model.BackLink,
+           })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <h1 class="govuk-heading-l">We think you might be eligible</h1>
+        
+        <h2 class="govuk-heading-m">What to do next</h2>
+        
+        <p class="govuk-body">We will send your answers and contact details to <strong>@Model.LocalAuthorityName council or their official contractor</strong>
+            who will contact you for further information about your property before they can book a home survey.</p>
+        
+        <p class="govuk-body">An official contractor is a vetted organisation that may carry out some of the work on behalf of
+            your local authority. They will not try to sell you any services.</p>
+        
+        @await Html.GovUkWarningText(new WarningTextViewModel()
+            {
+                Text = "Your application will progress faster if they are more easily able to contact you."
+            })
+
+        <form action="@Url.Action(nameof(QuestionnaireController.Eligible_Get), "Questionnaire")" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+
+            @await Html.GovUkTextInputFor(
+                m => m.Name,
+                labelOptions: new LabelViewModel()
+                {
+                    Text = "Full name",
+                    Classes = "govuk-label--m"
+                },
+                classes: "govuk-input govuk-input--width-20")
+            
+            @await Html.GovUkInsetText(new InsetTextViewModel()
+            {
+                Text = "You can select to be contacted by either email, phone or both."
+            })
+            
+            @await Html.GovUkRadiosFor(
+                m => m.CanContactByEmail,
+                fieldsetOptions: new FieldsetViewModel
+                {
+                    Legend = new LegendViewModel
+                    {
+                        Text = "Can they contact you by email?",
+                        Classes = "govuk-fieldset__legend--m",
+                    },
+                },
+                conditionalOptions: new Dictionary<YesOrNo, Conditional>
+                {
+                    {
+                        YesOrNo.Yes,
+                        new Conditional
+                        {
+                            Html = (@<text>
+                                @await Html.GovUkTextInputFor(
+                                    m => m.EmailAddress,
+                                    labelOptions: new LabelViewModel
+                                    {
+                                        Text = "Email address",
+                                    },
+                                    classes: "govuk-input govuk-input--width-20")
+                            </text>)
+                        }
+                    }
+                })
+            
+            @await Html.GovUkRadiosFor(
+                m => m.CanContactByPhone,
+                fieldsetOptions: new FieldsetViewModel
+                {
+                    Legend = new LegendViewModel
+                    {
+                        Text = "Can they contact you by phone?",
+                        Classes = "govuk-fieldset__legend--m",
+                    },
+                },
+                conditionalOptions: new Dictionary<YesOrNo, Conditional>
+                {
+                    {
+                        YesOrNo.Yes,
+                        new Conditional
+                        {
+                            Html = (@<text>
+                                @await Html.GovUkTextInputFor(
+                                    m => m.Telephone,
+                                    labelOptions: new LabelViewModel
+                                    {
+                                        Text = "Phone number",
+                                    },
+                                    classes: "govuk-input govuk-input--width-20")
+                            </text>)
+                        }
+                    }
+                })
+
+            <div class="govuk-button-group">
+                @(await Html.GovUkButton(new ButtonViewModel
+                {
+                    Text = "Submit",
+                }))
+                <a class="govuk-link">I don't want to share my information</a>
+            </div>
+        </form>
+        
+    </div>
+</div>

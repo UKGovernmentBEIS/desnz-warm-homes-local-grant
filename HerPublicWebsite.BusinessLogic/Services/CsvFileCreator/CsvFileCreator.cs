@@ -37,60 +37,55 @@ public class CsvFileCreator
         
         [Index(3)]
         public string Telephone { get; set; }
-        
+
         [Index(4)]
-        [Name("Preferred contact method")]
-        public ContactPreference ContactPreferrence { get; set; }
-        
-        [Index(5)]
         public string Address1 { get; set; }
         
-        [Index(6)]
+        [Index(5)]
         public string Address2 { get; set; }
         
-        [Index(7)]
+        [Index(6)]
         public string Town { get; set; }
         
-        [Index(8)]
+        [Index(7)]
         public string County { get; set; }
         
-        [Index(9)]
+        [Index(8)]
         public string Postcode { get; set; }
         
-        [Index(10)]
+        [Index(9)]
         [Name("UPRN")]
         public string Uprn { get; set; }
         
-        [Index(11)]
+        [Index(10)]
         [Name("EPC Band")]
         public EpcRating EpcBand { get; set; }
         
-        [Index(12)]
+        [Index(11)]
         [Name("Is off gas grid")]
         [BooleanTrueValues("yes")]
         [BooleanFalseValues("no")]
         public string OffGasGrid { get; set; }
         
-        [Index(13)]
+        [Index(12)]
         [Name("Household income band")]
         public string HouseholdIncome { get; set; }
         
-        [Index(14)]
+        [Index(13)]
         [Name("Is eligible postcode")]
         [BooleanTrueValues("yes")]
         [BooleanFalseValues("no")]
         public bool EligiblePostcode { get; set; }
         
-        [Index(15)]
+        [Index(14)]
         public string Tenure { get; set; }
         
         public CsvRow(ReferralRequest request)
         {
             ReferralDate = request.RequestDate.ToString("yyyy-MM-dd HH:mm:ss");
             Name = request.ContactDetails.FullName;
-            Email = request.ContactDetails.Email;
-            Telephone = request.ContactDetails.Telephone;
-            ContactPreferrence = request.ContactDetails.ContactPreference;
+            Email = request.ContactDetails.LaContactEmailAddress;
+            Telephone = request.ContactDetails.LaContactTelephone;
             Address1 = request.AddressLine1;
             Address2 = request.AddressLine2;
             Town = request.AddressTown;
