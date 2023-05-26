@@ -1,4 +1,5 @@
-﻿using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
+﻿using System.Net;
+using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
@@ -35,10 +36,14 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
                 return null;
             }
 
+            // This spec suggests UPRNs shouldn't need leading zeroes, but we need them for the EPC API
+            // https://github.com/co-cddo/open-standards/issues/68
+            var paddedUrn = uprn.PadLeft(12, '0');
+
             var parameters = new RequestParameters
             {
                 BaseAddress = config.BaseUrl,
-                Path = $"retrofit-funding/assessments?uprn={uprn}",
+                Path = $"retrofit-funding/assessments?uprn={paddedUrn}",
                 Auth = new AuthenticationHeaderValue("Bearer", token)
             };
 
@@ -46,6 +51,11 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
             {
                 var response = await HttpRequestHelper.SendGetRequestAsync<EpbEpcDto>(parameters);
                 return response.Data.Assessment.Parse();
+            }
+            catch (ApiException e) when (e.StatusCode == HttpStatusCode.NotFound)
+            {
+                logger.LogInformation("EPB EPC request could not find any results for UPRN {}", uprn);
+                return null;
             }
             catch (Exception e)
             {
