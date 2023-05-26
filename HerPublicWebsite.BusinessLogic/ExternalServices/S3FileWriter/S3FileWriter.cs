@@ -34,7 +34,7 @@ public class S3FileWriter : IS3FileWriter
         
         try
         {
-            var s3Client = new AmazonS3Client(config.Region);
+            var s3Client = new AmazonS3Client(RegionEndpoint.GetBySystemName(config.Region));
 
             var fileTransferUtility = new TransferUtility(s3Client);
 

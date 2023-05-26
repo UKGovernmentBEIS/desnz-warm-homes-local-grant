@@ -8,5 +8,5 @@ public class S3FileWriterConfiguration
 
     public string BucketName { get; set; }
 
-    public RegionEndpoint Region { get; set; }
+    public string Region { get; set; }
 }
