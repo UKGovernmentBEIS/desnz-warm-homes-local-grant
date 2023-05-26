@@ -104,7 +104,7 @@ public class QuestionnaireUpdater
         questionnaire.ContactDetails.LaContactTelephone = telephone;
 
         var referralRequest = new ReferralRequest(questionnaire);
-        await dataAccessProvider.PersistNewReferralRequestAsync(referralRequest);
+        referralRequest = await dataAccessProvider.PersistNewReferralRequestAsync(referralRequest);
         
         questionnaire.Hug2ReferralId = referralRequest.ReferralCode;
         questionnaire.ReferralCreated = referralRequest.RequestDate;

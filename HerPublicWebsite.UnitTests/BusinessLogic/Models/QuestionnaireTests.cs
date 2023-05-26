@@ -217,4 +217,37 @@ public class QuestionnaireTests
         // Assert
         result.Should().Be(isEligible);
     }
+
+    [Test]
+    public void LocalAuthorityName_ForBadCustodianCode_ReturnsUnknown()
+    {
+        // Arrange
+        var underTest = new Questionnaire
+        {
+            CustodianCode = "bad_code"
+        };
+        
+        // Act
+        var result = underTest.LocalAuthorityName;
+        
+        // Assert
+        result.Should().Be("unrecognised local authority");
+    }
+    
+    
+    [Test]
+    public void LocalAuthorityName_ForGoodCustodianCode_ReturnsLaName()
+    {
+        // Arrange
+        var underTest = new Questionnaire
+        {
+            CustodianCode = "9052"
+        };
+        
+        // Act
+        var result = underTest.LocalAuthorityName;
+        
+        // Assert
+        result.Should().Be("Aberdeenshire");
+    }
 }
