@@ -207,12 +207,19 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Address),
         new(
-            "Manual address goes back to Address if was changing answer",
+            "Manual address goes back to Address if was changing address answer",
             new Input(
                 QuestionFlowStep.ManualAddress,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.Address),
+        new(
+            "Manual address goes back to check answers if was changing manual address answer",
+            new Input(
+                QuestionFlowStep.ManualAddress,
+                entryPoint: QuestionFlowStep.ManualAddress
+            ),
+            QuestionFlowStep.CheckAnswers),
         new(
             "Select local authority goes back to Manual address if was changing answer",
             new Input(

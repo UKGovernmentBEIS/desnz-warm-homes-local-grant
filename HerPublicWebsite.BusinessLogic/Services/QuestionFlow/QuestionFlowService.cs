@@ -27,7 +27,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.Address => AddressBackDestination(entryPoint),
                 QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
                 QuestionFlowStep.ReviewEpc => ReviewEpcBackDestination(),
-                QuestionFlowStep.ManualAddress => ManualAddressBackDestination(),
+                QuestionFlowStep.ManualAddress => ManualAddressBackDestination(entryPoint),
                 QuestionFlowStep.SelectLocalAuthority => SelectLocalAuthorityBackDestination(),
                 QuestionFlowStep.ConfirmLocalAuthority => ConfirmLocalAuthorityBackDestination(),
                 QuestionFlowStep.HouseholdIncome => HouseholdIncomeBackDestination(questionnaire, entryPoint),
@@ -124,8 +124,12 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return QuestionFlowStep.Address;
         }
 
-        private QuestionFlowStep ManualAddressBackDestination()
+        private QuestionFlowStep ManualAddressBackDestination(QuestionFlowStep? entryPoint)
         {
+            if (entryPoint == QuestionFlowStep.ManualAddress)
+            {
+                return QuestionFlowStep.CheckAnswers;
+            }
             return QuestionFlowStep.Address;
         }
 
@@ -240,14 +244,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep CheckAnswersForwardDestination(Questionnaire questionnaire)
         {
-            return (questionnaire.IncomeBand, questionnaire.HasGasBoiler, questionnaire.FoundEpcBandIsTooHigh, questionnaire.EpcDetailsAreCorrect, questionnaire.Country, questionnaire.OwnershipStatus, questionnaire.IsLsoaProperty) switch
-            {
-                (IncomeBand.UnderOrEqualTo31000, not HasGasBoiler.Yes, false, _, Country.England, OwnershipStatus.OwnerOccupancy, _) => QuestionFlowStep.Eligible,
-                (IncomeBand.UnderOrEqualTo31000, not HasGasBoiler.Yes, _, false, Country.England, OwnershipStatus.OwnerOccupancy, _) => QuestionFlowStep.Eligible,
-                (IncomeBand.GreaterThan31000, not HasGasBoiler.Yes, false, _, Country.England, OwnershipStatus.OwnerOccupancy, true) => QuestionFlowStep.Eligible,
-                (IncomeBand.GreaterThan31000, not HasGasBoiler.Yes, _, false, Country.England, OwnershipStatus.OwnerOccupancy, true) => QuestionFlowStep.Eligible,
-                _ => QuestionFlowStep.Ineligible,
-            };
+            return questionnaire.IsEligibleForHug2 ? QuestionFlowStep.Eligible : QuestionFlowStep.Ineligible;
         }
     }
 }

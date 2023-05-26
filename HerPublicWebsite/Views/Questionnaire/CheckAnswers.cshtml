@@ -126,7 +126,9 @@
                                                              Model.Questionnaire.AddressCounty,
                                                              Model.Questionnaire.AddressTown,
                                                              Model.Questionnaire.AddressPostcode
-                                                         }.Where(x => x is not null).Select(x => Html.Encode(x))))
+                                                         }
+                                                             .Where(x => !string.IsNullOrEmpty(x))
+                                                             .Select(x => Html.Encode(x))))
                                            </text>
                                },
                                Actions = new SummaryListRowActionViewModel()
@@ -136,11 +138,8 @@
                                        new()
                                        {
                                            Text = "Change",
-                                           Href = Url.Action(Model.Questionnaire.Uprn switch
-                                           {
-                                               null => nameof(QuestionnaireController.ManualAddress_Get),
-                                               _ => nameof(QuestionnaireController.Address_Get)
-                                            }, controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.Address } )
+                                           Href = Url.Action(Model.Questionnaire.Uprn is null ? nameof(QuestionnaireController.ManualAddress_Get) : nameof(QuestionnaireController.Address_Get),
+                                               controller: "Questionnaire", values: new { entryPoint = Model.Questionnaire.Uprn is null ? QuestionFlowStep.ManualAddress : QuestionFlowStep.Address } )
                                        }
                                    }
                                },

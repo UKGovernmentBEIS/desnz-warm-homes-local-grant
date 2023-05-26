@@ -1,11 +1,15 @@
 ﻿using HerPublicWebsite.BusinessLogic.Models.Enums;
+using IncomeBandEnum = HerPublicWebsite.BusinessLogic.Models.Enums.IncomeBand;
+using HasGasBoilerEnum = HerPublicWebsite.BusinessLogic.Models.Enums.HasGasBoiler;
+using CountryEnum = HerPublicWebsite.BusinessLogic.Models.Enums.Country;
+using OwnershipStatusEnum = HerPublicWebsite.BusinessLogic.Models.Enums.OwnershipStatus;
 
 namespace HerPublicWebsite.BusinessLogic.Models;
 
 public record Questionnaire
 {
-    public Country? Country { get; set; }
-    public OwnershipStatus? OwnershipStatus { get; set; }
+    public CountryEnum? Country { get; set; }
+    public OwnershipStatusEnum? OwnershipStatus { get; set; }
 
     public string AddressLine1 { get; set; }
     public string AddressLine2 { get; set; }
@@ -21,12 +25,27 @@ public record Questionnaire
     public EpcDetails EpcDetails { get; set; }
     public bool? EpcDetailsAreCorrect { get; set; }
     public bool? IsLsoaProperty { get; set; }
-    public HasGasBoiler? HasGasBoiler { get; set; }
-    public IncomeBand? IncomeBand { get; set; }
+    public HasGasBoilerEnum? HasGasBoiler { get; set; }
+    public IncomeBandEnum? IncomeBand { get; set; }
 
     public DateTime ReferralCreated { get; set; }
 
-    public bool IsEligibleForHug2 { get; set; }
+    public bool IsEligibleForHug2
+    {
+        get
+        {
+            return (IncomeBand, HasGasBoiler, FoundEpcBandIsTooHigh, EpcDetailsAreCorrect, Country, OwnershipStatus, IsLsoaProperty) switch
+                {
+                    (IncomeBandEnum.UnderOrEqualTo31000, not HasGasBoilerEnum.Yes, false, _, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, _) => true,
+                    (IncomeBandEnum.UnderOrEqualTo31000, not HasGasBoilerEnum.Yes, _, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, _) => true,
+                    (IncomeBandEnum.GreaterThan31000, not HasGasBoilerEnum.Yes, false, _, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, true) => true,
+                    (IncomeBandEnum.GreaterThan31000, not HasGasBoilerEnum.Yes, _, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, true) => true,
+                    _ => false
+                };
+        }
+    }
+
+
     public string Hug2ReferralId { get; set; }
 
     public ContactDetails ContactDetails { get; set; }
