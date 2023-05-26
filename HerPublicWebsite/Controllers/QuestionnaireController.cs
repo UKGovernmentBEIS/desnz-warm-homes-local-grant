@@ -449,6 +449,9 @@ public class QuestionnaireController : Controller
             viewModel.Name,
             viewModel.CanContactByEmail is YesOrNo.Yes ? viewModel.EmailAddress : null,
             viewModel.CanContactByPhone is YesOrNo.Yes ? viewModel.Telephone : null);
+        
+        await googleAnalyticsService.SendReferralGeneratedEvent(Request);
+        
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Eligible, questionnaire, viewModel.EntryPoint);
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
