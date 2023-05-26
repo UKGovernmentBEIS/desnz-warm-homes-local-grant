@@ -15,5 +15,7 @@ public enum QuestionFlowStep
     SelectLocalAuthority,
     ConfirmLocalAuthority,
     HouseholdIncome,
-    CheckAnswers
+    CheckAnswers,
+    Eligible,
+    Ineligible,
 }

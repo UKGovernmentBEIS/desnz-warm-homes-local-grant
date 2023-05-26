@@ -157,6 +157,127 @@ public class QuestionFlowServiceTests
                 epcDetailsAreCorrect: false
             ),
             QuestionFlowStep.GasBoiler),
+        new(
+            "Gas boiler goes back to check answers if was changing answer",
+            new Input(
+                QuestionFlowStep.GasBoiler,
+                entryPoint: QuestionFlowStep.GasBoiler
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Direct to ECO goes back to gas boiler if was changing answer",
+            new Input(
+                QuestionFlowStep.DirectToEco,
+                entryPoint: QuestionFlowStep.GasBoiler
+            ),
+            QuestionFlowStep.GasBoiler),
+        new(
+            "Country goes back to check answers if was changing answer",
+            new Input(
+                QuestionFlowStep.Country,
+                entryPoint: QuestionFlowStep.Country
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Ownership status goes back to check answers if was changing answer",
+            new Input(
+                QuestionFlowStep.OwnershipStatus,
+                entryPoint: QuestionFlowStep.OwnershipStatus
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Address goes back to check answers if was changing answer",
+            new Input(
+                QuestionFlowStep.Address,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Select address goes back to Address if was changing answer",
+            new Input(
+                QuestionFlowStep.SelectAddress,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.Address),
+        new(
+            "Review EPC goes back to Address if was changing answer",
+            new Input(
+                QuestionFlowStep.ReviewEpc,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.Address),
+        new(
+            "Manual address goes back to Address if was changing address answer",
+            new Input(
+                QuestionFlowStep.ManualAddress,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.Address),
+        new(
+            "Manual address goes back to check answers if was changing manual address answer",
+            new Input(
+                QuestionFlowStep.ManualAddress,
+                entryPoint: QuestionFlowStep.ManualAddress
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Select local authority goes back to Manual address if was changing answer",
+            new Input(
+                QuestionFlowStep.SelectLocalAuthority,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.ManualAddress),
+        new(
+            "Confirm local authority goes back to select local authority if was changing answer",
+            new Input(
+                QuestionFlowStep.ConfirmLocalAuthority,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.SelectLocalAuthority),
+        new(
+            "Household income goes back to check answers if was changing answer",
+            new Input(
+                QuestionFlowStep.HouseholdIncome,
+                entryPoint: QuestionFlowStep.HouseholdIncome
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Service unsuitable goes back to the country you came from if was changing answer",
+            new Input(
+                QuestionFlowStep.ServiceUnsuitable,
+                country: Country.Other,
+                entryPoint: QuestionFlowStep.Country
+            ),
+            QuestionFlowStep.Country),
+        new(
+            "Service unsuitable goes back to ownership status isn't owner occupier if was changing answer",
+            new Input(
+                QuestionFlowStep.ServiceUnsuitable,
+                country: Country.England,
+                ownershipStatus: OwnershipStatus.Landlord,
+                entryPoint: QuestionFlowStep.OwnershipStatus
+            ),
+            QuestionFlowStep.OwnershipStatus),
+        new(
+            "Service unsuitable goes back to review EPC if EPC is filled in if was changing answer",
+            new Input(
+                QuestionFlowStep.ServiceUnsuitable,
+                country: Country.England,
+                ownershipStatus: OwnershipStatus.OwnerOccupancy,
+                epcDetailsAreCorrect: true,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.ReviewEpc),
+        new(
+            "Service unsuitable goes back to boiler question if the service is actually suitable and was changing answer",
+            new Input(
+                QuestionFlowStep.ServiceUnsuitable,
+                country: Country.England,
+                ownershipStatus: OwnershipStatus.OwnerOccupancy,
+                epcDetailsAreCorrect: false,
+                entryPoint: QuestionFlowStep.GasBoiler
+            ),
+            QuestionFlowStep.GasBoiler),
     };
 
     private static QuestionFlowServiceTestCase[] ForwardTestCases =
@@ -302,6 +423,171 @@ public class QuestionFlowServiceTests
             "Household income continues to check answers",
             new Input(
                 QuestionFlowStep.HouseholdIncome
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Gas boiler continues to direct to ECO if the user has a boiler and was changing answer",
+            new Input(
+                QuestionFlowStep.GasBoiler,
+                hasGasBoiler: HasGasBoiler.Yes,
+                entryPoint: QuestionFlowStep.GasBoiler
+            ),
+            QuestionFlowStep.DirectToEco),
+        new(
+            "Gas boiler returns to check answers if user doesn't have a boiler, and was changing answer",
+            new Input(
+                QuestionFlowStep.GasBoiler,
+                hasGasBoiler: HasGasBoiler.No,
+                entryPoint: QuestionFlowStep.GasBoiler
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Gas boiler returns to check answers if user doesn't know about their boiler, and was changing answer",
+            new Input(
+                QuestionFlowStep.GasBoiler,
+                hasGasBoiler: HasGasBoiler.Unknown,
+                entryPoint: QuestionFlowStep.GasBoiler
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Country continues to service unsuitable if the country is Wales and was changing answer",
+            new Input(
+                QuestionFlowStep.Country,
+                country: Country.Wales,
+                entryPoint: QuestionFlowStep.Country
+            ),
+            QuestionFlowStep.ServiceUnsuitable),
+        new(
+            "Country continues to service unsuitable if the country is Scotland and was changing answer",
+            new Input(
+                QuestionFlowStep.Country,
+                country: Country.Scotland,
+                entryPoint: QuestionFlowStep.Country
+            ),
+            QuestionFlowStep.ServiceUnsuitable),
+        new(
+            "Country continues to service unsuitable if the country is Northern Ireland and was changing answer",
+            new Input(
+                QuestionFlowStep.Country,
+                country: Country.NorthernIreland,
+                entryPoint: QuestionFlowStep.Country
+            ),
+            QuestionFlowStep.ServiceUnsuitable),
+        new(
+            "Country continues to service unsuitable if the country is Other and was changing answer",
+            new Input(
+                QuestionFlowStep.Country,
+                country: Country.Other,
+                entryPoint: QuestionFlowStep.Country
+            ),
+            QuestionFlowStep.ServiceUnsuitable),
+        new(
+            "Country returns to check answers if the country is England was changing answer",
+            new Input(
+                QuestionFlowStep.Country,
+                country: Country.England,
+                entryPoint: QuestionFlowStep.Country
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Ownership status continues to service unsuitable if user is private tenant and was changing answer",
+            new Input(
+                QuestionFlowStep.OwnershipStatus,
+                ownershipStatus: OwnershipStatus.PrivateTenancy,
+                entryPoint: QuestionFlowStep.OwnershipStatus
+            ),
+            QuestionFlowStep.ServiceUnsuitable),
+        new(
+            "Ownership status continues to service unsuitable if user is landlord and was changing answer",
+            new Input(
+                QuestionFlowStep.OwnershipStatus,
+                ownershipStatus: OwnershipStatus.Landlord,
+                entryPoint: QuestionFlowStep.OwnershipStatus
+            ),
+            QuestionFlowStep.ServiceUnsuitable),
+        new(
+            "Ownership status returns to check answers if user is owner occupier and was changing answer",
+            new Input(
+                QuestionFlowStep.OwnershipStatus,
+                ownershipStatus: OwnershipStatus.OwnerOccupancy,
+                entryPoint: QuestionFlowStep.OwnershipStatus
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Address continues to address selection if was changing answer",
+            new Input(
+                QuestionFlowStep.Address,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.SelectAddress),
+        new(
+            "Address selection returns to check answers income if EPC is low and was changing answer",
+            new Input(
+                QuestionFlowStep.SelectAddress,
+                epcRating: EpcRating.D,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Address selection continues to review EPC if EPC is high and was changing answer",
+            new Input(
+                QuestionFlowStep.SelectAddress,
+                epcRating: EpcRating.C,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.ReviewEpc),
+        new(
+            "Review EPC returns to check answers if EPC is incorrect and was changing answer",
+            new Input(
+                QuestionFlowStep.ReviewEpc,
+                epcDetailsAreCorrect: false,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Review EPC continues to service unsuitable if EPC is correct and was changing answer",
+            new Input(
+                QuestionFlowStep.ReviewEpc,
+                epcDetailsAreCorrect: true,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.ServiceUnsuitable),
+        new(
+            "Manual address continues to select local authority if was changing answer",
+            new Input(
+                QuestionFlowStep.ManualAddress,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.SelectLocalAuthority),
+        new(
+            "Select local authority continues to confirm local authority if was changing answer",
+            new Input(
+                QuestionFlowStep.SelectLocalAuthority,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.ConfirmLocalAuthority),
+        new(
+            "Confirm local authority continues to select local authority if authority is incorrect if was changing answer",
+            new Input(
+                QuestionFlowStep.ConfirmLocalAuthority,
+                localAuthorityIsCorrect: false,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.SelectLocalAuthority),
+        new(
+            "Confirm local authority continues to check answers if authority is correct if was changing answer",
+            new Input(
+                QuestionFlowStep.ConfirmLocalAuthority,
+                localAuthorityIsCorrect: true,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.CheckAnswers),
+
+        new(
+            "Household income continues to check answers if was changing answer",
+            new Input(
+                QuestionFlowStep.HouseholdIncome,
+                entryPoint: QuestionFlowStep.HouseholdIncome
             ),
             QuestionFlowStep.CheckAnswers),
     };
