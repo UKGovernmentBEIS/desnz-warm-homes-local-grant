@@ -17,7 +17,23 @@ public class DataAccessProvider : IDataAccessProvider
     {
         context.ReferralRequests.Add(referralRequest);
         await context.SaveChangesAsync();
+        referralRequest.UpdateReferralCode();
+        await context.SaveChangesAsync();
         return referralRequest;
+    }
+
+    public async Task PersistNotificationConsentAsync(string referralCode, NotificationDetails details)
+    {
+        if (details.FutureSchemeNotificationConsent)
+        {
+            var referralRequest =
+                context.ReferralRequests.Single(rr => rr.ReferralCode == referralCode);
+
+            details.ReferralRequest = referralRequest;
+
+            context.NotificationDetails.Add(details);
+            await context.SaveChangesAsync();
+        }
     }
 
     public async Task<IList<ReferralRequest>> GetUnsubmittedReferralRequestsAsync()
@@ -30,7 +46,6 @@ public class DataAccessProvider : IDataAccessProvider
     public async Task<IList<ReferralRequest>> GetReferralRequestsByCustodianAndRequestDateAsync(string custodianCode, int month, int year)
     {
         return await context.ReferralRequests
-            .Include(rr => rr.ContactDetails)
             .Where(rr => rr.CustodianCode == custodianCode && rr.RequestDate.Month == month && rr.RequestDate.Year == year)
             .ToListAsync();
     }

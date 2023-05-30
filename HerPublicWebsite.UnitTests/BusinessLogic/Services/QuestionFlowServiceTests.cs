@@ -137,6 +137,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.CheckAnswers),
         new(
+            "Confirmation goes back to eligible",
+            new Input(
+                QuestionFlowStep.Confirmation
+            ),
+            QuestionFlowStep.Eligible),
+        new(
             "Service unsuitable goes back to the country you came from",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
@@ -459,6 +465,12 @@ public class QuestionFlowServiceTests
             "Eligible continues to confirmation",
             new Input(
                 QuestionFlowStep.Eligible
+            ),
+            QuestionFlowStep.Confirmation),
+        new(
+            "Confirmation continues to confirmation",
+            new Input(
+                QuestionFlowStep.Confirmation
             ),
             QuestionFlowStep.Confirmation),
         new(

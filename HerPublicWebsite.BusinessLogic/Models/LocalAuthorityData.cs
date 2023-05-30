@@ -15,7 +15,7 @@ public class LocalAuthorityData
     // on https://www.ordnancesurvey.co.uk/business-government/tools-support/addressbase-support
     public static readonly Dictionary<string, LocalAuthorityDetails> LocalAuthorityDetailsByCustodianCode = new()
     {
-        { "9052", new LocalAuthorityDetails("Aberdeenshire", Hug2Status.NotTakingPart, "") },
+        { "9052", new LocalAuthorityDetails("Aberdeenshire", Hug2Status.NotTakingPart, "https://www.aberdeenshire.gov.uk/") },
         { "3805", new LocalAuthorityDetails("Adur", Hug2Status.NotTakingPart, "") },
         { "905", new LocalAuthorityDetails("Allerdale", Hug2Status.NotTakingPart, "") },
         { "1005", new LocalAuthorityDetails("Amber Valley", Hug2Status.NotTakingPart, "") },

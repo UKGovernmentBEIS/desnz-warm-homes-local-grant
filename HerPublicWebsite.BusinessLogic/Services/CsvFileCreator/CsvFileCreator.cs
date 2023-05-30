@@ -83,9 +83,9 @@ public class CsvFileCreator
         public CsvRow(ReferralRequest request)
         {
             ReferralDate = request.RequestDate.ToString("yyyy-MM-dd HH:mm:ss");
-            Name = request.ContactDetails.FullName;
-            Email = request.ContactDetails.LaContactEmailAddress;
-            Telephone = request.ContactDetails.LaContactTelephone;
+            Name = request.FullName;
+            Email = request.ContactEmailAddress;
+            Telephone = request.ContactTelephone;
             Address1 = request.AddressLine1;
             Address2 = request.AddressLine2;
             Town = request.AddressTown;

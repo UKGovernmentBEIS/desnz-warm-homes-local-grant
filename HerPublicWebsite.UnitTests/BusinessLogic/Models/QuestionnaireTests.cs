@@ -250,4 +250,37 @@ public class QuestionnaireTests
         // Assert
         result.Should().Be("Aberdeenshire");
     }
+    
+    [Test]
+    public void LocalAuthorityWebsite_ForBadCustodianCode_ReturnsUnknown()
+    {
+        // Arrange
+        var underTest = new Questionnaire
+        {
+            CustodianCode = "bad_code"
+        };
+        
+        // Act
+        var result = underTest.LocalAuthorityWebsite;
+        
+        // Assert
+        result.Should().Be("unrecognised local authority");
+    }
+    
+    
+    [Test]
+    public void LocalAuthorityWebsite_ForGoodCustodianCode_ReturnsLaName()
+    {
+        // Arrange
+        var underTest = new Questionnaire
+        {
+            CustodianCode = "9052"
+        };
+        
+        // Act
+        var result = underTest.LocalAuthorityWebsite;
+        
+        // Assert
+        result.Should().Be("https://www.aberdeenshire.gov.uk/");
+    }
 }

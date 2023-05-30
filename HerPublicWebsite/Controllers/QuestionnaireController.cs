@@ -449,6 +449,9 @@ public class QuestionnaireController : Controller
             viewModel.Name,
             viewModel.CanContactByEmail is YesOrNo.Yes ? viewModel.EmailAddress : null,
             viewModel.CanContactByPhone is YesOrNo.Yes ? viewModel.Telephone : null);
+        
+        await googleAnalyticsService.SendReferralGeneratedEvent(Request);
+        
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Eligible, questionnaire, viewModel.EntryPoint);
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
@@ -457,7 +460,33 @@ public class QuestionnaireController : Controller
     [HttpGet("confirmation")]
     public IActionResult Confirmation_Get()
     {
-        return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new ConfirmationViewModel()
+        {
+            ReferenceCode = questionnaire.Hug2ReferralId,
+            LocalAuthorityName = questionnaire.LocalAuthorityName,
+            LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
+            ConfirmationEmailAddress = questionnaire.LaContactEmailAddress,
+            BackLink = GetBackUrl(QuestionFlowStep.Confirmation, questionnaire)
+        };
+
+        return View("Confirmation", viewModel);
+    }
+    
+    [HttpPost("confirmation")]
+    public async Task<IActionResult> Confirmation_Post(ConfirmationViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return Confirmation_Get();
+        }
+
+        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
+            viewModel.CanNotifyAboutFutureSchemes is YesOrNo.Yes);
+        
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.Confirmation, questionnaire, viewModel.EntryPoint);
+
+        return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
 
     [HttpGet("ineligible")]
