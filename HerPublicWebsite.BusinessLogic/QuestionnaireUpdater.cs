@@ -97,6 +97,8 @@ public class QuestionnaireUpdater
 
     public async Task<Questionnaire> GenerateReferralAsync(Questionnaire questionnaire, string name, string emailAddress, string telephone)
     {
+        questionnaire.LaCanContactByEmail = !string.IsNullOrEmpty(emailAddress);
+        questionnaire.LaCanContactByPhone = !string.IsNullOrEmpty(telephone);
         questionnaire.LaContactEmailAddress = emailAddress;
         questionnaire.LaContactTelephone = telephone;
         questionnaire.LaContactName = name;

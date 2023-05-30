@@ -431,6 +431,10 @@ public class QuestionnaireController : Controller
         var viewModel = new EligibleViewModel()
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
+            CanContactByEmail = questionnaire.LaCanContactByEmail.ToNullableYesOrNo(),
+            CanContactByPhone = questionnaire.LaCanContactByPhone.ToNullableYesOrNo(),
+            EmailAddress = questionnaire.LaContactEmailAddress,
+            Telephone = questionnaire.LaContactTelephone,
             BackLink = GetBackUrl(QuestionFlowStep.Eligible, questionnaire)
         };
 
