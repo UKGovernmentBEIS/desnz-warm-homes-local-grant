@@ -143,6 +143,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Eligible),
         new(
+            "No consent goes back to eligible",
+            new Input(
+                QuestionFlowStep.NoConsent
+            ),
+            QuestionFlowStep.Eligible),
+        new(
             "Service unsuitable goes back to the country you came from",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,

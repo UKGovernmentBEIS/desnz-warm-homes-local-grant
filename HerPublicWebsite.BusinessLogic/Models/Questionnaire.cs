@@ -16,10 +16,10 @@ public record Questionnaire
     public string AddressTown { get; set; }
     public string AddressCounty { get; set; }
     public string AddressPostcode { get; set; }
-    
+
     public string CustodianCode { get; set; }
     public bool? LocalAuthorityConfirmed { get; set; }
-    
+
     public string Uprn { get; set; } // Should be populated for most questionnaires, but not 100% guaranteed
 
     public EpcDetails EpcDetails { get; set; }
@@ -29,9 +29,9 @@ public record Questionnaire
     public IncomeBandEnum? IncomeBand { get; set; }
 
     public DateTime ReferralCreated { get; set; }
-    
+
     public string Hug2ReferralId { get; set; }
-    
+
     public string LaContactName { get; set; }
     public string LaContactEmailAddress { get; set; }
     public string LaContactTelephone { get; set; }
@@ -39,25 +39,25 @@ public record Questionnaire
     public bool? NotificationConsent { get; set; }
 
     public string NotificationEmailAddress { get; set; }
-    
+
     public bool IsEligibleForHug2
     {
         get
         {
             return (IncomeBand, HasGasBoiler, FoundEpcBandIsTooHigh, EpcDetailsAreCorrect, Country, OwnershipStatus, IsLsoaProperty) switch
-                {
-                    (IncomeBandEnum.UnderOrEqualTo31000, not HasGasBoilerEnum.Yes, false, _, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, _) => true,
-                    (IncomeBandEnum.UnderOrEqualTo31000, not HasGasBoilerEnum.Yes, _, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, _) => true,
-                    (IncomeBandEnum.GreaterThan31000, not HasGasBoilerEnum.Yes, false, _, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, true) => true,
-                    (IncomeBandEnum.GreaterThan31000, not HasGasBoilerEnum.Yes, _, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, true) => true,
-                    _ => false
-                };
+            {
+                (IncomeBandEnum.UnderOrEqualTo31000, not HasGasBoilerEnum.Yes, false, _, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, _) => true,
+                (IncomeBandEnum.UnderOrEqualTo31000, not HasGasBoilerEnum.Yes, _, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, _) => true,
+                (IncomeBandEnum.GreaterThan31000, not HasGasBoilerEnum.Yes, false, _, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, true) => true,
+                (IncomeBandEnum.GreaterThan31000, not HasGasBoilerEnum.Yes, _, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, true) => true,
+                _ => false
+            };
         }
     }
 
-    public bool FoundEpcBandIsTooHigh => 
+    public bool FoundEpcBandIsTooHigh =>
         EpcDetails is { EpcRating: EpcRating.A or EpcRating.B or EpcRating.C };
-    
+
     public string LocalAuthorityName
     {
         get
