@@ -482,7 +482,7 @@ public class QuestionnaireController : Controller
         }
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
-            viewModel.CanNotfiyAboutFutureSchemes is YesOrNo.Yes);
+            viewModel.CanNotifyAboutFutureSchemes is YesOrNo.Yes);
         
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Confirmation, questionnaire, viewModel.EntryPoint);
 

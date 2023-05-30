@@ -6,7 +6,7 @@
 @model HerPublicWebsite.Models.Questionnaire.ConfirmationViewModel
 
 @{
-    ViewBag.Title = "You may be eligible";
+    ViewBag.Title = "Application submitted";
 }
 
 <div class="govuk-grid-row">
@@ -45,7 +45,7 @@
             @Html.AntiForgeryToken()
 
             @await Html.GovUkRadiosFor(
-                       m => m.CanNotfiyAboutFutureSchemes,
+                       m => m.CanNotifyAboutFutureSchemes,
                        fieldsetOptions: new FieldsetViewModel
                        {
                            Legend = new LegendViewModel

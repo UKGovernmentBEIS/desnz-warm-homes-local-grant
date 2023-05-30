@@ -10,5 +10,5 @@ public class ConfirmationViewModel : QuestionFlowViewModel
     public string LocalAuthorityWebsite { get; set; }
     public string ConfirmationEmailAddress { get; set; }
     [GovUkValidateRequired(ErrorMessageIfMissing = "Select whether we can notify you about future energy grants")]
-    public YesOrNo? CanNotfiyAboutFutureSchemes { get; set; }
+    public YesOrNo? CanNotifyAboutFutureSchemes { get; set; }
 }
