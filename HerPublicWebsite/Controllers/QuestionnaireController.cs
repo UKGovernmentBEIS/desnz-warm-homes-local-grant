@@ -15,6 +15,7 @@ using HerPublicWebsite.Models.Questionnaire;
 using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
@@ -444,6 +445,11 @@ public class QuestionnaireController : Controller
     [HttpPost("eligible")]
     public async Task<IActionResult> Eligible_Post(EligibleViewModel viewModel)
     {
+        if (viewModel.CanContactByEmail is not YesOrNo.Yes && viewModel.CanContactByPhone is not YesOrNo.Yes)
+        {
+            ModelState.AddModelError(null, "Select at least one method to be contacted by");
+        }
+        
         if (!ModelState.IsValid)
         {
             return Eligible_Get();
