@@ -188,4 +188,57 @@ public class QuestionnaireUpdaterTests
         result.Hug2ReferralId.Should().Be("code");
         result.ReferralCreated.Should().Be(creationDate);
     }
+    
+    [Test]
+    public async Task RecordNotificationConsentAsync_WhenCalledWithLaContactEmail_PersistsConsent()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire
+        {
+            LaContactEmailAddress = "test@example.com",
+            Hug2ReferralId = "referral code"
+        };
+        
+        // Act
+        await underTest.RecordNotificationConsentAsync(questionnaire, true);
+        
+        // Assert
+        mockDataAccessProvider.Verify(dap => dap.PersistNotificationConsentAsync("referral code",It.IsAny<NotificationDetails>()));
+    }
+    
+    [Test]
+    public async Task RecordNotificationConsentAsync_WhenCalledWithLaContactEmailAndConsent_UsesLaContactEmail()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire
+        {
+            LaContactEmailAddress = "test@example.com",
+            Hug2ReferralId = "referral code"
+        };
+
+        // Act
+        var result = await underTest.RecordNotificationConsentAsync(questionnaire, true);
+        
+        // Assert
+        result.NotificationConsent.Should().BeTrue();
+        result.NotificationEmailAddress.Should().Be("test@example.com");
+    }
+    
+    [Test]
+    public async Task RecordNotificationConsentAsync_WhenCalledWithLaContactEmailAndNoConsent_UsesNullEmail()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire
+        {
+            LaContactEmailAddress = "test@example.com",
+            Hug2ReferralId = "referral code"
+        };
+
+        // Act
+        var result = await underTest.RecordNotificationConsentAsync(questionnaire, false);
+        
+        // Assert
+        result.NotificationConsent.Should().BeFalse();
+        result.NotificationEmailAddress.Should().BeNull();
+    }
 }
