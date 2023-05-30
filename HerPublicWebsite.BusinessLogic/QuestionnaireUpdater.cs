@@ -12,7 +12,7 @@ public class QuestionnaireUpdater
     private readonly IDataAccessProvider dataAccessProvider;
 
     public QuestionnaireUpdater(
-        IEpcApi epcApi, 
+        IEpcApi epcApi,
         IEligiblePostcodeService eligiblePostcodeService,
         IDataAccessProvider dataAccessProvider)
     {
@@ -81,7 +81,7 @@ public class QuestionnaireUpdater
         questionnaire.LocalAuthorityConfirmed = null;
         return questionnaire;
     }
-    
+
     public Questionnaire UpdateLocalAuthorityIsCorrect(Questionnaire questionnaire, bool? confirmed)
     {
         questionnaire.LocalAuthorityConfirmed = confirmed;
@@ -103,7 +103,7 @@ public class QuestionnaireUpdater
 
         var referralRequest = new ReferralRequest(questionnaire);
         referralRequest = await dataAccessProvider.PersistNewReferralRequestAsync(referralRequest);
-        
+
         questionnaire.Hug2ReferralId = referralRequest.ReferralCode;
         questionnaire.ReferralCreated = referralRequest.RequestDate;
 

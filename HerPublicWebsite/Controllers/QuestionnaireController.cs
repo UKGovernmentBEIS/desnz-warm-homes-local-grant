@@ -490,9 +490,36 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("ineligible")]
-    public IActionResult Ineligible_Get()
+    public IActionResult Ineligible_Get(bool submitted = false)
     {
-        return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new IneligibleViewModel
+        {
+            FoundEpcIsTooHigh = questionnaire.FoundEpcBandIsTooHigh && (questionnaire.EpcDetailsAreCorrect ?? true),
+            IncomeBand = questionnaire.IncomeBand,
+            LocalAuthorityName = questionnaire.LocalAuthorityName,
+            LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
+            Submitted = submitted,
+            BackLink = GetBackUrl(QuestionFlowStep.Ineligible, questionnaire)
+        };
+
+        return View("Ineligible", viewModel);
+    }
+
+    [HttpPost("ineligible")]
+    public async Task<IActionResult> Ineligible_Post(IneligibleViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return Ineligible_Get();
+        }
+
+        if (viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes)
+        {
+            await questionnaireService.AddFutureNotificationContactDetailsAsync(viewModel.EmailAddress);
+        }
+
+        return Ineligible_Get(true);
     }
 
     private string GetBackUrl(

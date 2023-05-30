@@ -143,6 +143,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Eligible),
         new(
+            "Ineligible goes back to check answers",
+            new Input(
+                QuestionFlowStep.Ineligible
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
             "Service unsuitable goes back to the country you came from",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,

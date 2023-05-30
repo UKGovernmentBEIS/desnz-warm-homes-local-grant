@@ -42,7 +42,7 @@ public class DataAccessProvider : IDataAccessProvider
             .Where(rr => !rr.ReferralWrittenToCsv)
             .ToListAsync();
     }
-    
+
     public async Task<IList<ReferralRequest>> GetReferralRequestsByCustodianAndRequestDateAsync(string custodianCode, int month, int year)
     {
         return await context.ReferralRequests

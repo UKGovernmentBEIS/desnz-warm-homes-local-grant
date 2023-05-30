@@ -34,6 +34,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.CheckAnswers => CheckAnswersBackDestination(questionnaire),
                 QuestionFlowStep.Eligible => EligibleBackDestination(),
                 QuestionFlowStep.Confirmation => ConfirmationBackDestination(),
+                QuestionFlowStep.Ineligible => IneligibleBackDestination(),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -174,6 +175,12 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         private QuestionFlowStep ConfirmationBackDestination()
         {
             return QuestionFlowStep.Eligible;
+        }
+
+        private QuestionFlowStep IneligibleBackDestination()
+        {
+            return QuestionFlowStep.CheckAnswers;
+
         }
 
         private QuestionFlowStep GasBoilerForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)

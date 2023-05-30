@@ -38,7 +38,7 @@ public class QuestionnaireService
 
         return questionnaire;
     }
-    
+
     public Questionnaire UpdateGasBoiler(HasGasBoiler hasGasBoiler)
     {
         var questionnaire = GetQuestionnaire();
@@ -54,7 +54,7 @@ public class QuestionnaireService
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
-  
+
     public Questionnaire UpdateOwnershipStatus(OwnershipStatus ownershipStatus)
     {
         var questionnaire = GetQuestionnaire();
@@ -62,7 +62,7 @@ public class QuestionnaireService
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
-    
+
     public async Task<Questionnaire> UpdateAddressAsync(Address address)
 
     {
@@ -87,7 +87,7 @@ public class QuestionnaireService
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
-    
+
     public Questionnaire UpdateLocalAuthorityIsCorrect(bool laIsCorrect)
     {
         var questionnaire = GetQuestionnaire();
@@ -95,7 +95,7 @@ public class QuestionnaireService
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
-    
+
     public Questionnaire UpdateHouseholdIncome(IncomeBand incomeBand)
     {
         var questionnaire = GetQuestionnaire();
@@ -103,7 +103,7 @@ public class QuestionnaireService
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
-    
+
     public async Task<Questionnaire> GenerateReferralAsync(string name, string emailAddress, string telephone)
     {
         var questionnaire = GetQuestionnaire();
@@ -111,7 +111,7 @@ public class QuestionnaireService
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
-    
+
     public async Task<Questionnaire> RecordNotificationConsentAsync(bool consentGranted)
     {
         var questionnaire = GetQuestionnaire();
@@ -119,7 +119,7 @@ public class QuestionnaireService
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
-    
+
     private void SaveQuestionnaireToSession(Questionnaire questionnaire)
     {
         var questionnaireString = JsonSerializer.Serialize(questionnaire, JsonSerializerOptions);
