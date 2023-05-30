@@ -29,7 +29,17 @@ public record Questionnaire
     public IncomeBandEnum? IncomeBand { get; set; }
 
     public DateTime ReferralCreated { get; set; }
+    
+    public string Hug2ReferralId { get; set; }
+    
+    public string LaContactName { get; set; }
+    public string LaContactEmailAddress { get; set; }
+    public string LaContactTelephone { get; set; }
 
+    public bool? NotificationConsent { get; set; }
+
+    public string NotificationEmailAddress { get; set; }
+    
     public bool IsEligibleForHug2
     {
         get
@@ -45,11 +55,6 @@ public record Questionnaire
         }
     }
 
-
-    public string Hug2ReferralId { get; set; }
-
-    public ContactDetails ContactDetails { get; set; }
-
     public bool FoundEpcBandIsTooHigh => 
         EpcDetails is { EpcRating: EpcRating.A or EpcRating.B or EpcRating.C };
     
@@ -63,6 +68,20 @@ public record Questionnaire
             }
 
             return LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[CustodianCode].Name;
+        }
+    }
+
+    public string LocalAuthorityWebsite
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(CustodianCode) ||
+                !LocalAuthorityData.LocalAuthorityDetailsByCustodianCode.ContainsKey(CustodianCode))
+            {
+                return "unrecognised local authority";
+            }
+
+            return LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[CustodianCode].WebsiteUrl;
         }
     }
 

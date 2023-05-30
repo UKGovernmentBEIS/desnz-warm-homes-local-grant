@@ -22,7 +22,7 @@ namespace HerPublicWebsite.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ContactDetails", b =>
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.NotificationDetails", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,14 +30,14 @@ namespace HerPublicWebsite.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("FullName")
+                    b.Property<bool>("FutureSchemeNotificationConsent")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("FutureSchemeNotificationEmail")
                         .HasColumnType("text");
 
-                    b.Property<string>("LaContactEmailAddress")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LaContactTelephone")
-                        .HasColumnType("text");
+                    b.Property<int?>("ReferralRequestId")
+                        .HasColumnType("integer");
 
                     b.Property<uint>("xmin")
                         .IsConcurrencyToken()
@@ -45,6 +45,8 @@ namespace HerPublicWebsite.Data.Migrations
                         .HasColumnType("xid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ReferralRequestId");
 
                     b.ToTable("ContactDetails");
                 });
@@ -72,14 +74,20 @@ namespace HerPublicWebsite.Data.Migrations
                     b.Property<string>("AddressTown")
                         .HasColumnType("text");
 
-                    b.Property<int>("ContactDetailsId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ContactEmailAddress")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContactTelephone")
+                        .HasColumnType("text");
 
                     b.Property<string>("CustodianCode")
                         .HasColumnType("text");
 
                     b.Property<int>("EpcRating")
                         .HasColumnType("integer");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("text");
 
                     b.Property<int>("HasGasBoiler")
                         .HasColumnType("integer");
@@ -109,8 +117,6 @@ namespace HerPublicWebsite.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ContactDetailsId");
-
                     b.ToTable("ReferralRequests");
                 });
 
@@ -133,15 +139,13 @@ namespace HerPublicWebsite.Data.Migrations
                     b.ToTable("DataProtectionKeys");
                 });
 
-            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", b =>
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.NotificationDetails", b =>
                 {
-                    b.HasOne("HerPublicWebsite.BusinessLogic.Models.ContactDetails", "ContactDetails")
+                    b.HasOne("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", "ReferralRequest")
                         .WithMany()
-                        .HasForeignKey("ContactDetailsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReferralRequestId");
 
-                    b.Navigation("ContactDetails");
+                    b.Navigation("ReferralRequest");
                 });
 #pragma warning restore 612, 618
         }

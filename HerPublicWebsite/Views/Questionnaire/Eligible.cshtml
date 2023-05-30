@@ -36,7 +36,7 @@
                 Text = "Your application will progress faster if they are more easily able to contact you."
             })
 
-        <form action="@Url.Action(nameof(QuestionnaireController.Eligible_Get), "Questionnaire")" method="post" novalidate>
+        <form action="@Url.Action(nameof(QuestionnaireController.Eligible_Post), "Questionnaire")" method="post" novalidate>
             @(Html.HiddenFor(m => m.EntryPoint))
             @Html.AntiForgeryToken()
 

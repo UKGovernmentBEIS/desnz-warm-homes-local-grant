@@ -12,7 +12,6 @@ public class ReferralRequestBuilder
     {
         referralRequest = new ReferralRequest
         {
-            ContactDetails = new ContactDetailsBuilder(id).Build(),
             AddressLine1 = $"Address {id} line 1",
             AddressLine2 = $"Address {id} line 2",
             AddressTown = $"Town{id}",
@@ -26,7 +25,10 @@ public class ReferralRequestBuilder
             Uprn = $"100 111 222 {id:D3}",
             ReferralWrittenToCsv = false,
             RequestDate = new DateTime(2023, 01, 01, 13, 00, id),
-            IsLsoaProperty = false
+            IsLsoaProperty = false,
+            ContactEmailAddress = $"contact{id}@example.com",
+            FullName = $"Full Name{id}",
+            ContactTelephone = $"{id:D5} 123456"
         };
     }
     public ReferralRequest Build()

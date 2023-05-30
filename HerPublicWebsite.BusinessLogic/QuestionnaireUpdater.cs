@@ -97,17 +97,26 @@ public class QuestionnaireUpdater
 
     public async Task<Questionnaire> GenerateReferralAsync(Questionnaire questionnaire, string name, string emailAddress, string telephone)
     {
-        questionnaire.ContactDetails ??= new ContactDetails();
-
-        questionnaire.ContactDetails.FullName = name;
-        questionnaire.ContactDetails.LaContactEmailAddress = emailAddress;
-        questionnaire.ContactDetails.LaContactTelephone = telephone;
+        questionnaire.LaContactEmailAddress = emailAddress;
+        questionnaire.LaContactTelephone = telephone;
+        questionnaire.LaContactName = name;
 
         var referralRequest = new ReferralRequest(questionnaire);
         referralRequest = await dataAccessProvider.PersistNewReferralRequestAsync(referralRequest);
         
         questionnaire.Hug2ReferralId = referralRequest.ReferralCode;
         questionnaire.ReferralCreated = referralRequest.RequestDate;
+
+        return questionnaire;
+    }
+
+    public async Task<Questionnaire> RecordNotificationConsentAsync(Questionnaire questionnaire, bool consentGranted)
+    {
+        questionnaire.NotificationConsent = consentGranted;
+        questionnaire.NotificationEmailAddress = consentGranted ? questionnaire.LaContactEmailAddress : null;
+
+        var notificationContactDetails = new NotificationDetails(questionnaire);
+        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.Hug2ReferralId, notificationContactDetails);
 
         return questionnaire;
     }

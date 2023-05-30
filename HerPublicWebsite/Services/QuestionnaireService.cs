@@ -112,6 +112,14 @@ public class QuestionnaireService
         return questionnaire;
     }
     
+    public async Task<Questionnaire> RecordNotificationConsentAsync(bool consentGranted)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = await questionnaireUpdater.RecordNotificationConsentAsync(questionnaire, consentGranted);
+        SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+    
     private void SaveQuestionnaireToSession(Questionnaire questionnaire)
     {
         var questionnaireString = JsonSerializer.Serialize(questionnaire, JsonSerializerOptions);

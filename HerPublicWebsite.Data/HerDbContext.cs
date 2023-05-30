@@ -8,7 +8,7 @@ namespace HerPublicWebsite.Data;
 public class HerDbContext : DbContext, IDataProtectionKeyContext
 {
     public DbSet<ReferralRequest> ReferralRequests { get; set; }
-    public DbSet<ContactDetails> ContactDetails { get; set; }
+    public DbSet<NotificationDetails> NotificationDetails { get; set; }
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     
     public HerDbContext(DbContextOptions<HerDbContext> options) : base(options)
@@ -19,7 +19,6 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
     {
         SetupReferralRequests(modelBuilder);
         SetupContactDetails(modelBuilder);
-        SetupRelations(modelBuilder);
     }
 
     private void SetupReferralRequests(ModelBuilder modelBuilder)
@@ -42,25 +41,15 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
     private void SetupContactDetails(ModelBuilder modelBuilder)
     {
         // Contact details primary key
-        modelBuilder.Entity<ContactDetails>()
+        modelBuilder.Entity<NotificationDetails>()
             .Property<int>("Id")
             .HasColumnType("integer")
             .ValueGeneratedOnAdd();
-        modelBuilder.Entity<ContactDetails>()
+        modelBuilder.Entity<NotificationDetails>()
             .HasKey("Id");
         
         // Contact details row versioning
-        AddRowVersionColumn(modelBuilder.Entity<ContactDetails>());
-    }
-
-    private void SetupRelations(ModelBuilder modelBuilder)
-    {
-        // Set up the ReferralRequest -> ContactDetails relationship in the database
-        modelBuilder.Entity<ReferralRequest>()
-            .HasOne(rr => rr.ContactDetails)
-            .WithMany()
-            .HasForeignKey("ContactDetailsId")
-            .IsRequired();
+        AddRowVersionColumn(modelBuilder.Entity<NotificationDetails>());
     }
 
     private void AddRowVersionColumn<T>(EntityTypeBuilder<T> builder) where T : class

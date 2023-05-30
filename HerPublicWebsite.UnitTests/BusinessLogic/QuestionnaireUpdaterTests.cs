@@ -157,9 +157,9 @@ public class QuestionnaireUpdaterTests
         var result = await underTest.GenerateReferralAsync(questionnaire, "name", "email", "telephone");
         
         // Assert
-        result.ContactDetails.FullName.Should().Be("name");
-        result.ContactDetails.LaContactEmailAddress.Should().Be("email");
-        result.ContactDetails.LaContactTelephone.Should().Be("telephone");
+        result.LaContactName.Should().Be("name");
+        result.LaContactEmailAddress.Should().Be("email");
+        result.LaContactTelephone.Should().Be("telephone");
     }
     
     [Test]

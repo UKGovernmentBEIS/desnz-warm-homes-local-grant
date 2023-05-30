@@ -20,6 +20,10 @@ public class ReferralRequest
     public bool IsLsoaProperty { get; set; }
     public HasGasBoiler HasGasBoiler { get; set; } = HasGasBoiler.Unknown;
     public IncomeBand IncomeBand { get; set; }
+    
+    public string FullName { get; set; }
+    public string ContactEmailAddress { get; set; }
+    public string ContactTelephone { get; set; }
 
     public DateTime RequestDate { get; set; }
 
@@ -27,7 +31,7 @@ public class ReferralRequest
 
     public string ReferralCode { get; set; }
 
-    public ContactDetails ContactDetails { get; set; }
+
 
     public ReferralRequest()
     {
@@ -46,7 +50,9 @@ public class ReferralRequest
         IsLsoaProperty = questionnaire.IsLsoaProperty!.Value;
         HasGasBoiler = questionnaire.HasGasBoiler!.Value;
         IncomeBand = questionnaire.IncomeBand!.Value;
-        ContactDetails = questionnaire.ContactDetails;
+        FullName = questionnaire.LaContactName;
+        ContactEmailAddress = questionnaire.LaContactEmailAddress;
+        ContactTelephone = questionnaire.LaContactTelephone;
         RequestDate = DateTime.Now;
     }
 
