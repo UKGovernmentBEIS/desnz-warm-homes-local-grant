@@ -447,7 +447,7 @@ public class QuestionnaireController : Controller
     {
         if (viewModel.CanContactByEmail is not YesOrNo.Yes && viewModel.CanContactByPhone is not YesOrNo.Yes)
         {
-            ModelState.AddModelError(null, "Select at least one method to be contacted by");
+            ModelState.AddModelError(string.Empty, "Select at least one method to be contacted by");
         }
         
         if (!ModelState.IsValid)
@@ -468,8 +468,9 @@ public class QuestionnaireController : Controller
     }
     
     [HttpGet("confirmation")]
-    public IActionResult Confirmation_Get()
+    public IActionResult Confirmation_Get(bool emailPreferenceSubmitted)
     {
+        //qq:DCC variation based on whether we have email address already
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new ConfirmationViewModel()
         {
@@ -477,6 +478,7 @@ public class QuestionnaireController : Controller
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
             ConfirmationEmailAddress = questionnaire.LaContactEmailAddress,
+            EmailPreferenceSubmitted = emailPreferenceSubmitted,
             BackLink = GetBackUrl(QuestionFlowStep.Confirmation, questionnaire)
         };
 
@@ -488,15 +490,23 @@ public class QuestionnaireController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return Confirmation_Get();
+            return Confirmation_Get(viewModel.EmailPreferenceSubmitted);
         }
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanNotifyAboutFutureSchemes is YesOrNo.Yes);
         
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Confirmation, questionnaire, viewModel.EntryPoint);
+        var forwardArgs = GetActionArgumentsForQuestion(
+            nextStep,
+            viewModel.EntryPoint,
+            extraRouteValues: new Dictionary<string, object>
+            {
+                { "emailPreferenceSubmitted", true }
+            }
+        );
 
-        return RedirectToNextStep(nextStep, viewModel.EntryPoint);
+        return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
 
     [HttpGet("ineligible")]
