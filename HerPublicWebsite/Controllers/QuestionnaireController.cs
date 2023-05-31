@@ -470,7 +470,6 @@ public class QuestionnaireController : Controller
     [HttpGet("confirmation")]
     public IActionResult Confirmation_Get(bool emailPreferenceSubmitted)
     {
-        //qq:DCC variation based on whether we have email address already
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new ConfirmationViewModel()
         {
