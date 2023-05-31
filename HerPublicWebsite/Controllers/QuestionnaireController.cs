@@ -476,7 +476,7 @@ public class QuestionnaireController : Controller
             ReferenceCode = questionnaire.Hug2ReferralId,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
-            ConfirmationSentToEmailAddress = questionnaire.LaContactEmailAddress,
+            ConfirmationSentToEmailAddress = questionnaire.LaContactEmailAddress ?? questionnaire.ConfirmationEmailAddress,
             RequestEmailAddress = questionnaire.LaCanContactByEmail is not true,
             CanNotifyAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
             SendConfirmationDetails = questionnaire.ConfirmationConsent.ToNullableYesOrNo(),
