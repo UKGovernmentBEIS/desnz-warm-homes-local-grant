@@ -93,7 +93,7 @@
             Html = @<text>This is a new service – your <a class="govuk-link" href="@ViewBag.FeedbackUrl" target="_blank">feedback (opens in new tab)</a> will help us to improve it.</text>
         }))
 
-        @(RenderSection("BeforeMain", false))
+        @await RenderSectionAsync("BeforeMain", false)
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             @(await Html.GovUkErrorSummary(ViewData.ModelState))
@@ -138,5 +138,8 @@
     {
         <script>setUpGoogleAnalytics()</script>   
     }
+
+
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

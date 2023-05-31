@@ -170,3 +170,11 @@
 
     </div>
 </div>
+
+@section Scripts {
+    @if (!Model.EmailPreferenceSubmitted && Model.RequestEmailAddress)
+    {
+        <script language="JavaScript">ConfirmationPage.duplicateDefaultValue('ConfirmationEmailAddress', 'NotificationEmailAddress');</script>
+    }
+}
+
