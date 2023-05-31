@@ -476,7 +476,12 @@ public class QuestionnaireController : Controller
             ReferenceCode = questionnaire.Hug2ReferralId,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
-            ConfirmationEmailAddress = questionnaire.LaContactEmailAddress,
+            ConfirmationSentToEmailAddress = questionnaire.LaContactEmailAddress,
+            RequestEmailAddress = questionnaire.LaCanContactByEmail is not true,
+            CanNotifyAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
+            SendConfirmationDetails = questionnaire.ConfirmationConsent.ToNullableYesOrNo(),
+            ConfirmationEmailAddress = questionnaire.ConfirmationEmailAddress,
+            NotificationEmailAddress = questionnaire.NotificationEmailAddress,
             EmailPreferenceSubmitted = emailPreferenceSubmitted,
             BackLink = GetBackUrl(QuestionFlowStep.Confirmation, questionnaire)
         };
@@ -492,9 +497,22 @@ public class QuestionnaireController : Controller
             return Confirmation_Get(viewModel.EmailPreferenceSubmitted);
         }
 
-        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
-            viewModel.CanNotifyAboutFutureSchemes is YesOrNo.Yes);
-        
+        var questionnaire = questionnaireService.GetQuestionnaire();
+
+        if (questionnaire.LaCanContactByEmail is true)
+        {
+            questionnaire = await questionnaireService.RecordNotificationConsentAsync(
+                viewModel.CanNotifyAboutFutureSchemes is YesOrNo.Yes);
+        }
+        else
+        {
+            questionnaire = await questionnaireService.RecordConfirmationAndNotificationConsentAsync(
+                viewModel.CanNotifyAboutFutureSchemes is YesOrNo.Yes,
+                viewModel.NotificationEmailAddress,
+                viewModel.SendConfirmationDetails is YesOrNo.Yes,
+                viewModel.ConfirmationEmailAddress);
+        }
+
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Confirmation, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
