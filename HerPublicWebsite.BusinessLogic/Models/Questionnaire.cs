@@ -97,7 +97,7 @@ public record Questionnaire
         }
     }
 
-    public bool EpcIsTooHigh => FoundEpcBandIsTooHigh && EpcDetailsAreCorrect is not false;
+    public bool EpcIsTooHigh => EffectiveEpcBand is EpcRating.A or EpcRating.B or EpcRating.C;
 
     public bool IncomeIsTooHigh => IncomeBand is IncomeBandEnum.GreaterThan31000 && IsLsoaProperty is not true;
 }

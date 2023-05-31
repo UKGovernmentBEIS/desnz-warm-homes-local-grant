@@ -123,10 +123,11 @@ public class QuestionnaireUpdater
 
     public async Task<Questionnaire> RecordNotificationConsentAsync(Questionnaire questionnaire, bool consentGranted, string emailAddress)
     {
-        questionnaire.LaContactEmailAddress = emailAddress;
-        questionnaire.Hug2ReferralId = null;
+        questionnaire.NotificationConsent = consentGranted;
+        questionnaire.NotificationEmailAddress = consentGranted ? emailAddress : null;
 
-        await RecordNotificationConsentAsync(questionnaire, consentGranted);
+        var notificationContactDetails = new NotificationDetails(questionnaire);
+        await dataAccessProvider.PersistNotificationConsentAsync(null, notificationContactDetails);
 
         return questionnaire;
     }

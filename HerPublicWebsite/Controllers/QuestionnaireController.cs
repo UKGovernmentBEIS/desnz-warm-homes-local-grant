@@ -490,7 +490,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("ineligible")]
-    public IActionResult Ineligible_Get(bool submitted = false)
+    public IActionResult Ineligible_Get(bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new IneligibleViewModel
@@ -499,7 +499,7 @@ public class QuestionnaireController : Controller
             IncomeIsTooHigh = questionnaire.IncomeIsTooHigh,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
-            Submitted = submitted,
+            Submitted = emailPreferenceSubmitted,
             BackLink = GetBackUrl(QuestionFlowStep.Ineligible, questionnaire)
         };
 
@@ -511,7 +511,7 @@ public class QuestionnaireController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return Ineligible_Get();
+            return Ineligible_Get(false);
         }
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
@@ -525,7 +525,7 @@ public class QuestionnaireController : Controller
                             viewModel.EntryPoint,
                             extraRouteValues: new Dictionary<string, object>
                             {
-                                { "submitted", true}
+                                { "submitted", true }
                             }
                         );
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
