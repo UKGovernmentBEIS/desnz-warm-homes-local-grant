@@ -33,6 +33,8 @@ public record Questionnaire
     public string Hug2ReferralId { get; set; }
     
     public string LaContactName { get; set; }
+    public bool? LaCanContactByEmail { get; set; }
+    public bool? LaCanContactByPhone { get; set; }
     public string LaContactEmailAddress { get; set; }
     public string LaContactTelephone { get; set; }
 

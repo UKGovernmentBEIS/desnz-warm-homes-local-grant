@@ -15,6 +15,7 @@ using HerPublicWebsite.Models.Questionnaire;
 using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
@@ -431,6 +432,10 @@ public class QuestionnaireController : Controller
         var viewModel = new EligibleViewModel()
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
+            CanContactByEmail = questionnaire.LaCanContactByEmail.ToNullableYesOrNo(),
+            CanContactByPhone = questionnaire.LaCanContactByPhone.ToNullableYesOrNo(),
+            EmailAddress = questionnaire.LaContactEmailAddress,
+            Telephone = questionnaire.LaContactTelephone,
             BackLink = GetBackUrl(QuestionFlowStep.Eligible, questionnaire)
         };
 
@@ -440,6 +445,11 @@ public class QuestionnaireController : Controller
     [HttpPost("eligible")]
     public async Task<IActionResult> Eligible_Post(EligibleViewModel viewModel)
     {
+        if (viewModel.CanContactByEmail is not YesOrNo.Yes && viewModel.CanContactByPhone is not YesOrNo.Yes)
+        {
+            ModelState.AddModelError(string.Empty, "Select at least one method to be contacted by");
+        }
+        
         if (!ModelState.IsValid)
         {
             return Eligible_Get();
@@ -458,7 +468,7 @@ public class QuestionnaireController : Controller
     }
     
     [HttpGet("confirmation")]
-    public IActionResult Confirmation_Get()
+    public IActionResult Confirmation_Get(bool emailPreferenceSubmitted)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new ConfirmationViewModel()
@@ -467,6 +477,7 @@ public class QuestionnaireController : Controller
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
             ConfirmationEmailAddress = questionnaire.LaContactEmailAddress,
+            EmailPreferenceSubmitted = emailPreferenceSubmitted,
             BackLink = GetBackUrl(QuestionFlowStep.Confirmation, questionnaire)
         };
 
@@ -478,15 +489,23 @@ public class QuestionnaireController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return Confirmation_Get();
+            return Confirmation_Get(viewModel.EmailPreferenceSubmitted);
         }
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanNotifyAboutFutureSchemes is YesOrNo.Yes);
         
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Confirmation, questionnaire, viewModel.EntryPoint);
+        var forwardArgs = GetActionArgumentsForQuestion(
+            nextStep,
+            viewModel.EntryPoint,
+            extraRouteValues: new Dictionary<string, object>
+            {
+                { "emailPreferenceSubmitted", true }
+            }
+        );
 
-        return RedirectToNextStep(nextStep, viewModel.EntryPoint);
+        return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
 
     [HttpGet("ineligible")]

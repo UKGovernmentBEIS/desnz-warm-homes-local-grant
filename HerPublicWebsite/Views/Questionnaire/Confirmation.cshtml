@@ -37,36 +37,47 @@
                    Text = "Your local authority or their official contractor will contact you within 10 working days."
                })
 
-        <p class="govuk-body">To enquire about your application visit <a href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName council's website</a>.
-            Where you can find out other ways to improve the energy efficiency of your home.</p>
+        <p class="govuk-body">To enquire about your application visit <a href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName council's website</a>.</p>
 
-        <form action="@Url.Action(nameof(QuestionnaireController.Confirmation_Post), "Questionnaire")" method="post" novalidate>
-            @(Html.HiddenFor(m => m.EntryPoint))
-            @Html.AntiForgeryToken()
+        @if (Model.EmailPreferenceSubmitted)
+        {
+            @await Html.GovUkNotificationBanner(new NotificationBannerViewModel
+                   {
+                       TitleText = "Success",
+                       Text = "Your answers have been submitted.",
+                       Classes = "govuk-notification-banner--success"
+                   })
+        }
+        else
+        {
+            <form action="@Url.Action(nameof(QuestionnaireController.Confirmation_Post), "Questionnaire")" method="post" novalidate>
+                @(Html.HiddenFor(m => m.EntryPoint))
+                @Html.AntiForgeryToken()
 
-            @await Html.GovUkRadiosFor(
-                       m => m.CanNotifyAboutFutureSchemes,
-                       fieldsetOptions: new FieldsetViewModel
-                       {
-                           Legend = new LegendViewModel
+                @await Html.GovUkRadiosFor(
+                           m => m.CanNotifyAboutFutureSchemes,
+                           fieldsetOptions: new FieldsetViewModel
                            {
-                               Text = "Can we email you about future energy grants?",
-                               Classes = "govuk-fieldset__legend--m",
+                               Legend = new LegendViewModel
+                               {
+                                   Text = "Can we email you about future energy grants?",
+                                   Classes = "govuk-fieldset__legend--m",
+                               },
                            },
-                       },
-                       new HintViewModel
-                       {
-                           Text = "We will only email you when new grants for homes become available."
-                       }
-                       )
+                           new HintViewModel
+                           {
+                               Text = "We will only email you when new grants for homes become available."
+                           }
+                           )
 
-            <div class="govuk-button-group">
-                @(await Html.GovUkButton(new ButtonViewModel
-                {
-                    Text = "Submit",
-                }))
-            </div>
-        </form>
+                <div class="govuk-button-group">
+                    @(await Html.GovUkButton(new ButtonViewModel
+                    {
+                        Text = "Submit",
+                    }))
+                </div>
+            </form>
+        }
 
         <h3 class="govuk-heading-s">Give feeback</h3>
 
