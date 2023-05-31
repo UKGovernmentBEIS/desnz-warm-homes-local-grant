@@ -441,7 +441,7 @@ public class QuestionnaireController : Controller
 
         return View("Eligible", viewModel);
     }
-    
+
     [HttpPost("eligible")]
     public async Task<IActionResult> Eligible_Post(EligibleViewModel viewModel)
     {
@@ -466,7 +466,7 @@ public class QuestionnaireController : Controller
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
-    
+
     [HttpGet("confirmation")]
     public IActionResult Confirmation_Get(bool emailPreferenceSubmitted)
     {
@@ -512,6 +512,19 @@ public class QuestionnaireController : Controller
     public IActionResult Ineligible_Get()
     {
         return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
+    }
+
+    [HttpGet("no-consent")]
+    public IActionResult NoConsent_Get()
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new NoConsentViewModel()
+        {
+            LocalAuthorityName = questionnaire.LocalAuthorityName,
+            LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
+            BackLink = GetBackUrl(QuestionFlowStep.NoConsent, questionnaire)
+        };
+        return View("NoConsent", viewModel);
     }
 
     private string GetBackUrl(

@@ -19,4 +19,5 @@ public enum QuestionFlowStep
     Eligible,
     Confirmation,
     Ineligible,
+    NoConsent
 }
