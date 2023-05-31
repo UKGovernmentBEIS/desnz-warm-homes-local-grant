@@ -436,7 +436,7 @@ public class QuestionnaireController : Controller
 
         return View("Eligible", viewModel);
     }
-    
+
     [HttpPost("eligible")]
     public async Task<IActionResult> Eligible_Post(EligibleViewModel viewModel)
     {
@@ -449,14 +449,14 @@ public class QuestionnaireController : Controller
             viewModel.Name,
             viewModel.CanContactByEmail is YesOrNo.Yes ? viewModel.EmailAddress : null,
             viewModel.CanContactByPhone is YesOrNo.Yes ? viewModel.Telephone : null);
-        
+
         await googleAnalyticsService.SendReferralGeneratedEvent(Request);
-        
+
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Eligible, questionnaire, viewModel.EntryPoint);
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
-    
+
     [HttpGet("confirmation")]
     public IActionResult Confirmation_Get()
     {
@@ -472,7 +472,7 @@ public class QuestionnaireController : Controller
 
         return View("Confirmation", viewModel);
     }
-    
+
     [HttpPost("confirmation")]
     public async Task<IActionResult> Confirmation_Post(ConfirmationViewModel viewModel)
     {
@@ -483,7 +483,7 @@ public class QuestionnaireController : Controller
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanNotifyAboutFutureSchemes is YesOrNo.Yes);
-        
+
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Confirmation, questionnaire, viewModel.EntryPoint);
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
@@ -495,8 +495,8 @@ public class QuestionnaireController : Controller
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new IneligibleViewModel
         {
-            FoundEpcIsTooHigh = questionnaire.FoundEpcBandIsTooHigh && (questionnaire.EpcDetailsAreCorrect ?? true),
-            IncomeBand = questionnaire.IncomeBand,
+            EpcIsTooHigh = questionnaire.EpcIsTooHigh,
+            IncomeIsTooHigh = questionnaire.IncomeIsTooHigh,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
             Submitted = submitted,
@@ -514,12 +514,21 @@ public class QuestionnaireController : Controller
             return Ineligible_Get();
         }
 
-        if (viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes)
-        {
-            await questionnaireService.AddFutureNotificationContactDetailsAsync(viewModel.EmailAddress);
-        }
+        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
+                viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
+                viewModel.EmailAddress
+                );
 
-        return Ineligible_Get(true);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.Ineligible, questionnaire, viewModel.EntryPoint);
+        var forwardArgs = GetActionArgumentsForQuestion(
+                            nextStep,
+                            viewModel.EntryPoint,
+                            extraRouteValues: new Dictionary<string, object>
+                            {
+                                { "submitted", true}
+                            }
+                        );
+        return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
 
     private string GetBackUrl(

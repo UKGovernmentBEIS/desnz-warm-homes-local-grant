@@ -120,4 +120,14 @@ public class QuestionnaireUpdater
 
         return questionnaire;
     }
+
+    public async Task<Questionnaire> RecordNotificationConsentAsync(Questionnaire questionnaire, bool consentGranted, string emailAddress)
+    {
+        questionnaire.LaContactEmailAddress = emailAddress;
+        questionnaire.Hug2ReferralId = null;
+
+        await RecordNotificationConsentAsync(questionnaire, consentGranted);
+
+        return questionnaire;
+    }
 }

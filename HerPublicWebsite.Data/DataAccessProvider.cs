@@ -26,10 +26,14 @@ public class DataAccessProvider : IDataAccessProvider
     {
         if (details.FutureSchemeNotificationConsent)
         {
-            var referralRequest =
-                context.ReferralRequests.Single(rr => rr.ReferralCode == referralCode);
+            if (referralCode is not null)
+            {
+                var referralRequest =
+                    context.ReferralRequests
+                    .Single(rr => rr.ReferralCode == referralCode);
 
-            details.ReferralRequest = referralRequest;
+                details.ReferralRequest = referralRequest;
+            }
 
             context.NotificationDetails.Add(details);
             await context.SaveChangesAsync();

@@ -56,6 +56,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.CheckAnswers => CheckAnswersForwardDestination(questionnaire),
                 QuestionFlowStep.Eligible => EligibleForwardDestination(questionnaire),
                 QuestionFlowStep.Confirmation => ConfirmationForwardDestination(questionnaire),
+                QuestionFlowStep.Ineligible => IneligibleForwardDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
             };
         }
@@ -276,6 +277,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         private QuestionFlowStep ConfirmationForwardDestination(Questionnaire questionnaire)
         {
             return QuestionFlowStep.Confirmation;
+        }
+
+        private QuestionFlowStep IneligibleForwardDestination(Questionnaire questionnaire)
+        {
+            return QuestionFlowStep.Ineligible;
         }
     }
 }

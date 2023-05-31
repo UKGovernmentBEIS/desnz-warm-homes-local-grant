@@ -26,13 +26,13 @@
         
         <p class="govuk-body">
             @{
-                switch (Model.FoundEpcIsTooHigh, Model.IncomeBand)  {
-                    case (true, IncomeBand.GreaterThan31000):
+                switch (Model.EpcIsTooHigh, Model.IncomeIsTooHigh)  {
+                    case (true, true):
                         <text>
                             You are not eligible for the Home Upgrade Grant because your EPC rating is A, B, or C and your income is more than £31,000 but you may be able to get other help for your energy needs.
                          </text>;
                         break;
-                    case (true, IncomeBand.UnderOrEqualTo31000):
+                    case (true, false):
                         <text>
                             You are not eligible for the Home Upgrade Grant because your EPC rating is A, B, or C but you may be able to get other help for your energy needs.
                          </text>;

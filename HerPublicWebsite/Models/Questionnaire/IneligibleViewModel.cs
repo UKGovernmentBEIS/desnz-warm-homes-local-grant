@@ -15,9 +15,9 @@ public class IneligibleViewModel : QuestionFlowViewModel
 
     public bool IsEmailAddressRequired => CanContactByEmailAboutFutureSchemes is YesOrNo.Yes;
 
-    public bool FoundEpcIsTooHigh { get; set; }
+    public bool EpcIsTooHigh { get; set; }
 
-    public IncomeBandEnum? IncomeBand { get; set; }
+    public bool IncomeIsTooHigh { get; set; }
 
     public string LocalAuthorityName { get; set; }
 

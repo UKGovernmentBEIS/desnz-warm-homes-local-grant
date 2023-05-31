@@ -480,6 +480,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Confirmation),
         new(
+            "Ineligible continues to ineligible",
+            new Input(
+                QuestionFlowStep.Ineligible
+            ),
+            QuestionFlowStep.Ineligible),
+        new(
             "Gas boiler continues to direct to ECO if the user has a boiler and was changing answer",
             new Input(
                 QuestionFlowStep.GasBoiler,
