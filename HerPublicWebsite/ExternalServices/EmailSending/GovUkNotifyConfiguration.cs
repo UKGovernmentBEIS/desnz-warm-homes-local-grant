@@ -5,23 +5,15 @@
         public const string ConfigSection = "GovUkNotify";
         
         public string ApiKey { get; set; }
-        public string BaseUrl { get; set; }
-        public ApplicationReferenceNumberConfiguration ApplicationReferenceNumberTemplate { get; set; }
-        public RequestDocumentConfiguration RequestDocumentTemplate { get; set; }
-    }
-    
-    public class ApplicationReferenceNumberConfiguration
-    {
-        public string Id { get; set; }
-        public string ReferencePlaceholder { get; set; }
-        public string MagicLinkPlaceholder { get; set; }
-        public string ReturningUserLinkPlaceholder { get; set; }
-        public string FeedbackLinkPlaceholder { get; set; }
+        public ReferenceCodeConfiguration ReferenceCodeTemplate { get; set; }
     }
 
-    public class RequestDocumentConfiguration
+    public class ReferenceCodeConfiguration
     {
         public string Id { get; set; }
-        public string DocumentContentsPlaceholder { get; set; }
+        public string RecipientNamePlaceholder { get; set; }
+        public string ReferenceCodePlaceholder { get; set; }
+        public string LocalAuthorityNamePlaceholder { get; set; }
+        public string LocalAuthorityWebsiteUrlPlaceholder { get; set; }
     }
 }
