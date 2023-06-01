@@ -107,6 +107,18 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectLocalAuthority),
         new(
+            "Not taking part goes back to Address if UPRN found",
+            new Input(
+                QuestionFlowStep.NotTakingPart, uprn: "100023336956"
+            ),
+            QuestionFlowStep.Address),
+        new(
+            "Not taking part goes back to confirm local authority if no UPRN found",
+            new Input(
+                QuestionFlowStep.NotTakingPart, uprn: null
+            ),
+            QuestionFlowStep.ConfirmLocalAuthority),
+        new(
             "Household income goes back to Address if UPRN found",
             new Input(
                 QuestionFlowStep.HouseholdIncome, uprn: "100023336956"
@@ -265,6 +277,20 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectLocalAuthority),
         new(
+            "Not taking part goes back to Address if UPRN found if was changing answer",
+            new Input(
+                QuestionFlowStep.NotTakingPart, uprn: "100023336956",
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.Address),
+        new(
+            "Not taking part goes back to confirm local authority if no UPRN found if was changing answer",
+            new Input(
+                QuestionFlowStep.NotTakingPart, uprn: null,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.ConfirmLocalAuthority),
+        new(
             "Household income goes back to check answers if was changing answer",
             new Input(
                 QuestionFlowStep.HouseholdIncome,
@@ -396,6 +422,14 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectAddress),
         new(
+            "Address selection continues to not taking part if local authority is not participating",
+            new Input(
+                QuestionFlowStep.SelectAddress,
+                epcRating: EpcRating.D,
+                custodianCode: "9052"
+            ),
+            QuestionFlowStep.NotTakingPart),
+        new(
             "Address selection continues to household income if EPC is low",
             new Input(
                 QuestionFlowStep.SelectAddress,
@@ -449,6 +483,14 @@ public class QuestionFlowServiceTests
                 localAuthorityIsCorrect: true
             ),
             QuestionFlowStep.HouseholdIncome),
+        new(
+            "Confirm local authority continues to not taking part if authority is not taking part",
+            new Input(
+                QuestionFlowStep.ConfirmLocalAuthority,
+                localAuthorityIsCorrect: true,
+                custodianCode: "9052"
+            ),
+            QuestionFlowStep.NotTakingPart),
         new(
             "Household income continues to check answers",
             new Input(
@@ -587,6 +629,15 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectAddress),
         new(
+            "Address selection continues to not taking part if local authority is not participating and was changing answer",
+            new Input(
+                QuestionFlowStep.SelectAddress,
+                epcRating: EpcRating.D,
+                custodianCode: "9052",
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.NotTakingPart),
+        new(
             "Address selection returns to check answers income if EPC is low and was changing answer",
             new Input(
                 QuestionFlowStep.SelectAddress,
@@ -648,7 +699,15 @@ public class QuestionFlowServiceTests
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.CheckAnswers),
-
+        new(
+            "Confirm local authority continues to not taking part if authority is not taking part if was changing answer",
+            new Input(
+                QuestionFlowStep.ConfirmLocalAuthority,
+                localAuthorityIsCorrect: true,
+                custodianCode: "9052",
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.NotTakingPart),
         new(
             "Household income continues to check answers if was changing answer",
             new Input(
@@ -697,6 +756,7 @@ public class QuestionFlowServiceTests
             EpcRating? epcRating = null,
             IncomeBand? incomeBand = null,
             bool localAuthorityIsCorrect = false,
+            string custodianCode = null,
             QuestionFlowStep? entryPoint = null)
         {
             Page = page;
@@ -710,6 +770,7 @@ public class QuestionFlowServiceTests
                 EpcDetails = epcRating == null ? null : new EpcDetails { EpcRating = epcRating },
                 IncomeBand = incomeBand,
                 LocalAuthorityConfirmed = localAuthorityIsCorrect,
+                CustodianCode = custodianCode,
             };
             EntryPoint = entryPoint;
         }

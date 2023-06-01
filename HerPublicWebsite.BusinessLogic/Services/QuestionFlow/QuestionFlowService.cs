@@ -27,6 +27,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.Address => AddressBackDestination(entryPoint),
                 QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
                 QuestionFlowStep.ReviewEpc => ReviewEpcBackDestination(),
+                QuestionFlowStep.NotTakingPart => NotTakingPartBackDestination(questionnaire),
                 QuestionFlowStep.ManualAddress => ManualAddressBackDestination(entryPoint),
                 QuestionFlowStep.SelectLocalAuthority => SelectLocalAuthorityBackDestination(),
                 QuestionFlowStep.ConfirmLocalAuthority => ConfirmLocalAuthorityBackDestination(),
@@ -53,6 +54,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.ManualAddress => ManualAddressForwardDestination(questionnaire),
                 QuestionFlowStep.SelectLocalAuthority => SelectLocalAuthorityForwardDestination(questionnaire),
                 QuestionFlowStep.ConfirmLocalAuthority => ConfirmLocalAuthorityForwardDestination(questionnaire, entryPoint),
+                QuestionFlowStep.NotTakingPart => NotTakingPartForwardDestination(questionnaire),
                 QuestionFlowStep.HouseholdIncome => HouseholdIncomeForwardDestination(questionnaire),
                 QuestionFlowStep.CheckAnswers => CheckAnswersForwardDestination(questionnaire),
                 QuestionFlowStep.Eligible => EligibleForwardDestination(questionnaire),
@@ -150,6 +152,15 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return QuestionFlowStep.SelectLocalAuthority;
         }
 
+        private QuestionFlowStep NotTakingPartBackDestination(Questionnaire questionnaire)
+        {
+            return questionnaire.Uprn switch
+            {
+                null => QuestionFlowStep.ConfirmLocalAuthority,
+                _ => QuestionFlowStep.Address
+            };
+        }
+
         private QuestionFlowStep HouseholdIncomeBackDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
             if (questionnaire.FoundEpcBandIsTooHigh)
@@ -228,10 +239,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
-            return (entryPoint, questionnaire.FoundEpcBandIsTooHigh) switch
+            return (entryPoint, questionnaire.LocalAuthorityHug2Status, questionnaire.FoundEpcBandIsTooHigh) switch
             {
-                (_, true) => QuestionFlowStep.ReviewEpc,
-                (QuestionFlowStep.Address, _) => QuestionFlowStep.CheckAnswers,
+                (_, LocalAuthorityData.Hug2Status.NotTakingPart, _) => QuestionFlowStep.NotTakingPart,
+                (_, _, true) => QuestionFlowStep.ReviewEpc,
+                (QuestionFlowStep.Address, _, _) => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.HouseholdIncome
             };
         }
@@ -258,12 +270,18 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep ConfirmLocalAuthorityForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
-            return (entryPoint, questionnaire.LocalAuthorityConfirmed) switch
+            return (entryPoint, questionnaire.LocalAuthorityHug2Status, questionnaire.LocalAuthorityConfirmed) switch
             {
-                (_, not true) => QuestionFlowStep.SelectLocalAuthority,
-                (QuestionFlowStep.Address, _) => QuestionFlowStep.CheckAnswers,
+                (_, _, not true) => QuestionFlowStep.SelectLocalAuthority,
+                (_, LocalAuthorityData.Hug2Status.NotTakingPart, _) => QuestionFlowStep.NotTakingPart,
+                (QuestionFlowStep.Address, _, _) => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.HouseholdIncome
             };
+        }
+
+        private QuestionFlowStep NotTakingPartForwardDestination(Questionnaire questionnaire)
+        {
+            return QuestionFlowStep.NotTakingPart;
         }
 
         private QuestionFlowStep HouseholdIncomeForwardDestination(Questionnaire questionnaire)

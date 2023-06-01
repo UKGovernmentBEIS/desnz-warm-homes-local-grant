@@ -373,6 +373,46 @@ public class QuestionnaireController : Controller
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
 
+    [HttpGet("not-taking-part")]
+    public IActionResult NotTakingPart_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new NotTakingPartViewModel()
+        {
+            LocalAuthorityName = questionnaire.LocalAuthorityName,
+            Submitted = emailPreferenceSubmitted,
+            EntryPoint = entryPoint,
+            BackLink = GetBackUrl(QuestionFlowStep.ConfirmLocalAuthority, questionnaire, entryPoint)
+        };
+
+        return View("NotTakingPart", viewModel);
+    }
+
+    [HttpPost("not-taking-part")]
+    public async Task<IActionResult> NotTakingPart_Post(IneligibleViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return NotTakingPart_Get(viewModel.EntryPoint, false);
+        }
+
+        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
+                viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
+                viewModel.EmailAddress
+                );
+
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.NotTakingPart, questionnaire, viewModel.EntryPoint);
+        var forwardArgs = GetActionArgumentsForQuestion(
+                            nextStep,
+                            viewModel.EntryPoint,
+                            extraRouteValues: new Dictionary<string, object>
+                            {
+                                { "emailPreferenceSubmitted", true }
+                            }
+                        );
+        return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
+    }
+
     [HttpGet("income")]
     public IActionResult HouseholdIncome_Get(QuestionFlowStep? entryPoint)
     {
@@ -616,6 +656,7 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.ManualAddress => new PathByActionArguments(nameof(ManualAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.SelectLocalAuthority => new PathByActionArguments(nameof(SelectLocalAuthority_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.ConfirmLocalAuthority => new PathByActionArguments(nameof(ConfirmLocalAuthority_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.NotTakingPart => new PathByActionArguments(nameof(NotTakingPart_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.HouseholdIncome => new PathByActionArguments(nameof(HouseholdIncome_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.CheckAnswers => new PathByActionArguments(nameof(CheckAnswers_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.Ineligible => new PathByActionArguments(nameof(Ineligible_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
