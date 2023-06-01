@@ -381,8 +381,10 @@ public class QuestionnaireController : Controller
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             Submitted = emailPreferenceSubmitted,
+            EmailAddress = questionnaire.NotificationEmailAddress,
+            CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
             EntryPoint = entryPoint,
-            BackLink = GetBackUrl(QuestionFlowStep.ConfirmLocalAuthority, questionnaire, entryPoint)
+            BackLink = GetBackUrl(QuestionFlowStep.NotTakingPart, questionnaire, entryPoint)
         };
 
         return View("NotTakingPart", viewModel);
@@ -576,6 +578,8 @@ public class QuestionnaireController : Controller
             IncomeIsTooHigh = questionnaire.IncomeIsTooHigh,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
+            EmailAddress = questionnaire.NotificationEmailAddress,
+            CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
             Submitted = emailPreferenceSubmitted,
             BackLink = GetBackUrl(QuestionFlowStep.Ineligible, questionnaire)
         };
