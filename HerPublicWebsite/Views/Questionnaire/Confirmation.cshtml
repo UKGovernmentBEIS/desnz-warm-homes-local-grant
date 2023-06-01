@@ -2,6 +2,7 @@
 @using GovUkDesignSystem.GovUkDesignSystemComponents
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using HerPublicWebsite.Controllers
+@using HerPublicWebsite.Models.Enums
 
 @model HerPublicWebsite.Models.Questionnaire.ConfirmationViewModel
 
@@ -22,9 +23,9 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         
-        @if (!string.IsNullOrEmpty(Model.ConfirmationEmailAddress))
+        @if (!string.IsNullOrEmpty(Model.ConfirmationSentToEmailAddress))
         {
-            <p class="govuk-body">You will receive an email confirmation at <strong>@Model.ConfirmationEmailAddress</strong></p>
+            <p class="govuk-body">You will receive an email confirmation at <strong>@Model.ConfirmationSentToEmailAddress</strong></p>
         }
 
         <h2 class="govuk-heading-l">What happens next</h2>
@@ -37,36 +38,127 @@
                    Text = "Your local authority or their official contractor will contact you within 10 working days."
                })
 
-        <p class="govuk-body">To enquire about your application visit <a href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName council's website</a>.
-            Where you can find out other ways to improve the energy efficiency of your home.</p>
+        <p class="govuk-body">To enquire about your application visit <a href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName council's website</a>.</p>
 
-        <form action="@Url.Action(nameof(QuestionnaireController.Confirmation_Post), "Questionnaire")" method="post" novalidate>
-            @(Html.HiddenFor(m => m.EntryPoint))
-            @Html.AntiForgeryToken()
+        @if (Model.EmailPreferenceSubmitted)
+        {
+            @await Html.GovUkNotificationBanner(new NotificationBannerViewModel
+                   {
+                       TitleText = "Success",
+                       Text = "Your answers have been submitted.",
+                       Classes = "govuk-notification-banner--success"
+                   })
+        }
+        else
+        {
+            @if (Model.RequestEmailAddress)
+            {
+                <form action="@Url.Action(nameof(QuestionnaireController.Confirmation_Post), "Questionnaire")" method="post" novalidate>
+                    @(Html.HiddenFor(m => m.EntryPoint))
+                    @(Html.HiddenFor(m => m.RequestEmailAddress))
+                    @Html.AntiForgeryToken()
+                    
+                    @await Html.GovUkRadiosFor(
+                               m => m.SendConfirmationDetails,
+                               fieldsetOptions: new FieldsetViewModel
+                               {
+                                   Legend = new LegendViewModel
+                                   {
+                                       Text = "Can we email you the confirmation details?",
+                                       Classes = "govuk-fieldset__legend--m",
+                                   },
+                               },
+                               conditionalOptions: new Dictionary<YesOrNo, Conditional>
+                               {
+                                   {
+                                       YesOrNo.Yes,
+                                       new Conditional
+                                       {
+                                           Html = (@<text>
+                                                       @await Html.GovUkTextInputFor(
+                                                                  m => m.ConfirmationEmailAddress,
+                                                                  labelOptions: new LabelViewModel
+                                                                  {
+                                                                      Text = "Email address",
+                                                                  },
+                                                                  classes: "govuk-input govuk-input--width-20")
+                                                    </text>)
+                                       }
+                                   }
+                               })
+						
+                    @await Html.GovUkRadiosFor(
+                               m => m.CanNotifyAboutFutureSchemes,
+                               fieldsetOptions: new FieldsetViewModel
+                               {
+                                   Legend = new LegendViewModel
+                                   {
+                                       Text = "Can we email you about future energy grants?",
+                                       Classes = "govuk-fieldset__legend--m",
+                                   },
+                               },
+                               new HintViewModel
+                               {
+                                   Text = "We will only email you when new grants for homes become available."
+                               },
+                               conditionalOptions: new Dictionary<YesOrNo, Conditional>
+                               {
+                                   {
+                                       YesOrNo.Yes,
+                                       new Conditional
+                                       {
+                                           Html = (@<text>
+                                                       @await Html.GovUkTextInputFor(
+                                                                  m => m.NotificationEmailAddress,
+                                                                  labelOptions: new LabelViewModel
+                                                                  {
+                                                                      Text = "Email address",
+                                                                  },
+                                                                  classes: "govuk-input govuk-input--width-20")
+                                                    </text>)
+                                       }
+                                   }
+                               })
 
-            @await Html.GovUkRadiosFor(
-                       m => m.CanNotifyAboutFutureSchemes,
-                       fieldsetOptions: new FieldsetViewModel
-                       {
-                           Legend = new LegendViewModel
-                           {
-                               Text = "Can we email you about future energy grants?",
-                               Classes = "govuk-fieldset__legend--m",
-                           },
-                       },
-                       new HintViewModel
-                       {
-                           Text = "We will only email you when new grants for homes become available."
-                       }
-                       )
 
-            <div class="govuk-button-group">
-                @(await Html.GovUkButton(new ButtonViewModel
-                {
-                    Text = "Submit",
-                }))
-            </div>
-        </form>
+                    <div class="govuk-button-group">
+                        @(await Html.GovUkButton(new ButtonViewModel
+                        {
+                            Text = "Submit",
+                        }))
+                    </div>
+                </form>
+            }
+            else
+            {
+                <form action="@Url.Action(nameof(QuestionnaireController.Confirmation_Post), "Questionnaire")" method="post" novalidate>
+                    @(Html.HiddenFor(m => m.EntryPoint))
+                    @Html.AntiForgeryToken()
+
+                    @await Html.GovUkRadiosFor(
+                               m => m.CanNotifyAboutFutureSchemes,
+                               fieldsetOptions: new FieldsetViewModel
+                               {
+                                   Legend = new LegendViewModel
+                                   {
+                                       Text = "Can we email you about future energy grants?",
+                                       Classes = "govuk-fieldset__legend--m",
+                                   },
+                               },
+                               new HintViewModel
+                               {
+                                   Text = "We will only email you when new grants for homes become available."
+                               })
+
+                    <div class="govuk-button-group">
+                        @(await Html.GovUkButton(new ButtonViewModel
+                        {
+                            Text = "Submit",
+                        }))
+                    </div>
+                </form>
+            }
+        }
 
         <h3 class="govuk-heading-s">Give feeback</h3>
 
@@ -78,3 +170,11 @@
 
     </div>
 </div>
+
+@section Scripts {
+    @if (!Model.EmailPreferenceSubmitted && Model.RequestEmailAddress)
+    {
+        <script language="JavaScript">ConfirmationPage.duplicateDefaultValue('ConfirmationEmailAddress', 'NotificationEmailAddress');</script>
+    }
+}
+

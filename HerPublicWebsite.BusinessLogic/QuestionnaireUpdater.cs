@@ -97,6 +97,8 @@ public class QuestionnaireUpdater
 
     public async Task<Questionnaire> GenerateReferralAsync(Questionnaire questionnaire, string name, string emailAddress, string telephone)
     {
+        questionnaire.LaCanContactByEmail = !string.IsNullOrEmpty(emailAddress);
+        questionnaire.LaCanContactByPhone = !string.IsNullOrEmpty(telephone);
         questionnaire.LaContactEmailAddress = emailAddress;
         questionnaire.LaContactTelephone = telephone;
         questionnaire.LaContactName = name;
@@ -106,6 +108,8 @@ public class QuestionnaireUpdater
 
         questionnaire.Hug2ReferralId = referralRequest.ReferralCode;
         questionnaire.ReferralCreated = referralRequest.RequestDate;
+
+        // TODO BEISHER-516 Send confirmation email
 
         return questionnaire;
     }
@@ -128,6 +132,26 @@ public class QuestionnaireUpdater
 
         var notificationContactDetails = new NotificationDetails(questionnaire);
         await dataAccessProvider.PersistNotificationConsentAsync(null, notificationContactDetails);
+
+        return questionnaire;
+    }
+
+    public async Task<Questionnaire> RecordConfirmationAndNotificationConsentAsync(
+        Questionnaire questionnaire,
+        bool notificationConsentGranted,
+        string notificationEmailAddress,
+        bool confirmationConsentGranted,
+        string confirmationEmailAddress)
+    {
+        questionnaire.NotificationConsent = notificationConsentGranted;
+        questionnaire.NotificationEmailAddress = notificationConsentGranted ? notificationEmailAddress : null;
+        questionnaire.ConfirmationConsent = confirmationConsentGranted;
+        questionnaire.ConfirmationEmailAddress = confirmationConsentGranted ? confirmationEmailAddress : null;
+
+        var notificationContactDetails = new NotificationDetails(questionnaire);
+        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.Hug2ReferralId, notificationContactDetails);
+
+        // TODO BEISHER-516 Send confirmation email if requested
 
         return questionnaire;
     }

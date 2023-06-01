@@ -33,12 +33,16 @@ public record Questionnaire
     public string Hug2ReferralId { get; set; }
 
     public string LaContactName { get; set; }
+    public bool? LaCanContactByEmail { get; set; }
+    public bool? LaCanContactByPhone { get; set; }
     public string LaContactEmailAddress { get; set; }
     public string LaContactTelephone { get; set; }
 
     public bool? NotificationConsent { get; set; }
-
+    public bool? ConfirmationConsent { get; set; }
     public string NotificationEmailAddress { get; set; }
+
+    public string ConfirmationEmailAddress { get; set; }
 
     public bool IsEligibleForHug2 =>
             (IncomeIsTooHigh, HasGasBoiler, EpcIsTooHigh, Country, OwnershipStatus) is
