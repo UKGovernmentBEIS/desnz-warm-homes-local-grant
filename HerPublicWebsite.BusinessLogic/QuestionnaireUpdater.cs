@@ -12,7 +12,7 @@ public class QuestionnaireUpdater
     private readonly IDataAccessProvider dataAccessProvider;
 
     public QuestionnaireUpdater(
-        IEpcApi epcApi, 
+        IEpcApi epcApi,
         IEligiblePostcodeService eligiblePostcodeService,
         IDataAccessProvider dataAccessProvider)
     {
@@ -81,7 +81,7 @@ public class QuestionnaireUpdater
         questionnaire.LocalAuthorityConfirmed = null;
         return questionnaire;
     }
-    
+
     public Questionnaire UpdateLocalAuthorityIsCorrect(Questionnaire questionnaire, bool? confirmed)
     {
         questionnaire.LocalAuthorityConfirmed = confirmed;
@@ -105,10 +105,10 @@ public class QuestionnaireUpdater
 
         var referralRequest = new ReferralRequest(questionnaire);
         referralRequest = await dataAccessProvider.PersistNewReferralRequestAsync(referralRequest);
-        
+
         questionnaire.Hug2ReferralId = referralRequest.ReferralCode;
         questionnaire.ReferralCreated = referralRequest.RequestDate;
-        
+
         // TODO BEISHER-516 Send confirmation email
 
         return questionnaire;
@@ -125,6 +125,17 @@ public class QuestionnaireUpdater
         return questionnaire;
     }
 
+    public async Task<Questionnaire> RecordNotificationConsentAsync(Questionnaire questionnaire, bool consentGranted, string emailAddress)
+    {
+        questionnaire.NotificationConsent = consentGranted;
+        questionnaire.NotificationEmailAddress = consentGranted ? emailAddress : null;
+
+        var notificationContactDetails = new NotificationDetails(questionnaire);
+        await dataAccessProvider.PersistNotificationConsentAsync(null, notificationContactDetails);
+
+        return questionnaire;
+    }
+
     public async Task<Questionnaire> RecordConfirmationAndNotificationConsentAsync(
         Questionnaire questionnaire,
         bool notificationConsentGranted,
@@ -136,10 +147,10 @@ public class QuestionnaireUpdater
         questionnaire.NotificationEmailAddress = notificationConsentGranted ? notificationEmailAddress : null;
         questionnaire.ConfirmationConsent = confirmationConsentGranted;
         questionnaire.ConfirmationEmailAddress = confirmationConsentGranted ? confirmationEmailAddress : null;
-        
+
         var notificationContactDetails = new NotificationDetails(questionnaire);
         await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.Hug2ReferralId, notificationContactDetails);
-        
+
         // TODO BEISHER-516 Send confirmation email if requested
 
         return questionnaire;

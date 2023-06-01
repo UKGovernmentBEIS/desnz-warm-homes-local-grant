@@ -35,6 +35,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.Eligible => EligibleBackDestination(),
                 QuestionFlowStep.Confirmation => ConfirmationBackDestination(),
                 QuestionFlowStep.NoConsent => NoConsentBackDestination(),
+                QuestionFlowStep.Ineligible => IneligibleBackDestination(),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -56,6 +57,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.CheckAnswers => CheckAnswersForwardDestination(questionnaire),
                 QuestionFlowStep.Eligible => EligibleForwardDestination(questionnaire),
                 QuestionFlowStep.Confirmation => ConfirmationForwardDestination(questionnaire),
+                QuestionFlowStep.Ineligible => IneligibleForwardDestination(questionnaire),
                 _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
             };
         }
@@ -183,6 +185,12 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return QuestionFlowStep.Eligible;
         }
 
+        private QuestionFlowStep IneligibleBackDestination()
+        {
+            return QuestionFlowStep.CheckAnswers;
+
+        }
+
         private QuestionFlowStep GasBoilerForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
             return (entryPoint, questionnaire.HasGasBoiler) switch
@@ -276,6 +284,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         private QuestionFlowStep ConfirmationForwardDestination(Questionnaire questionnaire)
         {
             return QuestionFlowStep.Confirmation;
+        }
+
+        private QuestionFlowStep IneligibleForwardDestination(Questionnaire questionnaire)
+        {
+            return QuestionFlowStep.Ineligible;
         }
     }
 }

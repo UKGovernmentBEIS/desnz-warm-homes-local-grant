@@ -143,6 +143,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Eligible),
         new(
+            "Ineligible goes back to check answers",
+            new Input(
+                QuestionFlowStep.Ineligible
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
             "No consent goes back to eligible",
             new Input(
                 QuestionFlowStep.NoConsent
@@ -479,6 +485,12 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.Confirmation
             ),
             QuestionFlowStep.Confirmation),
+        new(
+            "Ineligible continues to ineligible",
+            new Input(
+                QuestionFlowStep.Ineligible
+            ),
+            QuestionFlowStep.Ineligible),
         new(
             "Gas boiler continues to direct to ECO if the user has a boiler and was changing answer",
             new Input(

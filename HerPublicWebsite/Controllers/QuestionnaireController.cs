@@ -449,7 +449,7 @@ public class QuestionnaireController : Controller
         {
             ModelState.AddModelError(string.Empty, "Select at least one method to be contacted by");
         }
-        
+
         if (!ModelState.IsValid)
         {
             return Eligible_Get();
@@ -459,9 +459,9 @@ public class QuestionnaireController : Controller
             viewModel.Name,
             viewModel.CanContactByEmail is YesOrNo.Yes ? viewModel.EmailAddress : null,
             viewModel.CanContactByPhone is YesOrNo.Yes ? viewModel.Telephone : null);
-        
+
         await googleAnalyticsService.SendReferralGeneratedEvent(Request);
-        
+
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Eligible, questionnaire, viewModel.EntryPoint);
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
@@ -488,7 +488,7 @@ public class QuestionnaireController : Controller
 
         return View("Confirmation", viewModel);
     }
-    
+
     [HttpPost("confirmation")]
     public async Task<IActionResult> Confirmation_Post(ConfirmationViewModel viewModel)
     {
@@ -527,9 +527,45 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("ineligible")]
-    public IActionResult Ineligible_Get()
+    public IActionResult Ineligible_Get(bool emailPreferenceSubmitted = false)
     {
-        return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new IneligibleViewModel
+        {
+            EpcIsTooHigh = questionnaire.EpcIsTooHigh,
+            IncomeIsTooHigh = questionnaire.IncomeIsTooHigh,
+            LocalAuthorityName = questionnaire.LocalAuthorityName,
+            LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
+            Submitted = emailPreferenceSubmitted,
+            BackLink = GetBackUrl(QuestionFlowStep.Ineligible, questionnaire)
+        };
+
+        return View("Ineligible", viewModel);
+    }
+
+    [HttpPost("ineligible")]
+    public async Task<IActionResult> Ineligible_Post(IneligibleViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return Ineligible_Get(false);
+        }
+
+        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
+                viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
+                viewModel.EmailAddress
+                );
+
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.Ineligible, questionnaire, viewModel.EntryPoint);
+        var forwardArgs = GetActionArgumentsForQuestion(
+                            nextStep,
+                            viewModel.EntryPoint,
+                            extraRouteValues: new Dictionary<string, object>
+                            {
+                                { "emailPreferenceSubmitted", true }
+                            }
+                        );
+        return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
 
     [HttpGet("no-consent")]

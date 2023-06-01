@@ -41,22 +41,12 @@ public record Questionnaire
     public bool? NotificationConsent { get; set; }
     public bool? ConfirmationConsent { get; set; }
     public string NotificationEmailAddress { get; set; }
+
     public string ConfirmationEmailAddress { get; set; }
-    
-    public bool IsEligibleForHug2
-    {
-        get
-        {
-            return (IncomeBand, HasGasBoiler, FoundEpcBandIsTooHigh, EpcDetailsAreCorrect, Country, OwnershipStatus, IsLsoaProperty) switch
-            {
-                (IncomeBandEnum.UnderOrEqualTo31000, not HasGasBoilerEnum.Yes, false, _, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, _) => true,
-                (IncomeBandEnum.UnderOrEqualTo31000, not HasGasBoilerEnum.Yes, _, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, _) => true,
-                (IncomeBandEnum.GreaterThan31000, not HasGasBoilerEnum.Yes, false, _, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, true) => true,
-                (IncomeBandEnum.GreaterThan31000, not HasGasBoilerEnum.Yes, _, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy, true) => true,
-                _ => false
-            };
-        }
-    }
+
+    public bool IsEligibleForHug2 =>
+            (IncomeIsTooHigh, HasGasBoiler, EpcIsTooHigh, Country, OwnershipStatus) is
+                (false, not HasGasBoilerEnum.Yes, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy);
 
     public bool FoundEpcBandIsTooHigh =>
         EpcDetails is { EpcRating: EpcRating.A or EpcRating.B or EpcRating.C };
@@ -110,4 +100,8 @@ public record Questionnaire
             return EpcDetails.EpcRating ?? EpcRating.Unknown;
         }
     }
+
+    public bool EpcIsTooHigh => EffectiveEpcBand is EpcRating.A or EpcRating.B or EpcRating.C;
+
+    public bool IncomeIsTooHigh => IncomeBand is IncomeBandEnum.GreaterThan31000 && IsLsoaProperty is not true;
 }

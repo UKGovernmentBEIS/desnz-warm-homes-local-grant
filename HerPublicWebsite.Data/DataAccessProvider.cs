@@ -26,10 +26,14 @@ public class DataAccessProvider : IDataAccessProvider
     {
         if (details.FutureSchemeNotificationConsent)
         {
-            var referralRequest =
-                context.ReferralRequests.Single(rr => rr.ReferralCode == referralCode);
+            if (referralCode is not null)
+            {
+                var referralRequest =
+                    context.ReferralRequests
+                    .Single(rr => rr.ReferralCode == referralCode);
 
-            details.ReferralRequest = referralRequest;
+                details.ReferralRequest = referralRequest;
+            }
 
             context.NotificationDetails.Add(details);
             await context.SaveChangesAsync();
@@ -42,7 +46,7 @@ public class DataAccessProvider : IDataAccessProvider
             .Where(rr => !rr.ReferralWrittenToCsv)
             .ToListAsync();
     }
-    
+
     public async Task<IList<ReferralRequest>> GetReferralRequestsByCustodianAndRequestDateAsync(string custodianCode, int month, int year)
     {
         return await context.ReferralRequests
