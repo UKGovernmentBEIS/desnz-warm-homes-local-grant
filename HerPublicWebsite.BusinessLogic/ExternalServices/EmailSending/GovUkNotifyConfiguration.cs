@@ -1,4 +1,4 @@
-﻿namespace HerPublicWebsite.ExternalServices.EmailSending
+﻿namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
 {
     public class GovUkNotifyConfiguration
     {

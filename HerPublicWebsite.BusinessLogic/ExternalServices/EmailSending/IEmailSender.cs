@@ -1,5 +1,5 @@
 ﻿
-namespace HerPublicWebsite.ExternalServices.EmailSending
+namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
 {
     public interface IEmailSender
     {
