@@ -78,6 +78,20 @@ public record Questionnaire
         }
     }
 
+    public LocalAuthorityData.Hug2Status? LocalAuthorityHug2Status
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(CustodianCode) ||
+                !LocalAuthorityData.LocalAuthorityDetailsByCustodianCode.ContainsKey(CustodianCode))
+            {
+                return null;
+            }
+
+            return LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[CustodianCode].Status;
+        }
+    }
+
     public EpcRating EffectiveEpcBand
     {
         get
