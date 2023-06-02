@@ -487,7 +487,7 @@ public class QuestionnaireController : Controller
     [HttpPost("eligible")]
     public async Task<IActionResult> Eligible_Post(EligibleViewModel viewModel)
     {
-        if (viewModel.CanContactByEmail is not YesOrNo.Yes && viewModel.CanContactByPhone is not YesOrNo.Yes)
+        if (viewModel.CanContactByEmail is YesOrNo.No && viewModel.CanContactByPhone is YesOrNo.No)
         {
             ModelState.AddModelError(string.Empty, "Select at least one method to be contacted by");
         }
