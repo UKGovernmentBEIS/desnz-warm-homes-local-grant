@@ -64,11 +64,23 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.GasBoiler),
         new(
+            "Ineligible Wales goes back to country",
+            new Input(
+                QuestionFlowStep.IneligibleWales
+            ),
+            QuestionFlowStep.Country),
+        new(
             "Ownership status goes back to Country",
             new Input(
                 QuestionFlowStep.OwnershipStatus
             ),
             QuestionFlowStep.Country),
+        new(
+            "Ineligible tenure goes back to ownership status",
+            new Input(
+                QuestionFlowStep.IneligibleTenure
+            ),
+            QuestionFlowStep.OwnershipStatus),
         new(
             "Address goes back to Ownership status",
             new Input(
@@ -173,12 +185,6 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
-            "Ineligible tenure goes back to ownership status",
-            new Input(
-                QuestionFlowStep.IneligibleTenure
-            ),
-            QuestionFlowStep.OwnershipStatus),
-        new(
             "Service unsuitable goes back to review EPC if EPC is filled in",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
@@ -218,12 +224,26 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.CheckAnswers),
         new(
+            "Ineligible Wales goes back to country if was changing answer",
+            new Input(
+                QuestionFlowStep.IneligibleWales,
+                entryPoint: QuestionFlowStep.Country
+            ),
+            QuestionFlowStep.Country),
+        new(
             "Ownership status goes back to check answers if was changing answer",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
                 entryPoint: QuestionFlowStep.OwnershipStatus
             ),
             QuestionFlowStep.CheckAnswers),
+        new(
+            "Ineligible tenure goes back to ownership status if was changing answer",
+            new Input(
+                QuestionFlowStep.IneligibleTenure,
+                entryPoint: QuestionFlowStep.OwnershipStatus
+            ),
+            QuestionFlowStep.OwnershipStatus),
         new(
             "Address goes back to check answers if was changing answer",
             new Input(
@@ -303,13 +323,6 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
-            "Ineligible tenure goes back to ownership status if was changing answer",
-            new Input(
-                QuestionFlowStep.IneligibleTenure,
-                entryPoint: QuestionFlowStep.OwnershipStatus
-            ),
-            QuestionFlowStep.OwnershipStatus),
-        new(
             "Service unsuitable goes back to review EPC if EPC is filled in if was changing answer",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
@@ -355,12 +368,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
-            "Country continues to service unsuitable if the country is Wales",
+            "Country continues to ineligible Wales if the country is Wales",
             new Input(
                 QuestionFlowStep.Country,
                 country: Country.Wales
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStep.IneligibleWales),
         new(
             "Country continues to service unsuitable if the country is Scotland",
             new Input(
@@ -553,13 +566,13 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.CheckAnswers),
         new(
-            "Country continues to service unsuitable if the country is Wales and was changing answer",
+            "Country continues to ineligible Wales if the country is Wales and was changing answer",
             new Input(
                 QuestionFlowStep.Country,
                 country: Country.Wales,
                 entryPoint: QuestionFlowStep.Country
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStep.IneligibleWales),
         new(
             "Country continues to service unsuitable if the country is Scotland and was changing answer",
             new Input(

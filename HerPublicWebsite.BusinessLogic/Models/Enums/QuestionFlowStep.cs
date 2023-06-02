@@ -6,6 +6,7 @@ public enum QuestionFlowStep
     GasBoiler,
     DirectToEco,
     Country,
+    IneligibleWales,
     ServiceUnsuitable,
     OwnershipStatus,
     IneligibleTenure,
