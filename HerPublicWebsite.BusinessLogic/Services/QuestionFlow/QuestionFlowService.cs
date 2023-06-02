@@ -24,6 +24,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.Country => CountryBackDestination(entryPoint),
                 QuestionFlowStep.ServiceUnsuitable => ServiceUnsuitableBackDestination(questionnaire),
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusBackDestination(entryPoint),
+                QuestionFlowStep.IneligibleTenure => IneligibleTenureBackDestination(),
                 QuestionFlowStep.Address => AddressBackDestination(entryPoint),
                 QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
                 QuestionFlowStep.ReviewEpc => ReviewEpcBackDestination(),
@@ -93,8 +94,6 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             {
                 { Country: not Country.England }
                     => QuestionFlowStep.Country,
-                { OwnershipStatus: not OwnershipStatus.OwnerOccupancy }
-                    => QuestionFlowStep.OwnershipStatus,
                 { EpcDetailsAreCorrect: true }
                     => QuestionFlowStep.ReviewEpc,
                 // By using the browser back button a user can get to the service unsuitable page when their questionnaire
@@ -111,6 +110,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.OwnershipStatus => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.Country
             };
+        }
+        
+        private QuestionFlowStep IneligibleTenureBackDestination()
+        {
+            return QuestionFlowStep.OwnershipStatus;
         }
 
         private QuestionFlowStep AddressBackDestination(QuestionFlowStep? entryPoint)
@@ -226,7 +230,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         {
             return (entryPoint, questionnaire.OwnershipStatus) switch
             {
-                (_, not OwnershipStatus.OwnerOccupancy) => QuestionFlowStep.ServiceUnsuitable,
+                (_, not OwnershipStatus.OwnerOccupancy) => QuestionFlowStep.IneligibleTenure,
                 (QuestionFlowStep.OwnershipStatus, _) => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.Address
             };

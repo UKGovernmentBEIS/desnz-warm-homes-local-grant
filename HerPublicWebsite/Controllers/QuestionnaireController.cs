@@ -13,9 +13,7 @@ using HerPublicWebsite.Filters;
 using HerPublicWebsite.Models.Enums;
 using HerPublicWebsite.Models.Questionnaire;
 using HerPublicWebsite.Services;
-using HerPublicWebsite.Services.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
@@ -26,7 +24,6 @@ namespace HerPublicWebsite.Controllers;
 public class QuestionnaireController : Controller
 {
     private readonly IQuestionFlowService questionFlowService;
-    private readonly CookieService cookieService;
     private readonly GoogleAnalyticsService googleAnalyticsService;
     private readonly QuestionnaireService questionnaireService;
     private readonly IOsPlacesApi osPlaces;
@@ -34,7 +31,6 @@ public class QuestionnaireController : Controller
 
     public QuestionnaireController(
         IQuestionFlowService questionFlowService,
-        CookieService cookieService,
         GoogleAnalyticsService googleAnalyticsService,
         QuestionnaireService questionnaireService,
         IOsPlacesApi osPlaces,
@@ -42,7 +38,6 @@ public class QuestionnaireController : Controller
     )
     {
         this.questionFlowService = questionFlowService;
-        this.cookieService = cookieService;
         this.googleAnalyticsService = googleAnalyticsService;
         this.questionnaireService = questionnaireService;
         this.osPlaces = osPlaces;
@@ -162,6 +157,19 @@ public class QuestionnaireController : Controller
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.OwnershipStatus, questionnaire, viewModel.EntryPoint);
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
+    }
+    
+    [HttpGet("ineligible-tenure/")]
+    public IActionResult IneligibleTenure_Get(QuestionFlowStep? entryPoint)
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+
+        var viewModel = new OwnershipStatusViewModel
+        {
+            BackLink = GetBackUrl(QuestionFlowStep.IneligibleTenure, questionnaire, entryPoint)
+        };
+
+        return View("IneligibleTenure", viewModel);
     }
 
     [HttpGet("address/")]
@@ -656,6 +664,7 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.Country => new PathByActionArguments(nameof(Country_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.ServiceUnsuitable => new PathByActionArguments(nameof(ServiceUnsuitable_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.OwnershipStatus => new PathByActionArguments(nameof(OwnershipStatus_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.IneligibleTenure => new PathByActionArguments(nameof(IneligibleTenure_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.Address => new PathByActionArguments(nameof(Address_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.SelectAddress => new PathByActionArguments(nameof(SelectAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.ReviewEpc => new PathByActionArguments(nameof(ReviewEpc_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),

@@ -2,7 +2,6 @@
 using NUnit.Framework;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
-using HerPublicWebsite.BusinessLogic.Services;
 using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
 
 namespace Tests.BusinessLogic.Services;
@@ -174,11 +173,9 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
-            "Service unsuitable goes back to ownership status isn't owner occupier",
+            "Ineligible tenure goes back to ownership status",
             new Input(
-                QuestionFlowStep.ServiceUnsuitable,
-                country: Country.England,
-                ownershipStatus: OwnershipStatus.Landlord
+                QuestionFlowStep.IneligibleTenure
             ),
             QuestionFlowStep.OwnershipStatus),
         new(
@@ -306,11 +303,9 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
-            "Service unsuitable goes back to ownership status isn't owner occupier if was changing answer",
+            "Ineligible tenure goes back to ownership status if was changing answer",
             new Input(
-                QuestionFlowStep.ServiceUnsuitable,
-                country: Country.England,
-                ownershipStatus: OwnershipStatus.Landlord,
+                QuestionFlowStep.IneligibleTenure,
                 entryPoint: QuestionFlowStep.OwnershipStatus
             ),
             QuestionFlowStep.OwnershipStatus),
@@ -395,19 +390,19 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.OwnershipStatus),
         new(
-            "Ownership status continues to service unsuitable if user is private tenant",
+            "Ownership status continues to ineligible tenure if user is private tenant",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
                 ownershipStatus: OwnershipStatus.PrivateTenancy
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStep.IneligibleTenure),
         new(
-            "Ownership status continues to service unsuitable if user is landlord",
+            "Ownership status continues to ineligible tenure if user is landlord",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
                 ownershipStatus: OwnershipStatus.Landlord
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStep.IneligibleTenure),
         new(
             "Ownership status continues to address if user is owner occupier",
             new Input(
@@ -598,21 +593,21 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.CheckAnswers),
         new(
-            "Ownership status continues to service unsuitable if user is private tenant and was changing answer",
+            "Ownership status continues to ineligible tenure if user is private tenant and was changing answer",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
                 ownershipStatus: OwnershipStatus.PrivateTenancy,
                 entryPoint: QuestionFlowStep.OwnershipStatus
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStep.IneligibleTenure),
         new(
-            "Ownership status continues to service unsuitable if user is landlord and was changing answer",
+            "Ownership status continues to ineligible tenure if user is landlord and was changing answer",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
                 ownershipStatus: OwnershipStatus.Landlord,
                 entryPoint: QuestionFlowStep.OwnershipStatus
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStep.IneligibleTenure),
         new(
             "Ownership status returns to check answers if user is owner occupier and was changing answer",
             new Input(
