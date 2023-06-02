@@ -8,7 +8,7 @@ public enum QuestionFlowStep
     Country,
     ServiceUnsuitable,
     OwnershipStatus,
-    OwnershipUnsuitable,
+    IneligibleTenure,
     Address,
     SelectAddress,
     ReviewEpc,

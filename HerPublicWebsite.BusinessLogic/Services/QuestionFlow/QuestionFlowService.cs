@@ -24,7 +24,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.Country => CountryBackDestination(entryPoint),
                 QuestionFlowStep.ServiceUnsuitable => ServiceUnsuitableBackDestination(questionnaire),
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusBackDestination(entryPoint),
-                QuestionFlowStep.OwnershipUnsuitable => OwnershipUnsuitableBackDestination(),
+                QuestionFlowStep.IneligibleTenure => IneligibleTenureBackDestination(),
                 QuestionFlowStep.Address => AddressBackDestination(entryPoint),
                 QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
                 QuestionFlowStep.ReviewEpc => ReviewEpcBackDestination(),
@@ -112,7 +112,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             };
         }
         
-        private QuestionFlowStep OwnershipUnsuitableBackDestination()
+        private QuestionFlowStep IneligibleTenureBackDestination()
         {
             return QuestionFlowStep.OwnershipStatus;
         }
@@ -230,7 +230,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         {
             return (entryPoint, questionnaire.OwnershipStatus) switch
             {
-                (_, not OwnershipStatus.OwnerOccupancy) => QuestionFlowStep.OwnershipUnsuitable,
+                (_, not OwnershipStatus.OwnerOccupancy) => QuestionFlowStep.IneligibleTenure,
                 (QuestionFlowStep.OwnershipStatus, _) => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.Address
             };

@@ -160,16 +160,16 @@ public class QuestionnaireController : Controller
     }
     
     [HttpGet("ineligible-tenure/")]
-    public IActionResult OwnershipUnsuitable_Get(QuestionFlowStep? entryPoint)
+    public IActionResult IneligibleTenure_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
 
         var viewModel = new OwnershipStatusViewModel
         {
-            BackLink = GetBackUrl(QuestionFlowStep.OwnershipUnsuitable, questionnaire, entryPoint)
+            BackLink = GetBackUrl(QuestionFlowStep.IneligibleTenure, questionnaire, entryPoint)
         };
 
-        return View("OwnershipUnsuitable", viewModel);
+        return View("IneligibleTenure", viewModel);
     }
 
     [HttpGet("address/")]
@@ -664,7 +664,7 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.Country => new PathByActionArguments(nameof(Country_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.ServiceUnsuitable => new PathByActionArguments(nameof(ServiceUnsuitable_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.OwnershipStatus => new PathByActionArguments(nameof(OwnershipStatus_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.OwnershipUnsuitable => new PathByActionArguments(nameof(OwnershipUnsuitable_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.IneligibleTenure => new PathByActionArguments(nameof(IneligibleTenure_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.Address => new PathByActionArguments(nameof(Address_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.SelectAddress => new PathByActionArguments(nameof(SelectAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.ReviewEpc => new PathByActionArguments(nameof(ReviewEpc_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),

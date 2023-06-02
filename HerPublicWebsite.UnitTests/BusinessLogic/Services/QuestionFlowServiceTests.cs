@@ -173,9 +173,9 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
-            "Ownership unsuitable goes back to ownership status",
+            "Ineligible tenure goes back to ownership status",
             new Input(
-                QuestionFlowStep.OwnershipUnsuitable
+                QuestionFlowStep.IneligibleTenure
             ),
             QuestionFlowStep.OwnershipStatus),
         new(
@@ -303,9 +303,9 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
-            "Ownership unsuitable goes back to ownership status if was changing answer",
+            "Ineligible tenure goes back to ownership status if was changing answer",
             new Input(
-                QuestionFlowStep.OwnershipUnsuitable,
+                QuestionFlowStep.IneligibleTenure,
                 entryPoint: QuestionFlowStep.OwnershipStatus
             ),
             QuestionFlowStep.OwnershipStatus),
@@ -390,19 +390,19 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.OwnershipStatus),
         new(
-            "Ownership status continues to ownership unsuitable if user is private tenant",
+            "Ownership status continues to ineligible tenure if user is private tenant",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
                 ownershipStatus: OwnershipStatus.PrivateTenancy
             ),
-            QuestionFlowStep.OwnershipUnsuitable),
+            QuestionFlowStep.IneligibleTenure),
         new(
-            "Ownership status continues to ownership unsuitable if user is landlord",
+            "Ownership status continues to ineligible tenure if user is landlord",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
                 ownershipStatus: OwnershipStatus.Landlord
             ),
-            QuestionFlowStep.OwnershipUnsuitable),
+            QuestionFlowStep.IneligibleTenure),
         new(
             "Ownership status continues to address if user is owner occupier",
             new Input(
@@ -593,21 +593,21 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.CheckAnswers),
         new(
-            "Ownership status continues to ownership unsuitable if user is private tenant and was changing answer",
+            "Ownership status continues to ineligible tenure if user is private tenant and was changing answer",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
                 ownershipStatus: OwnershipStatus.PrivateTenancy,
                 entryPoint: QuestionFlowStep.OwnershipStatus
             ),
-            QuestionFlowStep.OwnershipUnsuitable),
+            QuestionFlowStep.IneligibleTenure),
         new(
-            "Ownership status continues to ownership unsuitable if user is landlord and was changing answer",
+            "Ownership status continues to ineligible tenure if user is landlord and was changing answer",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
                 ownershipStatus: OwnershipStatus.Landlord,
                 entryPoint: QuestionFlowStep.OwnershipStatus
             ),
-            QuestionFlowStep.OwnershipUnsuitable),
+            QuestionFlowStep.IneligibleTenure),
         new(
             "Ownership status returns to check answers if user is owner occupier and was changing answer",
             new Input(
