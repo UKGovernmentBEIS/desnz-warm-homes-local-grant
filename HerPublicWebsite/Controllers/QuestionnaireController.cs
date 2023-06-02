@@ -474,6 +474,7 @@ public class QuestionnaireController : Controller
         var viewModel = new EligibleViewModel()
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
+            LocalAuthorityIsLiveWithHug2 = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Live,
             CanContactByEmail = questionnaire.LaCanContactByEmail.ToNullableYesOrNo(),
             CanContactByPhone = questionnaire.LaCanContactByPhone.ToNullableYesOrNo(),
             EmailAddress = questionnaire.LaContactEmailAddress,
@@ -487,7 +488,7 @@ public class QuestionnaireController : Controller
     [HttpPost("eligible")]
     public async Task<IActionResult> Eligible_Post(EligibleViewModel viewModel)
     {
-        if (viewModel.CanContactByEmail is not YesOrNo.Yes && viewModel.CanContactByPhone is not YesOrNo.Yes)
+        if (viewModel.CanContactByEmail is YesOrNo.No && viewModel.CanContactByPhone is YesOrNo.No)
         {
             ModelState.AddModelError(string.Empty, "Select at least one method to be contacted by");
         }
@@ -518,6 +519,7 @@ public class QuestionnaireController : Controller
             ReferenceCode = questionnaire.Hug2ReferralId,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
+            LocalAuthorityIsLiveWithHug2 = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Live,
             ConfirmationSentToEmailAddress = questionnaire.LaContactEmailAddress ?? questionnaire.ConfirmationEmailAddress,
             RequestEmailAddress = questionnaire.LaCanContactByEmail is not true,
             CanNotifyAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),

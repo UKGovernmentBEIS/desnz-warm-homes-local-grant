@@ -202,7 +202,7 @@ public class LocalAuthorityData
         { "1820", new LocalAuthorityDetails("Malvern Hills", Hug2Status.NotTakingPart, "") },
         { "4215", new LocalAuthorityDetails("Manchester", Hug2Status.NotTakingPart, "") },
         { "3025", new LocalAuthorityDetails("Mansfield", Hug2Status.NotTakingPart, "") },
-        { "2280", new LocalAuthorityDetails("Medway", Hug2Status.NotTakingPart, "") },
+        { "2280", new LocalAuthorityDetails("Medway", Hug2Status.Pending, "") },
         { "2430", new LocalAuthorityDetails("Melton", Hug2Status.NotTakingPart, "") },
         { "3305", new LocalAuthorityDetails("Mendip", Hug2Status.NotTakingPart, "") },
         { "6925", new LocalAuthorityDetails("Merthyr Tydfil Ua", Hug2Status.NotTakingPart, "") },

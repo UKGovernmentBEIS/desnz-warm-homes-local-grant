@@ -17,6 +17,7 @@ public class EligibleViewModel : QuestionFlowViewModel
     public string Telephone { get; set; }
 
     public string LocalAuthorityName { get; set; }
+    public bool LocalAuthorityIsLiveWithHug2 { get; set; }
     
     public bool IsEmailAddressRequired => CanContactByEmail is YesOrNo.Yes;
     public bool IsPhoneRequired => CanContactByPhone is YesOrNo.Yes;

@@ -33,10 +33,13 @@
         <p class="govuk-body"><strong>@Model.LocalAuthorityName council or their official contractor</strong> will process
             your details and contact you if they need any more information on the contact details you proviced.</p>
 
-        @await Html.GovUkInsetText(new InsetTextViewModel
-               {
-                   Text = "Your local authority or their official contractor will contact you within 10 working days."
-               })
+        @if (Model.LocalAuthorityIsLiveWithHug2)
+        {
+            @await Html.GovUkInsetText(new InsetTextViewModel
+                   {
+                       Text = "Your local authority or their official contractor will contact you within 10 working days."
+                   })
+        }
 
         <p class="govuk-body">To enquire about your application visit <a href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName council's website</a>.</p>
 
