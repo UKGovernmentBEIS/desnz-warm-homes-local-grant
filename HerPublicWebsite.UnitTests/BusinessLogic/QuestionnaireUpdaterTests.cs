@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using HerPublicWebsite.BusinessLogic;
+using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
@@ -18,6 +19,7 @@ public class QuestionnaireUpdaterTests
     private Mock<IEpcApi> mockEpcApi;
     private Mock<IEligiblePostcodeService> mockPostCodeService;
     private Mock<IDataAccessProvider> mockDataAccessProvider;
+    private Mock<IEmailSender> mockEmailSender;
     
     
     [SetUp]
@@ -26,7 +28,14 @@ public class QuestionnaireUpdaterTests
         mockEpcApi = new Mock<IEpcApi>();
         mockPostCodeService = new Mock<IEligiblePostcodeService>();
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
-        underTest = new QuestionnaireUpdater(mockEpcApi.Object, mockPostCodeService.Object, mockDataAccessProvider.Object);
+        mockEmailSender = new Mock<IEmailSender>();
+        underTest = new QuestionnaireUpdater
+        (
+            mockEpcApi.Object,
+            mockPostCodeService.Object,
+            mockDataAccessProvider.Object,
+            mockEmailSender.Object
+        );
     }
     
     [Test]
