@@ -22,6 +22,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.GasBoiler => GasBoilerBackDestination(entryPoint),
                 QuestionFlowStep.DirectToEco => DirectToEcoBackDestination(),
                 QuestionFlowStep.Country => CountryBackDestination(entryPoint),
+                QuestionFlowStep.IneligibleWales => IneligibleWalesBackDestination(),
                 QuestionFlowStep.ServiceUnsuitable => ServiceUnsuitableBackDestination(questionnaire),
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusBackDestination(entryPoint),
                 QuestionFlowStep.IneligibleTenure => IneligibleTenureBackDestination(),
@@ -86,6 +87,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.Country => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.GasBoiler
             };
+        }
+
+        private QuestionFlowStep IneligibleWalesBackDestination()
+        {
+            return QuestionFlowStep.Country;
         }
 
         private QuestionFlowStep ServiceUnsuitableBackDestination(Questionnaire questionnaire)
@@ -220,6 +226,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         {
             return (entryPoint, questionnaire.Country) switch
             {
+                (_, Country.Wales) => QuestionFlowStep.IneligibleWales,
                 (_, not Country.England) => QuestionFlowStep.ServiceUnsuitable,
                 (QuestionFlowStep.Country, _) => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.OwnershipStatus
