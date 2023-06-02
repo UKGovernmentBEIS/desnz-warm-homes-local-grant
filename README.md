@@ -19,24 +19,34 @@ Migrations will be run automatically on deployment. If a migration needs to be r
 
 ### Process
 
-For normal development:
-- Create a branch from main
-- Make changes on the branch
-- Raise a PR back to main once the feature is complete
-- If the PR is accepted merge the branch into main
+We follow a process similar to git-flow, with 3 branches corresponding to each of the environments:
+- `develop` - Dev ([https://dev.check-eligibility-for-home-upgrade-grant.service.gov.uk])
+- `staging` - UAT ([https://uat.check-eligibility-for-home-upgrade-grant.service.gov.uk])
+- `main` - Production ([https://check-eligibility-for-home-upgrade-grant.service.gov.uk])
 
-Doing a release:
-- Create a release branch from main
-- Deploy this branch to an environment
+For normal development:
+- Create a branch from `develop`
+- Make changes on the branch, e.g. `feat/add-new-widget`
+- Raise a PR back to `develop` once the feature is complete
+- If the PR is accepted merge the branch into `develop`
+
+Doing a release to staging:
+- Merge `develop` into `staging`
+- Deploy this branch into the UAT environment
 - Run manual tests against this environment and gain sign-off to deploy
-- Merge the branch into production
+
+Doing a release to production:
+- Ensure all sign-offs are in place
+- Merge `staging` into `main`
+- Deploy this branch into the production environment
+- Perform any post go-live checks
 
 For critical bug fixes on production
-- Create a branch from production
+- Create a hotfix branch from `main`, e.g. `hotfix/update-service-name`
 - Make changes on the branch
-- Raise a PR back to production once the bug is fixed
-- If the PR is accepted merge the branch into production
-- Then also merge the branch into main
+- Raise a PR back to `main` once the bug is fixed
+- If the PR is accepted, merge the branch into `main`
+- Then also merge the branch into `develop`
 
 ### Pre-requisites
 
