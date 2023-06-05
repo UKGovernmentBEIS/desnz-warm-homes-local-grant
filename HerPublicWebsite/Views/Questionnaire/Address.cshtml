@@ -25,16 +25,16 @@
             @(Html.HiddenFor(m => m.EntryPoint))
 
             <h1 class="govuk-heading-l">
-                What is the address of your property?
+                What is the property address?
             </h1>
 
             <p class="govuk-body">
-                We need this information to find out the following:
+                We need this information to find out your:
             </p>
             <ul class="govuk-list govuk-list--bullet">
-                <li>the energy efficiency of your home</li>
-                <li>who your local authority could be</li>
-                <li>if you live in an eligible postcode</li>
+                <li>property’s energy efficiency</li>
+                <li>local authority</li>
+                <li>postcode’s eligibility</li>
             </ul>
 
             @await Html.GovUkTextInputFor(m => m.BuildingNameOrNumber, labelOptions: new LabelViewModel()
