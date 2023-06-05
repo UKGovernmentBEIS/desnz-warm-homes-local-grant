@@ -206,7 +206,7 @@ public class LocalAuthorityData
         { "3025", new LocalAuthorityDetails("Mansfield District Council", Hug2Status.Pending, "https://www.mansfield.gov.uk/") },
         { "2280", new LocalAuthorityDetails("Medway Council", Hug2Status.Pending, "https://www.medway.gov.uk/") },
         { "2430", new LocalAuthorityDetails("Melton Borough Council", Hug2Status.Pending, "http://www.melton.gov.uk/") },
-        { "3305", new LocalAuthorityDetails("Mendip", Hug2Status.Pending, "") }, // TODO: Update this manually
+        { "3305", new LocalAuthorityDetails("Somerset Council", Hug2Status.Pending, "https://www.somerset.gov.uk/") }, // Mendip is now part of Somerset Council https://www.somerset.gov.uk/council-and-democracy/a-new-council-for-somerset
         { "6925", new LocalAuthorityDetails("Merthyr Tydfil County Borough Council", Hug2Status.NotTakingPart, "https://www.merthyr.gov.uk") },
         { "5720", new LocalAuthorityDetails("London Borough of Merton", Hug2Status.Pending, "http://www.merton.gov.uk/") },
         { "1135", new LocalAuthorityDetails("Mid Devon District Council", Hug2Status.Pending, "https://www.middevon.gov.uk/") },
@@ -246,7 +246,7 @@ public class LocalAuthorityData
         { "3710", new LocalAuthorityDetails("Nuneaton and Bedworth Borough Council", Hug2Status.Pending, "https://www.nuneatonandbedworth.gov.uk/site/") },
         { "2440", new LocalAuthorityDetails("Oadby and Wigston District Council", Hug2Status.Pending, "http://oadby-wigston.gov.uk/Home/Home.aspx") },
         { "4220", new LocalAuthorityDetails("Oldham Metropolitan Borough Council", Hug2Status.NotTakingPart, "https://www.oldham.gov.uk/") },
-        { "7655", new LocalAuthorityDetails("Ordnance Survey", Hug2Status.NotTakingPart, "") },// TODO: Update this manually
+        { "7655", new LocalAuthorityDetails("Ordnance Survey", Hug2Status.NotTakingPart, "") },
         { "9000", new LocalAuthorityDetails("Orkney Islands Council", Hug2Status.NotTakingPart, "https://www.orkney.gov.uk/") },
         { "3110", new LocalAuthorityDetails("Oxford City Council", Hug2Status.Pending, "https://www.oxford.gov.uk/") },
         { "6845", new LocalAuthorityDetails("Pembrokeshire County Council", Hug2Status.NotTakingPart, "http://www.pembrokeshire.gov.uk") },
@@ -282,7 +282,7 @@ public class LocalAuthorityData
         { "4620", new LocalAuthorityDetails("Sandwell Metropolitan Borough Council", Hug2Status.Pending, "http://www.sandwell.gov.uk/") },
         { "2730", new LocalAuthorityDetails("North Yorkshire County Council", Hug2Status.Pending, "http://www.northyorks.gov.uk/") },
         { "9055", new LocalAuthorityDetails("Scottish Borders Council", Hug2Status.NotTakingPart, "https://www.scotborders.gov.uk") },
-        { "3310", new LocalAuthorityDetails("Sedgemoor", Hug2Status.Pending, "") }, // TODO: Update this manually
+        { "3310", new LocalAuthorityDetails("Somerset Council", Hug2Status.Pending, "https://www.somerset.gov.uk/") }, // Sedgemoor is now part of Somerset Council https://www.somerset.gov.uk/council-and-democracy/a-new-council-for-somerset
         { "4320", new LocalAuthorityDetails("Sefton Metropolitan Borough Council", Hug2Status.Pending, "https://www.sefton.gov.uk/") },
         { "2735", new LocalAuthorityDetails("North Yorkshire County Council", Hug2Status.Pending, "http://www.northyorks.gov.uk/") },
         { "2245", new LocalAuthorityDetails("Sevenoaks District Council", Hug2Status.Pending, "http://www.sevenoaks.gov.uk/") },
@@ -291,8 +291,8 @@ public class LocalAuthorityData
         { "3245", new LocalAuthorityDetails("Shropshire Council", Hug2Status.Pending, "http://www.shropshire.gov.uk/") },
         { "350", new LocalAuthorityDetails("Slough Borough Council", Hug2Status.Pending, "https://www.slough.gov.uk/") },
         { "4625", new LocalAuthorityDetails("Solihull Metropolitan Borough Council", Hug2Status.Pending, "https://www.solihull.gov.uk/") },
-        { "3300", new LocalAuthorityDetails("Somerset", Hug2Status.Pending, "") }, // TODO: Update this manually
-        { "3330", new LocalAuthorityDetails("Somerset West and Taunton", Hug2Status.Pending, "") }, // TODO: Update this manually
+        { "3300", new LocalAuthorityDetails("Somerset Council", Hug2Status.Pending, "https://www.somerset.gov.uk/") }, // Somerset appears to now cover Mendip, Sedgemoor, Somerset West and Taunton, and South Somerset. 
+        { "3330", new LocalAuthorityDetails("Somerset Council", Hug2Status.Pending, "https://www.somerset.gov.uk/") }, // Somerset West and Taunton is now part of Somerset Council https://www.somerset.gov.uk/council-and-democracy/a-new-council-for-somerset
         { "9076", new LocalAuthorityDetails("South Ayrshire Council", Hug2Status.NotTakingPart, "https://www.south-ayrshire.gov.uk/") },
         { "530", new LocalAuthorityDetails("South Cambridgeshire District Council", Hug2Status.Pending, "http://www.scambs.gov.uk/") },
         { "1040", new LocalAuthorityDetails("South Derbyshire District Council", Hug2Status.Pending, "https://www.southderbyshire.gov.uk") },
@@ -305,7 +305,7 @@ public class LocalAuthorityData
         { "2630", new LocalAuthorityDetails("South Norfolk District Council", Hug2Status.Pending, "https://www.southnorfolkandbroadland.gov.uk/") },
         { "3115", new LocalAuthorityDetails("South Oxfordshire District Council", Hug2Status.Pending, "http://www.southoxon.gov.uk") },
         { "2360", new LocalAuthorityDetails("South Ribble Borough Council", Hug2Status.Pending, "http://www.southribble.gov.uk/") },
-        { "3325", new LocalAuthorityDetails("South Somerset", Hug2Status.Pending, "") },// TODO: Update this manually
+        { "3325", new LocalAuthorityDetails("Somerset Council", Hug2Status.Pending, "https://www.somerset.gov.uk/") }, // South Somerset is now part of Somerset Council https://www.somerset.gov.uk/council-and-democracy/a-new-council-for-somerset
         { "3430", new LocalAuthorityDetails("South Staffordshire Council", Hug2Status.Pending, "https://www.sstaffs.gov.uk/") },
         { "4520", new LocalAuthorityDetails("South Tyneside Council", Hug2Status.NotTakingPart, "http://www.southtyneside.gov.uk") },
         { "1780", new LocalAuthorityDetails("Southampton City Council", Hug2Status.Pending, "http://www.southampton.gov.uk/") },
@@ -368,7 +368,7 @@ public class LocalAuthorityData
         { "2845", new LocalAuthorityDetails("West Northamptonshire Council", Hug2Status.Pending, "https://www.westnorthants.gov.uk/") },
         { "3125", new LocalAuthorityDetails("West Oxfordshire District Council", Hug2Status.Pending, "https://www.westoxon.gov.uk/") },
         { "3545", new LocalAuthorityDetails("West Suffolk District Council", Hug2Status.Pending, "https://www.westsuffolk.gov.uk/") },
-        { "9020", new LocalAuthorityDetails("Western Isles", Hug2Status.NotTakingPart, "") },// TODO: Update this manually
+        { "9020", new LocalAuthorityDetails("Comhairle nan Eilean Siar", Hug2Status.NotTakingPart, "https://www.cne-siar.gov.uk/") },
         { "935", new LocalAuthorityDetails("Westmorland and Furness Council", Hug2Status.NotTakingPart, "https://www.westmorlandandfurness.gov.uk/") },
         { "4250", new LocalAuthorityDetails("Wigan Metropolitan Borough Council", Hug2Status.NotTakingPart, "http://www.wigan.gov.uk") },
         { "3940", new LocalAuthorityDetails("Wiltshire Council", Hug2Status.Pending, "https://www.wiltshire.gov.uk/") },
