@@ -7,6 +7,7 @@ public enum QuestionFlowStep
     DirectToEco,
     Country,
     IneligibleWales,
+    IneligibleScotland,
     ServiceUnsuitable,
     OwnershipStatus,
     IneligibleTenure,

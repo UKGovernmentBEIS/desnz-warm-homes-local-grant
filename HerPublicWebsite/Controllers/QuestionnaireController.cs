@@ -130,6 +130,19 @@ public class QuestionnaireController : Controller
 
         return View("IneligibleWales", viewModel);
     }
+    
+    [HttpGet("ineligible-scotland/")]
+    public IActionResult IneligibleScotland_Get(QuestionFlowStep? entryPoint)
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+
+        var viewModel = new IneligibleScotlandViewModel()
+        {
+            BackLink = GetBackUrl(QuestionFlowStep.IneligibleScotland, questionnaire, entryPoint)
+        };
+
+        return View("IneligibleScotland", viewModel);
+    }
 
     [HttpGet("service-unsuitable/")]
     public IActionResult ServiceUnsuitable_Get(QuestionFlowStep? entryPoint)
@@ -676,6 +689,7 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.DirectToEco => new PathByActionArguments(nameof(DirectToEco_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.Country => new PathByActionArguments(nameof(Country_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.IneligibleWales => new PathByActionArguments(nameof(IneligibleWales_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.IneligibleScotland => new PathByActionArguments(nameof(IneligibleScotland_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.ServiceUnsuitable => new PathByActionArguments(nameof(ServiceUnsuitable_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.OwnershipStatus => new PathByActionArguments(nameof(OwnershipStatus_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.IneligibleTenure => new PathByActionArguments(nameof(IneligibleTenure_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
