@@ -38,14 +38,14 @@
                        new HintViewModel
                        {
                            Html = @<text>
-                                     <p class="govuk-body">To receive the Home Upgrade Grant 2, your property can not have a gas boiler as a heating system.</p>
+                                     <p class="govuk-body">To be eligible for the Home Upgrade Grant, you cannot use a gas boiler to heat the property.</p>
 
-                                     <p class="govuk-body">If you have two heating systems, then select yes if you use your gas boiler to heat your home the most. </p>
+                                     <p class="govuk-body">If you have two heating systems but use your gas boiler more than the other, choose ‘Yes’.</p>
                                </text>
                                
                        },
                        // Necessary to make sure the options appear in the correct order
-                       overrideRadioValues: new [] { HasGasBoiler.Yes, HasGasBoiler.No, HasGasBoiler.Unknown })
+                       overrideRadioValues: new [] { HasGasBoiler.Yes, HasGasBoiler.No })
 
             @(await Html.GovUkButton(new ButtonViewModel
             {
