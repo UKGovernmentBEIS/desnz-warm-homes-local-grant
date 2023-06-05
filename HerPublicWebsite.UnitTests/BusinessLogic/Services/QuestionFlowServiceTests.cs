@@ -76,6 +76,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
+            "Ineligible Northern Ireland goes back to country",
+            new Input(
+                QuestionFlowStep.IneligibleNorthernIreland
+            ),
+            QuestionFlowStep.Country),
+        new(
             "Ownership status goes back to Country",
             new Input(
                 QuestionFlowStep.OwnershipStatus
@@ -244,6 +250,13 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
+            "Ineligible Northern Ireland goes back to country if was changing answer",
+            new Input(
+                QuestionFlowStep.IneligibleNorthernIreland,
+                entryPoint: QuestionFlowStep.Country
+            ),
+            QuestionFlowStep.Country),
+        new(
             "Ownership status goes back to check answers if was changing answer",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
@@ -395,12 +408,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.IneligibleScotland),
         new(
-            "Country continues to service unsuitable if the country is Northern Ireland",
+            "Country continues to ineligible Northern Ireland if the country is Northern Ireland",
             new Input(
                 QuestionFlowStep.Country,
                 country: Country.NorthernIreland
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStep.IneligibleNorthernIreland),
         new(
             "Country continues to service unsuitable if the country is Other",
             new Input(
@@ -595,13 +608,13 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.IneligibleScotland),
         new(
-            "Country continues to service unsuitable if the country is Northern Ireland and was changing answer",
+            "Country continues to ineligible Northern Ireland if the country is Northern Ireland and was changing answer",
             new Input(
                 QuestionFlowStep.Country,
                 country: Country.NorthernIreland,
                 entryPoint: QuestionFlowStep.Country
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStep.IneligibleNorthernIreland),
         new(
             "Country continues to service unsuitable if the country is Other and was changing answer",
             new Input(
