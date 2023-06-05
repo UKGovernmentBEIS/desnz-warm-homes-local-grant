@@ -248,7 +248,7 @@ public class QuestionnaireTests
         var result = underTest.LocalAuthorityName;
         
         // Assert
-        result.Should().Be("Aberdeenshire");
+        result.Should().Be("Aberdeenshire Council");
     }
     
     [Test]
