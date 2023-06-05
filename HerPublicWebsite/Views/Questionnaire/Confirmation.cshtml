@@ -30,7 +30,7 @@
 
         <h2 class="govuk-heading-l">What happens next</h2>
 
-        <p class="govuk-body"><strong>@Model.LocalAuthorityName council or their official contractor</strong> will process
+        <p class="govuk-body"><strong>@Model.LocalAuthorityName or their official contractor</strong> will process
             your details and contact you if they need any more information on the contact details you proviced.</p>
 
         @if (Model.LocalAuthorityIsLiveWithHug2)
@@ -41,7 +41,7 @@
                    })
         }
 
-        <p class="govuk-body">To enquire about your application visit <a href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName council's website</a>.</p>
+        <p class="govuk-body">To enquire about your application visit <a href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName's website</a>.</p>
 
         @if (Model.EmailPreferenceSubmitted)
         {
