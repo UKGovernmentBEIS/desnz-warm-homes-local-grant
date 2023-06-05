@@ -100,8 +100,6 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             {
                 { Country: not Country.England }
                     => QuestionFlowStep.Country,
-                { EpcDetailsAreCorrect: true }
-                    => QuestionFlowStep.ReviewEpc,
                 // By using the browser back button a user can get to the service unsuitable page when their questionnaire
                 // says that they are suitable. In that case we don't want to show them an error page, so set the back
                 // link to just go to the start of the questionnaire.
@@ -117,7 +115,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 _ => QuestionFlowStep.Country
             };
         }
-        
+
         private QuestionFlowStep IneligibleTenureBackDestination()
         {
             return QuestionFlowStep.OwnershipStatus;
@@ -261,10 +259,9 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep ReviewEpcForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
-            return (entryPoint, questionnaire.EpcDetailsAreCorrect!.Value) switch
+            return entryPoint switch
             {
-                (_, true) => QuestionFlowStep.ServiceUnsuitable,
-                (QuestionFlowStep.Address, _) => QuestionFlowStep.CheckAnswers,
+                QuestionFlowStep.Address => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.HouseholdIncome
             };
         }

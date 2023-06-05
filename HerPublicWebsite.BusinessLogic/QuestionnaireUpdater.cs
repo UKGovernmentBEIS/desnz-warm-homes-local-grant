@@ -72,6 +72,7 @@ public class QuestionnaireUpdater
     public Questionnaire UpdateEpcIsCorrect(Questionnaire questionnaire, bool epcIsCorrect)
     {
         questionnaire.EpcDetailsAreCorrect = epcIsCorrect;
+
         return questionnaire;
     }
 
