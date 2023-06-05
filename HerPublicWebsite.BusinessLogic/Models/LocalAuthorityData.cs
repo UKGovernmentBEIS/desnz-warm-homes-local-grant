@@ -194,7 +194,7 @@ public class LocalAuthorityData
         { "5690", new LocalAuthorityDetails("London Borough of Lewisham", Hug2Status.Pending, "https://lewisham.gov.uk/") },
         { "3415", new LocalAuthorityDetails("Lichfield District Council", Hug2Status.Pending, "https://www.lichfielddc.gov.uk/") },
         { "2515", new LocalAuthorityDetails("City of Lincoln Council", Hug2Status.Pending, "http://www.lincoln.gov.uk/") },
-        { "4310", new LocalAuthorityDetails("Liverpool City Council", Hug2Status.Pending, "https://liverpool.gov.uk/") },
+        { "4310", new LocalAuthorityDetails("Liverpool City Council", Hug2Status.Live, "https://liverpool.gov.uk/") }, // TODO: BEISHER-620 revert this after testing
         { "5180", new LocalAuthorityDetails("London Borough of Bromley", Hug2Status.Pending, "https://www.bromley.gov.uk/") },
         { "5420", new LocalAuthorityDetails("London Borough of Haringey", Hug2Status.Pending, "https://www.haringey.gov.uk/") },
         { "5540", new LocalAuthorityDetails("London Borough of Hounslow", Hug2Status.Pending, "https://www.hounslow.gov.uk/") },
