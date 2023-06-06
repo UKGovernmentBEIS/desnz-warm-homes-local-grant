@@ -48,7 +48,7 @@
             @await Html.GovUkNotificationBanner(new NotificationBannerViewModel
                    {
                        TitleText = "Success",
-                       Text = "Your answers have been submitted.",
+                       Text = Model.CanNotifyAboutFutureSchemes is YesOrNo.Yes ? "Your contact details have been submitted" : "Your answers have been submitted.",
                        Classes = "govuk-notification-banner--success"
                    })
         }
