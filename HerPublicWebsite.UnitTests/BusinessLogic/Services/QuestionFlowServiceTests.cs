@@ -387,13 +387,6 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
-            "Gas boiler continues to country if the user doesn't know about their boiler",
-            new Input(
-                QuestionFlowStep.GasBoiler,
-                hasGasBoiler: HasGasBoiler.Unknown
-            ),
-            QuestionFlowStep.Country),
-        new(
             "Country continues to ineligible Wales if the country is Wales",
             new Input(
                 QuestionFlowStep.Country,
@@ -580,14 +573,6 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.GasBoiler,
                 hasGasBoiler: HasGasBoiler.No,
-                entryPoint: QuestionFlowStep.GasBoiler
-            ),
-            QuestionFlowStep.CheckAnswers),
-        new(
-            "Gas boiler returns to check answers if user doesn't know about their boiler, and was changing answer",
-            new Input(
-                QuestionFlowStep.GasBoiler,
-                hasGasBoiler: HasGasBoiler.Unknown,
                 entryPoint: QuestionFlowStep.GasBoiler
             ),
             QuestionFlowStep.CheckAnswers),
