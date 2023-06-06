@@ -8,8 +8,6 @@ namespace HerPublicWebsite.BusinessLogic.Models.Enums
         Wales,
         Scotland,
         [GovUkRadioCheckboxLabelText(Text = "Northern Ireland")]
-        NorthernIreland,
-        [GovUkRadioCheckboxLabelText(Text = "A country not listed here")]
-        Other
+        NorthernIreland
     }
 }

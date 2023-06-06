@@ -190,13 +190,6 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Eligible),
         new(
-            "Service unsuitable goes back to the country you came from",
-            new Input(
-                QuestionFlowStep.ServiceUnsuitable,
-                country: Country.Other
-            ),
-            QuestionFlowStep.Country),
-        new(
             "Service unsuitable goes back to review EPC if EPC is filled in",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
@@ -341,14 +334,6 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.CheckAnswers),
         new(
-            "Service unsuitable goes back to the country you came from if was changing answer",
-            new Input(
-                QuestionFlowStep.ServiceUnsuitable,
-                country: Country.Other,
-                entryPoint: QuestionFlowStep.Country
-            ),
-            QuestionFlowStep.Country),
-        new(
             "Service unsuitable goes back to review EPC if EPC is filled in if was changing answer",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
@@ -414,13 +399,6 @@ public class QuestionFlowServiceTests
                 country: Country.NorthernIreland
             ),
             QuestionFlowStep.IneligibleNorthernIreland),
-        new(
-            "Country continues to service unsuitable if the country is Other",
-            new Input(
-                QuestionFlowStep.Country,
-                country: Country.Other
-            ),
-            QuestionFlowStep.ServiceUnsuitable),
         new(
             "Country continues to ownership status",
             new Input(
@@ -615,14 +593,6 @@ public class QuestionFlowServiceTests
                 entryPoint: QuestionFlowStep.Country
             ),
             QuestionFlowStep.IneligibleNorthernIreland),
-        new(
-            "Country continues to service unsuitable if the country is Other and was changing answer",
-            new Input(
-                QuestionFlowStep.Country,
-                country: Country.Other,
-                entryPoint: QuestionFlowStep.Country
-            ),
-            QuestionFlowStep.ServiceUnsuitable),
         new(
             "Country returns to check answers if the country is England was changing answer",
             new Input(
