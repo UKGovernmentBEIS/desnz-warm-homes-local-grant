@@ -18,8 +18,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         
-        <h1 class="govuk-heading-l">We couldn't find your local authority</h1>
-        <p class="govuk-body">Click your local authority in the list below.</p>
+        <h1 class="govuk-heading-l">Select your local authority</h1>
         
         <div class="her_alphabet_links">
             @{
@@ -29,7 +28,7 @@
             <div class="her_alphabet_links__row">
                 @for (var i = 0; i < lettersInFirstRow; i++)
                 {
-                    <span class="her_alphabet_links__letter"><a class="govuk-link" href="#@orderedLetters[i]">@orderedLetters[i]</a></span>
+                    <span class="her_alphabet_links__letter"><a class="govuk-link govuk-!-font-size-19 govuk-!-font-weight-bold" href="#@orderedLetters[i]">@orderedLetters[i]</a></span>
                 }
             </div>
             <div class="her_alphabet_links__row">
@@ -38,7 +37,7 @@
                     <span class="her_alphabet_links__letter">
                         @if (lettersInFirstRow + i < orderedLetters.Count)
                         {
-                            <a class="govuk-link" href="#@orderedLetters[lettersInFirstRow + i]">@orderedLetters[lettersInFirstRow + i]</a>
+                            <a class="govuk-link govuk-!-font-size-19 govuk-!-font-weight-bold" href="#@orderedLetters[lettersInFirstRow + i]">@orderedLetters[lettersInFirstRow + i]</a>
                         }
                     </span>
                 }
@@ -56,14 +55,14 @@
                     <div class="govuk-grid-column-one-half">
                         @foreach (var laDetails in orderedLaDetails.Take(linksInFirstColumn))
                         {
-                            <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode, entryPoint = Model.EntryPoint })">@laDetails.Name</a>
+                            <a class="govuk-link govuk-!-font-size-19" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode, entryPoint = Model.EntryPoint })">@laDetails.Name</a>
                             <br/>
                         }
                     </div>
                     <div class="govuk-grid-column-one-half">
                         @foreach (var laDetails in orderedLaDetails.Skip(linksInFirstColumn))
                         {
-                            <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode, entryPoint = Model.EntryPoint })">@laDetails.Name</a>
+                            <a class="govuk-link govuk-!-font-size-19" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode, entryPoint = Model.EntryPoint })">@laDetails.Name</a>
                             <br/>
                         }
                     </div>
