@@ -1,7 +1,7 @@
 {
-  "name": "simpleenergyadvicepublicwebsite",
+  "name": "homeupgradegrantpublicwebsite",
   "version": "1.0.0",
-  "description": "The public-facing website of the Simple Energy Advice service",
+  "description": "The public-facing website of the Home Upgrade Grant service",
   "dependencies": {
     "govuk-frontend": "^4.0.0",
     "html5shiv": "^3.7.3",

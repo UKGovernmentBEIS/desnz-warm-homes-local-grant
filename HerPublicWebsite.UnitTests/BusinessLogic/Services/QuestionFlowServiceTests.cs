@@ -197,21 +197,11 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
-            "Service unsuitable goes back to review EPC if EPC is filled in",
-            new Input(
-                QuestionFlowStep.ServiceUnsuitable,
-                country: Country.England,
-                ownershipStatus: OwnershipStatus.OwnerOccupancy,
-                epcDetailsAreCorrect: true
-            ),
-            QuestionFlowStep.ReviewEpc),
-        new(
             "Service unsuitable goes back to boiler question if the service is actually suitable",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
                 country: Country.England,
-                ownershipStatus: OwnershipStatus.OwnerOccupancy,
-                epcDetailsAreCorrect: false
+                ownershipStatus: OwnershipStatus.OwnerOccupancy
             ),
             QuestionFlowStep.GasBoiler),
         new(
@@ -349,22 +339,11 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
-            "Service unsuitable goes back to review EPC if EPC is filled in if was changing answer",
-            new Input(
-                QuestionFlowStep.ServiceUnsuitable,
-                country: Country.England,
-                ownershipStatus: OwnershipStatus.OwnerOccupancy,
-                epcDetailsAreCorrect: true,
-                entryPoint: QuestionFlowStep.Address
-            ),
-            QuestionFlowStep.ReviewEpc),
-        new(
             "Service unsuitable goes back to boiler question if the service is actually suitable and was changing answer",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
                 country: Country.England,
                 ownershipStatus: OwnershipStatus.OwnerOccupancy,
-                epcDetailsAreCorrect: false,
                 entryPoint: QuestionFlowStep.GasBoiler
             ),
             QuestionFlowStep.GasBoiler),
@@ -478,12 +457,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
-            "Review EPC continues to service unsuitable if EPC is correct",
+            "Review EPC continues to household income if EPC is correct",
             new Input(
                 QuestionFlowStep.ReviewEpc,
                 epcDetailsAreCorrect: true
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStep.HouseholdIncome),
         new(
             "Manual address continues to select local authority",
             new Input(
@@ -681,13 +660,13 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.CheckAnswers),
         new(
-            "Review EPC continues to service unsuitable if EPC is correct and was changing answer",
+            "Review EPC continues to check answers if EPC is correct and was changing answer",
             new Input(
                 QuestionFlowStep.ReviewEpc,
                 epcDetailsAreCorrect: true,
                 entryPoint: QuestionFlowStep.Address
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStep.CheckAnswers),
         new(
             "Manual address continues to select local authority if was changing answer",
             new Input(
