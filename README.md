@@ -88,11 +88,6 @@ Fill in the opened `secrets.json` file with:
 
 ```json
 {
-    "BasicAuth": {
-        "Username": "<REAL_VALUE_HERE>",
-        "Password": "<REAL_VALUE_HERE>"
-    },
-
     "EpbEpc": {
         "Username": "<REAL_VALUE_HERE>",
         "Password": "<REAL_VALUE_HERE>"
@@ -101,12 +96,11 @@ Fill in the opened `secrets.json` file with:
     "GovUkNotify": {
         "ApiKey": "<REAL_VALUE_HERE>"
     },
-   
+
     "GoogleAnalytics": {
-        "ApiSecret": "REAL_VALUE_HERE",
-        "MeasurementId": "REAL_VALUE_HERE"
+        "ApiSecret": "REAL_VALUE_HERE"
     },
-   
+
    "OsPlaces": {
       "Key": "REAL_VALUE_HERE"
    }
@@ -162,13 +156,29 @@ The solution is unfortunately tedious. Given branch 1 with migration A and branc
 
 ## Environments
 
-This app is deployed to BEIS Azure subscription
+This app is deployed to BEIS AWS platform
 
-### Pre-requisites
+### Configuration
 
-Before you can work with the environments you will need some things:
-- Credentials for BEIS Azure
+Non-secret configuration is stored in the corresponding `appsettings.<environment>.json` file:
+- appsettings.DEV.json
+- appsettings.UAT.json
+- appsettings.Production.json
 
-### Set up
+Secrets must be configured in the ECS tasks, corresponding to the variables in `secrets.json` above:
+- `ConnectionStrings__PostgreSQLConnection`
+- `EpbEpc__Username`
+- `EpbEpc__Password`
+- `GoogleAnalytics__ApiKey`
+- `GovUkNotify__ApiKey`
+- `OsPlaces__Key`
 
-TODO fill this in once we know how to create Azure environments
+To prevent public access to DEV and UAT environments, we should also override the basic auth credentials:
+- `BasicAuth__Username`
+- `BasicAuth__Password`
+
+(These are not required for production)
+
+The S3 configuration is also configured in ECS, as it's linked to AWS resources
+- `S3__BucketName`
+- `S3__Region`

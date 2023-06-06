@@ -200,9 +200,10 @@ namespace HerPublicWebsite
 
         private void ConfigureHttpBasicAuth(IApplicationBuilder app)
         {
-            if (!webHostEnvironment.IsProduction())
+            if (!webHostEnvironment.IsDevelopment() && !webHostEnvironment.IsProduction())
             {
-                // Add HTTP Basic Authentication in our non-production environments to make sure people don't accidentally stumble across the site
+                // Add HTTP Basic Authentication in our non-local-development and non-production environments
+                // to make sure people don't accidentally stumble across the site
                 app.UseMiddleware<BasicAuthMiddleware>();
             }
         }
