@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using HerPublicWebsite.BusinessLogic.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Notify.Client;
 using Notify.Exceptions;
 using Notify.Models.Responses;
 
-namespace HerPublicWebsite.ExternalServices.EmailSending
+namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
 {
-    public class GovUkNotifyApi: IEmailSender
+    public class GovUkNotifyApi : IEmailSender
     {
         private readonly NotificationClient client;
         private readonly GovUkNotifyConfiguration govUkNotifyConfig;
@@ -43,32 +45,41 @@ namespace HerPublicWebsite.ExternalServices.EmailSending
                 throw new EmailSenderException(EmailSenderExceptionType.Other);
             }
         }
-
-        public void SendReferenceNumberEmail(string emailAddress, string reference)
-        {
-            var template = govUkNotifyConfig.ApplicationReferenceNumberTemplate;
+        
+        public void SendReferenceCodeEmail
+        (
+            string emailAddress,
+            string recipientName,
+            string referenceCode,
+            string custodianCode
+        ) {
+            var template = govUkNotifyConfig.ReferenceCodeTemplate;
+            LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
+            try
+            {
+                localAuthorityDetails = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[custodianCode];
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogError
+                (
+                    ex,
+                    "Attempted to send reference code email with invalid custodian code \"{CustodianCode}\"",
+                    custodianCode
+                );
+                throw new ArgumentOutOfRangeException
+                (
+                    $"Attempted to send reference code email with invalid custodian code \"{custodianCode}\"",
+                    ex
+                );
+            }
+            
             var personalisation = new Dictionary<string, dynamic>
             {
-                { template.ReferencePlaceholder, reference },
-                { template.MagicLinkPlaceholder, govUkNotifyConfig.BaseUrl + "returning-user/" + reference },
-                { template.ReturningUserLinkPlaceholder, govUkNotifyConfig.BaseUrl + "new-or-returning-user" },
-                { template.FeedbackLinkPlaceholder, Constants.FEEDBACK_URL_DEFAULT }
-            };
-            var emailModel = new GovUkNotifyEmailModel
-            {
-                EmailAddress = emailAddress,
-                TemplateId = template.Id,
-                Personalisation = personalisation
-            };
-            var response = SendEmail(emailModel);
-        }
-
-        public void SendRequestedDocumentEmail(string emailAddress, byte[] documentContents)
-        {
-            var template = govUkNotifyConfig.RequestDocumentTemplate;
-            var personalisation = new Dictionary<string, dynamic>
-            {
-                { template.DocumentContentsPlaceholder, NotificationClient.PrepareUpload(documentContents) }
+                { template.RecipientNamePlaceholder, recipientName },
+                { template.ReferenceCodePlaceholder, referenceCode },
+                { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
+                { template.LocalAuthorityWebsiteUrlPlaceholder, localAuthorityDetails.WebsiteUrl },
             };
             var emailModel = new GovUkNotifyEmailModel
             {

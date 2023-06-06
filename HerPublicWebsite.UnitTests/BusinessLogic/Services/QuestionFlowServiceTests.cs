@@ -70,6 +70,18 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
+            "Ineligible Scotland goes back to country",
+            new Input(
+                QuestionFlowStep.IneligibleScotland
+            ),
+            QuestionFlowStep.Country),
+        new(
+            "Ineligible Northern Ireland goes back to country",
+            new Input(
+                QuestionFlowStep.IneligibleNorthernIreland
+            ),
+            QuestionFlowStep.Country),
+        new(
             "Ownership status goes back to Country",
             new Input(
                 QuestionFlowStep.OwnershipStatus
@@ -231,6 +243,20 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
+            "Ineligible Scotland goes back to country if was changing answer",
+            new Input(
+                QuestionFlowStep.IneligibleScotland,
+                entryPoint: QuestionFlowStep.Country
+            ),
+            QuestionFlowStep.Country),
+        new(
+            "Ineligible Northern Ireland goes back to country if was changing answer",
+            new Input(
+                QuestionFlowStep.IneligibleNorthernIreland,
+                entryPoint: QuestionFlowStep.Country
+            ),
+            QuestionFlowStep.Country),
+        new(
             "Ownership status goes back to check answers if was changing answer",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
@@ -375,19 +401,19 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.IneligibleWales),
         new(
-            "Country continues to service unsuitable if the country is Scotland",
+            "Country continues to ineligible Scotland if the country is Scotland",
             new Input(
                 QuestionFlowStep.Country,
                 country: Country.Scotland
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStep.IneligibleScotland),
         new(
-            "Country continues to service unsuitable if the country is Northern Ireland",
+            "Country continues to ineligible Northern Ireland if the country is Northern Ireland",
             new Input(
                 QuestionFlowStep.Country,
                 country: Country.NorthernIreland
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStep.IneligibleNorthernIreland),
         new(
             "Country continues to service unsuitable if the country is Other",
             new Input(
@@ -574,21 +600,21 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.IneligibleWales),
         new(
-            "Country continues to service unsuitable if the country is Scotland and was changing answer",
+            "Country continues to ineligible Scotland if the country is Scotland and was changing answer",
             new Input(
                 QuestionFlowStep.Country,
                 country: Country.Scotland,
                 entryPoint: QuestionFlowStep.Country
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStep.IneligibleScotland),
         new(
-            "Country continues to service unsuitable if the country is Northern Ireland and was changing answer",
+            "Country continues to ineligible Northern Ireland if the country is Northern Ireland and was changing answer",
             new Input(
                 QuestionFlowStep.Country,
                 country: Country.NorthernIreland,
                 entryPoint: QuestionFlowStep.Country
             ),
-            QuestionFlowStep.ServiceUnsuitable),
+            QuestionFlowStep.IneligibleNorthernIreland),
         new(
             "Country continues to service unsuitable if the country is Other and was changing answer",
             new Input(

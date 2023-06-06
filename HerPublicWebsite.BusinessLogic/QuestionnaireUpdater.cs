@@ -1,4 +1,5 @@
-﻿using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
+﻿using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
+using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
@@ -10,15 +11,18 @@ public class QuestionnaireUpdater
     private readonly IEpcApi epcApi;
     private readonly IEligiblePostcodeService eligiblePostcodeService;
     private readonly IDataAccessProvider dataAccessProvider;
+    private readonly IEmailSender emailSender;
 
     public QuestionnaireUpdater(
         IEpcApi epcApi,
         IEligiblePostcodeService eligiblePostcodeService,
-        IDataAccessProvider dataAccessProvider)
-    {
+        IDataAccessProvider dataAccessProvider,
+        IEmailSender emailSender
+    ) {
         this.epcApi = epcApi;
         this.eligiblePostcodeService = eligiblePostcodeService;
         this.dataAccessProvider = dataAccessProvider;
+        this.emailSender = emailSender;
     }
 
     public Questionnaire UpdateCountry(Questionnaire questionnaire, Country country)
@@ -109,7 +113,16 @@ public class QuestionnaireUpdater
         questionnaire.Hug2ReferralId = referralRequest.ReferralCode;
         questionnaire.ReferralCreated = referralRequest.RequestDate;
 
-        // TODO BEISHER-516 Send confirmation email
+        if (!string.IsNullOrEmpty(emailAddress))
+        {
+            emailSender.SendReferenceCodeEmail
+            (
+                emailAddress,
+                name,
+                referralRequest.ReferralCode,
+                referralRequest.CustodianCode
+            );
+        }
 
         return questionnaire;
     }
@@ -151,7 +164,16 @@ public class QuestionnaireUpdater
         var notificationContactDetails = new NotificationDetails(questionnaire);
         await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.Hug2ReferralId, notificationContactDetails);
 
-        // TODO BEISHER-516 Send confirmation email if requested
+        if (confirmationConsentGranted)
+        {
+            emailSender.SendReferenceCodeEmail
+            (
+                confirmationEmailAddress,
+                questionnaire.LaContactName,
+                questionnaire.Hug2ReferralId,
+                questionnaire.CustodianCode
+            );
+        }
 
         return questionnaire;
     }

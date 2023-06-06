@@ -48,7 +48,7 @@ namespace HerPublicWebsite.Data.Migrations
 
                     b.HasIndex("ReferralRequestId");
 
-                    b.ToTable("ContactDetails");
+                    b.ToTable("NotificationDetails");
                 });
 
             modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", b =>
