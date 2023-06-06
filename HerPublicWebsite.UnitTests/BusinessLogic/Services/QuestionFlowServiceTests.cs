@@ -185,21 +185,11 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Country),
         new(
-            "Service unsuitable goes back to review EPC if EPC is filled in",
-            new Input(
-                QuestionFlowStep.ServiceUnsuitable,
-                country: Country.England,
-                ownershipStatus: OwnershipStatus.OwnerOccupancy,
-                epcDetailsAreCorrect: true
-            ),
-            QuestionFlowStep.ReviewEpc),
-        new(
             "Service unsuitable goes back to boiler question if the service is actually suitable",
             new Input(
                 QuestionFlowStep.ServiceUnsuitable,
                 country: Country.England,
-                ownershipStatus: OwnershipStatus.OwnerOccupancy,
-                epcDetailsAreCorrect: false
+                ownershipStatus: OwnershipStatus.OwnerOccupancy
             ),
             QuestionFlowStep.GasBoiler),
         new(
@@ -328,7 +318,6 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.ServiceUnsuitable,
                 country: Country.England,
                 ownershipStatus: OwnershipStatus.OwnerOccupancy,
-                epcDetailsAreCorrect: false,
                 entryPoint: QuestionFlowStep.GasBoiler
             ),
             QuestionFlowStep.GasBoiler),
