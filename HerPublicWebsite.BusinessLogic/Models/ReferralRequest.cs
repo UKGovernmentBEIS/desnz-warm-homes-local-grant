@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
+﻿using HerPublicWebsite.BusinessLogic.Models.Enums;
 
 namespace HerPublicWebsite.BusinessLogic.Models;
 
@@ -18,7 +17,7 @@ public class ReferralRequest
 
     public EpcRating EpcRating { get; set; } = EpcRating.Unknown;
     public bool IsLsoaProperty { get; set; }
-    public HasGasBoiler HasGasBoiler { get; set; } = HasGasBoiler.Unknown;
+    public HasGasBoiler HasGasBoiler { get; set; }
     public IncomeBand IncomeBand { get; set; }
     
     public string FullName { get; set; }

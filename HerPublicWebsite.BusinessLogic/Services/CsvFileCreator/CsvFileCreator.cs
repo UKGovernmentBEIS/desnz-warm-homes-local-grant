@@ -96,7 +96,6 @@ public class CsvFileCreator
             OffGasGrid = request.HasGasBoiler switch
             {
                 HasGasBoiler.No => "yes",
-                HasGasBoiler.Unknown => "unknown",
                 HasGasBoiler.Yes => "no",
                 _ => throw new ArgumentOutOfRangeException("request.HasGasBoiler", "Unrecognised HasGasBoiler value: " + request.HasGasBoiler)
             };
