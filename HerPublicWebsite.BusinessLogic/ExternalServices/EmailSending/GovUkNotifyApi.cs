@@ -78,7 +78,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             {
                 { template.RecipientNamePlaceholder, recipientName },
                 { template.ReferenceCodePlaceholder, referenceCode },
-                { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name + " Council" },
+                { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
                 { template.LocalAuthorityWebsiteUrlPlaceholder, localAuthorityDetails.WebsiteUrl },
             };
             var emailModel = new GovUkNotifyEmailModel
