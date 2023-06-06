@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using HerPublicWebsite.BusinessLogic;
+using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
@@ -18,6 +19,7 @@ public class QuestionnaireUpdaterTests
     private Mock<IEpcApi> mockEpcApi;
     private Mock<IEligiblePostcodeService> mockPostCodeService;
     private Mock<IDataAccessProvider> mockDataAccessProvider;
+    private Mock<IEmailSender> mockEmailSender;
     
     
     [SetUp]
@@ -26,7 +28,14 @@ public class QuestionnaireUpdaterTests
         mockEpcApi = new Mock<IEpcApi>();
         mockPostCodeService = new Mock<IEligiblePostcodeService>();
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
-        underTest = new QuestionnaireUpdater(mockEpcApi.Object, mockPostCodeService.Object, mockDataAccessProvider.Object);
+        mockEmailSender = new Mock<IEmailSender>();
+        underTest = new QuestionnaireUpdater
+        (
+            mockEpcApi.Object,
+            mockPostCodeService.Object,
+            mockDataAccessProvider.Object,
+            mockEmailSender.Object
+        );
     }
     
     [Test]
@@ -190,6 +199,111 @@ public class QuestionnaireUpdaterTests
     }
     
     [Test]
+    public async Task GenerateReferralAsync_WhenCalledWithEmail_SendOneEmailWithReferralCode()
+    {
+        // Arrange
+        const string testCustodianCode = "1234";
+        const string testReferralCode = "referral code";
+        const string testName = "Example Person";
+        const string testEmailAddress = "test@example.com";
+        var questionnaire = new Questionnaire
+        {
+            CustodianCode = testCustodianCode,
+            IsLsoaProperty = false,
+            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            HasGasBoiler = HasGasBoiler.No
+        };
+        var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
+        var referral = new ReferralRequest
+        {
+            CustodianCode = testCustodianCode,
+            ReferralCode = testReferralCode,
+            RequestDate = creationDate
+        };
+        mockDataAccessProvider.Setup(dap =>
+            dap.PersistNewReferralRequestAsync
+            (
+                It.Is<ReferralRequest>(rr => rr.CustodianCode == testCustodianCode)
+            )).ReturnsAsync(referral);
+        mockEmailSender.Setup(es =>
+            es.SendReferenceCodeEmail
+            (
+                testEmailAddress,
+                testName,
+                testReferralCode,
+                testCustodianCode
+            )
+        );
+
+        // Act
+        var result = await underTest.GenerateReferralAsync
+        (
+            questionnaire,
+            testName,
+            testEmailAddress,
+            ""
+        );
+        
+        // Assert
+        mockEmailSender.Verify(es => es.SendReferenceCodeEmail
+        (
+            testEmailAddress,
+            testName,
+            testReferralCode,
+            testCustodianCode
+        ), Times.Once);
+    }
+    
+    [Test]
+    public async Task GenerateReferralAsync_WhenCalledWithoutEmail_DoesNotSendEmail()
+    {
+        // Arrange
+        const string testReferralCode = "referral code";
+        const string testName = "Example Person";
+        var questionnaire = new Questionnaire
+        {
+            IsLsoaProperty = false,
+            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            HasGasBoiler = HasGasBoiler.No
+        };
+        var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
+        var referral = new ReferralRequest
+        {
+            ReferralCode = testReferralCode,
+            RequestDate = creationDate
+        };
+        mockDataAccessProvider.Setup(dap =>
+            dap.PersistNewReferralRequestAsync(It.IsAny<ReferralRequest>())).ReturnsAsync(referral);
+        mockEmailSender.Setup(es =>
+            es.SendReferenceCodeEmail
+            (
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()
+            )
+        );
+
+        // Act
+        var result = await underTest.GenerateReferralAsync
+        (
+            questionnaire,
+            testName,
+            "",
+            ""
+        );
+        
+        // Assert
+        mockEmailSender.Verify(es => es.SendReferenceCodeEmail
+        (
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string>()
+        ), Times.Never);
+    }
+    
+    [Test]
     public async Task RecordNotificationConsentAsync_WhenCalledWithLaContactEmail_PersistsConsent()
     {
         // Arrange
@@ -240,5 +354,101 @@ public class QuestionnaireUpdaterTests
         // Assert
         result.NotificationConsent.Should().BeFalse();
         result.NotificationEmailAddress.Should().BeNull();
+    }
+
+    [TestCase(true, "test@example.com")]
+    [TestCase(false, "")]
+    public async Task RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentGrantedAndEmailGiven_SendsOneEmailWithReferralCode
+    (
+        bool notificationConsentGranted,
+        string notificationEmailAddress
+    ) {
+        // Arrange
+        const string testCustodianCode = "1234";
+        const string testReferralCode = "referral code";
+        const string testName = "Example Person";
+        const string testEmailAddress = "test@example.com";
+        var questionnaire = new Questionnaire
+        {
+            LaContactName = testName,
+            LaContactEmailAddress = testEmailAddress,
+            Hug2ReferralId = testReferralCode,
+            CustodianCode = testCustodianCode,
+        };
+        mockEmailSender.Setup(es =>
+            es.SendReferenceCodeEmail
+            (
+                testEmailAddress,
+                testName,
+                testReferralCode,
+                testCustodianCode
+            )
+        );
+        
+        // Act
+        var result = await underTest.RecordConfirmationAndNotificationConsentAsync
+        (
+            questionnaire,
+            notificationConsentGranted,
+            notificationEmailAddress,
+            true,
+            testEmailAddress
+        );
+        
+        // Assert
+        mockEmailSender.Verify(es => es.SendReferenceCodeEmail
+        (
+            testEmailAddress,
+            testName,
+            testReferralCode,
+            testCustodianCode
+        ), Times.Once);
+    }
+    
+    [TestCase(true, "test@example.com")]
+    [TestCase(false, "")]
+    public async Task RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentNotGrantedAndEmailNotGiven_DoesNotSendEmail
+    (
+        bool notificationConsentGranted,
+        string notificationEmailAddress
+    ) {
+        // Arrange
+        const string testCustodianCode = "1234";
+        const string testReferralCode = "referral code";
+        const string testName = "Example Person";
+        var questionnaire = new Questionnaire
+        {
+            LaContactName = testName,
+            Hug2ReferralId = testReferralCode,
+            CustodianCode = testCustodianCode,
+        };
+        mockEmailSender.Setup(es =>
+            es.SendReferenceCodeEmail
+            (
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()
+            )
+        );
+        
+        // Act
+        var result = await underTest.RecordConfirmationAndNotificationConsentAsync
+        (
+            questionnaire,
+            notificationConsentGranted,
+            notificationEmailAddress,
+            false,
+            ""
+        );
+        
+        // Assert
+        mockEmailSender.Verify(es => es.SendReferenceCodeEmail
+        (
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string>()
+        ), Times.Never);
     }
 }

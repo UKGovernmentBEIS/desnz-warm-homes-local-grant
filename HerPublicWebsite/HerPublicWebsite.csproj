@@ -9,7 +9,6 @@
     <ItemGroup>
         <PackageReference Include="CabinetOffice.GovUkDesignSystem" Version="1.0.0-922f9ad" />
         <PackageReference Include="Community.Microsoft.Extensions.Caching.PostgreSql" Version="3.1.2" />
-        <PackageReference Include="GovukNotify" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="6.0.16" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.16" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.16">

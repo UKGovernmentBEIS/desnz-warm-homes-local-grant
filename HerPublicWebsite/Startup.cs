@@ -20,7 +20,7 @@ using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 using HerPublicWebsite.BusinessLogic.Services.S3ReferralFileKeyGenerator;
 using HerPublicWebsite.Data;
 using HerPublicWebsite.ErrorHandling;
-using HerPublicWebsite.ExternalServices.EmailSending;
+using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 using HerPublicWebsite.ExternalServices.GoogleAnalytics;
 using HerPublicWebsite.Middleware;
 using HerPublicWebsite.Services;
