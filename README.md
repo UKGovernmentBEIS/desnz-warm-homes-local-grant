@@ -173,6 +173,12 @@ Secrets must be configured in the ECS tasks, corresponding to the variables in `
 - `GovUkNotify__ApiKey`
 - `OsPlaces__Key`
 
+To prevent public access to DEV and UAT environments, we should also override the basic auth credentials:
+- `BasicAuth__Username`
+- `BasicAuth__Password`
+
+(These are not required for production)
+
 The S3 configuration is also configured in ECS, as it's linked to AWS resources
 - `S3__BucketName`
 - `S3__Region`
