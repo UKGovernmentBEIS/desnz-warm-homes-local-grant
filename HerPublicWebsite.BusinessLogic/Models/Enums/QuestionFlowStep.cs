@@ -9,7 +9,6 @@ public enum QuestionFlowStep
     IneligibleWales,
     IneligibleScotland,
     IneligibleNorthernIreland,
-    ServiceUnsuitable,
     OwnershipStatus,
     IneligibleTenure,
     Address,

@@ -172,7 +172,6 @@ public class QuestionnaireTests
     [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, false, EpcRating.A, false, IncomeBand.UnderOrEqualTo31000, true)] // Eligible wrong EPC found
     [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, true, EpcRating.D, true, IncomeBand.GreaterThan31000, true)] // Eligible high income but LSOA
     [TestCase(HasGasBoiler.Yes, Country.England, OwnershipStatus.OwnerOccupancy, true, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible gas boiler
-    [TestCase(HasGasBoiler.No, Country.Other, OwnershipStatus.OwnerOccupancy, true, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible country
     [TestCase(HasGasBoiler.No, Country.Scotland, OwnershipStatus.OwnerOccupancy, true, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible country
     [TestCase(HasGasBoiler.No, Country.Wales, OwnershipStatus.OwnerOccupancy, true, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible country
     [TestCase(HasGasBoiler.No, Country.NorthernIreland, OwnershipStatus.OwnerOccupancy, true, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible country

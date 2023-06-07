@@ -25,7 +25,6 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.IneligibleWales => IneligibleWalesBackDestination(),
                 QuestionFlowStep.IneligibleScotland => IneligibleScotlandBackDestination(),
                 QuestionFlowStep.IneligibleNorthernIreland => IneligibleNorthernIrelandBackDestination(),
-                QuestionFlowStep.ServiceUnsuitable => ServiceUnsuitableBackDestination(questionnaire),
                 QuestionFlowStep.OwnershipStatus => OwnershipStatusBackDestination(entryPoint),
                 QuestionFlowStep.IneligibleTenure => IneligibleTenureBackDestination(),
                 QuestionFlowStep.Address => AddressBackDestination(entryPoint),
@@ -239,7 +238,6 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 (_, Country.Wales) => QuestionFlowStep.IneligibleWales,
                 (_, Country.Scotland) => QuestionFlowStep.IneligibleScotland,
                 (_, Country.NorthernIreland) => QuestionFlowStep.IneligibleNorthernIreland,
-                (_, not Country.England) => QuestionFlowStep.ServiceUnsuitable,
                 (QuestionFlowStep.Country, _) => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.OwnershipStatus
             };

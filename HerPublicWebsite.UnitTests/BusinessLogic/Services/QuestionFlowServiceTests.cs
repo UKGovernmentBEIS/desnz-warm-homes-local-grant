@@ -190,21 +190,6 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Eligible),
         new(
-            "Service unsuitable goes back to the country you came from",
-            new Input(
-                QuestionFlowStep.ServiceUnsuitable,
-                country: Country.Other
-            ),
-            QuestionFlowStep.Country),
-        new(
-            "Service unsuitable goes back to boiler question if the service is actually suitable",
-            new Input(
-                QuestionFlowStep.ServiceUnsuitable,
-                country: Country.England,
-                ownershipStatus: OwnershipStatus.OwnerOccupancy
-            ),
-            QuestionFlowStep.GasBoiler),
-        new(
             "Gas boiler goes back to check answers if was changing answer",
             new Input(
                 QuestionFlowStep.GasBoiler,
@@ -330,23 +315,6 @@ public class QuestionFlowServiceTests
                 entryPoint: QuestionFlowStep.HouseholdIncome
             ),
             QuestionFlowStep.CheckAnswers),
-        new(
-            "Service unsuitable goes back to the country you came from if was changing answer",
-            new Input(
-                QuestionFlowStep.ServiceUnsuitable,
-                country: Country.Other,
-                entryPoint: QuestionFlowStep.Country
-            ),
-            QuestionFlowStep.Country),
-        new(
-            "Service unsuitable goes back to boiler question if the service is actually suitable and was changing answer",
-            new Input(
-                QuestionFlowStep.ServiceUnsuitable,
-                country: Country.England,
-                ownershipStatus: OwnershipStatus.OwnerOccupancy,
-                entryPoint: QuestionFlowStep.GasBoiler
-            ),
-            QuestionFlowStep.GasBoiler),
     };
 
     private static QuestionFlowServiceTestCase[] ForwardTestCases =
@@ -386,13 +354,6 @@ public class QuestionFlowServiceTests
                 country: Country.NorthernIreland
             ),
             QuestionFlowStep.IneligibleNorthernIreland),
-        new(
-            "Country continues to service unsuitable if the country is Other",
-            new Input(
-                QuestionFlowStep.Country,
-                country: Country.Other
-            ),
-            QuestionFlowStep.ServiceUnsuitable),
         new(
             "Country continues to ownership status",
             new Input(
@@ -579,14 +540,6 @@ public class QuestionFlowServiceTests
                 entryPoint: QuestionFlowStep.Country
             ),
             QuestionFlowStep.IneligibleNorthernIreland),
-        new(
-            "Country continues to service unsuitable if the country is Other and was changing answer",
-            new Input(
-                QuestionFlowStep.Country,
-                country: Country.Other,
-                entryPoint: QuestionFlowStep.Country
-            ),
-            QuestionFlowStep.ServiceUnsuitable),
         new(
             "Country returns to check answers if the country is England was changing answer",
             new Input(
