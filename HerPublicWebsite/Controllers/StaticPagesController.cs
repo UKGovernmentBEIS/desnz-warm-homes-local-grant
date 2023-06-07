@@ -1,15 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 
 namespace HerPublicWebsite.Controllers;
 
 public class StaticPagesController : Controller
 {
+    private readonly IWebHostEnvironment environment;
+
+    public StaticPagesController(IWebHostEnvironment environment)
+    {
+        this.environment = environment;
+    }
+
     [HttpGet("/")]
     public IActionResult Index()
     {
+        if (environment.IsProduction())
+        {
+            return Redirect(Constants.SERVICE_URL);
+        }
+
         return View("Index");
     }
-    
+
     [HttpGet("/accessibility-statement")]
     public IActionResult AccessibilityStatement()
     {
