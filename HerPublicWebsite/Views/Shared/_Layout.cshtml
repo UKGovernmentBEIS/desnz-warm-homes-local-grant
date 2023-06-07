@@ -78,7 +78,7 @@
             ServiceName = Constants.SERVICE_NAME,
             AssetsPath = assetsPath,
             HomepageUrl = "https://www.gov.uk",
-            ServiceUrl = "/placeholder", //TODO BEISHER-504 update this with the real service URL
+            ServiceUrl = Url.Action(nameof(StaticPagesController.Index), "StaticPages"),
             Navigation = headerNavigationLinks
         }))
 
