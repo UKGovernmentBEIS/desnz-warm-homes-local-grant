@@ -190,14 +190,6 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Eligible),
         new(
-            "Service unsuitable goes back to boiler question if the service is actually suitable",
-            new Input(
-                QuestionFlowStep.ServiceUnsuitable,
-                country: Country.England,
-                ownershipStatus: OwnershipStatus.OwnerOccupancy
-            ),
-            QuestionFlowStep.GasBoiler),
-        new(
             "Gas boiler goes back to check answers if was changing answer",
             new Input(
                 QuestionFlowStep.GasBoiler,
@@ -323,15 +315,6 @@ public class QuestionFlowServiceTests
                 entryPoint: QuestionFlowStep.HouseholdIncome
             ),
             QuestionFlowStep.CheckAnswers),
-        new(
-            "Service unsuitable goes back to boiler question if the service is actually suitable and was changing answer",
-            new Input(
-                QuestionFlowStep.ServiceUnsuitable,
-                country: Country.England,
-                ownershipStatus: OwnershipStatus.OwnerOccupancy,
-                entryPoint: QuestionFlowStep.GasBoiler
-            ),
-            QuestionFlowStep.GasBoiler),
     };
 
     private static QuestionFlowServiceTestCase[] ForwardTestCases =
