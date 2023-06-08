@@ -22,30 +22,35 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             this.logger = logger;
         }
 
-        private EmailNotificationResponse SendEmail(GovUkNotifyEmailModel emailModel)
+        private void SendEmail(GovUkNotifyEmailModel emailModel)
         {
             try
             {
-                var response = client.SendEmail(
+                client.SendEmail(
                     emailModel.EmailAddress,
                     emailModel.TemplateId,
                     emailModel.Personalisation,
                     emailModel.Reference,
                     emailModel.EmailReplyToId);
-                return response;
             }
             catch (NotifyClientException e)
             {
                 if (e.Message.Contains("Not a valid email address"))
                 {
-                    throw new EmailSenderException(EmailSenderExceptionType.InvalidEmailAddress);
+                    logger.LogWarning("GOV.UK Notify could not send to an invalid email address");
                 }
-
-                logger.LogError("GOV.UK Notify returned an error: " + e.Message);
-                throw new EmailSenderException(EmailSenderExceptionType.Other);
+                else if (e.Message.Contains("send to this recipient using a team-only API key"))
+                {
+                    // In development we use a 'team-only' API key which can only send to team emails
+                    logger.LogWarning($"GOV.UK Notify cannot send to this recipient using a team-only API key");
+                }
+                else
+                {
+                    logger.LogError(e, "GOV.UK Notify returned an error");
+                }
             }
         }
-        
+
         public void SendReferenceCodeEmail
         (
             string emailAddress,
@@ -87,7 +92,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 TemplateId = template.Id,
                 Personalisation = personalisation
             };
-            var response = SendEmail(emailModel);
+            SendEmail(emailModel);
         }
     }
 
