@@ -42,7 +42,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 else if (e.Message.Contains("send to this recipient using a team-only API key"))
                 {
                     // In development we use a 'team-only' API key which can only send to team emails
-                    logger.LogWarning($"GOV.UK Notify cannot send to this recipient using a team-only API key");
+                    logger.LogWarning("GOV.UK Notify cannot send to this recipient using a team-only API key");
                 }
                 else
                 {
