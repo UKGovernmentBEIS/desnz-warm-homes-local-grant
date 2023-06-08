@@ -79,7 +79,7 @@ public class GoogleAnalyticsService
     // If we can't find the _ga cookie, return a new id
     private string GetClientId(HttpRequest request)
     {
-        return cookieService.TryGetCookie<string>(request, Configuration.CookieName, out var cookie) 
+        return request.Cookies.TryGetValue(Configuration.CookieName, out var cookie)
             ? cookie.Split('.')[2] 
             : Guid.NewGuid().ToString();
     }
