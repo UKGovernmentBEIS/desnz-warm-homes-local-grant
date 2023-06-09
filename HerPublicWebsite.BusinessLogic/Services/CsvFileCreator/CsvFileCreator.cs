@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 using CsvHelper;
+using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
@@ -12,10 +13,15 @@ public class CsvFileCreator
     public MemoryStream CreateFileData(IEnumerable<ReferralRequest> referralRequests)
     {
         var rows = referralRequests.Select(rr => new CsvRow(rr));
-        
+
+        var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            InjectionOptions = InjectionOptions.Strip
+        };
+
         using var writeableMemoryStream = new MemoryStream();
         using var streamWriter = new StreamWriter(writeableMemoryStream, Encoding.UTF8);
-        using var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture);
+        using var csvWriter = new CsvWriter(streamWriter, csvConfiguration);
         {
             csvWriter.WriteRecords(rows);
             csvWriter.Flush();

@@ -65,4 +65,16 @@ public class ReferralRequestBuilder
         referralRequest.IncomeBand = incomeBand;
         return this;
     }
+
+    public ReferralRequestBuilder WithFullName(string fullName)
+    {
+        referralRequest.FullName = fullName;
+        return this;
+    }
+
+    public ReferralRequestBuilder WithTelephone(string telephone)
+    {
+        referralRequest.ContactTelephone = telephone;
+        return this;
+    }
 }
