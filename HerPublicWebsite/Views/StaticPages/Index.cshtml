@@ -1,4 +1,6 @@
 ﻿@using HerPublicWebsite.Controllers
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
 @{
     ViewBag.Title = "Home Upgrade Grant Questionnaire";
 }
@@ -58,6 +60,31 @@
                 <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"/>
             </svg>
         </a>
+
+        <h2 class="govuk-heading-m">
+            Speak to an adviser
+        </h2>
+        <p class="govuk-body">
+            Call an adviser to get recommendations by phone instead.
+        </p>
+        <p class="govuk-body">
+            You can also call if you've used the online service and want to discuss your options.
+        </p>
+
+        @await Html.GovUkInsetText(new InsetTextViewModel()
+               {
+                   Html = @<text>
+                              <ul class="govuk-list">
+                                  <li>Telephone: 0800 098 7950</li>
+                                  <li>Monday to Friday, 8am to 6pm (except bank holidays)</li>
+                                  <li>Saturday, 9am to 12pm</li>
+
+                              </ul>
+                              <p class="govuk-body">
+                                <a class="govuk-link" href="https://www.gov.uk/call-charges">Find out about call charges</a>
+                              </p>
+                           </text>
+               })
     </div>
 
     <div class="govuk-grid-column-one-third">
