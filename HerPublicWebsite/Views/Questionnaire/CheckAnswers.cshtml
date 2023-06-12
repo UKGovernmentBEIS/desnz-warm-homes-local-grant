@@ -58,6 +58,7 @@
                                        new()
                                        {
                                            Text = "Change",
+                                           VisuallyHiddenText = "gas boiler ownership",
                                            Href = @Url.Action(nameof(QuestionnaireController.GasBoiler_Get), controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.GasBoiler } )
                                        }
                                    }
@@ -81,6 +82,7 @@
                                        new()
                                        {
                                            Text = "Change",
+                                           VisuallyHiddenText = "country",
                                            Href = @Url.Action(nameof(QuestionnaireController.Country_Get), controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.Country } )
                                        }
                                    }
@@ -104,6 +106,7 @@
                                        new()
                                        {
                                            Text = "Change",
+                                           VisuallyHiddenText = "property ownership",
                                            Href = @Url.Action(nameof(QuestionnaireController.OwnershipStatus_Get), controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.OwnershipStatus } )
                                        }
                                    }
@@ -138,6 +141,7 @@
                                        new()
                                        {
                                            Text = "Change",
+                                           VisuallyHiddenText = "address",
                                            Href = Url.Action(Model.Questionnaire.Uprn is null ? nameof(QuestionnaireController.ManualAddress_Get) : nameof(QuestionnaireController.Address_Get),
                                                controller: "Questionnaire", values: new { entryPoint = Model.Questionnaire.Uprn is null ? QuestionFlowStep.ManualAddress : QuestionFlowStep.Address } )
                                        }
@@ -163,6 +167,7 @@
                                        new()
                                        {
                                            Text = "Change",
+                                           VisuallyHiddenText = "household income",
                                            Href = @Url.Action(nameof(QuestionnaireController.HouseholdIncome_Get), controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.HouseholdIncome } )
                                        }
                                    }
