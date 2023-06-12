@@ -238,13 +238,13 @@ public class QuestionnaireController : Controller
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
 
-    [HttpGet("address/{postcode}/{buildingNameOrNumber ?}")]
+    [HttpGet("address/{postcode}/{buildingNameOrNumber?}")]
     public async Task<IActionResult> SelectAddress_Get(string postcode, string buildingNameOrNumber, QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new SelectAddressViewModel()
         {
-            Addresses = await osPlaces.GetAddressesAsync(postcode, buildingNameOrNumber ?? ""),
+            Addresses = await osPlaces.GetAddressesAsync(postcode, buildingNameOrNumber),
             BackLink = GetBackUrl(QuestionFlowStep.SelectAddress, questionnaire, entryPoint)
         };
 
@@ -253,12 +253,12 @@ public class QuestionnaireController : Controller
         return View("SelectAddress", viewModel);
     }
 
-    [HttpPost("address/{postcode}/{buildingNameOrNumber ?}")]
+    [HttpPost("address/{postcode}/{buildingNameOrNumber?}")]
     public async Task<IActionResult> SelectAddress_Post(SelectAddressViewModel viewModel, string postcode, string buildingNameOrNumber)
     {
         if (!ModelState.IsValid)
         {
-            return await SelectAddress_Get(postcode, buildingNameOrNumber ?? "", viewModel.EntryPoint);
+            return await SelectAddress_Get(postcode, buildingNameOrNumber, viewModel.EntryPoint);
         }
 
         try
