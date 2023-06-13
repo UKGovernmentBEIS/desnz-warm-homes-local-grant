@@ -90,4 +90,25 @@ public class CsvFileCreatorTests
 "2023-01-01 13:00:02,Full Name2,contact2@example.com,00002 123456,Address 2 line 1,Address 2 line 2,Town2,County2,AL02 1RS,100 111 222 002,E,yes,Below £31k,no,Owner\r\n" +
 "2023-01-01 13:00:03,Full Name3,contact3@example.com,00003 123456,Address 3 line 1,Address 3 line 2,Town3,County3,AL03 1RS,100 111 222 003,E,yes,Below £31k,no,Owner\r\n");
     }
+
+    [TestCase("comma,separated,value", "\"comma,separated,value\"")]
+    [TestCase("double\"quotes", "\"double\"\"quotes\"")]
+    [TestCase("=Formula()", "Formula()")]
+    [TestCase("+441234567890", "441234567890")]
+    public void CreateFileData_CalledWithSpecialCharacters_GeneratesEscapedFileData(string nameInput, string expectedOutput)
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).WithFullName(nameInput).Build();
+        var referralRequests = new List<ReferralRequest>() { referralRequest };
+
+        // Act
+        var data = underTest.CreateFileData(referralRequests);
+
+        // Assert
+        var reader = new StreamReader(data, Encoding.UTF8);
+        reader.ReadToEnd().Should().Be(
+            "Referral date,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,Is off gas grid,Household income band,Is eligible postcode,Tenure\r\n" +
+            $"2023-01-01 13:00:01,{expectedOutput},contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,yes,Below £31k,no,Owner\r\n");
+    }
 }
