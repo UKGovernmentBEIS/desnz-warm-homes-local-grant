@@ -1,6 +1,7 @@
 ﻿using GovUkDesignSystem.Attributes.ValidationAttributes;
 using HerPublicWebsite.Models.Enums;
 using System.ComponentModel.DataAnnotations;
+using HerPublicWebsite.Helpers;
 
 namespace HerPublicWebsite.Models.Questionnaire;
 
@@ -15,7 +16,8 @@ public class EligibleViewModel : QuestionFlowViewModel
     public string EmailAddress { get; set; }
     [GovUkValidateRequired(ErrorMessageIfMissing = "Select whether they can contact you by phone")]
     public YesOrNo? CanContactByPhone { get; set; }
-    [GovUkValidateRequiredIf(ErrorMessageIfMissing = "Enter your phone number", IsRequiredPropertyName = nameof(IsPhoneRequired))]
+    [ValidUkPhoneNumber(ErrorMessage = "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192")]  // examples from https://design-system.service.gov.uk/patterns/telephone-numbers/
+    [GovUkValidateRequiredIf(ErrorMessageIfMissing = "Enter your telephone number", IsRequiredPropertyName = nameof(IsPhoneRequired))]
     public string Telephone { get; set; }
 
     public string LocalAuthorityName { get; set; }
