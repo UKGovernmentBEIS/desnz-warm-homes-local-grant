@@ -58,7 +58,7 @@
                                        new()
                                        {
                                            Text = "Change",
-                                           VisuallyHiddenText = "gas boiler ownership",
+                                           VisuallyHiddenText = "boiler type",
                                            Href = @Url.Action(nameof(QuestionnaireController.GasBoiler_Get), controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.GasBoiler } )
                                        }
                                    }
@@ -106,7 +106,7 @@
                                        new()
                                        {
                                            Text = "Change",
-                                           VisuallyHiddenText = "property ownership",
+                                           VisuallyHiddenText = "property ownership status",
                                            Href = @Url.Action(nameof(QuestionnaireController.OwnershipStatus_Get), controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.OwnershipStatus } )
                                        }
                                    }
