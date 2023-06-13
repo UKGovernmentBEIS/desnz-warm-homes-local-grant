@@ -5,9 +5,9 @@ using PhoneNumbers;
 namespace HerPublicWebsite.Helpers;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
-public class CustomPhoneNumberAttribute : DataTypeAttribute
+public class ValidUkPhoneNumberAttribute : DataTypeAttribute
 {
-    public CustomPhoneNumberAttribute() : base(DataType.PhoneNumber)
+    public ValidUkPhoneNumberAttribute() : base(DataType.PhoneNumber)
     {
     }
 
