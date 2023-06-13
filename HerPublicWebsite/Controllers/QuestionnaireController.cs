@@ -117,7 +117,7 @@ public class QuestionnaireController : Controller
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
-    
+
     [HttpGet("ineligible-wales/")]
     public IActionResult IneligibleWales_Get(QuestionFlowStep? entryPoint)
     {
@@ -130,7 +130,7 @@ public class QuestionnaireController : Controller
 
         return View("IneligibleWales", viewModel);
     }
-    
+
     [HttpGet("ineligible-scotland/")]
     public IActionResult IneligibleScotland_Get(QuestionFlowStep? entryPoint)
     {
@@ -143,7 +143,7 @@ public class QuestionnaireController : Controller
 
         return View("IneligibleScotland", viewModel);
     }
-    
+
     [HttpGet("ineligible-northern-ireland/")]
     public IActionResult IneligibleNorthernIreland_Get(QuestionFlowStep? entryPoint)
     {
@@ -184,7 +184,7 @@ public class QuestionnaireController : Controller
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
-    
+
     [HttpGet("ineligible-tenure/")]
     public IActionResult IneligibleTenure_Get(QuestionFlowStep? entryPoint)
     {
@@ -238,7 +238,7 @@ public class QuestionnaireController : Controller
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
 
-    [HttpGet("address/{postcode}/{buildingNameOrNumber}")]
+    [HttpGet("address/{postcode}/{buildingNameOrNumber?}")]
     public async Task<IActionResult> SelectAddress_Get(string postcode, string buildingNameOrNumber, QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
@@ -253,7 +253,7 @@ public class QuestionnaireController : Controller
         return View("SelectAddress", viewModel);
     }
 
-    [HttpPost("address/{postcode}/{buildingNameOrNumber}")]
+    [HttpPost("address/{postcode}/{buildingNameOrNumber?}")]
     public async Task<IActionResult> SelectAddress_Post(SelectAddressViewModel viewModel, string postcode, string buildingNameOrNumber)
     {
         if (!ModelState.IsValid)

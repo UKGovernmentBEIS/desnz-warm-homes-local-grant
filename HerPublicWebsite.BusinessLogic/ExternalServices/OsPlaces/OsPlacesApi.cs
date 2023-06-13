@@ -46,7 +46,9 @@ public class OsPlacesApi : IOsPlacesApi
                 }
             }
 
-            var filteredResults = results.Where(r =>
+            var filteredResults = buildingNameOrNumber is null
+                ? results
+                : results.Where(r =>
                     r.Dpa.BuildingNumber == buildingNameOrNumber
                     || r.Dpa.BuildingName?.ToLower() == buildingNameOrNumber.ToLower()
                     || r.Dpa.SubBuildingName?.ToLower() == buildingNameOrNumber.ToLower())
