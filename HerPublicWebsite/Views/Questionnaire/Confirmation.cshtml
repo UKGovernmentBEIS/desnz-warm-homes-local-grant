@@ -31,7 +31,7 @@
         <h2 class="govuk-heading-l">What happens next</h2>
 
         <p class="govuk-body"><strong>@Model.LocalAuthorityName or their official contractor</strong> will process
-            your details and contact you if they need any more information on the contact details you proviced.</p>
+            your details and contact you if they need any more information on the contact details you provided.</p>
 
         @if (Model.LocalAuthorityIsLiveWithHug2)
         {
@@ -48,7 +48,7 @@
             @await Html.GovUkNotificationBanner(new NotificationBannerViewModel
                    {
                        TitleText = "Success",
-                       Text = Model.CanNotifyAboutFutureSchemes is YesOrNo.Yes ? "Your contact details have been submitted" : "Your answers have been submitted.",
+                       Text = Model.CanNotifyAboutFutureSchemes is YesOrNo.Yes ? "Your contact details have been submitted." : "Your answers have been submitted.",
                        Classes = "govuk-notification-banner--success"
                    })
         }
