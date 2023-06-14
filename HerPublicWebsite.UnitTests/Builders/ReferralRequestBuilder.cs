@@ -12,6 +12,7 @@ public class ReferralRequestBuilder
     {
         referralRequest = new ReferralRequest
         {
+            ReferralCode = $"DummyCode{id:D5}",
             AddressLine1 = $"Address {id} line 1",
             AddressLine2 = $"Address {id} line 2",
             AddressTown = $"Town{id}",
@@ -19,6 +20,7 @@ public class ReferralRequestBuilder
             AddressPostcode = $"AL{id:D2} 1RS",
             CustodianCode = "114",
             EpcRating = EpcRating.E,
+            EpcLodgementDate = new DateTime(2023, 01, 01, 15, 00, id),
             HasGasBoiler = HasGasBoiler.No,
             Id = id,
             IncomeBand = IncomeBand.UnderOrEqualTo31000,

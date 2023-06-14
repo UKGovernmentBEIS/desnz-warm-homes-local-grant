@@ -73,7 +73,7 @@ public class CsvFileCreator
         
         [Index(12)]
         [Name("EPC Lodgement Date")]
-        public DateTime? EpcLodgementDate { get; set; }
+        public string EpcLodgementDate { get; set; }
         
         [Index(13)]
         [Name("Is off gas grid")]
@@ -108,7 +108,7 @@ public class CsvFileCreator
             Postcode = request.AddressPostcode;
             Uprn = request.Uprn;
             EpcBand = request.EpcRating;
-            EpcLodgementDate = request.EpcLodgementDate;
+            EpcLodgementDate = request.EpcLodgementDate?.ToString("yyyy-MM-dd HH:mm:ss");
             OffGasGrid = request.HasGasBoiler switch
             {
                 HasGasBoiler.No => "yes",
