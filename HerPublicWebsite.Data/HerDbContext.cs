@@ -31,6 +31,9 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
         modelBuilder.Entity<ReferralRequest>()
             .HasKey("Id");
         modelBuilder.Entity<ReferralRequest>()
+            .Property(rr => rr.EpcLodgementDate)
+            .HasColumnType("timestamp without time zone");
+        modelBuilder.Entity<ReferralRequest>()
             .Property(rr => rr.RequestDate)
             .HasColumnType("timestamp without time zone");
         
