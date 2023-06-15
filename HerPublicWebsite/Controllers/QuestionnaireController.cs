@@ -511,6 +511,7 @@ public class QuestionnaireController : Controller
             LocalAuthorityIsLiveWithHug2 = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Live,
             CanContactByEmail = questionnaire.LaCanContactByEmail.ToNullableYesOrNo(),
             CanContactByPhone = questionnaire.LaCanContactByPhone.ToNullableYesOrNo(),
+            Name = questionnaire.LaContactName,
             EmailAddress = questionnaire.LaContactEmailAddress,
             Telephone = questionnaire.LaContactTelephone,
             BackLink = GetBackUrl(QuestionFlowStep.Eligible, questionnaire)
