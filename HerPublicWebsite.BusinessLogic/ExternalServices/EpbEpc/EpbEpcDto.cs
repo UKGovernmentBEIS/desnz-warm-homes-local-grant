@@ -87,8 +87,7 @@ public record class EpcAssessmentDto
             return null;
         }
 
-        var date = DateTime.Parse(dateString);
-        return DateTime.SpecifyKind(date, DateTimeKind.Utc);
+        return DateTime.Parse(dateString);
     }
 
     private EpcRating ParseBand()
