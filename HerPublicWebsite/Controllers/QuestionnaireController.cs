@@ -245,7 +245,8 @@ public class QuestionnaireController : Controller
         var viewModel = new SelectAddressViewModel()
         {
             Addresses = await osPlaces.GetAddressesAsync(postcode, buildingNameOrNumber),
-            BackLink = GetBackUrl(QuestionFlowStep.SelectAddress, questionnaire, entryPoint)
+            BackLink = GetBackUrl(QuestionFlowStep.SelectAddress, questionnaire, entryPoint),
+            EntryPoint = entryPoint
         };
 
         TempData["Addresses"] = JsonSerializer.Serialize(viewModel.Addresses);
@@ -316,7 +317,7 @@ public class QuestionnaireController : Controller
             Town = questionnaire.AddressTown,
             County = questionnaire.AddressCounty,
             Postcode = questionnaire.AddressPostcode,
-            BackLink = GetBackUrl(QuestionFlowStep.SelectAddress, questionnaire, entryPoint)
+            BackLink = GetBackUrl(QuestionFlowStep.ManualAddress, questionnaire, entryPoint)
         };
 
         return View("ManualAddress", viewModel);

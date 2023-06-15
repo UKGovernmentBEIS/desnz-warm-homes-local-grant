@@ -124,7 +124,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
             return entryPoint switch
             {
-                QuestionFlowStep.Address => QuestionFlowStep.CheckAnswers,
+                QuestionFlowStep.Address or QuestionFlowStep.ManualAddress => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.OwnershipStatus
             };
         }
@@ -141,10 +141,6 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep ManualAddressBackDestination(QuestionFlowStep? entryPoint)
         {
-            if (entryPoint == QuestionFlowStep.ManualAddress)
-            {
-                return QuestionFlowStep.CheckAnswers;
-            }
             return QuestionFlowStep.Address;
         }
 
@@ -251,7 +247,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             {
                 (_, LocalAuthorityData.Hug2Status.NotTakingPart, _) => QuestionFlowStep.NotTakingPart,
                 (_, _, true) => QuestionFlowStep.ReviewEpc,
-                (QuestionFlowStep.Address, _, _) => QuestionFlowStep.CheckAnswers,
+                (QuestionFlowStep.Address or QuestionFlowStep.ManualAddress, _, _) => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.HouseholdIncome
             };
         }
@@ -260,7 +256,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         {
             return entryPoint switch
             {
-                QuestionFlowStep.Address => QuestionFlowStep.CheckAnswers,
+                QuestionFlowStep.Address or QuestionFlowStep.ManualAddress => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.HouseholdIncome
             };
         }
@@ -281,7 +277,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             {
                 (_, _, not true) => QuestionFlowStep.SelectLocalAuthority,
                 (_, LocalAuthorityData.Hug2Status.NotTakingPart, _) => QuestionFlowStep.NotTakingPart,
-                (QuestionFlowStep.Address, _, _) => QuestionFlowStep.CheckAnswers,
+                (QuestionFlowStep.Address or QuestionFlowStep.ManualAddress, _, _) => QuestionFlowStep.CheckAnswers,
                 _ => QuestionFlowStep.HouseholdIncome
             };
         }
