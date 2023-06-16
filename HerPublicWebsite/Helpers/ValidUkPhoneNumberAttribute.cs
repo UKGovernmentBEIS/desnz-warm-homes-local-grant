@@ -7,7 +7,7 @@ namespace HerPublicWebsite.Helpers;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 public class ValidUkPhoneNumberAttribute : DataTypeAttribute
 {
-    public string DoNotValidateIf;
+    public string ValidateIf;
     
     public ValidUkPhoneNumberAttribute() : base(DataType.PhoneNumber)
     {
@@ -15,17 +15,17 @@ public class ValidUkPhoneNumberAttribute : DataTypeAttribute
 
     protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     {
-        var doNotValidatePropertyInfo = validationContext.ObjectInstance.GetType().GetProperty(DoNotValidateIf);
+        var validateIfPropertyInfo = validationContext.ObjectInstance.GetType().GetProperty(ValidateIf);
             
-        if (doNotValidatePropertyInfo is null)
+        if (validateIfPropertyInfo is null)
         {
             throw new ArgumentException(
-                $"'{DoNotValidateIf}' must be a boolean property in the model the attribute is included in");
+                $"'{ValidateIf}' must be a boolean property in the model the attribute is included in");
         }
             
-        var doNotValidate = (bool)doNotValidatePropertyInfo.GetValue(validationContext.ObjectInstance, null)!;
+        var doValidation = (bool)validateIfPropertyInfo.GetValue(validationContext.ObjectInstance, null)!;
             
-        if (doNotValidate)
+        if (!doValidation)
         {
             return ValidationResult.Success;
         }
