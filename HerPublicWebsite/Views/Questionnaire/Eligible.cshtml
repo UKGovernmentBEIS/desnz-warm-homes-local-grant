@@ -45,8 +45,7 @@
         
         <p class="govuk-body">
             An official contractor is a vetted organisation that may carry out some of the work on
-            behalf of your local authority. They will not try to sell you any services and will never ask for bank
-            details.
+            behalf of your local authority. They will not sell you any services and will never ask for bank details.
         </p>
         
         @await Html.GovUkWarningText(new WarningTextViewModel()
@@ -71,7 +70,7 @@
             
             @await Html.GovUkInsetText(new InsetTextViewModel()
             {
-                Text = "You can select to be contacted by either email, phone or both."
+                Text = "You can be contacted by email, phone or both."
             })
             
             @await Html.GovUkRadiosFor(
