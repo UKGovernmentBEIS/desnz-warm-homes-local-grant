@@ -2,6 +2,7 @@
 @using GovUkDesignSystem.GovUkDesignSystemComponents
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using HerPublicWebsite.Controllers
+@using HerPublicWebsite.Middleware
 @using HerPublicWebsite.Models.Enums
 
 @model HerPublicWebsite.Models.Questionnaire.ConfirmationViewModel
@@ -180,7 +181,8 @@
 @section Scripts {
     @if (!Model.EmailPreferenceSubmitted && Model.RequestEmailAddress)
     {
-        <script language="JavaScript">ConfirmationPage.duplicateDefaultValue('ConfirmationEmailAddress', 'NotificationEmailAddress');</script>
+        <script nonce="@Context.GetScriptNonce()">
+            ConfirmationPage.duplicateDefaultValue('ConfirmationEmailAddress', 'NotificationEmailAddress');
+        </script>
     }
 }
-
