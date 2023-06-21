@@ -13,7 +13,7 @@ public class PerReferralReport
 
     public PerReferralReport(ReferralRequest referralRequest)
     {
-        ApplicationDate = DateTime.Now;
+        ApplicationDate = referralRequest.RequestDate;
         ReferralCode = referralRequest.ReferralCode;
         Uprn = referralRequest.Uprn;
         Scheme = "HUG2";
