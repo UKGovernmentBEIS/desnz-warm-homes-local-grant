@@ -495,8 +495,7 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> CheckAnswers_Post()
     {
         await googleAnalyticsService.SendQuestionnaireCompletedEvent(Request);
-        //TODO BEISHER-257 add ConfirmQuestionnaireAnswers() method to questionnaireService and use that to record reporting data.
-        var questionnaire = questionnaireService.GetQuestionnaire();
+        var questionnaire = await questionnaireService.ConfirmQuestionnaireAnswers();
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.CheckAnswers, questionnaire);
 
         return RedirectToNextStep(nextStep);

@@ -18,7 +18,8 @@ public class QuestionnaireUpdater
         IEligiblePostcodeService eligiblePostcodeService,
         IDataAccessProvider dataAccessProvider,
         IEmailSender emailSender
-    ) {
+    )
+    {
         this.epcApi = epcApi;
         this.eligiblePostcodeService = eligiblePostcodeService;
         this.dataAccessProvider = dataAccessProvider;
@@ -124,6 +125,17 @@ public class QuestionnaireUpdater
                 referralRequest.CustodianCode
             );
         }
+
+        var perReferralReport = new PerReferralReport(referralRequest);
+        await dataAccessProvider.PersistPerReferralReportAsync(perReferralReport);
+
+        return questionnaire;
+    }
+
+    public async Task<Questionnaire> GenerateAnonymisedReportAsync(Questionnaire questionnaire)
+    {
+        var anonymisedReport = new AnonymisedReport(questionnaire);
+        await dataAccessProvider.PersistAnonymisedReportAsync(anonymisedReport);
 
         return questionnaire;
     }
