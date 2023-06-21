@@ -108,7 +108,7 @@ namespace HerPublicWebsite
             {
                 // Recommendation for MaxAge is at least one year, and a maximum of 2 years
                 // If Preload is enabled, IncludeSubdomains should be set to true, and MaxAge should be set to 2 years
-                options.MaxAge = TimeSpan.FromSeconds(31536000);
+                options.MaxAge = TimeSpan.FromDays(365);
             });
 
             services.AddHttpContextAccessor();
