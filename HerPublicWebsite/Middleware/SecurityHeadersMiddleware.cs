@@ -9,6 +9,11 @@ public class SecurityHeadersMiddleware
 {
     public const string NonceContextKey = "ContentSecurityPolicyScriptNonce";
 
+    private const string XContentTypeOptions = "X-Content-Type-Options";
+    private const string XFrameOptions = "X-Frame-Options";
+    private const string ContentSecurityPolicy = "Content-Security-Policy";
+    private const string ReferrerPolicy = "Referrer-Policy";
+
     private readonly RequestDelegate next;
 
     public SecurityHeadersMiddleware(RequestDelegate next)
@@ -18,27 +23,31 @@ public class SecurityHeadersMiddleware
 
     public Task Invoke(HttpContext context)
     {
-        if (!context.Response.Headers.ContainsKey("X-Content-Type-Options"))
+        if (!context.Response.Headers.ContainsKey(XContentTypeOptions))
         {
-            context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+            context.Response.Headers.Add(XContentTypeOptions, "nosniff");
         }
 
-        var nonce = Guid.NewGuid().ToString("N");;
+        if (!context.Response.Headers.ContainsKey(XFrameOptions))
+        {
+            context.Response.Headers.Add(XFrameOptions, "deny");
+        }
+
+        var nonce = Guid.NewGuid().ToString("N");
         context.Items[NonceContextKey] = nonce;
 
-        if (!context.Response.Headers.ContainsKey("Content-Security-Policy"))
+        if (!context.Response.Headers.ContainsKey(ContentSecurityPolicy))
         {
             // Based on https://csp.withgoogle.com/docs/strict-csp.html
-            context.Response.Headers.Add("Content-Security-Policy",
+            context.Response.Headers.Add(ContentSecurityPolicy,
                 "object-src 'none'; " +
                 $"script-src 'nonce-{nonce}' 'unsafe-inline' 'strict-dynamic' https:; " +
                 "base-uri 'none';");
         }
 
-        if (!context.Response.Headers.ContainsKey("Referrer-Policy"))
+        if (!context.Response.Headers.ContainsKey(ReferrerPolicy))
         {
-            context.Response.Headers.Add("Referrer-Policy", "no-referrer");
-
+            context.Response.Headers.Add(ReferrerPolicy, "no-referrer");
         }
 
         return next(context);
