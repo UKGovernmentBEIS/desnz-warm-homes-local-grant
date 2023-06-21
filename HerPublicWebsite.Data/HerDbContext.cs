@@ -72,7 +72,7 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
             .Property(rr => rr.EpcLodgementDate)
             .HasColumnType("timestamp without time zone");
 
-        // Contact details row versioning
+        // Anonymised reports row versioning
         AddRowVersionColumn(modelBuilder.Entity<AnonymisedReport>());
     }
 
@@ -89,8 +89,8 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
             .Property(rr => rr.ApplicationDate)
             .HasColumnType("timestamp without time zone");
 
-        // Contact details row versioning
-        AddRowVersionColumn(modelBuilder.Entity<AnonymisedReport>());
+        // Per referral reports row versioning
+        AddRowVersionColumn(modelBuilder.Entity<PerReferralReport>());
     }
 
     private void AddRowVersionColumn<T>(EntityTypeBuilder<T> builder) where T : class

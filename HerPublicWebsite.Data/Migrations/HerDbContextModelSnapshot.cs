@@ -30,6 +30,9 @@ namespace HerPublicWebsite.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CustodianCode")
+                        .HasColumnType("text");
+
                     b.Property<DateTime?>("EpcLodgementDate")
                         .HasColumnType("timestamp without time zone");
 
@@ -48,6 +51,12 @@ namespace HerPublicWebsite.Data.Migrations
                     b.Property<bool>("IsLsoaProperty")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("LocalAuthorityName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("OwnershipStatus")
+                        .HasColumnType("integer");
+
                     b.Property<string>("PostcodeFirstHalf")
                         .HasColumnType("text");
 
@@ -58,7 +67,7 @@ namespace HerPublicWebsite.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AnonymisedReports", (string)null);
+                    b.ToTable("AnonymisedReports");
                 });
 
             modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.NotificationDetails", b =>
@@ -87,7 +96,7 @@ namespace HerPublicWebsite.Data.Migrations
 
                     b.HasIndex("ReferralRequestId");
 
-                    b.ToTable("NotificationDetails", (string)null);
+                    b.ToTable("NotificationDetails");
                 });
 
             modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.PerReferralReport", b =>
@@ -98,21 +107,38 @@ namespace HerPublicWebsite.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AddressCounty")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AddressLine1")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AddressLine2")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AddressPostcode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AddressTown")
+                        .HasColumnType("text");
+
                     b.Property<DateTime?>("ApplicationDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("ReferralCode")
                         .HasColumnType("text");
 
-                    b.Property<string>("Scheme")
-                        .HasColumnType("text");
-
                     b.Property<string>("Uprn")
                         .HasColumnType("text");
 
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid");
+
                     b.HasKey("Id");
 
-                    b.ToTable("PerReferralReports", (string)null);
+                    b.ToTable("PerReferralReports");
                 });
 
             modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", b =>
@@ -184,7 +210,7 @@ namespace HerPublicWebsite.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReferralRequests", (string)null);
+                    b.ToTable("ReferralRequests");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
@@ -203,7 +229,7 @@ namespace HerPublicWebsite.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DataProtectionKeys", (string)null);
+                    b.ToTable("DataProtectionKeys");
                 });
 
             modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.NotificationDetails", b =>
