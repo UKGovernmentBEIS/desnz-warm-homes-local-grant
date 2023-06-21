@@ -104,6 +104,13 @@ namespace HerPublicWebsite
                 options.Cookie.IsEssential = true;
             });
 
+            services.AddHsts(options =>
+            {
+                // Recommendation for MaxAge is at least one year, and a maximum of 2 years
+                // If Preload is enabled, IncludeSubdomains should be set to true, and MaxAge should be set to 2 years
+                options.MaxAge = TimeSpan.FromSeconds(31536000);
+            });
+
             services.AddHttpContextAccessor();
         }
 
@@ -169,7 +176,7 @@ namespace HerPublicWebsite
                     ExceptionHandlingPath = "/error"
                 });
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                // app.UseHsts();
+                app.UseHsts();
             }
 
             app.UseStatusCodePagesWithReExecute("/error/{0}");
