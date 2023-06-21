@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HerPublicWebsite.Data.Migrations
 {
     [DbContext(typeof(HerDbContext))]
-    [Migration("20230621160925_AddReportingData")]
+    [Migration("20230621164007_AddReportingData")]
     partial class AddReportingData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,9 +52,6 @@ namespace HerPublicWebsite.Data.Migrations
 
                     b.Property<bool>("IsLsoaProperty")
                         .HasColumnType("boolean");
-
-                    b.Property<string>("LocalAuthorityName")
-                        .HasColumnType("text");
 
                     b.Property<int>("OwnershipStatus")
                         .HasColumnType("integer");

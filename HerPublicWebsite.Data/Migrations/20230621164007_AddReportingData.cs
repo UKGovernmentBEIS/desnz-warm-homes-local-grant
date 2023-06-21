@@ -23,7 +23,6 @@ namespace HerPublicWebsite.Data.Migrations
                     IsEligible = table.Column<bool>(type: "boolean", nullable: false),
                     HasGasBoiler = table.Column<int>(type: "integer", nullable: false),
                     IncomeBand = table.Column<int>(type: "integer", nullable: false),
-                    LocalAuthorityName = table.Column<string>(type: "text", nullable: true),
                     CustodianCode = table.Column<string>(type: "text", nullable: true),
                     OwnershipStatus = table.Column<int>(type: "integer", nullable: false),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)

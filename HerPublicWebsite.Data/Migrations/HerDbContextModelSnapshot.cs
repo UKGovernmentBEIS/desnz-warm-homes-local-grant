@@ -51,9 +51,6 @@ namespace HerPublicWebsite.Data.Migrations
                     b.Property<bool>("IsLsoaProperty")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("LocalAuthorityName")
-                        .HasColumnType("text");
-
                     b.Property<int>("OwnershipStatus")
                         .HasColumnType("integer");
 

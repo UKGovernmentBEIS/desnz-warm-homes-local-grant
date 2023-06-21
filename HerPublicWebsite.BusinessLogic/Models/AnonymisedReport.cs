@@ -13,7 +13,6 @@ public class AnonymisedReport
     public bool IsEligible { get; set; }
     public HasGasBoiler HasGasBoiler { get; set; }
     public IncomeBand IncomeBand { get; set; }
-    public string LocalAuthorityName { get; set; }
     public string CustodianCode { get; set; }
     public OwnershipStatus OwnershipStatus { get; set; }
 
@@ -30,7 +29,6 @@ public class AnonymisedReport
         HasGasBoiler = questionnaire.HasGasBoiler!.Value;
         IncomeBand = questionnaire.IncomeBand!.Value;
         IsEligible = questionnaire.IsEligibleForHug2;
-        LocalAuthorityName = questionnaire.LocalAuthorityName;
         CustodianCode = questionnaire.CustodianCode;
         OwnershipStatus = questionnaire.OwnershipStatus!.Value;
     }
