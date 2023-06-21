@@ -30,7 +30,7 @@ public record Questionnaire
 
     public DateTime ReferralCreated { get; set; }
 
-    public string Hug2ReferralId { get; set; }
+    public string ReferralCode { get; set; }
 
     public string LaContactName { get; set; }
     public bool? LaCanContactByEmail { get; set; }

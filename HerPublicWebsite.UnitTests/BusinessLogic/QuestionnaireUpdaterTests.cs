@@ -194,7 +194,7 @@ public class QuestionnaireUpdaterTests
         var result = await underTest.GenerateReferralAsync(questionnaire, "name", "email", "telephone");
         
         // Assert
-        result.Hug2ReferralId.Should().Be("code");
+        result.ReferralCode.Should().Be("code");
         result.ReferralCreated.Should().Be(creationDate);
     }
     
@@ -310,7 +310,7 @@ public class QuestionnaireUpdaterTests
         var questionnaire = new Questionnaire
         {
             LaContactEmailAddress = "test@example.com",
-            Hug2ReferralId = "referral code"
+            ReferralCode = "referral code"
         };
         
         // Act
@@ -327,7 +327,7 @@ public class QuestionnaireUpdaterTests
         var questionnaire = new Questionnaire
         {
             LaContactEmailAddress = "test@example.com",
-            Hug2ReferralId = "referral code"
+            ReferralCode = "referral code"
         };
 
         // Act
@@ -345,7 +345,7 @@ public class QuestionnaireUpdaterTests
         var questionnaire = new Questionnaire
         {
             LaContactEmailAddress = "test@example.com",
-            Hug2ReferralId = "referral code"
+            ReferralCode = "referral code"
         };
 
         // Act
@@ -372,7 +372,7 @@ public class QuestionnaireUpdaterTests
         {
             LaContactName = testName,
             LaContactEmailAddress = testEmailAddress,
-            Hug2ReferralId = testReferralCode,
+            ReferralCode = testReferralCode,
             CustodianCode = testCustodianCode,
         };
         mockEmailSender.Setup(es =>
@@ -419,7 +419,7 @@ public class QuestionnaireUpdaterTests
         var questionnaire = new Questionnaire
         {
             LaContactName = testName,
-            Hug2ReferralId = testReferralCode,
+            ReferralCode = testReferralCode,
             CustodianCode = testCustodianCode,
         };
         mockEmailSender.Setup(es =>

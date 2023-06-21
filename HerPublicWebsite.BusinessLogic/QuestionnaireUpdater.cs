@@ -112,7 +112,7 @@ public class QuestionnaireUpdater
         var referralRequest = new ReferralRequest(questionnaire);
         referralRequest = await dataAccessProvider.PersistNewReferralRequestAsync(referralRequest);
 
-        questionnaire.Hug2ReferralId = referralRequest.ReferralCode;
+        questionnaire.ReferralCode = referralRequest.ReferralCode;
         questionnaire.ReferralCreated = referralRequest.RequestDate;
 
         if (!string.IsNullOrEmpty(emailAddress))
@@ -146,7 +146,7 @@ public class QuestionnaireUpdater
         questionnaire.NotificationEmailAddress = consentGranted ? questionnaire.LaContactEmailAddress : null;
 
         var notificationContactDetails = new NotificationDetails(questionnaire);
-        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.Hug2ReferralId, notificationContactDetails);
+        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.ReferralCode, notificationContactDetails);
 
         return questionnaire;
     }
@@ -175,7 +175,7 @@ public class QuestionnaireUpdater
         questionnaire.ConfirmationEmailAddress = confirmationConsentGranted ? confirmationEmailAddress : null;
 
         var notificationContactDetails = new NotificationDetails(questionnaire);
-        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.Hug2ReferralId, notificationContactDetails);
+        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.ReferralCode, notificationContactDetails);
 
         if (confirmationConsentGranted)
         {
@@ -183,7 +183,7 @@ public class QuestionnaireUpdater
             (
                 confirmationEmailAddress,
                 questionnaire.LaContactName,
-                questionnaire.Hug2ReferralId,
+                questionnaire.ReferralCode,
                 questionnaire.CustodianCode
             );
         }
