@@ -16,6 +16,10 @@ public class GoogleAnalyticsService
     public readonly GoogleAnalyticsConfiguration Configuration;
     private readonly CookieService cookieService;
     private readonly ILogger<GoogleAnalyticsService> logger;
+
+    // If these strings are ever updated you will need to update the Google Analytics custom events on the GA site too match.
+    private const string EventNameQuestionnaireCompleted = "questionnaire_completed";
+    private const string EventNameReferralGenerated = "referral_generated";
     
     public GoogleAnalyticsService(
         IOptions<GoogleAnalyticsConfiguration> options,
@@ -36,7 +40,7 @@ public class GoogleAnalyticsService
             {
                 new()
                 {
-                    Name = "questionnaire_completed"
+                    Name = EventNameQuestionnaireCompleted
                 }
             }
         });
@@ -51,7 +55,7 @@ public class GoogleAnalyticsService
             {
                 new()
                 {
-                    Name = "referral_generated"
+                    Name = EventNameReferralGenerated
                 }
             }
         });
