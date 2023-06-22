@@ -9,6 +9,7 @@ using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 using Moq;
 using NUnit.Framework;
+using Microsoft.Extensions.Logging;
 
 namespace Tests.BusinessLogic;
 
@@ -20,6 +21,7 @@ public class QuestionnaireUpdaterTests
     private Mock<IEligiblePostcodeService> mockPostCodeService;
     private Mock<IDataAccessProvider> mockDataAccessProvider;
     private Mock<IEmailSender> mockEmailSender;
+    private Mock<ILogger<QuestionnaireUpdater>> mockLogger;
     
     
     [SetUp]
@@ -29,12 +31,14 @@ public class QuestionnaireUpdaterTests
         mockPostCodeService = new Mock<IEligiblePostcodeService>();
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
         mockEmailSender = new Mock<IEmailSender>();
+        mockLogger = new Mock<ILogger<QuestionnaireUpdater>>();
         underTest = new QuestionnaireUpdater
         (
             mockEpcApi.Object,
             mockPostCodeService.Object,
             mockDataAccessProvider.Object,
-            mockEmailSender.Object
+            mockEmailSender.Object,
+            mockLogger.Object
         );
     }
     
@@ -362,7 +366,8 @@ public class QuestionnaireUpdaterTests
     (
         bool notificationConsentGranted,
         string notificationEmailAddress
-    ) {
+    )
+    {
         // Arrange
         const string testCustodianCode = "1234";
         const string testReferralCode = "referral code";
@@ -411,7 +416,8 @@ public class QuestionnaireUpdaterTests
     (
         bool notificationConsentGranted,
         string notificationEmailAddress
-    ) {
+    )
+    {
         // Arrange
         const string testCustodianCode = "1234";
         const string testReferralCode = "referral code";

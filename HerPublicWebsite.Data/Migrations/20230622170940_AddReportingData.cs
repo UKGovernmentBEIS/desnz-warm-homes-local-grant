@@ -16,6 +16,7 @@ namespace HerPublicWebsite.Data.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    SubmissionDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     PostcodeFirstHalf = table.Column<string>(type: "text", nullable: true),
                     IsLsoaProperty = table.Column<bool>(type: "boolean", nullable: false),
                     EpcRating = table.Column<int>(type: "integer", nullable: false),

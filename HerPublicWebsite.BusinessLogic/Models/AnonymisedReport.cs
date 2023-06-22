@@ -6,6 +6,7 @@ namespace HerPublicWebsite.BusinessLogic.Models;
 
 public class AnonymisedReport
 {
+    public DateTime? SubmissionDate { get; set; }
     public string PostcodeFirstHalf { get; set; }
     public bool IsLsoaProperty { get; set; }
     public EpcRating EpcRating { get; set; }
@@ -22,7 +23,8 @@ public class AnonymisedReport
 
     public AnonymisedReport(Questionnaire questionnaire)
     {
-        PostcodeFirstHalf = questionnaire.AddressPostcode.NormaliseToUkPostcodeFormat().Split(" ").FirstOrDefault();
+        SubmissionDate = DateTime.Now;
+        PostcodeFirstHalf = questionnaire.AddressPostcode.NormaliseToUkPostcodeFormat()?.Split(" ")?.FirstOrDefault();
         IsLsoaProperty = questionnaire.IsLsoaProperty!.Value;
         EpcRating = questionnaire.EffectiveEpcBand;
         EpcLodgementDate = questionnaire.EpcDetails?.LodgementDate;

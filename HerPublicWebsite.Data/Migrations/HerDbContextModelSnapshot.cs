@@ -57,6 +57,9 @@ namespace HerPublicWebsite.Data.Migrations
                     b.Property<string>("PostcodeFirstHalf")
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("SubmissionDate")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<uint>("xmin")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()

@@ -71,6 +71,9 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
         modelBuilder.Entity<AnonymisedReport>()
             .Property(rr => rr.EpcLodgementDate)
             .HasColumnType("timestamp without time zone");
+        modelBuilder.Entity<AnonymisedReport>()
+            .Property(rr => rr.SubmissionDate)
+            .HasColumnType("timestamp without time zone");
 
         // Anonymised reports row versioning
         AddRowVersionColumn(modelBuilder.Entity<AnonymisedReport>());

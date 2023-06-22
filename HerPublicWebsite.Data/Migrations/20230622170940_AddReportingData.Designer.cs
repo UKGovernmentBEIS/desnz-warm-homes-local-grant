@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HerPublicWebsite.Data.Migrations
 {
     [DbContext(typeof(HerDbContext))]
-    [Migration("20230621164007_AddReportingData")]
+    [Migration("20230622170940_AddReportingData")]
     partial class AddReportingData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,6 +58,9 @@ namespace HerPublicWebsite.Data.Migrations
 
                     b.Property<string>("PostcodeFirstHalf")
                         .HasColumnType("text");
+
+                    b.Property<DateTime?>("SubmissionDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<uint>("xmin")
                         .IsConcurrencyToken()
