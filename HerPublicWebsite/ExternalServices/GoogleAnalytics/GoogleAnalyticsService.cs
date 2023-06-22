@@ -17,7 +17,7 @@ public class GoogleAnalyticsService
     private readonly CookieService cookieService;
     private readonly ILogger<GoogleAnalyticsService> logger;
 
-    // If these strings are ever updated you will need to update the Google Analytics custom events on the GA site too match.
+    // If these strings are ever updated you will need to update the Google Analytics custom events on the GA site to match.
     private const string EventNameQuestionnaireCompleted = "questionnaire_completed";
     private const string EventNameReferralGenerated = "referral_generated";
     
