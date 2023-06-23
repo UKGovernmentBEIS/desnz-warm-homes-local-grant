@@ -132,8 +132,8 @@ public class QuestionnaireUpdater
 
         try
         {
-        var perReferralReport = new PerReferralReport(referralRequest);
-        await dataAccessProvider.PersistPerReferralReportAsync(perReferralReport);
+            var perReferralReport = new PerReferralReport(referralRequest);
+            await dataAccessProvider.PersistPerReferralReportAsync(perReferralReport);
         }
         catch (Exception e)
         {
@@ -146,9 +146,9 @@ public class QuestionnaireUpdater
     public async Task<Questionnaire> GenerateAnonymisedReportAsync(Questionnaire questionnaire)
     {
         try
-    {
-        var anonymisedReport = new AnonymisedReport(questionnaire);
-        await dataAccessProvider.PersistAnonymisedReportAsync(anonymisedReport);
+        {
+            var anonymisedReport = new AnonymisedReport(questionnaire);
+            await dataAccessProvider.PersistAnonymisedReportAsync(anonymisedReport);
         }
         catch (Exception e)
         {
