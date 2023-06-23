@@ -23,5 +23,5 @@ public class OsPlacesPostcodeResultDto
     public OsPlacesDpaDto Dpa { get; set; }
     
     [JsonProperty("LPI")]
-    public OsPlacesDpaDto Lpi { get; set; }
+    public OsPlacesLpiDto Lpi { get; set; }
 }

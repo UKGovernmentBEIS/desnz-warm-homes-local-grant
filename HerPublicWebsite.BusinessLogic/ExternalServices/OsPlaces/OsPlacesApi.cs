@@ -45,22 +45,31 @@ public class OsPlacesApi : IOsPlacesApi
                     resultsRequested += MaxResults;
                 }
             }
+            
+            // Join results based on UPRN
+            var dpaAddresses = results
+                .Where(r => r.Dpa is not null)
+                .Select(r => r.Dpa.Parse());
+            var lpiAddresses = results
+                .Where(r => r.Lpi is not null)
+                .Select(r => r.Lpi.Parse());
+
+            var joinedAddresses = dpaAddresses.UnionBy(lpiAddresses, a => a.Uprn).ToList();
 
             var filteredResults = buildingNameOrNumber is null
-                ? results
-                : results.Where(r =>
-                    r.Dpa.BuildingNumber == buildingNameOrNumber
-                    || r.Dpa.BuildingName?.ToLower() == buildingNameOrNumber.ToLower()
-                    || r.Dpa.SubBuildingName?.ToLower() == buildingNameOrNumber.ToLower())
+                ? joinedAddresses
+                : joinedAddresses.Where(a =>
+                    a.AddressLine1.ToLower().Contains(buildingNameOrNumber.ToLower())
+                    || a.AddressLine2.ToLower().Contains(buildingNameOrNumber.ToLower()))
                 .ToList();
 
             // If the filter doesn't match then show all the results we found.
             if (!filteredResults.Any())
             {
-                filteredResults = results;
+                filteredResults = joinedAddresses;
             }
             
-            return filteredResults.Select(r => r.Dpa.Parse()).ToList();
+            return filteredResults.OrderBy(a => a.AddressLine1).ToList();
         }
         catch (Exception e) {
             logger.LogError("OS Places postcode request failed: {}", e.Message);
