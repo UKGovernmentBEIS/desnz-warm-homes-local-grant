@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using HerPublicWebsite.BusinessLogic;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
@@ -169,6 +170,20 @@ namespace HerPublicWebsite
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Use forwarded headers, so the app knows it's using HTTPS and sets the HSTS headers
+            // AWS ALB will automatically add `X-Forwarded-For` and `X-Forwarded-Proto`
+            var forwardedHeaderOptions = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            };
+
+            // TODO: We know all traffic to the container is from AWS, but ideally we
+            // would still specify the IP and networks of the ALB here
+            forwardedHeaderOptions.KnownNetworks.Clear();
+            forwardedHeaderOptions.KnownProxies.Clear();
+
+            app.UseForwardedHeaders(forwardedHeaderOptions);
+
             if (!webHostEnvironment.IsDevelopment())
             {
                 app.UseExceptionHandler(new ExceptionHandlerOptions
@@ -186,6 +201,7 @@ namespace HerPublicWebsite
                 // In production we terminate TLS at the load balancer and redirect there
                 app.UseHttpsRedirection();
             }
+
 
             app.UseStaticFiles();
 
