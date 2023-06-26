@@ -75,7 +75,7 @@ namespace HerPublicWebsite
             ConfigureDatabaseContext(services);
             ConfigureGoogleAnalyticsService(services);
 
-            if (!webHostEnvironment.IsProduction())
+            if (!webHostEnvironment.IsDevelopment())
             {
                 services.Configure<BasicAuthMiddlewareConfiguration>(
                     configuration.GetSection(BasicAuthMiddlewareConfiguration.ConfigSection));
@@ -207,7 +207,7 @@ namespace HerPublicWebsite
 
         private void ConfigureHttpBasicAuth(IApplicationBuilder app)
         {
-            if (!webHostEnvironment.IsDevelopment() && !webHostEnvironment.IsProduction())
+            if (!webHostEnvironment.IsDevelopment())
             {
                 // Add HTTP Basic Authentication in our non-local-development and non-production environments
                 // to make sure people don't accidentally stumble across the site
