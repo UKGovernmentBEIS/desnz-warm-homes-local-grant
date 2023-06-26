@@ -3,6 +3,7 @@
 @using HerPublicWebsite.ExternalServices.GoogleAnalytics
 @using HerPublicWebsite.Controllers
 @using HerPublicWebsite.Helpers
+@using HerPublicWebsite.Middleware
 @using HerPublicWebsite.Services
 @using HerPublicWebsite.Services.Cookies
 @inject StaticAssetsVersioningService StaticAssetsVersioning
@@ -12,18 +13,14 @@
     string assetsPath = "/assets/images";
 }
 <!DOCTYPE html>
-
-<!-- Build number: @(BuildNumberHelper.GetBuildNumber()) -->
-<!-- Server name: @(Environment.MachineName) -->
-
 <html lang="en" class="govuk-template app-html-class">
 <head>
     @if (CookieService.HasAcceptedGoogleAnalytics(Context.Request))
     {
         var id = GoogleAnalytics.Configuration.MeasurementId;
         <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=@id"></script>
-        <script>
+        <script nonce="@Context.GetScriptNonce()" async src="https://www.googletagmanager.com/gtag/js?id=@id"></script>
+        <script nonce="@Context.GetScriptNonce()">
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
@@ -55,14 +52,14 @@
     <![endif]-->
     
     <!--[if lt IE 9]>
-        <script src="@(StaticAssetsVersioning.GetHtml5ShivJsFilename())"></script>
+    <script nonce="@Context.GetScriptNonce()" src="@(StaticAssetsVersioning.GetHtml5ShivJsFilename())"></script>
     <![endif]-->
     
     <meta property="og:image" content="@(assetsPath)/govuk-opengraph-image.png">
 </head>
 
 <body class="govuk-template__body app-body-class">
-    <script>
+    <script nonce="@Context.GetScriptNonce()">
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     </script>
 
@@ -130,12 +127,12 @@
         }
     })
 
-    <script src="@(StaticAssetsVersioning.GetAppJsFilename())"></script>
-    <script>window.GOVUKFrontend.initAll()</script>
-    
+    <script nonce="@Context.GetScriptNonce()" src="@(StaticAssetsVersioning.GetAppJsFilename())"></script>
+    <script nonce="@Context.GetScriptNonce()">window.GOVUKFrontend.initAll()</script>
+
     @if (CookieService.HasAcceptedGoogleAnalytics(Context.Request))
     {
-        <script>setUpGoogleAnalytics()</script>   
+        <script nonce="@Context.GetScriptNonce()">setUpGoogleAnalytics()</script>
     }
 
 

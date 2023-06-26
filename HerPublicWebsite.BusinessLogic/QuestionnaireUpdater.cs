@@ -3,6 +3,7 @@ using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
+using Microsoft.Extensions.Logging;
 
 namespace HerPublicWebsite.BusinessLogic;
 
@@ -12,17 +13,21 @@ public class QuestionnaireUpdater
     private readonly IEligiblePostcodeService eligiblePostcodeService;
     private readonly IDataAccessProvider dataAccessProvider;
     private readonly IEmailSender emailSender;
+    private readonly ILogger logger;
 
     public QuestionnaireUpdater(
         IEpcApi epcApi,
         IEligiblePostcodeService eligiblePostcodeService,
         IDataAccessProvider dataAccessProvider,
-        IEmailSender emailSender
-    ) {
+        IEmailSender emailSender,
+        ILogger<QuestionnaireUpdater> logger
+    )
+    {
         this.epcApi = epcApi;
         this.eligiblePostcodeService = eligiblePostcodeService;
         this.dataAccessProvider = dataAccessProvider;
         this.emailSender = emailSender;
+        this.logger = logger;
     }
 
     public Questionnaire UpdateCountry(Questionnaire questionnaire, Country country)
@@ -111,7 +116,7 @@ public class QuestionnaireUpdater
         var referralRequest = new ReferralRequest(questionnaire);
         referralRequest = await dataAccessProvider.PersistNewReferralRequestAsync(referralRequest);
 
-        questionnaire.Hug2ReferralId = referralRequest.ReferralCode;
+        questionnaire.ReferralCode = referralRequest.ReferralCode;
         questionnaire.ReferralCreated = referralRequest.RequestDate;
 
         if (!string.IsNullOrEmpty(emailAddress))
@@ -125,6 +130,31 @@ public class QuestionnaireUpdater
             );
         }
 
+        try
+        {
+            var perReferralReport = new PerReferralReport(referralRequest);
+            await dataAccessProvider.PersistPerReferralReportAsync(perReferralReport);
+        }
+        catch (Exception e)
+        {
+            logger.LogError("Couldn't generate per referral report: {}", e.Message);
+        }
+
+        return questionnaire;
+    }
+
+    public async Task<Questionnaire> GenerateAnonymisedReportAsync(Questionnaire questionnaire)
+    {
+        try
+        {
+            var anonymisedReport = new AnonymisedReport(questionnaire);
+            await dataAccessProvider.PersistAnonymisedReportAsync(anonymisedReport);
+        }
+        catch (Exception e)
+        {
+            logger.LogError("Couldn't generate anonymised report: {}", e.Message);
+        }
+
         return questionnaire;
     }
 
@@ -134,7 +164,7 @@ public class QuestionnaireUpdater
         questionnaire.NotificationEmailAddress = consentGranted ? questionnaire.LaContactEmailAddress : null;
 
         var notificationContactDetails = new NotificationDetails(questionnaire);
-        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.Hug2ReferralId, notificationContactDetails);
+        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.ReferralCode, notificationContactDetails);
 
         return questionnaire;
     }
@@ -163,7 +193,7 @@ public class QuestionnaireUpdater
         questionnaire.ConfirmationEmailAddress = confirmationConsentGranted ? confirmationEmailAddress : null;
 
         var notificationContactDetails = new NotificationDetails(questionnaire);
-        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.Hug2ReferralId, notificationContactDetails);
+        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.ReferralCode, notificationContactDetails);
 
         if (confirmationConsentGranted)
         {
@@ -171,7 +201,7 @@ public class QuestionnaireUpdater
             (
                 confirmationEmailAddress,
                 questionnaire.LaContactName,
-                questionnaire.Hug2ReferralId,
+                questionnaire.ReferralCode,
                 questionnaire.CustodianCode
             );
         }
