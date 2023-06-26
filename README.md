@@ -20,9 +20,9 @@ Migrations will be run automatically on deployment. If a migration needs to be r
 ### Process
 
 We follow a process similar to git-flow, with 3 branches corresponding to each of the environments:
-- `develop` - Dev ([https://dev.check-eligibility-for-home-upgrade-grant.service.gov.uk])
-- `staging` - UAT ([https://uat.check-eligibility-for-home-upgrade-grant.service.gov.uk])
-- `main` - Production ([https://check-eligibility-for-home-upgrade-grant.service.gov.uk])
+- `develop` - [Dev](https://dev.check-eligibility-for-home-upgrade-grant.service.gov.uk)
+- `staging` - [UAT](https://uat.check-eligibility-for-home-upgrade-grant.service.gov.uk)
+- `main` - [Production](https://www.check-eligibility-for-home-upgrade-grant.service.gov.uk)
 
 For normal development:
 - Create a branch from `develop`

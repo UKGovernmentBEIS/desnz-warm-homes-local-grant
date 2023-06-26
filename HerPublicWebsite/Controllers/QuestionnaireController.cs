@@ -245,7 +245,8 @@ public class QuestionnaireController : Controller
         var viewModel = new SelectAddressViewModel()
         {
             Addresses = await osPlaces.GetAddressesAsync(postcode, buildingNameOrNumber),
-            BackLink = GetBackUrl(QuestionFlowStep.SelectAddress, questionnaire, entryPoint)
+            BackLink = GetBackUrl(QuestionFlowStep.SelectAddress, questionnaire, entryPoint),
+            EntryPoint = entryPoint
         };
 
         TempData["Addresses"] = JsonSerializer.Serialize(viewModel.Addresses);
@@ -316,7 +317,7 @@ public class QuestionnaireController : Controller
             Town = questionnaire.AddressTown,
             County = questionnaire.AddressCounty,
             Postcode = questionnaire.AddressPostcode,
-            BackLink = GetBackUrl(QuestionFlowStep.SelectAddress, questionnaire, entryPoint)
+            BackLink = GetBackUrl(QuestionFlowStep.ManualAddress, questionnaire, entryPoint)
         };
 
         return View("ManualAddress", viewModel);
@@ -494,8 +495,7 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> CheckAnswers_Post()
     {
         await googleAnalyticsService.SendQuestionnaireCompletedEvent(Request);
-        //TODO BEISHER-257 add ConfirmQuestionnaireAnswers() method to questionnaireService and use that to record reporting data.
-        var questionnaire = questionnaireService.GetQuestionnaire();
+        var questionnaire = await questionnaireService.ConfirmQuestionnaireAnswers();
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.CheckAnswers, questionnaire);
 
         return RedirectToNextStep(nextStep);
@@ -551,7 +551,7 @@ public class QuestionnaireController : Controller
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new ConfirmationViewModel()
         {
-            ReferenceCode = questionnaire.Hug2ReferralId,
+            ReferenceCode = questionnaire.ReferralCode,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
             LocalAuthorityIsLiveWithHug2 = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Live,

@@ -75,7 +75,7 @@ namespace HerPublicWebsite
             ConfigureDatabaseContext(services);
             ConfigureGoogleAnalyticsService(services);
 
-            if (!webHostEnvironment.IsProduction())
+            if (!webHostEnvironment.IsDevelopment())
             {
                 services.Configure<BasicAuthMiddlewareConfiguration>(
                     configuration.GetSection(BasicAuthMiddlewareConfiguration.ConfigSection));
@@ -102,6 +102,13 @@ namespace HerPublicWebsite
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
+            });
+
+            services.AddHsts(options =>
+            {
+                // Recommendation for MaxAge is at least one year, and a maximum of 2 years
+                // If Preload is enabled, IncludeSubdomains should be set to true, and MaxAge should be set to 2 years
+                options.MaxAge = TimeSpan.FromDays(365);
             });
 
             services.AddHttpContextAccessor();
@@ -169,7 +176,7 @@ namespace HerPublicWebsite
                     ExceptionHandlingPath = "/error"
                 });
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                // app.UseHsts();
+                app.UseHsts();
             }
 
             app.UseStatusCodePagesWithReExecute("/error/{0}");
@@ -200,7 +207,7 @@ namespace HerPublicWebsite
 
         private void ConfigureHttpBasicAuth(IApplicationBuilder app)
         {
-            if (!webHostEnvironment.IsDevelopment() && !webHostEnvironment.IsProduction())
+            if (!webHostEnvironment.IsDevelopment())
             {
                 // Add HTTP Basic Authentication in our non-local-development and non-production environments
                 // to make sure people don't accidentally stumble across the site

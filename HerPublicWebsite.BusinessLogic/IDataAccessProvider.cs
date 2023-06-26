@@ -8,5 +8,7 @@ public interface IDataAccessProvider
     Task PersistNotificationConsentAsync(string referralId, NotificationDetails notificationDetails);
     Task<IList<ReferralRequest>> GetUnsubmittedReferralRequestsAsync();
     Task<IList<ReferralRequest>> GetReferralRequestsByCustodianAndRequestDateAsync(string custodianCode, int month, int year);
+    Task<AnonymisedReport> PersistAnonymisedReportAsync(AnonymisedReport report);
+    Task<PerReferralReport> PersistPerReferralReportAsync(PerReferralReport report);
     Task PersistAllChangesAsync();
 }

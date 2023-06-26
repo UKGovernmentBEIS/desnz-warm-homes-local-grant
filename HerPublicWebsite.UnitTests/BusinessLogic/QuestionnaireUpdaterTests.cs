@@ -9,6 +9,7 @@ using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 using Moq;
 using NUnit.Framework;
+using Microsoft.Extensions.Logging;
 
 namespace Tests.BusinessLogic;
 
@@ -20,6 +21,7 @@ public class QuestionnaireUpdaterTests
     private Mock<IEligiblePostcodeService> mockPostCodeService;
     private Mock<IDataAccessProvider> mockDataAccessProvider;
     private Mock<IEmailSender> mockEmailSender;
+    private Mock<ILogger<QuestionnaireUpdater>> mockLogger;
     
     
     [SetUp]
@@ -29,12 +31,14 @@ public class QuestionnaireUpdaterTests
         mockPostCodeService = new Mock<IEligiblePostcodeService>();
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
         mockEmailSender = new Mock<IEmailSender>();
+        mockLogger = new Mock<ILogger<QuestionnaireUpdater>>();
         underTest = new QuestionnaireUpdater
         (
             mockEpcApi.Object,
             mockPostCodeService.Object,
             mockDataAccessProvider.Object,
-            mockEmailSender.Object
+            mockEmailSender.Object,
+            mockLogger.Object
         );
     }
     
@@ -194,7 +198,7 @@ public class QuestionnaireUpdaterTests
         var result = await underTest.GenerateReferralAsync(questionnaire, "name", "email", "telephone");
         
         // Assert
-        result.Hug2ReferralId.Should().Be("code");
+        result.ReferralCode.Should().Be("code");
         result.ReferralCreated.Should().Be(creationDate);
     }
     
@@ -310,7 +314,7 @@ public class QuestionnaireUpdaterTests
         var questionnaire = new Questionnaire
         {
             LaContactEmailAddress = "test@example.com",
-            Hug2ReferralId = "referral code"
+            ReferralCode = "referral code"
         };
         
         // Act
@@ -327,7 +331,7 @@ public class QuestionnaireUpdaterTests
         var questionnaire = new Questionnaire
         {
             LaContactEmailAddress = "test@example.com",
-            Hug2ReferralId = "referral code"
+            ReferralCode = "referral code"
         };
 
         // Act
@@ -345,7 +349,7 @@ public class QuestionnaireUpdaterTests
         var questionnaire = new Questionnaire
         {
             LaContactEmailAddress = "test@example.com",
-            Hug2ReferralId = "referral code"
+            ReferralCode = "referral code"
         };
 
         // Act
@@ -362,7 +366,8 @@ public class QuestionnaireUpdaterTests
     (
         bool notificationConsentGranted,
         string notificationEmailAddress
-    ) {
+    )
+    {
         // Arrange
         const string testCustodianCode = "1234";
         const string testReferralCode = "referral code";
@@ -372,7 +377,7 @@ public class QuestionnaireUpdaterTests
         {
             LaContactName = testName,
             LaContactEmailAddress = testEmailAddress,
-            Hug2ReferralId = testReferralCode,
+            ReferralCode = testReferralCode,
             CustodianCode = testCustodianCode,
         };
         mockEmailSender.Setup(es =>
@@ -411,7 +416,8 @@ public class QuestionnaireUpdaterTests
     (
         bool notificationConsentGranted,
         string notificationEmailAddress
-    ) {
+    )
+    {
         // Arrange
         const string testCustodianCode = "1234";
         const string testReferralCode = "referral code";
@@ -419,7 +425,7 @@ public class QuestionnaireUpdaterTests
         var questionnaire = new Questionnaire
         {
             LaContactName = testName,
-            Hug2ReferralId = testReferralCode,
+            ReferralCode = testReferralCode,
             CustodianCode = testCustodianCode,
         };
         mockEmailSender.Setup(es =>

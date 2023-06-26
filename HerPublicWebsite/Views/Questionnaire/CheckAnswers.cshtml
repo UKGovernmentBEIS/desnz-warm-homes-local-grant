@@ -142,8 +142,8 @@
                                        {
                                            Text = "Change",
                                            VisuallyHiddenText = "address",
-                                           Href = Url.Action(Model.Questionnaire.Uprn is null ? nameof(QuestionnaireController.ManualAddress_Get) : nameof(QuestionnaireController.Address_Get),
-                                               controller: "Questionnaire", values: new { entryPoint = Model.Questionnaire.Uprn is null ? QuestionFlowStep.ManualAddress : QuestionFlowStep.Address } )
+                                           Href = Url.Action(nameof(QuestionnaireController.Address_Get),
+                                               controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.Address } )
                                        }
                                    }
                                },

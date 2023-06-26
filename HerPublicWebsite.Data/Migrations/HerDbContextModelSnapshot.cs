@@ -22,6 +22,54 @@ namespace HerPublicWebsite.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.AnonymisedReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CustodianCode")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("EpcLodgementDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("EpcRating")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("HasGasBoiler")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("IncomeBand")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsEligible")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsLsoaProperty")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("OwnershipStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PostcodeFirstHalf")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("SubmissionDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AnonymisedReports");
+                });
+
             modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.NotificationDetails", b =>
                 {
                     b.Property<int>("Id")
@@ -49,6 +97,48 @@ namespace HerPublicWebsite.Data.Migrations
                     b.HasIndex("ReferralRequestId");
 
                     b.ToTable("NotificationDetails");
+                });
+
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.PerReferralReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AddressCounty")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AddressLine1")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AddressLine2")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AddressPostcode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AddressTown")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ApplicationDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ReferralCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Uprn")
+                        .HasColumnType("text");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PerReferralReports");
                 });
 
             modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", b =>

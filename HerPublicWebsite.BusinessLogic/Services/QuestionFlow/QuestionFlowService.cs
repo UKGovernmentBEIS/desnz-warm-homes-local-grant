@@ -141,10 +141,6 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep ManualAddressBackDestination(QuestionFlowStep? entryPoint)
         {
-            if (entryPoint == QuestionFlowStep.ManualAddress)
-            {
-                return QuestionFlowStep.CheckAnswers;
-            }
             return QuestionFlowStep.Address;
         }
 
