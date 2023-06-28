@@ -28,6 +28,7 @@ using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
 using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
+using Microsoft.AspNetCore.Http;
 
 namespace HerPublicWebsite
 {
@@ -103,6 +104,7 @@ namespace HerPublicWebsite
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
 
             services.AddHsts(options =>
@@ -134,7 +136,12 @@ namespace HerPublicWebsite
             services.Configure<CookieServiceConfiguration>(
                 configuration.GetSection(CookieServiceConfiguration.ConfigSection));
             // Change the default antiforgery cookie name so it doesn't include Asp.Net for security reasons
-            services.AddAntiforgery(options => options.Cookie.Name = "Antiforgery");
+            services.AddAntiforgery(options =>
+            {
+                options.Cookie.Name = "Antiforgery";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
             services.AddScoped<CookieService, CookieService>();
         }
 
