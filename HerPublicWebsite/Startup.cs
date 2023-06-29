@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using HerPublicWebsite.BusinessLogic;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
@@ -27,6 +28,7 @@ using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
 using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
+using Microsoft.AspNetCore.Http;
 
 namespace HerPublicWebsite
 {
@@ -75,7 +77,7 @@ namespace HerPublicWebsite
             ConfigureDatabaseContext(services);
             ConfigureGoogleAnalyticsService(services);
 
-            if (!webHostEnvironment.IsProduction())
+            if (!webHostEnvironment.IsDevelopment())
             {
                 services.Configure<BasicAuthMiddlewareConfiguration>(
                     configuration.GetSection(BasicAuthMiddlewareConfiguration.ConfigSection));
@@ -102,6 +104,7 @@ namespace HerPublicWebsite
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
 
             services.AddHsts(options =>
@@ -133,7 +136,12 @@ namespace HerPublicWebsite
             services.Configure<CookieServiceConfiguration>(
                 configuration.GetSection(CookieServiceConfiguration.ConfigSection));
             // Change the default antiforgery cookie name so it doesn't include Asp.Net for security reasons
-            services.AddAntiforgery(options => options.Cookie.Name = "Antiforgery");
+            services.AddAntiforgery(options =>
+            {
+                options.Cookie.Name = "Antiforgery";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
             services.AddScoped<CookieService, CookieService>();
         }
 
@@ -169,6 +177,20 @@ namespace HerPublicWebsite
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Use forwarded headers, so the app knows it's using HTTPS and sets the HSTS headers
+            // AWS ALB will automatically add `X-Forwarded-For` and `X-Forwarded-Proto`
+            var forwardedHeaderOptions = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            };
+
+            // TODO: We know all traffic to the container is from AWS, but ideally we
+            // would still specify the IP and networks of the ALB here
+            forwardedHeaderOptions.KnownNetworks.Clear();
+            forwardedHeaderOptions.KnownProxies.Clear();
+
+            app.UseForwardedHeaders(forwardedHeaderOptions);
+
             if (!webHostEnvironment.IsDevelopment())
             {
                 app.UseExceptionHandler(new ExceptionHandlerOptions
@@ -186,6 +208,7 @@ namespace HerPublicWebsite
                 // In production we terminate TLS at the load balancer and redirect there
                 app.UseHttpsRedirection();
             }
+
 
             app.UseStaticFiles();
 
@@ -207,7 +230,7 @@ namespace HerPublicWebsite
 
         private void ConfigureHttpBasicAuth(IApplicationBuilder app)
         {
-            if (!webHostEnvironment.IsDevelopment() && !webHostEnvironment.IsProduction())
+            if (!webHostEnvironment.IsDevelopment())
             {
                 // Add HTTP Basic Authentication in our non-local-development and non-production environments
                 // to make sure people don't accidentally stumble across the site

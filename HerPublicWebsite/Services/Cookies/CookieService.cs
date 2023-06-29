@@ -90,6 +90,12 @@ public class CookieService
         response.Cookies.Append(
             cookieName,
             cookieString,
-            new CookieOptions {Secure = true, SameSite = SameSiteMode.Lax, MaxAge = TimeSpan.FromDays(Configuration.DefaultDaysUntilExpiry)});
+            new CookieOptions
+            {
+                Secure = true,
+                SameSite = SameSiteMode.Lax,
+                MaxAge = TimeSpan.FromDays(Configuration.DefaultDaysUntilExpiry),
+                HttpOnly = true
+            });
     }
 }

@@ -4,6 +4,7 @@ using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
+using Microsoft.Extensions.Logging;
 
 namespace HerPublicWebsite.BusinessLogic;
 
@@ -14,13 +15,15 @@ public class QuestionnaireUpdater
     private readonly IDataAccessProvider dataAccessProvider;
     private readonly IEmailSender emailSender;
     private readonly IQuestionFlowService questionFlowService;
+    private readonly ILogger logger;
 
     public QuestionnaireUpdater(
         IEpcApi epcApi,
         IEligiblePostcodeService eligiblePostcodeService,
         IDataAccessProvider dataAccessProvider,
         IEmailSender emailSender,
-        IQuestionFlowService questionFlowService
+        IQuestionFlowService questionFlowService,
+        ILogger<QuestionnaireUpdater> logger
     )
     {
         this.epcApi = epcApi;
@@ -28,6 +31,7 @@ public class QuestionnaireUpdater
         this.dataAccessProvider = dataAccessProvider;
         this.emailSender = emailSender;
         this.questionFlowService = questionFlowService;
+        this.logger = logger;
     }
 
     public Questionnaire UpdateCountry(Questionnaire questionnaire, Country country, QuestionFlowStep? entryPoint)
@@ -121,7 +125,7 @@ public class QuestionnaireUpdater
         var referralRequest = new ReferralRequest(questionnaire);
         referralRequest = await dataAccessProvider.PersistNewReferralRequestAsync(referralRequest);
 
-        questionnaire.Hug2ReferralId = referralRequest.ReferralCode;
+        questionnaire.ReferralCode = referralRequest.ReferralCode;
         questionnaire.ReferralCreated = referralRequest.RequestDate;
 
         if (!string.IsNullOrEmpty(emailAddress))
@@ -135,6 +139,31 @@ public class QuestionnaireUpdater
             );
         }
 
+        try
+        {
+            var perReferralReport = new PerReferralReport(referralRequest);
+            await dataAccessProvider.PersistPerReferralReportAsync(perReferralReport);
+        }
+        catch (Exception e)
+        {
+            logger.LogError("Couldn't generate per referral report: {}", e.Message);
+        }
+
+        return questionnaire;
+    }
+
+    public async Task<Questionnaire> GenerateAnonymisedReportAsync(Questionnaire questionnaire)
+    {
+        try
+        {
+            var anonymisedReport = new AnonymisedReport(questionnaire);
+            await dataAccessProvider.PersistAnonymisedReportAsync(anonymisedReport);
+        }
+        catch (Exception e)
+        {
+            logger.LogError("Couldn't generate anonymised report: {}", e.Message);
+        }
+
         return questionnaire;
     }
 
@@ -144,8 +173,7 @@ public class QuestionnaireUpdater
         questionnaire.NotificationEmailAddress = consentGranted ? questionnaire.LaContactEmailAddress : null;
 
         var notificationContactDetails = new NotificationDetails(questionnaire);
-        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.Hug2ReferralId,
-            notificationContactDetails);
+        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.ReferralCode, notificationContactDetails);
 
         return questionnaire;
     }
@@ -175,8 +203,7 @@ public class QuestionnaireUpdater
         questionnaire.ConfirmationEmailAddress = confirmationConsentGranted ? confirmationEmailAddress : null;
 
         var notificationContactDetails = new NotificationDetails(questionnaire);
-        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.Hug2ReferralId,
-            notificationContactDetails);
+        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.ReferralCode, notificationContactDetails);
 
         if (confirmationConsentGranted)
         {
@@ -184,7 +211,7 @@ public class QuestionnaireUpdater
             (
                 confirmationEmailAddress,
                 questionnaire.LaContactName,
-                questionnaire.Hug2ReferralId,
+                questionnaire.ReferralCode,
                 questionnaire.CustodianCode
             );
         }

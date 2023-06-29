@@ -29,7 +29,7 @@ public class QuestionnaireTests
             HasGasBoiler = HasGasBoiler.No,
             IncomeBand = IncomeBand.UnderOrEqualTo31000,
             ReferralCreated = default,
-            Hug2ReferralId = "HUG21023",
+            ReferralCode = "HUG21023",
             LaContactName = "Contact Name",
             LaCanContactByEmail = true,
             LaCanContactByPhone = true,
