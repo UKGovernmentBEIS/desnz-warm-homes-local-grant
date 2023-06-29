@@ -7,6 +7,7 @@ using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
+using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
 using Moq;
 using NUnit.Framework;
 
@@ -20,6 +21,7 @@ public class QuestionnaireUpdaterTests
     private Mock<IEligiblePostcodeService> mockPostCodeService;
     private Mock<IDataAccessProvider> mockDataAccessProvider;
     private Mock<IEmailSender> mockEmailSender;
+    private Mock<IQuestionFlowService> mockQuestionFlowService;
     
     
     [SetUp]
@@ -29,12 +31,14 @@ public class QuestionnaireUpdaterTests
         mockPostCodeService = new Mock<IEligiblePostcodeService>();
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
         mockEmailSender = new Mock<IEmailSender>();
+        mockQuestionFlowService = new Mock<IQuestionFlowService>();
         underTest = new QuestionnaireUpdater
         (
             mockEpcApi.Object,
             mockPostCodeService.Object,
             mockDataAccessProvider.Object,
-            mockEmailSender.Object
+            mockEmailSender.Object,
+            mockQuestionFlowService.Object
         );
     }
     
@@ -57,7 +61,7 @@ public class QuestionnaireUpdaterTests
         mockEpcApi.Setup(e => e.EpcFromUprnAsync("123456789012")).ReturnsAsync(epcDetails);
         
         // Act
-        var result = await underTest.UpdateAddressAsync(questionnaire, address);
+        var result = await underTest.UpdateAddressAsync(questionnaire, address, null);
         
         // Assert
         mockEpcApi.Verify(e => e.EpcFromUprnAsync("123456789012"));
@@ -81,7 +85,7 @@ public class QuestionnaireUpdaterTests
         };
 
         // Act
-        var result = await underTest.UpdateAddressAsync(questionnaire, address);
+        var result = await underTest.UpdateAddressAsync(questionnaire, address, null);
         
         // Assert
         mockEpcApi.VerifyNoOtherCalls();
@@ -105,7 +109,7 @@ public class QuestionnaireUpdaterTests
         mockPostCodeService.Setup(pcs => pcs.IsEligiblePostcode(postcode)).Returns(isEligible);
 
         // Act
-        var result = await underTest.UpdateAddressAsync(questionnaire, address);
+        var result = await underTest.UpdateAddressAsync(questionnaire, address, null);
         
         // Assert
         result.IsLsoaProperty.Should().Be(isEligible);
@@ -122,7 +126,7 @@ public class QuestionnaireUpdaterTests
         };
         
         // Act
-        var result = underTest.UpdateLocalAuthority(questionnaire, "new code");
+        var result = underTest.UpdateLocalAuthority(questionnaire, "new code", null);
         
         // Assert
         result.LocalAuthorityConfirmed.Should().BeNull();

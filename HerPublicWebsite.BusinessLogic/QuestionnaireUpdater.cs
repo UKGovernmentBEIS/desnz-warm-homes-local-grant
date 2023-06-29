@@ -3,6 +3,7 @@ using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
+using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
 
 namespace HerPublicWebsite.BusinessLogic;
 
@@ -12,95 +13,104 @@ public class QuestionnaireUpdater
     private readonly IEligiblePostcodeService eligiblePostcodeService;
     private readonly IDataAccessProvider dataAccessProvider;
     private readonly IEmailSender emailSender;
+    private readonly IQuestionFlowService questionFlowService;
 
     public QuestionnaireUpdater(
         IEpcApi epcApi,
         IEligiblePostcodeService eligiblePostcodeService,
         IDataAccessProvider dataAccessProvider,
-        IEmailSender emailSender
-    ) {
+        IEmailSender emailSender,
+        IQuestionFlowService questionFlowService
+    )
+    {
         this.epcApi = epcApi;
         this.eligiblePostcodeService = eligiblePostcodeService;
         this.dataAccessProvider = dataAccessProvider;
         this.emailSender = emailSender;
+        this.questionFlowService = questionFlowService;
     }
 
-    public Questionnaire UpdateCountry(Questionnaire questionnaire, Country country)
+    public Questionnaire UpdateCountry(Questionnaire questionnaire, Country country, QuestionFlowStep? entryPoint)
     {
-        questionnaire.Country = country;
-        return questionnaire;
+        return UpdateQuestionnaire(q => q.Country = country, questionnaire, QuestionFlowStep.Country, entryPoint);
     }
 
 
-    public Questionnaire UpdateOwnershipStatus(Questionnaire questionnaire, OwnershipStatus ownershipStatus)
+    public Questionnaire UpdateOwnershipStatus(Questionnaire questionnaire, OwnershipStatus ownershipStatus,
+        QuestionFlowStep? entryPoint)
     {
-        questionnaire.OwnershipStatus = ownershipStatus;
-        return questionnaire;
+        return UpdateQuestionnaire(q => q.OwnershipStatus = ownershipStatus, questionnaire,
+            QuestionFlowStep.OwnershipStatus, entryPoint);
     }
 
-    public async Task<Questionnaire> UpdateAddressAsync(Questionnaire questionnaire, Address address)
+    public async Task<Questionnaire> UpdateAddressAsync(Questionnaire questionnaire, Address address, QuestionFlowStep? entryPoint)
     {
-        questionnaire.Uprn = address.Uprn;
-        questionnaire.AddressPostcode = address.Postcode;
-        questionnaire.AddressLine1 = address.AddressLine1;
-        questionnaire.AddressLine2 = address.AddressLine2;
-        questionnaire.AddressTown = address.Town;
-        questionnaire.AddressCounty = address.County;
-        questionnaire.CustodianCode = address.LocalCustodianCode;
-        questionnaire.LocalAuthorityConfirmed = string.IsNullOrEmpty(address.LocalCustodianCode) ? null : true;
-
         // Try to find an EPC for this property
-        if (address.Uprn != null)
+        var epcDetails = address.Uprn != null ? await epcApi.EpcFromUprnAsync(address.Uprn) : null;
+
+        var currentPage = address.Uprn != null ? QuestionFlowStep.SelectAddress : QuestionFlowStep.ManualAddress;
+
+        return UpdateQuestionnaire(q =>
+            {
+                q.Uprn = address.Uprn;
+                q.AddressPostcode = address.Postcode;
+                q.AddressLine1 = address.AddressLine1;
+                q.AddressLine2 = address.AddressLine2;
+                q.AddressTown = address.Town;
+                q.AddressCounty = address.County;
+                q.CustodianCode = address.LocalCustodianCode;
+                q.LocalAuthorityConfirmed = string.IsNullOrEmpty(address.LocalCustodianCode) ? null : true;
+                
+                q.EpcDetails = epcDetails;
+
+                q.EpcDetailsAreCorrect = null;
+
+                // Check LSOA eligibility
+                q.IsLsoaProperty = eligiblePostcodeService.IsEligiblePostcode(address.Postcode);
+            }, questionnaire, currentPage, entryPoint
+        );
+    }
+
+    public Questionnaire UpdateGasBoiler(Questionnaire questionnaire, HasGasBoiler hasGasBoiler,
+        QuestionFlowStep? entryPoint)
+    {
+        return UpdateQuestionnaire(q => q.HasGasBoiler = hasGasBoiler, questionnaire, QuestionFlowStep.GasBoiler,
+            entryPoint);
+    }
+
+    public Questionnaire UpdateEpcIsCorrect(Questionnaire questionnaire, bool epcIsCorrect,
+        QuestionFlowStep? entryPoint)
+    {
+        return UpdateQuestionnaire(q => q.EpcDetailsAreCorrect = epcIsCorrect, questionnaire,
+            QuestionFlowStep.ReviewEpc, entryPoint);
+    }
+
+    public Questionnaire UpdateLocalAuthority(Questionnaire questionnaire, string custodianCode,
+        QuestionFlowStep? entryPoint)
+    {
+        return UpdateQuestionnaire(q =>
         {
-            questionnaire.EpcDetails = await epcApi.EpcFromUprnAsync(address.Uprn);
-        }
-        else
-        {
-            questionnaire.EpcDetails = null;
-        }
-
-        questionnaire.EpcDetailsAreCorrect = null;
-
-        // Check LSOA eligibility
-        questionnaire.IsLsoaProperty = eligiblePostcodeService.IsEligiblePostcode(address.Postcode);
-
-        return questionnaire;
+            q.CustodianCode = custodianCode;
+            q.LocalAuthorityConfirmed = null;
+        }, questionnaire, QuestionFlowStep.SelectLocalAuthority, entryPoint);
     }
 
-    public Questionnaire UpdateGasBoiler(Questionnaire questionnaire, HasGasBoiler hasGasBoiler)
+    public Questionnaire UpdateLocalAuthorityIsCorrect(Questionnaire questionnaire, bool? confirmed,
+        QuestionFlowStep? entryPoint)
     {
-        questionnaire.HasGasBoiler = hasGasBoiler;
-        return questionnaire;
+        return UpdateQuestionnaire(q => q.LocalAuthorityConfirmed = confirmed, questionnaire,
+            QuestionFlowStep.ConfirmLocalAuthority, entryPoint);
     }
 
-    public Questionnaire UpdateEpcIsCorrect(Questionnaire questionnaire, bool epcIsCorrect)
+    public Questionnaire UpdateHouseholdIncome(Questionnaire questionnaire, IncomeBand incomeBand,
+        QuestionFlowStep? entryPoint)
     {
-        questionnaire.EpcDetailsAreCorrect = epcIsCorrect;
-
-        return questionnaire;
+        return UpdateQuestionnaire(q => q.IncomeBand = incomeBand, questionnaire, QuestionFlowStep.HouseholdIncome,
+            entryPoint);
     }
 
-    public Questionnaire UpdateLocalAuthority(Questionnaire questionnaire, string custodianCode)
-    {
-        questionnaire.CustodianCode = custodianCode;
-        questionnaire.LocalAuthorityConfirmed = null;
-        return questionnaire;
-    }
-
-    public Questionnaire UpdateLocalAuthorityIsCorrect(Questionnaire questionnaire, bool? confirmed)
-    {
-        questionnaire.LocalAuthorityConfirmed = confirmed;
-        return questionnaire;
-    }
-
-    public Questionnaire UpdateHouseholdIncome(Questionnaire questionnaire, IncomeBand incomeBand)
-    {
-        questionnaire.IncomeBand = incomeBand;
-
-        return questionnaire;
-    }
-
-    public async Task<Questionnaire> GenerateReferralAsync(Questionnaire questionnaire, string name, string emailAddress, string telephone)
+    public async Task<Questionnaire> GenerateReferralAsync(Questionnaire questionnaire, string name,
+        string emailAddress, string telephone)
     {
         questionnaire.LaCanContactByEmail = !string.IsNullOrEmpty(emailAddress);
         questionnaire.LaCanContactByPhone = !string.IsNullOrEmpty(telephone);
@@ -134,12 +144,14 @@ public class QuestionnaireUpdater
         questionnaire.NotificationEmailAddress = consentGranted ? questionnaire.LaContactEmailAddress : null;
 
         var notificationContactDetails = new NotificationDetails(questionnaire);
-        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.Hug2ReferralId, notificationContactDetails);
+        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.Hug2ReferralId,
+            notificationContactDetails);
 
         return questionnaire;
     }
 
-    public async Task<Questionnaire> RecordNotificationConsentAsync(Questionnaire questionnaire, bool consentGranted, string emailAddress)
+    public async Task<Questionnaire> RecordNotificationConsentAsync(Questionnaire questionnaire, bool consentGranted,
+        string emailAddress)
     {
         questionnaire.NotificationConsent = consentGranted;
         questionnaire.NotificationEmailAddress = consentGranted ? emailAddress : null;
@@ -163,7 +175,8 @@ public class QuestionnaireUpdater
         questionnaire.ConfirmationEmailAddress = confirmationConsentGranted ? confirmationEmailAddress : null;
 
         var notificationContactDetails = new NotificationDetails(questionnaire);
-        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.Hug2ReferralId, notificationContactDetails);
+        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.Hug2ReferralId,
+            notificationContactDetails);
 
         if (confirmationConsentGranted)
         {
@@ -174,6 +187,26 @@ public class QuestionnaireUpdater
                 questionnaire.Hug2ReferralId,
                 questionnaire.CustodianCode
             );
+        }
+
+        return questionnaire;
+    }
+
+    private Questionnaire UpdateQuestionnaire(Action<Questionnaire> update, Questionnaire questionnaire,
+        QuestionFlowStep currentPage, QuestionFlowStep? entryPoint = null)
+    {
+        if ((entryPoint is not null) && questionnaire.UneditedData is null)
+        {
+            questionnaire.CreateUneditedData();
+        }
+
+        update(questionnaire);
+
+        var nextStep = questionFlowService.NextStep(currentPage, questionnaire, entryPoint);
+
+        if ((entryPoint is not null) && nextStep is QuestionFlowStep.CheckAnswers)
+        {
+            questionnaire.CommitEdits();
         }
 
         return questionnaire;

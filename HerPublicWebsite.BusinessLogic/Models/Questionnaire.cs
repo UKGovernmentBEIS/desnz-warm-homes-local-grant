@@ -8,6 +8,7 @@ namespace HerPublicWebsite.BusinessLogic.Models;
 
 public record Questionnaire
 {
+
     public CountryEnum? Country { get; set; }
     public OwnershipStatusEnum? OwnershipStatus { get; set; }
 
@@ -43,6 +44,8 @@ public record Questionnaire
     public string NotificationEmailAddress { get; set; }
 
     public string ConfirmationEmailAddress { get; set; }
+
+    public Questionnaire UneditedData { get; set; }
 
     public bool IsEligibleForHug2 =>
             (IncomeIsTooHigh, HasGasBoiler, EpcIsTooHigh, Country, OwnershipStatus) is
@@ -118,4 +121,68 @@ public record Questionnaire
     public bool EpcIsTooHigh => EffectiveEpcBand is EpcRating.A or EpcRating.B or EpcRating.C;
 
     public bool IncomeIsTooHigh => IncomeBand is IncomeBandEnum.GreaterThan31000 && IsLsoaProperty is not true;
+
+    public void CreateUneditedData()
+    {
+        UneditedData = new Questionnaire();
+        CopyAnswersTo(UneditedData);
+    }
+
+    public void CommitEdits()
+    {
+        // If a user has made changes to their answers we have to delete any recommendations they have as they may now
+        // be incorrect.
+        if (EditedDataIsDifferent())
+        {
+            /* PropertyRecommendations.Clear(); */
+        }
+        DeleteUneditedData();
+    }
+
+    public void RevertToUneditedData()
+    {
+        UneditedData.CopyAnswersTo(this);
+        DeleteUneditedData();
+    }
+
+    private void DeleteUneditedData()
+    {
+        UneditedData = null;
+    }
+
+    private bool EditedDataIsDifferent()
+    {
+        foreach (var propertyInfo in GetType().GetProperties())
+        {
+            if (propertyInfo.Name is nameof(EpcDetails) or nameof(UneditedData))
+            {
+                continue;
+            }
+
+
+            if (propertyInfo.GetValue(this) != propertyInfo.GetValue(UneditedData))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void CopyAnswersTo(Questionnaire other)
+    {
+        foreach (var propertyInfo in GetType().GetProperties())
+        {
+            if (propertyInfo.Name is nameof(EpcDetails) or nameof(UneditedData))
+            {
+                continue;
+            }
+
+            if (propertyInfo.CanWrite)
+            {
+                propertyInfo.SetValue(other, propertyInfo.GetValue(this));
+            }
+        }
+
+    }
 }
