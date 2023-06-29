@@ -23,7 +23,7 @@ public record Questionnaire
     public string Uprn { get; set; } // Should be populated for most questionnaires, but not 100% guaranteed
 
     public EpcDetails EpcDetails { get; set; }
-    public bool? EpcDetailsAreCorrect { get; set; }
+    public EpcConfirmation? EpcDetailsAreCorrect { get; set; }
     public bool? IsLsoaProperty { get; set; }
     public HasGasBoilerEnum? HasGasBoiler { get; set; }
     public IncomeBandEnum? IncomeBand { get; set; }
@@ -101,7 +101,25 @@ public record Questionnaire
                 return EpcRating.Unknown;
             }
 
-            if (EpcDetailsAreCorrect is not true)
+            if (EpcDetailsAreCorrect is not EpcConfirmation.Yes)
+            {
+                return EpcRating.Unknown;
+            }
+
+            if (EpcDetails.ExpiryDate < DateTime.Now)
+            {
+                return EpcRating.Expired;
+            }
+
+            return EpcDetails.EpcRating ?? EpcRating.Unknown;
+        }
+    }
+
+    public EpcRating DisplayEpcRating
+    {
+        get
+        {
+            if (EpcDetails is null)
             {
                 return EpcRating.Unknown;
             }

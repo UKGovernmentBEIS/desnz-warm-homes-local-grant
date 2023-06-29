@@ -78,7 +78,7 @@ public class QuestionnaireUpdater
         return questionnaire;
     }
 
-    public Questionnaire UpdateEpcIsCorrect(Questionnaire questionnaire, bool epcIsCorrect)
+    public Questionnaire UpdateEpcIsCorrect(Questionnaire questionnaire, EpcConfirmation? epcIsCorrect)
     {
         questionnaire.EpcDetailsAreCorrect = epcIsCorrect;
 
