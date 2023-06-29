@@ -9,6 +9,76 @@ namespace Tests.BusinessLogic.Models;
 [TestFixture]
 public class QuestionnaireTests
 {
+    private Questionnaire InitializeQuestionnaire()
+    {
+        return new Questionnaire
+        {
+            Country = Country.England,
+            OwnershipStatus = OwnershipStatus.OwnerOccupancy,
+            AddressLine1 = "Address Line 1",
+            AddressLine2 = "Address Line 2",
+            AddressTown = "A Town",
+            AddressCounty = "A County",
+            AddressPostcode = "PST C0D",
+            CustodianCode = "5210",
+            LocalAuthorityConfirmed = true,
+            Uprn = "123456789123",
+            EpcDetails = new EpcDetails(),
+            EpcDetailsAreCorrect = true,
+            IsLsoaProperty = true,
+            HasGasBoiler = HasGasBoiler.No,
+            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            ReferralCreated = default,
+            Hug2ReferralId = "HUG21023",
+            LaContactName = "Contact Name",
+            LaCanContactByEmail = true,
+            LaCanContactByPhone = true,
+            LaContactEmailAddress = "person@place.com",
+            LaContactTelephone = "07123456789",
+            NotificationConsent = true,
+            ConfirmationConsent = true,
+            NotificationEmailAddress = "person@place.com",
+            ConfirmationEmailAddress = "person@place.com",
+            UneditedData = new Questionnaire()
+        };
+    }
+    
+    [Test]
+    public void CopiesAllAnswers()
+    {
+        // Arrange
+        var questionnaire = InitializeQuestionnaire();
+
+        // Act
+        questionnaire.CreateUneditedData();
+
+        // Assert
+        foreach (var propertyInfo in questionnaire.GetType().GetProperties())
+        {
+            if (
+                propertyInfo.Name.Equals(nameof(questionnaire.UneditedData))
+            )
+            {
+                continue;
+            }
+            
+            propertyInfo.GetValue(questionnaire.UneditedData).Should().NotBeNull();
+        }
+    }
+    
+    [Test]
+    public void CommitEditsResetsUneditedData()
+    {
+        // Arrange
+        var questionnaire = InitializeQuestionnaire();
+        
+        // Act
+        questionnaire.CommitEdits();
+        
+        // Assert
+        questionnaire.UneditedData.Should().BeNull();
+    }
+    
     [Test]
     public void EffectiveEpcBand_WithNoEpcDetails_ReturnsUnknown()
     {

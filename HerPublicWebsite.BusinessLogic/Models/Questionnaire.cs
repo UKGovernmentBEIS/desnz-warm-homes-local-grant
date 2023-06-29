@@ -173,7 +173,7 @@ public record Questionnaire
     {
         foreach (var propertyInfo in GetType().GetProperties())
         {
-            if (propertyInfo.Name is nameof(EpcDetails) or nameof(UneditedData))
+            if (propertyInfo.Name is nameof(UneditedData))
             {
                 continue;
             }
