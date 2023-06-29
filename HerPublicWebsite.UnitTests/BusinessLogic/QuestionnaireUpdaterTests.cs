@@ -8,9 +8,9 @@ using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Microsoft.Extensions.Logging;
 
 namespace Tests.BusinessLogic;
 
@@ -460,5 +460,82 @@ public class QuestionnaireUpdaterTests
             It.IsAny<string>(),
             It.IsAny<string>()
         ), Times.Never);
+    }
+
+
+    [Test]
+    public async Task UpdateQuestionnaire_EditStarts_CreatesUneditedData()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire();
+
+        mockQuestionFlowService.Setup(qfs => qfs.NextStep(
+            It.IsAny<QuestionFlowStep>(),
+            It.IsAny<Questionnaire>(),
+            It.IsAny<QuestionFlowStep>()
+        )).Returns(QuestionFlowStep.SelectLocalAuthority);
+
+        // Act
+        var result = await underTest.UpdateAddressAsync(questionnaire, new Address(), QuestionFlowStep.Address);
+
+        // Assert
+        result.UneditedData.Should().NotBeNull();
+    }
+
+    [Test]
+    public async Task UpdateQuestionnaire_NotEditing_NoUneditedData()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire();
+
+        mockQuestionFlowService.Setup(qfs => qfs.NextStep(
+            It.IsAny<QuestionFlowStep>(),
+            It.IsAny<Questionnaire>(),
+            It.IsAny<QuestionFlowStep>()
+        )).Returns(QuestionFlowStep.SelectLocalAuthority);
+
+        // Act
+        var result = await underTest.UpdateAddressAsync(questionnaire, new Address(), null);
+
+        // Assert
+        result.UneditedData.Should().BeNull();
+    }
+
+    [Test]
+    public async Task UpdateQuestionnaire_EditWhileExistingData_UneditedDataPreserved()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire() { UneditedData = new Questionnaire()};
+
+        mockQuestionFlowService.Setup(qfs => qfs.NextStep(
+            It.IsAny<QuestionFlowStep>(),
+            It.IsAny<Questionnaire>(),
+            It.IsAny<QuestionFlowStep>()
+        )).Returns(QuestionFlowStep.SelectLocalAuthority);
+
+        // Act
+        var result = await underTest.UpdateAddressAsync(questionnaire, new Address(), QuestionFlowStep.Address);
+
+        // Assert
+        result.UneditedData.Should().Be(new Questionnaire());
+    }
+
+    [Test]
+    public async Task UpdateQuestionnaire_EditComplete_DataCommitted()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire() { UneditedData = new Questionnaire()};
+
+        mockQuestionFlowService.Setup(qfs => qfs.NextStep(
+            It.IsAny<QuestionFlowStep>(),
+            It.IsAny<Questionnaire>(),
+            It.IsAny<QuestionFlowStep>()
+        )).Returns(QuestionFlowStep.CheckAnswers);
+
+        // Act
+        var result = await underTest.UpdateAddressAsync(questionnaire, new Address(), QuestionFlowStep.Address);
+
+        // Assert
+        result.UneditedData.Should().BeNull();
     }
 }

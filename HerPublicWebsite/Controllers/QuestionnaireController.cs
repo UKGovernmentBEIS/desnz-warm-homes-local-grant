@@ -483,6 +483,8 @@ public class QuestionnaireController : Controller
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
 
+        // If the user comes back to this page and their changes haven't been saved,
+        // we need to revert to their old answers.
         if (questionnaire.UneditedData is not null)
         {
             questionnaire.RevertToUneditedData();

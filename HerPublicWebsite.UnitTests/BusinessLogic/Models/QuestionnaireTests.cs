@@ -44,7 +44,7 @@ public class QuestionnaireTests
     }
     
     [Test]
-    public void CopiesAllAnswers()
+    public void UneditedData_WhenCreated_CopiesAllAnswers()
     {
         // Arrange
         var questionnaire = InitializeQuestionnaire();
@@ -67,7 +67,7 @@ public class QuestionnaireTests
     }
     
     [Test]
-    public void CommitEditsResetsUneditedData()
+    public void UneditedData_WhenCommitEdits_UneditedDataIsNull()
     {
         // Arrange
         var questionnaire = InitializeQuestionnaire();

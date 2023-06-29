@@ -130,12 +130,6 @@ public record Questionnaire
 
     public void CommitEdits()
     {
-        // If a user has made changes to their answers we have to delete any recommendations they have as they may now
-        // be incorrect.
-        if (EditedDataIsDifferent())
-        {
-            /* PropertyRecommendations.Clear(); */
-        }
         DeleteUneditedData();
     }
 
@@ -148,25 +142,6 @@ public record Questionnaire
     private void DeleteUneditedData()
     {
         UneditedData = null;
-    }
-
-    private bool EditedDataIsDifferent()
-    {
-        foreach (var propertyInfo in GetType().GetProperties())
-        {
-            if (propertyInfo.Name is nameof(EpcDetails) or nameof(UneditedData))
-            {
-                continue;
-            }
-
-
-            if (propertyInfo.GetValue(this) != propertyInfo.GetValue(UneditedData))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public void CopyAnswersTo(Questionnaire other)

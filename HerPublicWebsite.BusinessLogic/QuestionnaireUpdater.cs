@@ -219,7 +219,7 @@ public class QuestionnaireUpdater
         return questionnaire;
     }
 
-    private Questionnaire UpdateQuestionnaire(Action<Questionnaire> update, Questionnaire questionnaire,
+    public Questionnaire UpdateQuestionnaire(Action<Questionnaire> update, Questionnaire questionnaire,
         QuestionFlowStep currentPage, QuestionFlowStep? entryPoint = null)
     {
         if ((entryPoint is not null) && questionnaire.UneditedData is null)
