@@ -242,11 +242,15 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> SelectAddress_Get(string postcode, string buildingNameOrNumber, QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
+
+        var addresses = await osPlaces.GetAddressesAsync(postcode, buildingNameOrNumber);
         var viewModel = new SelectAddressViewModel()
         {
-            Addresses = await osPlaces.GetAddressesAsync(postcode, buildingNameOrNumber),
+            Addresses = addresses,
             BackLink = GetBackUrl(QuestionFlowStep.SelectAddress, questionnaire, entryPoint),
-            EntryPoint = entryPoint
+            EntryPoint = entryPoint,
+            IsSingleAddress = addresses.Count == 1,
+            IsMultipleAddresses = addresses.Count > 1
         };
 
         TempData["Addresses"] = JsonSerializer.Serialize(viewModel.Addresses);
@@ -262,10 +266,15 @@ public class QuestionnaireController : Controller
             return await SelectAddress_Get(postcode, buildingNameOrNumber, viewModel.EntryPoint);
         }
 
+        if (viewModel.IsSingleAddress && viewModel.IsAddressCorrect is YesOrNo.No) {
+            var forwardArgs = GetActionArgumentsForQuestion(QuestionFlowStep.ManualAddress, viewModel.EntryPoint);
+            return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
+        }
+
         try
         {
             var addressResults = JsonSerializer.Deserialize<List<Address>>(TempData["Addresses"] as string ?? throw new InvalidOperationException());
-            var selectedAddress = addressResults[Convert.ToInt32(viewModel.SelectedAddressIndex)];
+            var selectedAddress = addressResults[viewModel.IsSingleAddress ? 0 : Convert.ToInt32(viewModel.SelectedAddressIndex)]; // If there's only one address, just use the first item
             var questionnaire = await questionnaireService.UpdateAddressAsync(selectedAddress);
 
             var nextStep = questionFlowService.NextStep(QuestionFlowStep.SelectAddress, questionnaire, viewModel.EntryPoint);
