@@ -115,7 +115,7 @@ public record Questionnaire
         }
     }
 
-    public bool EpcIsExpired => EpcDetails.ExpiryDate < DateTime.Now;
+    public bool EpcIsExpired => EpcDetails?.ExpiryDate == null ? false : EpcDetails.ExpiryDate < DateTime.Now;
 
     public bool EpcIsTooHigh => EffectiveEpcBand is EpcRating.A or EpcRating.B or EpcRating.C;
 
