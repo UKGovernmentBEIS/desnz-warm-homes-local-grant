@@ -44,6 +44,24 @@
             </div>
         </div>
         
+        <form action="@Url.Action(nameof(QuestionnaireController.SelectLocalAuthority_Get), "Questionnaire")" method="get" novalidate>
+            @if (Model.EntryPoint is not null)
+            {
+                @(Html.HiddenFor(m => m.EntryPoint))
+            }
+
+            <h2 class="govuk-heading-s">
+                Search for a local authority
+            </h2>
+
+            @await Html.GovUkTextInputFor(m => m.SearchTerm)
+
+            @(await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Search",
+            }))
+        </form>
+        
         @foreach (var localAuthoritiesForInitial in Model.LocalAuthoritiesByInitial.ToList().OrderBy(k => k.Key))
         {
             var orderedLaDetails = localAuthoritiesForInitial.Value.OrderBy(lad => lad.Name).ToList();

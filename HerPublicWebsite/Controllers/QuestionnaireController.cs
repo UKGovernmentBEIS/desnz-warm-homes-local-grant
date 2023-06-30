@@ -351,14 +351,16 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("select-local-authority")]
-    public IActionResult SelectLocalAuthority_Get(QuestionFlowStep? entryPoint)
+    public IActionResult SelectLocalAuthority_Get(QuestionFlowStep? entryPoint, string searchTerm = "")
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var viewModel = new SelectLocalAuthorityViewModel()
-        {
-            BackLink = GetBackUrl(QuestionFlowStep.SelectLocalAuthority, questionnaire, entryPoint),
-            EntryPoint = entryPoint
-        };
+
+        var viewModel = string.IsNullOrEmpty(searchTerm)
+            ? new SelectLocalAuthorityViewModel()
+            : new SelectLocalAuthorityViewModel(searchTerm);
+
+        viewModel.BackLink = GetBackUrl(QuestionFlowStep.SelectLocalAuthority, questionnaire, entryPoint);
+        viewModel.EntryPoint = entryPoint;
 
         return View("SelectLocalAuthority", viewModel);
     }
