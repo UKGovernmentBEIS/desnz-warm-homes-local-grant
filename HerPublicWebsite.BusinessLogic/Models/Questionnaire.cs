@@ -49,7 +49,7 @@ public record Questionnaire
                 (false, not HasGasBoilerEnum.Yes, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy);
 
     public bool FoundEpcBandIsTooHigh =>
-        EpcDetails is { EpcRating: EpcRating.A or EpcRating.B or EpcRating.C};
+        EpcDetails is { EpcRating: EpcRating.A or EpcRating.B or EpcRating.C };
 
     public string LocalAuthorityName
     {
