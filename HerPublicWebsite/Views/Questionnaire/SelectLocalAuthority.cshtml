@@ -23,23 +23,11 @@
         <div class="her_alphabet_links">
             @{
                 var orderedLetters = Model.LocalAuthoritiesByInitial.Keys.OrderBy(k => k).ToList();
-                var lettersInFirstRow = (orderedLetters.Count + 1) / 2;
             }
             <div class="her_alphabet_links__row">
-                @for (var i = 0; i < lettersInFirstRow; i++)
+                @foreach(var letter in orderedLetters)
                 {
-                    <span class="her_alphabet_links__letter"><a class="govuk-link govuk-!-font-size-19 govuk-!-font-weight-bold" href="#@orderedLetters[i]">@orderedLetters[i]</a></span>
-                }
-            </div>
-            <div class="her_alphabet_links__row">
-                @for (var i = 0; i < lettersInFirstRow; i++)
-                {
-                    <span class="her_alphabet_links__letter">
-                        @if (lettersInFirstRow + i < orderedLetters.Count)
-                        {
-                            <a class="govuk-link govuk-!-font-size-19 govuk-!-font-weight-bold" href="#@orderedLetters[lettersInFirstRow + i]">@orderedLetters[lettersInFirstRow + i]</a>
-                        }
-                    </span>
+                    <span class="her_alphabet_links__letter"><a class="govuk-link govuk-!-font-size-19 govuk-!-font-weight-bold" href="#@letter">@letter</a></span>
                 }
             </div>
         </div>
