@@ -351,16 +351,13 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("select-local-authority")]
-    public IActionResult SelectLocalAuthority_Get(QuestionFlowStep? entryPoint, string searchTerm = "")
-    {
+    public IActionResult SelectLocalAuthority_Get
+    (
+        [FromQuery] SelectLocalAuthorityViewModel viewModel
+    ) {
         var questionnaire = questionnaireService.GetQuestionnaire();
 
-        var viewModel = string.IsNullOrEmpty(searchTerm)
-            ? new SelectLocalAuthorityViewModel()
-            : new SelectLocalAuthorityViewModel(searchTerm);
-
-        viewModel.BackLink = GetBackUrl(QuestionFlowStep.SelectLocalAuthority, questionnaire, entryPoint);
-        viewModel.EntryPoint = entryPoint;
+        viewModel.BackLink = GetBackUrl(QuestionFlowStep.SelectLocalAuthority, questionnaire, viewModel.EntryPoint);
 
         return View("SelectLocalAuthority", viewModel);
     }
@@ -372,7 +369,7 @@ public class QuestionnaireController : Controller
         {
             // This should only happen if someone messes with the URL
             logger.LogError("Unrecognised custodian code received: " + custodianCode);
-            return SelectLocalAuthority_Get(entryPoint);
+            return SelectLocalAuthority_Get(new SelectLocalAuthorityViewModel { EntryPoint = entryPoint });
         }
 
         var questionnaire = questionnaireService.UpdateLocalAuthority(custodianCode);
