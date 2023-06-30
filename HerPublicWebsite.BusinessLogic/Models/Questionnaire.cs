@@ -101,7 +101,7 @@ public record Questionnaire
                 return EpcRating.Unknown;
             }
 
-            if (EpcDetailsAreCorrect is not EpcConfirmation.Yes)
+            if (EpcDetailsAreCorrect is EpcConfirmation.No or EpcConfirmation.Unknown)
             {
                 return EpcRating.Unknown;
             }
