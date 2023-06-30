@@ -9,7 +9,7 @@ public class SelectLocalAuthorityViewModel : QuestionFlowViewModel
 {
     public Dictionary<string, List<LocalAuthorityDetails>> LocalAuthoritiesByInitial => LocalAuthorityData
         .LocalAuthorityDetailsByCustodianCode
-        .Where(kvp => string.IsNullOrEmpty(SearchTerm) || kvp.Value.Name.Contains(SearchTerm))
+        .Where(kvp => string.IsNullOrEmpty(SearchTerm) || kvp.Value.Name.ToLower().Contains(SearchTerm.ToLower()))
         .ToList()
         .GroupBy(kvp => kvp.Value.Name[0].ToString().ToUpper())
         .ToDictionary(
