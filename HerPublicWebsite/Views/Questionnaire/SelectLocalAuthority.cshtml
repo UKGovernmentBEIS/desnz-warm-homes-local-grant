@@ -20,18 +20,21 @@
         
         <h1 class="govuk-heading-l">Select your local authority</h1>
         
-        <div class="her_alphabet_links">
-            @{
-                var orderedLetters = Model.LocalAuthoritiesByInitial.Keys.OrderBy(k => k).ToList();
-            }
-            <div class="her_alphabet_links__row">
-                @foreach(var letter in orderedLetters)
-                {
-                    <span class="her_alphabet_links__letter"><a class="govuk-link govuk-!-font-size-19 govuk-!-font-weight-bold" href="#@letter">@letter</a></span>
+        @if (Model.LocalAuthoritiesByInitial.Count > 0)
+        {
+            <div class="her_alphabet_links">
+                @{
+                    var orderedLetters = Model.LocalAuthoritiesByInitial.Keys.OrderBy(k => k).ToList();
                 }
+                <div class="her_alphabet_links__row">
+                    @foreach(var letter in orderedLetters)
+                    {
+                        <span class="her_alphabet_links__letter"><a class="govuk-link govuk-!-font-size-19 govuk-!-font-weight-bold" href="#@letter">@letter</a></span>
+                    }
+                </div>
             </div>
-        </div>
-        
+        }
+
         <form action="@Url.Action(nameof(QuestionnaireController.SelectLocalAuthority_Get), "Questionnaire")" method="get" novalidate>
             @if (Model.EntryPoint is not null)
             {
@@ -55,30 +58,39 @@
             </div>
         </form>
         
-        @foreach (var localAuthoritiesForInitial in Model.LocalAuthoritiesByInitial.ToList().OrderBy(k => k.Key))
+        @if (Model.LocalAuthoritiesByInitial.Count > 0)
         {
-            var orderedLaDetails = localAuthoritiesForInitial.Value.OrderBy(lad => lad.Name).ToList();
-            var linksInFirstColumn = Math.Max((orderedLaDetails.Count + 1) / 2, 8);
-            <div id="@localAuthoritiesForInitial.Key" class="her_local_authority_section">
-                <h2 class="govuk-heading-s">@localAuthoritiesForInitial.Key<hr/></h2>
+            @foreach (var localAuthoritiesForInitial in Model.LocalAuthoritiesByInitial.ToList().OrderBy(k => k.Key))
+            {
+                var orderedLaDetails = localAuthoritiesForInitial.Value.OrderBy(lad => lad.Name).ToList();
+                var linksInFirstColumn = Math.Max((orderedLaDetails.Count + 1) / 2, 8);
+                <div id="@localAuthoritiesForInitial.Key" class="her_local_authority_section">
+                    <h2 class="govuk-heading-s">@localAuthoritiesForInitial.Key<hr/></h2>
                 
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-one-half">
-                        @foreach (var laDetails in orderedLaDetails.Take(linksInFirstColumn))
-                        {
-                            <a class="govuk-link govuk-!-font-size-19" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode, entryPoint = Model.EntryPoint })">@laDetails.Name</a>
-                            <br/>
-                        }
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-one-half">
+                            @foreach (var laDetails in orderedLaDetails.Take(linksInFirstColumn))
+                            {
+                                <a class="govuk-link govuk-!-font-size-19" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode, entryPoint = Model.EntryPoint })">@laDetails.Name</a>
+                                <br/>
+                            }
+                        </div>
+                        <div class="govuk-grid-column-one-half">
+                            @foreach (var laDetails in orderedLaDetails.Skip(linksInFirstColumn))
+                            {
+                                <a class="govuk-link govuk-!-font-size-19" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode, entryPoint = Model.EntryPoint })">@laDetails.Name</a>
+                                <br/>
+                            }
+                        </div>
                     </div>
-                    <div class="govuk-grid-column-one-half">
-                        @foreach (var laDetails in orderedLaDetails.Skip(linksInFirstColumn))
-                        {
-                            <a class="govuk-link govuk-!-font-size-19" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode, entryPoint = Model.EntryPoint })">@laDetails.Name</a>
-                            <br/>
-                        }
-                    </div>
-                </div>
-            </div> 
+                </div> 
+            }
+        }
+        else
+        {
+            <p class="govuk-body govuk-!-font-weight-bold">
+                No local authorities match the given search term.
+            </p>
         }
 
     </div>
