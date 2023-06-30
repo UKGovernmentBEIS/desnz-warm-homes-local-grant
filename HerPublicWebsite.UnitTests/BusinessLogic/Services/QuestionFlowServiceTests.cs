@@ -1,8 +1,9 @@
-﻿using FluentAssertions;
-using NUnit.Framework;
+﻿using System;
+using FluentAssertions;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
+using NUnit.Framework;
 
 namespace Tests.BusinessLogic.Services;
 
@@ -159,6 +160,12 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.HouseholdIncome, epcRating: EpcRating.B
             ),
             QuestionFlowStep.ReviewEpc),
+        new(
+            "Household income goes back to address if EPC is too high, but expired",
+            new Input(
+                QuestionFlowStep.HouseholdIncome, uprn: "100023336956", epcRating: EpcRating.B, epcExpiry: DateTime.MinValue
+            ),
+            QuestionFlowStep.Address),
         new(
             "Check answers goes back to household income",
             new Input(
@@ -403,6 +410,14 @@ public class QuestionFlowServiceTests
                 epcRating: EpcRating.C
             ),
             QuestionFlowStep.ReviewEpc),
+        new(
+            "Address selection continues to household income if EPC is high, but expired",
+            new Input(
+                QuestionFlowStep.SelectAddress,
+                epcRating: EpcRating.C,
+                epcExpiry: DateTime.MinValue
+            ),
+            QuestionFlowStep.HouseholdIncome),
         new(
             "Review EPC continues to household income if EPC is incorrect",
             new Input(
@@ -698,6 +713,7 @@ public class QuestionFlowServiceTests
             string uprn = null,
             bool epcDetailsAreCorrect = false,
             EpcRating? epcRating = null,
+            DateTime? epcExpiry = null,
             IncomeBand? incomeBand = null,
             bool localAuthorityIsCorrect = false,
             string custodianCode = null,
@@ -711,7 +727,7 @@ public class QuestionFlowServiceTests
                 OwnershipStatus = ownershipStatus,
                 Country = country,
                 EpcDetailsAreCorrect = epcDetailsAreCorrect,
-                EpcDetails = epcRating == null ? null : new EpcDetails { EpcRating = epcRating },
+                EpcDetails = epcRating == null ? null : new EpcDetails { EpcRating = epcRating, ExpiryDate = epcExpiry },
                 IncomeBand = incomeBand,
                 LocalAuthorityConfirmed = localAuthorityIsCorrect,
                 CustodianCode = custodianCode,
