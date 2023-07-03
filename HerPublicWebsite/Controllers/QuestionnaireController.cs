@@ -74,7 +74,7 @@ public class QuestionnaireController : Controller
             return GasBoiler_Get(viewModel.EntryPoint);
         }
 
-        var questionnaire = questionnaireService.UpdateGasBoiler(viewModel.HasGasBoiler!.Value);
+        var questionnaire = questionnaireService.UpdateGasBoiler(viewModel.HasGasBoiler!.Value, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.GasBoiler, questionnaire, viewModel.EntryPoint);
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
@@ -112,7 +112,7 @@ public class QuestionnaireController : Controller
             return Country_Get(viewModel.EntryPoint);
         }
 
-        var questionnaire = questionnaireService.UpdateCountry(viewModel.Country!.Value);
+        var questionnaire = questionnaireService.UpdateCountry(viewModel.Country!.Value, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Country, questionnaire, viewModel.EntryPoint);
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
@@ -179,7 +179,7 @@ public class QuestionnaireController : Controller
             return OwnershipStatus_Get(viewModel.EntryPoint);
         }
 
-        var questionnaire = questionnaireService.UpdateOwnershipStatus(viewModel.OwnershipStatus!.Value);
+        var questionnaire = questionnaireService.UpdateOwnershipStatus(viewModel.OwnershipStatus!.Value, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.OwnershipStatus, questionnaire, viewModel.EntryPoint);
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
@@ -266,7 +266,7 @@ public class QuestionnaireController : Controller
         {
             var addressResults = JsonSerializer.Deserialize<List<Address>>(TempData["Addresses"] as string ?? throw new InvalidOperationException());
             var selectedAddress = addressResults[Convert.ToInt32(viewModel.SelectedAddressIndex)];
-            var questionnaire = await questionnaireService.UpdateAddressAsync(selectedAddress);
+            var questionnaire = await questionnaireService.UpdateAddressAsync(selectedAddress, viewModel.EntryPoint);
 
             var nextStep = questionFlowService.NextStep(QuestionFlowStep.SelectAddress, questionnaire, viewModel.EntryPoint);
             return RedirectToNextStep(nextStep, viewModel.EntryPoint);
@@ -300,7 +300,7 @@ public class QuestionnaireController : Controller
             return ReviewEpc_Get(viewModel.EntryPoint);
         }
 
-        var questionnaire = questionnaireService.UpdateEpcIsCorrect(viewModel.EpcIsCorrect == YesOrNo.Yes);
+        var questionnaire = questionnaireService.UpdateEpcIsCorrect(viewModel.EpcIsCorrect == YesOrNo.Yes, viewModel.EntryPoint);
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.ReviewEpc, questionnaire, viewModel.EntryPoint);
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
@@ -345,7 +345,7 @@ public class QuestionnaireController : Controller
             Postcode = viewModel.Postcode
         };
 
-        var questionnaire = await questionnaireService.UpdateAddressAsync(address);
+        var questionnaire = await questionnaireService.UpdateAddressAsync(address, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.ManualAddress, questionnaire, viewModel.EntryPoint);
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
@@ -372,7 +372,7 @@ public class QuestionnaireController : Controller
             return SelectLocalAuthority_Get(new SelectLocalAuthorityViewModel { EntryPoint = entryPoint });
         }
 
-        var questionnaire = questionnaireService.UpdateLocalAuthority(custodianCode);
+        var questionnaire = questionnaireService.UpdateLocalAuthority(custodianCode, entryPoint);
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.SelectLocalAuthority, questionnaire, entryPoint);
         return RedirectToNextStep(nextStep, entryPoint);
@@ -401,7 +401,7 @@ public class QuestionnaireController : Controller
             return ConfirmLocalAuthority_Get(viewModel.EntryPoint);
         }
 
-        var questionnaire = questionnaireService.UpdateLocalAuthorityIsCorrect(viewModel.LaIsCorrect == YesOrNo.Yes);
+        var questionnaire = questionnaireService.UpdateLocalAuthorityIsCorrect(viewModel.LaIsCorrect == YesOrNo.Yes, viewModel.EntryPoint);
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.ConfirmLocalAuthority, questionnaire, viewModel.EntryPoint);
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
@@ -470,7 +470,7 @@ public class QuestionnaireController : Controller
             return HouseholdIncome_Get(viewModel.EntryPoint);
         }
 
-        var questionnaire = questionnaireService.UpdateHouseholdIncome(viewModel.IncomeBand!.Value);
+        var questionnaire = questionnaireService.UpdateHouseholdIncome(viewModel.IncomeBand!.Value, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.HouseholdIncome, questionnaire, viewModel.EntryPoint);
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
@@ -481,6 +481,15 @@ public class QuestionnaireController : Controller
     public IActionResult CheckAnswers_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
+
+        // If the user comes back to this page and their changes haven't been saved,
+        // we need to revert to their old answers.
+        if (questionnaire.UneditedData is not null)
+        {
+            questionnaire.RevertToUneditedData();
+            questionnaireService.SaveQuestionnaireToSession(questionnaire);
+        }
+        
         var viewModel = new CheckAnswersViewModel()
         {
             Questionnaire = questionnaire,
