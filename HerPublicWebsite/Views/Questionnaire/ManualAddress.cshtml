@@ -10,13 +10,14 @@
 }
 
 @section BeforeMain {
-    @await Html.GovUkBackLink(new BackLinkViewModel
-           {
-               Text = "Back",
-               Href = Model.BackLink,
-           })
+    <nav>
+        @await Html.GovUkBackLink(new BackLinkViewModel
+        {
+            Text = "Back",
+            Href = Model.BackLink,
+        })
+    </nav>
 }
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <form action="@Url.Action(nameof(QuestionnaireController.ManualAddress_Post), "Questionnaire")" method="post" novalidate>
