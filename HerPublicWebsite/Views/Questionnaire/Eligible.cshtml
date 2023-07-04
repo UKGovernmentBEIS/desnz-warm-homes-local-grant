@@ -136,13 +136,14 @@
                     }
                 })
 
-            <div class="govuk-button-group">
-                @(await Html.GovUkButton(new ButtonViewModel
-                {
-                    Text = "Submit",
-                }))
+            <p class="govuk-body">
                 <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.NoConsent_Get), "Questionnaire")">I don't want to share my information</a>
-            </div>
+            </p>
+
+            @(await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Submit",
+            }))
         </form>
         
     </div>
