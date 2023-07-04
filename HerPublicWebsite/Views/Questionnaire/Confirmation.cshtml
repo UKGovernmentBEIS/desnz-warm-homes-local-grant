@@ -24,12 +24,12 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         
+        <h2 class="govuk-heading-l">What happens next</h2>
+
         @if (!string.IsNullOrEmpty(Model.ConfirmationSentToEmailAddress))
         {
             <p class="govuk-body">You will receive an email confirmation at <strong>@Model.ConfirmationSentToEmailAddress</strong></p>
         }
-
-        <h2 class="govuk-heading-l">What happens next</h2>
 
         <p class="govuk-body"><strong>@Model.LocalAuthorityName or their official contractor</strong> will process
             your details and contact you if they need any more information on the contact details you provided.</p>
