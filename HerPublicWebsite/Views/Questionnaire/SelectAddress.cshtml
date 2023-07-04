@@ -54,15 +54,14 @@
                            }
                            )
 
+                <p class="govuk-body">
+                    <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.ManualAddress_Get), "Questionnaire", extraRouteValues)">Address not listed</a>
+                </p>
 
-                <div class="govuk-button-group">
-                    @(await Html.GovUkButton(new ButtonViewModel
-                    {
-                        Text = "Continue",
-                    }))
-
-                    <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.ManualAddress_Get), "Questionnaire", extraRouteValues)">Address not listed above</a>
-                </div>
+                @await Html.GovUkButton(new ButtonViewModel
+                {
+                    Text = "Continue",
+                })
 
             </form>
         }
