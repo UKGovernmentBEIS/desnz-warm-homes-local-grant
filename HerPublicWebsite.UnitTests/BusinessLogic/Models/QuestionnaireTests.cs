@@ -85,7 +85,7 @@ public class QuestionnaireTests
         // Arrange
         var questionnaire = new Questionnaire()
         {
-            EpcDetailsAreCorrect = EpcConfirmation.Yes,
+            EpcDetailsAreCorrect = null,
             EpcDetails = null
         };
         
@@ -247,6 +247,26 @@ public class QuestionnaireTests
             EpcDetails = new EpcDetails
             {
                 EpcRating = null
+            }
+        };
+        
+        // Act
+        var result = questionnaire.FoundEpcBandIsTooHigh;
+        
+        // Assert
+        result.Should().Be(false);
+    }
+    
+    [Test]
+    public void FoundEpcBandIsTooHigh_ForExpiredEpc_ReturnsFalse()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire()
+        {
+            EpcDetails = new EpcDetails
+            {
+                EpcRating = EpcRating.A,
+                ExpiryDate = DateTime.MinValue
             }
         };
         

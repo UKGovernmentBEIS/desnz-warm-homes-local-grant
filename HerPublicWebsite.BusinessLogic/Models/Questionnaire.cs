@@ -51,9 +51,6 @@ public record Questionnaire
             (IncomeIsTooHigh, HasGasBoiler, EpcIsTooHigh, Country, OwnershipStatus) is
                 (false, not HasGasBoilerEnum.Yes, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy);
 
-    public bool FoundEpcBandIsTooHigh =>
-        EpcDetails is { EpcRating: EpcRating.A or EpcRating.B or EpcRating.C };
-
     public string LocalAuthorityName
     {
         get
@@ -135,8 +132,26 @@ public record Questionnaire
             return EpcDetails.EpcRating ?? EpcRating.Unknown;
         }
     }
+    
+    private EpcRating FoundEpcBand {
+        get
+        {
+            if (EpcDetails is null)
+            {
+                return EpcRating.Unknown;
+            }
 
-    public bool EpcIsExpired => EpcDetails?.ExpiryDate == null ? false : EpcDetails.ExpiryDate < DateTime.Now;
+            if (EpcDetails.ExpiryDate is not null && EpcDetails.ExpiryDate < DateTime.Now)
+            {
+                return EpcRating.Expired;
+            }
+
+            return EpcDetails.EpcRating ?? EpcRating.Unknown;
+        }
+    }
+    
+    public bool FoundEpcBandIsTooHigh =>
+        FoundEpcBand is EpcRating.A or EpcRating.B or EpcRating.C;
 
     public bool EpcIsTooHigh => EffectiveEpcBand is EpcRating.A or EpcRating.B or EpcRating.C;
 
