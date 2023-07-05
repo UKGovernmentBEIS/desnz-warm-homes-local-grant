@@ -16,6 +16,9 @@ public class ReferralRequest
     public string Uprn { get; set; } // Should be populated for most questionnaires, but not 100% guaranteed
 
     public EpcRating EpcRating { get; set; } = EpcRating.Unknown;
+
+    public EpcConfirmation? EpcConfirmation { get; set; }
+
     public DateTime? EpcLodgementDate { get; set; }
     public bool IsLsoaProperty { get; set; }
     public HasGasBoiler HasGasBoiler { get; set; }
@@ -46,7 +49,8 @@ public class ReferralRequest
         AddressPostcode = questionnaire.AddressPostcode;
         CustodianCode = questionnaire.CustodianCode;
         Uprn = questionnaire.Uprn;
-        EpcRating = questionnaire.EffectiveEpcBand;
+        EpcRating = questionnaire.DisplayEpcRating;
+        EpcConfirmation = questionnaire.EpcDetailsAreCorrect;
         EpcLodgementDate = questionnaire.EpcDetails?.LodgementDate;
         IsLsoaProperty = questionnaire.IsLsoaProperty!.Value;
         HasGasBoiler = questionnaire.HasGasBoiler!.Value;

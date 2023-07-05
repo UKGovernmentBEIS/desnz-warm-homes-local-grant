@@ -39,67 +39,67 @@ public class QuestionnaireService
         return questionnaire;
     }
 
-    public Questionnaire UpdateGasBoiler(HasGasBoiler hasGasBoiler)
+    public Questionnaire UpdateGasBoiler(HasGasBoiler hasGasBoiler, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
-        questionnaire = questionnaireUpdater.UpdateGasBoiler(questionnaire, hasGasBoiler);
+        questionnaire = questionnaireUpdater.UpdateGasBoiler(questionnaire, hasGasBoiler, entryPoint);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
-    public Questionnaire UpdateCountry(Country country)
+    public Questionnaire UpdateCountry(Country country, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
-        questionnaire = questionnaireUpdater.UpdateCountry(questionnaire, country);
+        questionnaire = questionnaireUpdater.UpdateCountry(questionnaire, country, entryPoint);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
-    public Questionnaire UpdateOwnershipStatus(OwnershipStatus ownershipStatus)
+    public Questionnaire UpdateOwnershipStatus(OwnershipStatus ownershipStatus, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
-        questionnaire = questionnaireUpdater.UpdateOwnershipStatus(questionnaire, ownershipStatus);
+        questionnaire = questionnaireUpdater.UpdateOwnershipStatus(questionnaire, ownershipStatus, entryPoint);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
-    public async Task<Questionnaire> UpdateAddressAsync(Address address)
+    public async Task<Questionnaire> UpdateAddressAsync(Address address, QuestionFlowStep? entryPoint)
 
     {
         var questionnaire = GetQuestionnaire();
-        questionnaire = await questionnaireUpdater.UpdateAddressAsync(questionnaire, address);
+        questionnaire = await questionnaireUpdater.UpdateAddressAsync(questionnaire, address, entryPoint);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
-    public Questionnaire UpdateEpcIsCorrect(bool epcIsCorrect)
+    public Questionnaire UpdateEpcIsCorrect(EpcConfirmation? epcIsCorrect, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
-        questionnaire = questionnaireUpdater.UpdateEpcIsCorrect(questionnaire, epcIsCorrect);
+        questionnaire = questionnaireUpdater.UpdateEpcIsCorrect(questionnaire, epcIsCorrect, entryPoint);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
-    public Questionnaire UpdateLocalAuthority(string custodianCode)
+    public Questionnaire UpdateLocalAuthority(string custodianCode, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
-        questionnaire = questionnaireUpdater.UpdateLocalAuthority(questionnaire, custodianCode);
+        questionnaire = questionnaireUpdater.UpdateLocalAuthority(questionnaire, custodianCode, entryPoint);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
-    public Questionnaire UpdateLocalAuthorityIsCorrect(bool laIsCorrect)
+    public Questionnaire UpdateLocalAuthorityIsCorrect(bool laIsCorrect, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
-        questionnaire = questionnaireUpdater.UpdateLocalAuthorityIsCorrect(questionnaire, laIsCorrect);
+        questionnaire = questionnaireUpdater.UpdateLocalAuthorityIsCorrect(questionnaire, laIsCorrect, entryPoint);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
-    public Questionnaire UpdateHouseholdIncome(IncomeBand incomeBand)
+    public Questionnaire UpdateHouseholdIncome(IncomeBand incomeBand, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
-        questionnaire = questionnaireUpdater.UpdateHouseholdIncome(questionnaire, incomeBand);
+        questionnaire = questionnaireUpdater.UpdateHouseholdIncome(questionnaire, incomeBand, entryPoint);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
@@ -153,7 +153,7 @@ public class QuestionnaireService
         return questionnaire;
     }
 
-    private void SaveQuestionnaireToSession(Questionnaire questionnaire)
+    public void SaveQuestionnaireToSession(Questionnaire questionnaire)
     {
         var questionnaireString = JsonSerializer.Serialize(questionnaire, JsonSerializerOptions);
         httpContextAccessor.HttpContext!.Session.SetString(SessionKeyQuestionnaire, questionnaireString);

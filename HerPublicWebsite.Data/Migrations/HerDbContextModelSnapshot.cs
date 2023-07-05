@@ -173,6 +173,9 @@ namespace HerPublicWebsite.Data.Migrations
                     b.Property<string>("CustodianCode")
                         .HasColumnType("text");
 
+                    b.Property<int?>("EpcConfirmation")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime?>("EpcLodgementDate")
                         .HasColumnType("timestamp without time zone");
 

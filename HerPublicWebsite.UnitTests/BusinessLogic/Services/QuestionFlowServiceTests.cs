@@ -1,8 +1,9 @@
-﻿using FluentAssertions;
-using NUnit.Framework;
+﻿using System;
+using FluentAssertions;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
+using NUnit.Framework;
 
 namespace Tests.BusinessLogic.Services;
 
@@ -159,6 +160,12 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.HouseholdIncome, epcRating: EpcRating.B
             ),
             QuestionFlowStep.ReviewEpc),
+        new(
+            "Household income goes back to address if EPC is too high, but expired",
+            new Input(
+                QuestionFlowStep.HouseholdIncome, uprn: "100023336956", epcRating: EpcRating.B, epcExpiry: DateTime.MinValue
+            ),
+            QuestionFlowStep.Address),
         new(
             "Check answers goes back to household income",
             new Input(
@@ -404,17 +411,32 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.ReviewEpc),
         new(
+            "Address selection continues to household income if EPC is high, but expired",
+            new Input(
+                QuestionFlowStep.SelectAddress,
+                epcRating: EpcRating.C,
+                epcExpiry: DateTime.MinValue
+            ),
+            QuestionFlowStep.HouseholdIncome),
+        new(
             "Review EPC continues to household income if EPC is incorrect",
             new Input(
                 QuestionFlowStep.ReviewEpc,
-                epcDetailsAreCorrect: false
+                epcDetailsAreCorrect: EpcConfirmation.No
+            ),
+            QuestionFlowStep.HouseholdIncome),
+        new(
+            "Review EPC continues to household income if EPC is unsure",
+            new Input(
+                QuestionFlowStep.ReviewEpc,
+                epcDetailsAreCorrect: EpcConfirmation.Unknown
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
             "Review EPC continues to household income if EPC is correct",
             new Input(
                 QuestionFlowStep.ReviewEpc,
-                epcDetailsAreCorrect: true
+                epcDetailsAreCorrect: EpcConfirmation.Yes
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
@@ -464,7 +486,7 @@ public class QuestionFlowServiceTests
                 HasGasBoiler.No,
                 OwnershipStatus.OwnerOccupancy,
                 Country.England,
-                epcDetailsAreCorrect: false,
+                epcDetailsAreCorrect: EpcConfirmation.No,
                 incomeBand: IncomeBand.UnderOrEqualTo31000
             ),
             QuestionFlowStep.Eligible),
@@ -601,7 +623,15 @@ public class QuestionFlowServiceTests
             "Review EPC returns to check answers if EPC is incorrect and was changing answer",
             new Input(
                 QuestionFlowStep.ReviewEpc,
-                epcDetailsAreCorrect: false,
+                epcDetailsAreCorrect: EpcConfirmation.No,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Review EPC returns to check answers if EPC is unsure and was changing answer",
+            new Input(
+                QuestionFlowStep.ReviewEpc,
+                epcDetailsAreCorrect: EpcConfirmation.Unknown,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.CheckAnswers),
@@ -609,7 +639,7 @@ public class QuestionFlowServiceTests
             "Review EPC continues to check answers if EPC is correct and was changing answer",
             new Input(
                 QuestionFlowStep.ReviewEpc,
-                epcDetailsAreCorrect: true,
+                epcDetailsAreCorrect: EpcConfirmation.Yes,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.CheckAnswers),
@@ -696,8 +726,9 @@ public class QuestionFlowServiceTests
             OwnershipStatus? ownershipStatus = null,
             Country? country = null,
             string uprn = null,
-            bool epcDetailsAreCorrect = false,
+            EpcConfirmation epcDetailsAreCorrect = EpcConfirmation.Yes,
             EpcRating? epcRating = null,
+            DateTime? epcExpiry = null,
             IncomeBand? incomeBand = null,
             bool localAuthorityIsCorrect = false,
             string custodianCode = null,
@@ -711,7 +742,7 @@ public class QuestionFlowServiceTests
                 OwnershipStatus = ownershipStatus,
                 Country = country,
                 EpcDetailsAreCorrect = epcDetailsAreCorrect,
-                EpcDetails = epcRating == null ? null : new EpcDetails { EpcRating = epcRating },
+                EpcDetails = epcRating == null ? null : new EpcDetails { EpcRating = epcRating, ExpiryDate = epcExpiry },
                 IncomeBand = incomeBand,
                 LocalAuthorityConfirmed = localAuthorityIsCorrect,
                 CustodianCode = custodianCode,
