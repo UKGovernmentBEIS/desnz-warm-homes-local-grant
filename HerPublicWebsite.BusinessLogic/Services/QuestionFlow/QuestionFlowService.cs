@@ -165,7 +165,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep HouseholdIncomeBackDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
-            if (questionnaire.FoundEpcBandIsTooHigh && !questionnaire.EpcIsExpired)
+            if (questionnaire.FoundEpcBandIsTooHigh)
             {
                 return QuestionFlowStep.ReviewEpc;
             }
@@ -243,7 +243,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
-            return (entryPoint, questionnaire.LocalAuthorityHug2Status, questionnaire.FoundEpcBandIsTooHigh && !questionnaire.EpcIsExpired) switch
+            return (entryPoint, questionnaire.LocalAuthorityHug2Status, questionnaire.FoundEpcBandIsTooHigh) switch
             {
                 (_, LocalAuthorityData.Hug2Status.NotTakingPart, _) => QuestionFlowStep.NotTakingPart,
                 (_, _, true) => QuestionFlowStep.ReviewEpc,

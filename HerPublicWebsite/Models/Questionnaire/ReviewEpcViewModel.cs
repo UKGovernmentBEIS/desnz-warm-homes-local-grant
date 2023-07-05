@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using GovUkDesignSystem.Attributes.ValidationAttributes;
 using HerPublicWebsite.BusinessLogic.Models;
+using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.Extensions;
 using HerPublicWebsite.Models.Enums;
 
@@ -11,7 +12,7 @@ namespace HerPublicWebsite.Models.Questionnaire;
 public class ReviewEpcViewModel : QuestionFlowViewModel
 {
     [GovUkValidateRequired(ErrorMessageIfMissing = "Select whether this EPC is correct for your property")]
-    public YesOrNo? EpcIsCorrect {get; set;}
+    public EpcConfirmation? EpcIsCorrect {get; set;}
     
     public string AddressRawHtml { get; set; }
     public string EpcBand { get; set; }
@@ -21,7 +22,7 @@ public class ReviewEpcViewModel : QuestionFlowViewModel
 
     public ReviewEpcViewModel() {}
     
-    public ReviewEpcViewModel(EpcDetails epcDetails, bool? epcIsCorrect)
+    public ReviewEpcViewModel(EpcDetails epcDetails, EpcConfirmation? epcIsCorrect)
     {
         var addressParts = new List<string>
             {
@@ -47,6 +48,6 @@ public class ReviewEpcViewModel : QuestionFlowViewModel
         var propertyType = epcDetails.PropertyType?.ForDisplay() ?? "Unknown";
         PropertyType = $"{propertyDetails} {propertyType}";
 
-        EpcIsCorrect = epcIsCorrect.ToNullableYesOrNo();
+        EpcIsCorrect = epcIsCorrect;
     }
 }

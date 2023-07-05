@@ -82,7 +82,7 @@ public class QuestionnaireUpdater
             entryPoint);
     }
 
-    public Questionnaire UpdateEpcIsCorrect(Questionnaire questionnaire, bool epcIsCorrect,
+    public Questionnaire UpdateEpcIsCorrect(Questionnaire questionnaire, EpcConfirmation? epcIsCorrect,
         QuestionFlowStep? entryPoint)
     {
         return UpdateQuestionnaire(q => q.EpcDetailsAreCorrect = epcIsCorrect, questionnaire,

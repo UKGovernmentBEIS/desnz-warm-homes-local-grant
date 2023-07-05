@@ -300,7 +300,7 @@ public class QuestionnaireController : Controller
             return ReviewEpc_Get(viewModel.EntryPoint);
         }
 
-        var questionnaire = questionnaireService.UpdateEpcIsCorrect(viewModel.EpcIsCorrect == YesOrNo.Yes, viewModel.EntryPoint);
+        var questionnaire = questionnaireService.UpdateEpcIsCorrect(viewModel.EpcIsCorrect, viewModel.EntryPoint);
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.ReviewEpc, questionnaire, viewModel.EntryPoint);
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);

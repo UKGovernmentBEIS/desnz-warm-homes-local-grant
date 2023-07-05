@@ -422,14 +422,21 @@ public class QuestionFlowServiceTests
             "Review EPC continues to household income if EPC is incorrect",
             new Input(
                 QuestionFlowStep.ReviewEpc,
-                epcDetailsAreCorrect: false
+                epcDetailsAreCorrect: EpcConfirmation.No
+            ),
+            QuestionFlowStep.HouseholdIncome),
+        new(
+            "Review EPC continues to household income if EPC is unsure",
+            new Input(
+                QuestionFlowStep.ReviewEpc,
+                epcDetailsAreCorrect: EpcConfirmation.Unknown
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
             "Review EPC continues to household income if EPC is correct",
             new Input(
                 QuestionFlowStep.ReviewEpc,
-                epcDetailsAreCorrect: true
+                epcDetailsAreCorrect: EpcConfirmation.Yes
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
@@ -479,7 +486,7 @@ public class QuestionFlowServiceTests
                 HasGasBoiler.No,
                 OwnershipStatus.OwnerOccupancy,
                 Country.England,
-                epcDetailsAreCorrect: false,
+                epcDetailsAreCorrect: EpcConfirmation.No,
                 incomeBand: IncomeBand.UnderOrEqualTo31000
             ),
             QuestionFlowStep.Eligible),
@@ -616,7 +623,15 @@ public class QuestionFlowServiceTests
             "Review EPC returns to check answers if EPC is incorrect and was changing answer",
             new Input(
                 QuestionFlowStep.ReviewEpc,
-                epcDetailsAreCorrect: false,
+                epcDetailsAreCorrect: EpcConfirmation.No,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Review EPC returns to check answers if EPC is unsure and was changing answer",
+            new Input(
+                QuestionFlowStep.ReviewEpc,
+                epcDetailsAreCorrect: EpcConfirmation.Unknown,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.CheckAnswers),
@@ -624,7 +639,7 @@ public class QuestionFlowServiceTests
             "Review EPC continues to check answers if EPC is correct and was changing answer",
             new Input(
                 QuestionFlowStep.ReviewEpc,
-                epcDetailsAreCorrect: true,
+                epcDetailsAreCorrect: EpcConfirmation.Yes,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.CheckAnswers),
@@ -711,7 +726,7 @@ public class QuestionFlowServiceTests
             OwnershipStatus? ownershipStatus = null,
             Country? country = null,
             string uprn = null,
-            bool epcDetailsAreCorrect = false,
+            EpcConfirmation epcDetailsAreCorrect = EpcConfirmation.Yes,
             EpcRating? epcRating = null,
             DateTime? epcExpiry = null,
             IncomeBand? incomeBand = null,

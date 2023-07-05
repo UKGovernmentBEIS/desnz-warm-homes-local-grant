@@ -24,7 +24,7 @@ public class QuestionnaireTests
             LocalAuthorityConfirmed = true,
             Uprn = "123456789123",
             EpcDetails = new EpcDetails(),
-            EpcDetailsAreCorrect = true,
+            EpcDetailsAreCorrect = EpcConfirmation.Yes,
             IsLsoaProperty = true,
             HasGasBoiler = HasGasBoiler.No,
             IncomeBand = IncomeBand.UnderOrEqualTo31000,
@@ -85,7 +85,7 @@ public class QuestionnaireTests
         // Arrange
         var questionnaire = new Questionnaire()
         {
-            EpcDetailsAreCorrect = false,
+            EpcDetailsAreCorrect = null,
             EpcDetails = null
         };
         
@@ -102,7 +102,27 @@ public class QuestionnaireTests
         // Arrange
         var questionnaire = new Questionnaire()
         {
-            EpcDetailsAreCorrect = false,
+            EpcDetailsAreCorrect = EpcConfirmation.No,
+            EpcDetails = new EpcDetails
+            {
+                EpcRating = EpcRating.A
+            }
+        };
+        
+        // Act
+        var result = questionnaire.EffectiveEpcBand;
+        
+        // Assert
+        result.Should().Be(EpcRating.Unknown);
+    }
+
+    [Test]
+    public void EffectiveEpcBand_ForUnknownEpcDetails_IgnoresEpcDetails()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire()
+        {
+            EpcDetailsAreCorrect = EpcConfirmation.Unknown,
             EpcDetails = new EpcDetails
             {
                 EpcRating = EpcRating.A
@@ -122,7 +142,7 @@ public class QuestionnaireTests
         // Arrange
         var questionnaire = new Questionnaire()
         {
-            EpcDetailsAreCorrect = true,
+            EpcDetailsAreCorrect = EpcConfirmation.Yes,
             EpcDetails = new EpcDetails
             {
                 EpcRating = EpcRating.A
@@ -142,7 +162,7 @@ public class QuestionnaireTests
         // Arrange
         var questionnaire = new Questionnaire()
         {
-            EpcDetailsAreCorrect = true,
+            EpcDetailsAreCorrect = EpcConfirmation.Yes,
             EpcDetails = new EpcDetails
             {
                 EpcRating = EpcRating.A,
@@ -163,7 +183,7 @@ public class QuestionnaireTests
         // Arrange
         var questionnaire = new Questionnaire()
         {
-            EpcDetailsAreCorrect = true,
+            EpcDetailsAreCorrect = EpcConfirmation.Yes,
             EpcDetails = new EpcDetails
             {
                 EpcRating = null
@@ -236,26 +256,47 @@ public class QuestionnaireTests
         // Assert
         result.Should().Be(false);
     }
+    
+    [Test]
+    public void FoundEpcBandIsTooHigh_ForExpiredEpc_ReturnsFalse()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire()
+        {
+            EpcDetails = new EpcDetails
+            {
+                EpcRating = EpcRating.A,
+                ExpiryDate = DateTime.MinValue
+            }
+        };
+        
+        // Act
+        var result = questionnaire.FoundEpcBandIsTooHigh;
+        
+        // Assert
+        result.Should().Be(false);
+    }
 
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, true, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, true)] // Eligible low income
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, true)] // Eligible low income
     [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, null, null, false, IncomeBand.UnderOrEqualTo31000, true)] // Eligible no EPC found
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, false, EpcRating.A, false, IncomeBand.UnderOrEqualTo31000, true)] // Eligible wrong EPC found
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, true, EpcRating.D, true, IncomeBand.GreaterThan31000, true)] // Eligible high income but LSOA
-    [TestCase(HasGasBoiler.Yes, Country.England, OwnershipStatus.OwnerOccupancy, true, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible gas boiler
-    [TestCase(HasGasBoiler.No, Country.Scotland, OwnershipStatus.OwnerOccupancy, true, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible country
-    [TestCase(HasGasBoiler.No, Country.Wales, OwnershipStatus.OwnerOccupancy, true, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible country
-    [TestCase(HasGasBoiler.No, Country.NorthernIreland, OwnershipStatus.OwnerOccupancy, true, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible country
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.Landlord, true, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible ownership
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.PrivateTenancy, true, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible ownership
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, true, EpcRating.A, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible EPC rating
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, true, EpcRating.B, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible EPC rating
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, true, EpcRating.C, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible EPC rating
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, true, EpcRating.D, false, IncomeBand.GreaterThan31000, false)] // Ineligible high income
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.No, EpcRating.A, false, IncomeBand.UnderOrEqualTo31000, true)] // Eligible wrong EPC found
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Unknown, EpcRating.A, false, IncomeBand.UnderOrEqualTo31000, true)] // Eligible unsure EPC found
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, true, IncomeBand.GreaterThan31000, true)] // Eligible high income but LSOA
+    [TestCase(HasGasBoiler.Yes, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible gas boiler
+    [TestCase(HasGasBoiler.No, Country.Scotland, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible country
+    [TestCase(HasGasBoiler.No, Country.Wales, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible country
+    [TestCase(HasGasBoiler.No, Country.NorthernIreland, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible country
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.Landlord, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible ownership
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.PrivateTenancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible ownership
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.A, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible EPC rating
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.B, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible EPC rating
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.C, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible EPC rating
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.GreaterThan31000, false)] // Ineligible high income
     public void IsEligibleForHug2_ForVariousAnswers_IsCorrect(
         HasGasBoiler hasGasBoiler,
         Country country,
         OwnershipStatus ownershipStatus,
-        bool? epcDetailsAreCorrect,
+        EpcConfirmation? epcDetailsAreCorrect,
         EpcRating? epcRating,
         bool isLsoaPostCode,
         IncomeBand incomeBand,

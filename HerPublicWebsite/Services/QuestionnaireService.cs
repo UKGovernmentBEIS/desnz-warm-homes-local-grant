@@ -72,7 +72,7 @@ public class QuestionnaireService
         return questionnaire;
     }
 
-    public Questionnaire UpdateEpcIsCorrect(bool epcIsCorrect, QuestionFlowStep? entryPoint)
+    public Questionnaire UpdateEpcIsCorrect(EpcConfirmation? epcIsCorrect, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = questionnaireUpdater.UpdateEpcIsCorrect(questionnaire, epcIsCorrect, entryPoint);

@@ -24,7 +24,7 @@ public record Questionnaire
     public string Uprn { get; set; } // Should be populated for most questionnaires, but not 100% guaranteed
 
     public EpcDetails EpcDetails { get; set; }
-    public bool? EpcDetailsAreCorrect { get; set; }
+    public EpcConfirmation? EpcDetailsAreCorrect { get; set; }
     public bool? IsLsoaProperty { get; set; }
     public HasGasBoilerEnum? HasGasBoiler { get; set; }
     public IncomeBandEnum? IncomeBand { get; set; }
@@ -50,9 +50,6 @@ public record Questionnaire
     public bool IsEligibleForHug2 =>
             (IncomeIsTooHigh, HasGasBoiler, EpcIsTooHigh, Country, OwnershipStatus) is
                 (false, not HasGasBoilerEnum.Yes, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy);
-
-    public bool FoundEpcBandIsTooHigh =>
-        EpcDetails is { EpcRating: EpcRating.A or EpcRating.B or EpcRating.C };
 
     public string LocalAuthorityName
     {
@@ -104,7 +101,7 @@ public record Questionnaire
                 return EpcRating.Unknown;
             }
 
-            if (EpcDetailsAreCorrect is false)
+            if (EpcDetailsAreCorrect is EpcConfirmation.No or EpcConfirmation.Unknown)
             {
                 return EpcRating.Unknown;
             }
@@ -118,7 +115,43 @@ public record Questionnaire
         }
     }
 
-    public bool EpcIsExpired => EpcDetails?.ExpiryDate == null ? false : EpcDetails.ExpiryDate < DateTime.Now;
+    public EpcRating DisplayEpcRating
+    {
+        get
+        {
+            if (EpcDetails is null)
+            {
+                return EpcRating.Unknown;
+            }
+
+            if (EpcDetails.ExpiryDate < DateTime.Now)
+            {
+                return EpcRating.Expired;
+            }
+
+            return EpcDetails.EpcRating ?? EpcRating.Unknown;
+        }
+    }
+    
+    private EpcRating FoundEpcBand {
+        get
+        {
+            if (EpcDetails is null)
+            {
+                return EpcRating.Unknown;
+            }
+
+            if (EpcDetails.ExpiryDate is not null && EpcDetails.ExpiryDate < DateTime.Now)
+            {
+                return EpcRating.Expired;
+            }
+
+            return EpcDetails.EpcRating ?? EpcRating.Unknown;
+        }
+    }
+    
+    public bool FoundEpcBandIsTooHigh =>
+        FoundEpcBand is EpcRating.A or EpcRating.B or EpcRating.C;
 
     public bool EpcIsTooHigh => EffectiveEpcBand is EpcRating.A or EpcRating.B or EpcRating.C;
 
