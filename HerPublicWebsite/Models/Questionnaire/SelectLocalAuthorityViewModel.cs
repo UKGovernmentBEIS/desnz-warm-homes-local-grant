@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using GovUkDesignSystem.Attributes.ValidationAttributes;
 using HerPublicWebsite.BusinessLogic.Models;
 
 namespace HerPublicWebsite.Models.Questionnaire;
 
 public class SelectLocalAuthorityViewModel : QuestionFlowViewModel
 {
+    public string SearchTerm { get; set; }
+    
     public Dictionary<string, List<LocalAuthorityDetails>> LocalAuthoritiesByInitial => LocalAuthorityData
         .LocalAuthorityDetailsByCustodianCode
         .Where(kvp => string.IsNullOrEmpty(SearchTerm) || kvp.Value.Name.ToLower().Contains(SearchTerm.ToLower()))
@@ -15,7 +16,6 @@ public class SelectLocalAuthorityViewModel : QuestionFlowViewModel
         .ToDictionary(
             group => group.Key,
             group => group.Select(kvp => new LocalAuthorityDetails(kvp.Value.Name, kvp.Key)).ToList());
-    public string SearchTerm { get; set; }
     
     public record class LocalAuthorityDetails(string Name, string CustodianCode);
 }
