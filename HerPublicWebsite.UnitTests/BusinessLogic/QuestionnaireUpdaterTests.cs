@@ -7,9 +7,10 @@ using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
+using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Microsoft.Extensions.Logging;
 
 namespace Tests.BusinessLogic;
 
@@ -21,6 +22,7 @@ public class QuestionnaireUpdaterTests
     private Mock<IEligiblePostcodeService> mockPostCodeService;
     private Mock<IDataAccessProvider> mockDataAccessProvider;
     private Mock<IEmailSender> mockEmailSender;
+    private Mock<IQuestionFlowService> mockQuestionFlowService;
     private Mock<ILogger<QuestionnaireUpdater>> mockLogger;
     
     
@@ -31,6 +33,7 @@ public class QuestionnaireUpdaterTests
         mockPostCodeService = new Mock<IEligiblePostcodeService>();
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
         mockEmailSender = new Mock<IEmailSender>();
+        mockQuestionFlowService = new Mock<IQuestionFlowService>();
         mockLogger = new Mock<ILogger<QuestionnaireUpdater>>();
         underTest = new QuestionnaireUpdater
         (
@@ -38,6 +41,7 @@ public class QuestionnaireUpdaterTests
             mockPostCodeService.Object,
             mockDataAccessProvider.Object,
             mockEmailSender.Object,
+            mockQuestionFlowService.Object,
             mockLogger.Object
         );
     }
@@ -61,7 +65,7 @@ public class QuestionnaireUpdaterTests
         mockEpcApi.Setup(e => e.EpcFromUprnAsync("123456789012")).ReturnsAsync(epcDetails);
         
         // Act
-        var result = await underTest.UpdateAddressAsync(questionnaire, address);
+        var result = await underTest.UpdateAddressAsync(questionnaire, address, null);
         
         // Assert
         mockEpcApi.Verify(e => e.EpcFromUprnAsync("123456789012"));
@@ -85,7 +89,7 @@ public class QuestionnaireUpdaterTests
         };
 
         // Act
-        var result = await underTest.UpdateAddressAsync(questionnaire, address);
+        var result = await underTest.UpdateAddressAsync(questionnaire, address, null);
         
         // Assert
         mockEpcApi.VerifyNoOtherCalls();
@@ -109,7 +113,7 @@ public class QuestionnaireUpdaterTests
         mockPostCodeService.Setup(pcs => pcs.IsEligiblePostcode(postcode)).Returns(isEligible);
 
         // Act
-        var result = await underTest.UpdateAddressAsync(questionnaire, address);
+        var result = await underTest.UpdateAddressAsync(questionnaire, address, null);
         
         // Assert
         result.IsLsoaProperty.Should().Be(isEligible);
@@ -126,7 +130,7 @@ public class QuestionnaireUpdaterTests
         };
         
         // Act
-        var result = underTest.UpdateLocalAuthority(questionnaire, "new code");
+        var result = underTest.UpdateLocalAuthority(questionnaire, "new code", null);
         
         // Assert
         result.LocalAuthorityConfirmed.Should().BeNull();
@@ -456,5 +460,82 @@ public class QuestionnaireUpdaterTests
             It.IsAny<string>(),
             It.IsAny<string>()
         ), Times.Never);
+    }
+
+
+    [Test]
+    public async Task UpdateQuestionnaire_EditStarts_CreatesUneditedData()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire();
+
+        mockQuestionFlowService.Setup(qfs => qfs.NextStep(
+            It.IsAny<QuestionFlowStep>(),
+            It.IsAny<Questionnaire>(),
+            It.IsAny<QuestionFlowStep>()
+        )).Returns(QuestionFlowStep.SelectLocalAuthority);
+
+        // Act
+        var result = await underTest.UpdateAddressAsync(questionnaire, new Address(), QuestionFlowStep.Address);
+
+        // Assert
+        result.UneditedData.Should().NotBeNull();
+    }
+
+    [Test]
+    public async Task UpdateQuestionnaire_NotEditing_NoUneditedData()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire();
+
+        mockQuestionFlowService.Setup(qfs => qfs.NextStep(
+            It.IsAny<QuestionFlowStep>(),
+            It.IsAny<Questionnaire>(),
+            It.IsAny<QuestionFlowStep>()
+        )).Returns(QuestionFlowStep.SelectLocalAuthority);
+
+        // Act
+        var result = await underTest.UpdateAddressAsync(questionnaire, new Address(), null);
+
+        // Assert
+        result.UneditedData.Should().BeNull();
+    }
+
+    [Test]
+    public async Task UpdateQuestionnaire_EditWhileExistingData_UneditedDataPreserved()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire() { UneditedData = new Questionnaire()};
+
+        mockQuestionFlowService.Setup(qfs => qfs.NextStep(
+            It.IsAny<QuestionFlowStep>(),
+            It.IsAny<Questionnaire>(),
+            It.IsAny<QuestionFlowStep>()
+        )).Returns(QuestionFlowStep.SelectLocalAuthority);
+
+        // Act
+        var result = await underTest.UpdateAddressAsync(questionnaire, new Address(), QuestionFlowStep.Address);
+
+        // Assert
+        result.UneditedData.Should().Be(new Questionnaire());
+    }
+
+    [Test]
+    public async Task UpdateQuestionnaire_EditComplete_DataCommitted()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire() { UneditedData = new Questionnaire()};
+
+        mockQuestionFlowService.Setup(qfs => qfs.NextStep(
+            It.IsAny<QuestionFlowStep>(),
+            It.IsAny<Questionnaire>(),
+            It.IsAny<QuestionFlowStep>()
+        )).Returns(QuestionFlowStep.CheckAnswers);
+
+        // Act
+        var result = await underTest.UpdateAddressAsync(questionnaire, new Address(), QuestionFlowStep.Address);
+
+        // Assert
+        result.UneditedData.Should().BeNull();
     }
 }

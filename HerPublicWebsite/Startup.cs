@@ -101,7 +101,7 @@ namespace HerPublicWebsite
             services.AddSession(options =>
             {
                 // If this changes, make sure to update the message on the session expiry page
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.IdleTimeout = TimeSpan.FromHours(5);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
