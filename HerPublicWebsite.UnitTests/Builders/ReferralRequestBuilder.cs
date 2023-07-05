@@ -20,6 +20,7 @@ public class ReferralRequestBuilder
             AddressPostcode = $"AL{id:D2} 1RS",
             CustodianCode = "114",
             EpcRating = EpcRating.E,
+            EpcConfirmation = null,
             EpcLodgementDate = new DateTime(2023, 01, 01, 15, 00, id),
             HasGasBoiler = HasGasBoiler.No,
             Id = id,
@@ -77,6 +78,11 @@ public class ReferralRequestBuilder
     public ReferralRequestBuilder WithTelephone(string telephone)
     {
         referralRequest.ContactTelephone = telephone;
+        return this;
+    }
+
+    public ReferralRequestBuilder WithEpcConfirmation(EpcConfirmation confirmation) {
+        referralRequest.EpcConfirmation = confirmation;
         return this;
     }
 }

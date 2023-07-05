@@ -70,28 +70,32 @@ public class CsvFileCreator
         [Index(11)]
         [Name("EPC Band")]
         public EpcRating EpcBand { get; set; }
-        
+
         [Index(12)]
+        [Name("EPC confirmed by homeowner")]
+        public string EpcConfirmed { get; set; }
+        
+        [Index(13)]
         [Name("EPC Lodgement Date")]
         public string EpcLodgementDate { get; set; }
         
-        [Index(13)]
+        [Index(14)]
         [Name("Is off gas grid")]
         [BooleanTrueValues("yes")]
         [BooleanFalseValues("no")]
         public string OffGasGrid { get; set; }
         
-        [Index(14)]
+        [Index(15)]
         [Name("Household income band")]
         public string HouseholdIncome { get; set; }
         
-        [Index(15)]
+        [Index(16)]
         [Name("Is eligible postcode")]
         [BooleanTrueValues("yes")]
         [BooleanFalseValues("no")]
         public bool EligiblePostcode { get; set; }
         
-        [Index(16)]
+        [Index(17)]
         public string Tenure { get; set; }
 
         public CsvRow(ReferralRequest request)
@@ -108,6 +112,14 @@ public class CsvFileCreator
             Postcode = request.AddressPostcode;
             Uprn = request.Uprn;
             EpcBand = request.EpcRating;
+            EpcConfirmed = request.EpcConfirmation switch
+            {
+                // Yes not included here as users can't be referred if they've confirmed a high EPC
+                EpcConfirmation.No => "Homeowner disagrees with rating",
+                EpcConfirmation.Unknown => "Homeowner unsure",
+                null => "",
+                _ => throw new ArgumentOutOfRangeException("request.EpcConfirmation", "Unrecognised EpcConfirmation value: " + request.EpcConfirmation),
+            };
             EpcLodgementDate = request.EpcLodgementDate?.ToString("yyyy-MM-dd HH:mm:ss");
             OffGasGrid = request.HasGasBoiler switch
             {

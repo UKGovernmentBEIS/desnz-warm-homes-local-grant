@@ -21,7 +21,7 @@ public class AnonymisedReportTests
             HasGasBoiler = HasGasBoiler.Yes,
             Country = Country.England,
             OwnershipStatus = OwnershipStatus.Landlord,
-            EpcDetailsAreCorrect = true,
+            EpcDetailsAreCorrect = EpcConfirmation.Yes,
             IsLsoaProperty = true,
             IncomeBand = IncomeBand.UnderOrEqualTo31000,
         };
