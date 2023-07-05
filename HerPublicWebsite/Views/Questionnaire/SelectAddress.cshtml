@@ -1,6 +1,7 @@
 ﻿@using GovUkDesignSystem
 @using GovUkDesignSystem.GovUkDesignSystemComponents
 @using HerPublicWebsite.BusinessLogic.Models.Enums
+@using HerPublicWebsite.Models.Enums;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using HerPublicWebsite.Controllers
 
@@ -24,10 +25,11 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         
-        @if (Model.Addresses.Count > 0)
+        @if (Model.IsMultipleAddresses)
         {
             <form action="@Url.Action(nameof(QuestionnaireController.SelectAddress_Post), "Questionnaire")" method="post" novalidate>
                 @(Html.HiddenFor(m => m.EntryPoint))
+                @(Html.HiddenFor(m => m.IsMultipleAddresses))
                 @Html.AntiForgeryToken()
 
 
@@ -62,6 +64,50 @@
                 {
                     Text = "Continue",
                 })
+
+            </form>
+        }
+        else if (Model.IsSingleAddress) {
+             <form action="@Url.Action(nameof(QuestionnaireController.SelectAddress_Post), "Questionnaire")" method="post" novalidate>
+                @(Html.HiddenFor(m => m.EntryPoint))
+                @(Html.HiddenFor(m => m.IsSingleAddress))
+                @Html.AntiForgeryToken()
+
+                @await Html.GovUkRadiosFor(m => m.IsAddressCorrect,
+                            labelOptions: new Dictionary<YesOrNo, LabelViewModel> {
+                                { YesOrNo.Yes, new() { Text = "Yes, this is my address" } },
+                                { YesOrNo.No, new() { Text = "No, this is not my address" } }
+                            },
+                            fieldsetOptions: new FieldsetViewModel()
+                            {
+                                Legend = new LegendViewModel()
+                                {
+                                    Html = @<text>
+                                            <h1 class="govuk-fieldset__legend--l">Is this your address?</h1>
+                                            <p>@Html.Raw(
+                                                        string.Join("<br/>",
+                                                            new List<string>{
+                                                                Model.Addresses[0].AddressLine1,
+                                                                Model.Addresses[0].AddressLine2,
+                                                                Model.Addresses[0].County,
+                                                                Model.Addresses[0].Town,
+                                                                Model.Addresses[0].Postcode
+                                                            }
+                                                            .Where(x => !string.IsNullOrEmpty(x))
+                                                            .Select(x => Html.Encode(x))))
+                                            </p>
+                                        </text>
+                                }
+                            }
+                           )
+
+
+                <div class="govuk-button-group">
+                    @(await Html.GovUkButton(new ButtonViewModel
+                    {
+                        Text = "Continue",
+                    }))
+                </div>
 
             </form>
         }
