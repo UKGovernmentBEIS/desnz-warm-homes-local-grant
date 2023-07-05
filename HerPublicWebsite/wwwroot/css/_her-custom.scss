@@ -27,12 +27,13 @@
 .her_alphabet_links__row {
     display: flex;
     flex-direction: row;
-    @include govuk-responsive-padding(4, "bottom");
+    flex-wrap: wrap;
 }
 
 .her_alphabet_links__letter {
-    flex-grow: 1;
-    width: 2em;
+    width: 8%;
+    text-align: center;
+    @include govuk-responsive-padding(4, "bottom");
 }
 
 .her_local_authority_section {

@@ -8,6 +8,7 @@ namespace HerPublicWebsite.BusinessLogic.Models;
 
 public record Questionnaire
 {
+
     public CountryEnum? Country { get; set; }
     public OwnershipStatusEnum? OwnershipStatus { get; set; }
 
@@ -23,7 +24,7 @@ public record Questionnaire
     public string Uprn { get; set; } // Should be populated for most questionnaires, but not 100% guaranteed
 
     public EpcDetails EpcDetails { get; set; }
-    public bool? EpcDetailsAreCorrect { get; set; }
+    public EpcConfirmation? EpcDetailsAreCorrect { get; set; }
     public bool? IsLsoaProperty { get; set; }
     public HasGasBoilerEnum? HasGasBoiler { get; set; }
     public IncomeBandEnum? IncomeBand { get; set; }
@@ -44,12 +45,11 @@ public record Questionnaire
 
     public string ConfirmationEmailAddress { get; set; }
 
+    public Questionnaire UneditedData { get; set; }
+
     public bool IsEligibleForHug2 =>
             (IncomeIsTooHigh, HasGasBoiler, EpcIsTooHigh, Country, OwnershipStatus) is
                 (false, not HasGasBoilerEnum.Yes, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy);
-
-    public bool FoundEpcBandIsTooHigh =>
-        EpcDetails is { EpcRating: EpcRating.A or EpcRating.B or EpcRating.C };
 
     public string LocalAuthorityName
     {
@@ -101,7 +101,7 @@ public record Questionnaire
                 return EpcRating.Unknown;
             }
 
-            if (EpcDetailsAreCorrect is not true)
+            if (EpcDetailsAreCorrect is EpcConfirmation.No or EpcConfirmation.Unknown)
             {
                 return EpcRating.Unknown;
             }
@@ -115,7 +115,84 @@ public record Questionnaire
         }
     }
 
+    public EpcRating DisplayEpcRating
+    {
+        get
+        {
+            if (EpcDetails is null)
+            {
+                return EpcRating.Unknown;
+            }
+
+            if (EpcDetails.ExpiryDate < DateTime.Now)
+            {
+                return EpcRating.Expired;
+            }
+
+            return EpcDetails.EpcRating ?? EpcRating.Unknown;
+        }
+    }
+    
+    private EpcRating FoundEpcBand {
+        get
+        {
+            if (EpcDetails is null)
+            {
+                return EpcRating.Unknown;
+            }
+
+            if (EpcDetails.ExpiryDate is not null && EpcDetails.ExpiryDate < DateTime.Now)
+            {
+                return EpcRating.Expired;
+            }
+
+            return EpcDetails.EpcRating ?? EpcRating.Unknown;
+        }
+    }
+    
+    public bool FoundEpcBandIsTooHigh =>
+        FoundEpcBand is EpcRating.A or EpcRating.B or EpcRating.C;
+
     public bool EpcIsTooHigh => EffectiveEpcBand is EpcRating.A or EpcRating.B or EpcRating.C;
 
     public bool IncomeIsTooHigh => IncomeBand is IncomeBandEnum.GreaterThan31000 && IsLsoaProperty is not true;
+
+    public void CreateUneditedData()
+    {
+        UneditedData = new Questionnaire();
+        CopyAnswersTo(UneditedData);
+    }
+
+    public void CommitEdits()
+    {
+        DeleteUneditedData();
+    }
+
+    public void RevertToUneditedData()
+    {
+        UneditedData.CopyAnswersTo(this);
+        DeleteUneditedData();
+    }
+
+    private void DeleteUneditedData()
+    {
+        UneditedData = null;
+    }
+
+    public void CopyAnswersTo(Questionnaire other)
+    {
+        foreach (var propertyInfo in GetType().GetProperties())
+        {
+            if (propertyInfo.Name is nameof(UneditedData))
+            {
+                continue;
+            }
+
+            if (propertyInfo.CanWrite)
+            {
+                propertyInfo.SetValue(other, propertyInfo.GetValue(this));
+            }
+        }
+
+    }
 }

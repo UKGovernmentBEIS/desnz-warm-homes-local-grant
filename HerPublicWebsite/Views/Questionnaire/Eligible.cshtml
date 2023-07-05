@@ -11,11 +11,13 @@
 }
 
 @section BeforeMain {
-    @await Html.GovUkBackLink(new BackLinkViewModel
-           {
-               Text = "Back",
-               Href = Model.BackLink,
-           })
+    <nav>
+        @await Html.GovUkBackLink(new BackLinkViewModel
+        {
+            Text = "Back",
+            Href = Model.BackLink,
+        })
+    </nav>
 }
 
 <div class="govuk-grid-row">
@@ -27,8 +29,7 @@
         }
         else
         {
-            <h1 class="govuk-heading-l">We think you might be eligible but your local authority is still onboarding
-                to the scheme</h1>
+            <h1 class="govuk-heading-l">We think you might be eligible but your local authority is not ready to process applications yet</h1>
         }
         
         <h2 class="govuk-heading-m">What to do next</h2>
@@ -135,13 +136,14 @@
                     }
                 })
 
-            <div class="govuk-button-group">
-                @(await Html.GovUkButton(new ButtonViewModel
-                {
-                    Text = "Submit",
-                }))
+            <p class="govuk-body">
                 <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.NoConsent_Get), "Questionnaire")">I don't want to share my information</a>
-            </div>
+            </p>
+
+            @(await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Submit",
+            }))
         </form>
         
     </div>
