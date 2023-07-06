@@ -51,7 +51,7 @@ jobs:
       uses: danielpalme/ReportGenerator-GitHub-Action@5.1.23
       with:
         reports: TestResults/*/coverage.cobertura.xml
-        targetdir: TestResults
+        targetdir: TestResults/CoverageReport
         
     - name: Upload dotnet test results
       uses: actions/upload-artifact@v3
