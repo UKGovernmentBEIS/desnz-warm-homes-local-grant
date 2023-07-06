@@ -11,6 +11,7 @@ on:
       - develop
       - staging
       - main
+      - code-coverage-report
 
 jobs:
   build-and-run-tests:
