@@ -38,7 +38,7 @@ public class CookieServiceTests
             ConfirmationShown = true,
             GoogleAnalytics = false
         }),
-        new("Rejected analytics and confirmation noy shown", new()
+        new("Rejected analytics and confirmation not shown", new()
         {
             Version = LatestVersion,
             ConfirmationShown = false,
