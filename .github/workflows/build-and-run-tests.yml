@@ -46,12 +46,16 @@ jobs:
         output: console
         # Threshold is currently very low as we don't test the website very much
         thresholds: '40 80'
+      # Use always() to always run this step to publish coverage results when there are test failures
+      if: ${{ always() }}
         
     - name: Generate detailed code coverage report
       uses: danielpalme/ReportGenerator-GitHub-Action@5.1.23
       with:
         reports: TestResults/*/coverage.cobertura.xml
         targetdir: TestResults/CoverageReport
+      # Use always() to always run this step to publish coverage report when there are test failures
+      if: ${{ always() }}
         
     - name: Upload dotnet test results
       uses: actions/upload-artifact@v3
