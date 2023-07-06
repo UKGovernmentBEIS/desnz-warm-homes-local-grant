@@ -34,7 +34,7 @@ jobs:
     - name: Run tests
       run: dotnet test --no-restore --logger trx --results-directory "TestResults" --collect:"XPlat Code Coverage" --settings HerPublicWebsite.UnitTests/coverlet.runsettings
 
-    - name: Code Coverage Report
+    - name: Generate code coverage report
       uses: irongut/CodeCoverageSummary@v1.3.0
       with:
         filename: TestResults/*/coverage.cobertura.xml
@@ -46,6 +46,12 @@ jobs:
         indicators: true
         output: console
         thresholds: '60 80'
+        
+    - name: Generate code coverage report 2
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.1.23
+      with:
+        reports: TestResults/*/coverage.cobertura.xml
+        targetdir: TestResults
         
     - name: Upload dotnet test results
       uses: actions/upload-artifact@v3
