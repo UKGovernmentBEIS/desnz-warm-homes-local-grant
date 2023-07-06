@@ -39,13 +39,14 @@ jobs:
       with:
         filename: TestResults/*/coverage.cobertura.xml
         badge: false
-        fail_below_min: false
+        fail_below_min: true
         format: text
         hide_branch_rate: false
         hide_complexity: false
         indicators: true
         output: console
-        thresholds: '60 80'
+        # Threshold is currently very low as we don't test the website very much
+        thresholds: '40 80'
         
     - name: Generate code coverage report 2
       uses: danielpalme/ReportGenerator-GitHub-Action@5.1.23
