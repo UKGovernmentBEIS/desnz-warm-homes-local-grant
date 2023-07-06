@@ -13,8 +13,6 @@ EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHubActions", "GitHubActions", "{F7C11F5D-EF14-4842-90D1-BB3084CA7F14}"
 ProjectSection(SolutionItems) = preProject
-	.github\workflows\build-and-deploy-to-azure-dev.yml = .github\workflows\build-and-deploy-to-azure-dev.yml
-	.github\workflows\_build-and-deploy-to-azure.yml = .github\workflows\_build-and-deploy-to-azure.yml
 	.github\workflows\build-and-run-tests.yml = .github\workflows\build-and-run-tests.yml
 EndProjectSection
 EndProject
