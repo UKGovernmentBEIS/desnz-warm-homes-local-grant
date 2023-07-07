@@ -92,6 +92,18 @@ public class OsPlacesLpiDto
             Uprn = Uprn
         };
     }
+    
+    public bool IsCurrentResidential()
+    {
+        return PostalAddressCode != "N" // is a postal address
+               && LpiLogicalStatusCode == "1" // only want current addresses
+               && (
+                   ClassificationCode.StartsWith("R") // Residential addresses
+                   || ClassificationCode.StartsWith("CE") // Educational addresses
+                   || ClassificationCode.StartsWith("X") // Dual-use (residential and commercial) addresses
+                   || ClassificationCode.StartsWith("M") // Military addresses
+               );
+    }
 
     private string ToTitleCase(string text)
     {
