@@ -322,6 +322,36 @@ public class OsPlacesApiTests
         // Assert
         result.Should().BeEquivalentTo(correctAddresses);
     }
+    
+    [Test]
+    public async Task GetAddressesAsync_WhenReceivesNonCurrentResidentialLpiResults_RemovesAddresses()
+    {
+        // Arrange
+        mockHttpHandler.Expect("http://test.com/search/places/v1/postcode?postcode=AB1%202CD")
+            .WithHeaders("Key", "testKey")
+            .Respond("application/json", DummyOsPlacesResponseWithNonResidentialResults);
+
+        var correctAddresses = new List<Address>
+        {
+            new()
+            {
+                AddressLine1 = "Premises In Unit 2, Example Studios",
+                AddressLine2 = "1–10, Example Road",
+                Town = "London",
+                Postcode = "AB1 2CD",
+                County = null,
+                Uprn = "12345678904",
+                LocalCustodianCode = "5210"
+            },
+        };
+
+        // Act
+        var result = await underTest.GetAddressesAsync("AB1 2CD", "Non matching name");
+        
+        // Assert
+        result.Should().BeEquivalentTo(correctAddresses);
+    }
+    
 
     // This is a real response from the API that has had it's data replaced with dummy values
     private const string DummyOsPlacesResponse = @"{
@@ -726,7 +756,7 @@ public class OsPlacesApiTests
                 ""Y_COORDINATE"": 1234567.78,
                 ""STATUS"": ""APPROVED"",
                 ""LOGICAL_STATUS_CODE"": ""1"",
-                ""CLASSIFICATION_CODE"": ""CR07"",
+                ""CLASSIFICATION_CODE"": ""RD07"",
                 ""CLASSIFICATION_CODE_DESCRIPTION"": ""Restaurant / Cafeteria"",
                 ""LOCAL_CUSTODIAN_CODE"": 5210,
                 ""LOCAL_CUSTODIAN_CODE_DESCRIPTION"": ""CAMDEN"",
@@ -771,7 +801,7 @@ public class OsPlacesApiTests
                 ""Y_COORDINATE"": 1234567.78,
                 ""STATUS"": ""APPROVED"",
                 ""LOGICAL_STATUS_CODE"": ""1"",
-                ""CLASSIFICATION_CODE"": ""C"",
+                ""CLASSIFICATION_CODE"": ""RD01"",
                 ""CLASSIFICATION_CODE_DESCRIPTION"": ""Commercial"",
                 ""LOCAL_CUSTODIAN_CODE"": 5210,
                 ""LOCAL_CUSTODIAN_CODE_DESCRIPTION"": ""CAMDEN"",
@@ -817,7 +847,7 @@ public class OsPlacesApiTests
                 ""Y_COORDINATE"": 1234567.78,
                 ""STATUS"": ""APPROVED"",
                 ""LOGICAL_STATUS_CODE"": ""1"",
-                ""CLASSIFICATION_CODE"": ""CL06"",
+                ""CLASSIFICATION_CODE"": ""RD06"",
                 ""CLASSIFICATION_CODE_DESCRIPTION"": ""Indoor / Outdoor Leisure / Sporting Activity / Centre"",
                 ""LOCAL_CUSTODIAN_CODE"": 5210,
                 ""LOCAL_CUSTODIAN_CODE_DESCRIPTION"": ""CAMDEN"",
@@ -862,7 +892,7 @@ public class OsPlacesApiTests
                 ""Y_COORDINATE"": 1234567.78,
                 ""STATUS"": ""APPROVED"",
                 ""LOGICAL_STATUS_CODE"": ""1"",
-                ""CLASSIFICATION_CODE"": ""CE02"",
+                ""CLASSIFICATION_CODE"": ""RD02"",
                 ""CLASSIFICATION_CODE_DESCRIPTION"": ""Children’s Nursery / Crèche"",
                 ""LOCAL_CUSTODIAN_CODE"": 5210,
                 ""LOCAL_CUSTODIAN_CODE_DESCRIPTION"": ""CAMDEN"",
@@ -907,7 +937,7 @@ public class OsPlacesApiTests
                 ""Y_COORDINATE"": 1234567.78,
                 ""STATUS"": ""APPROVED"",
                 ""LOGICAL_STATUS_CODE"": ""1"",
-                ""CLASSIFICATION_CODE"": ""CO01"",
+                ""CLASSIFICATION_CODE"": ""RD01"",
                 ""CLASSIFICATION_CODE_DESCRIPTION"": ""Office / Work Studio"",
                 ""LOCAL_CUSTODIAN_CODE"": 5210,
                 ""LOCAL_CUSTODIAN_CODE_DESCRIPTION"": ""CAMDEN"",
@@ -965,7 +995,7 @@ public class OsPlacesApiTests
                 ""Y_COORDINATE"": 1234567.78,
                 ""STATUS"": ""APPROVED"",
                 ""LOGICAL_STATUS_CODE"": ""1"",
-                ""CLASSIFICATION_CODE"": ""PP"",
+                ""CLASSIFICATION_CODE"": ""RD01"",
                 ""CLASSIFICATION_CODE_DESCRIPTION"": ""Property Shell"",
                 ""LOCAL_CUSTODIAN_CODE"": 5150,
                 ""LOCAL_CUSTODIAN_CODE_DESCRIPTION"": ""BRENT"",
@@ -1187,6 +1217,209 @@ public class OsPlacesApiTests
                 ""LAST_UPDATE_DATE"": ""30/07/2017"",
                 ""ENTRY_DATE"": ""18/09/2007"",
                 ""BLPU_STATE_DATE"": ""01/04/2009"",
+                ""STREET_STATE_CODE"": ""2"",
+                ""STREET_STATE_CODE_DESCRIPTION"": ""Open"",
+                ""STREET_CLASSIFICATION_CODE"": ""8"",
+                ""STREET_CLASSIFICATION_CODE_DESCRIPTION"": ""All vehicles"",
+                ""LPI_LOGICAL_STATUS_CODE"": ""1"",
+                ""LPI_LOGICAL_STATUS_CODE_DESCRIPTION"": ""APPROVED"",
+                ""LANGUAGE"": ""EN"",
+                ""MATCH"": 1.0,
+                ""MATCH_DESCRIPTION"": ""EXACT""
+            }
+        }
+    ]
+}";
+    
+    // First property postal address code = N
+    // Second property logical status code = 0
+    // Third property classification code = CO
+    // Fourth is OK
+    private const string DummyOsPlacesResponseWithNonResidentialResults = @"{
+    ""header"": {
+        ""uri"" : ""https://api.os.uk/search/places/v1/postcode?postcode=AB1%202CD"",
+        ""query"" : ""postcode=AB1 2CD"",
+        ""offset"" : 0,
+        ""totalresults"" : 5,
+        ""format"" : ""JSON"",
+        ""dataset"" : ""LPI"",
+        ""lr"" : ""EN,CY"",
+        ""maxresults"" : 100,
+        ""epoch"" : ""101"",
+        ""lastupdate"" : ""2023-05-18"",
+        ""output_srs"" : ""EPSG:27700""
+      },
+    ""results"": [
+        {
+            ""LPI"": {
+                ""UPRN"": ""12345678901"",
+                ""ADDRESS"": ""CAFE, EXAMPLE STUDIOS, 1-10, EXAMPLE ROAD, LONDON, CAMDEN, AB1 2CD"",
+                ""USRN"": ""9876543"",
+                ""LPI_KEY"": ""5150L000099999"",
+                ""SAO_TEXT"": ""CAFE"",
+                ""PAO_START_NUMBER"": ""1"",
+                ""PAO_END_NUMBER"": ""10"",
+                ""PAO_TEXT"": ""EXAMPLE STUDIOS"",
+                ""STREET_DESCRIPTION"": ""EXAMPLE ROAD"",
+                ""TOWN_NAME"": ""LONDON"",
+                ""ADMINISTRATIVE_AREA"": ""CAMDEN"",
+                ""POSTCODE_LOCATOR"": ""AB1 2CD"",
+                ""RPC"": ""2"",
+                ""X_COORDINATE"": 1234567.78,
+                ""Y_COORDINATE"": 1234567.78,
+                ""STATUS"": ""APPROVED"",
+                ""LOGICAL_STATUS_CODE"": ""1"",
+                ""CLASSIFICATION_CODE"": ""RD07"",
+                ""CLASSIFICATION_CODE_DESCRIPTION"": ""Restaurant / Cafeteria"",
+                ""LOCAL_CUSTODIAN_CODE"": 5210,
+                ""LOCAL_CUSTODIAN_CODE_DESCRIPTION"": ""CAMDEN"",
+                ""COUNTRY_CODE"": ""E"",
+                ""COUNTRY_CODE_DESCRIPTION"": ""This record is within England"",
+                ""POSTAL_ADDRESS_CODE"": ""N"",
+                ""POSTAL_ADDRESS_CODE_DESCRIPTION"": ""A record which is postal and has a parent record which is linked to PAF"",
+                ""BLPU_STATE_CODE"": ""2"",
+                ""BLPU_STATE_CODE_DESCRIPTION"": ""In use"",
+                ""TOPOGRAPHY_LAYER_TOID"": ""osgb1000000000000"",
+                ""PARENT_UPRN"": ""9090909"",
+                ""LAST_UPDATE_DATE"": ""25/03/2022"",
+                ""ENTRY_DATE"": ""08/10/2002"",
+                ""BLPU_STATE_DATE"": ""08/10/2002"",
+                ""STREET_STATE_CODE"": ""2"",
+                ""STREET_STATE_CODE_DESCRIPTION"": ""Open"",
+                ""STREET_CLASSIFICATION_CODE"": ""8"",
+                ""STREET_CLASSIFICATION_CODE_DESCRIPTION"": ""All vehicles"",
+                ""LPI_LOGICAL_STATUS_CODE"": ""1"",
+                ""LPI_LOGICAL_STATUS_CODE_DESCRIPTION"": ""APPROVED"",
+                ""LANGUAGE"": ""EN"",
+                ""MATCH"": 1.0,
+                ""MATCH_DESCRIPTION"": ""EXACT""
+            }
+        },
+        {
+            ""LPI"": {
+                ""UPRN"": ""12345678902"",
+                ""ADDRESS"": ""CAR PARKING SPACES, EXAMPLE STUDIOS, 1-10, EXAMPLE ROAD, LONDON, CAMDEN, AB1 2CD"",
+                ""USRN"": ""9876543"",
+                ""LPI_KEY"": ""5150L000099999"",
+                ""SAO_TEXT"": ""CAR PARKING SPACES"",
+                ""PAO_START_NUMBER"": ""1"",
+                ""PAO_END_NUMBER"": ""10"",
+                ""PAO_TEXT"": ""EXAMPLE STUDIOS"",
+                ""STREET_DESCRIPTION"": ""EXAMPLE ROAD"",
+                ""TOWN_NAME"": ""LONDON"",
+                ""ADMINISTRATIVE_AREA"": ""CAMDEN"",
+                ""POSTCODE_LOCATOR"": ""AB1 2CD"",
+                ""RPC"": ""2"",
+                ""X_COORDINATE"": 1234567.78,
+                ""Y_COORDINATE"": 1234567.78,
+                ""STATUS"": ""APPROVED"",
+                ""LOGICAL_STATUS_CODE"": ""1"",
+                ""CLASSIFICATION_CODE"": ""RD07"",
+                ""CLASSIFICATION_CODE_DESCRIPTION"": ""Commercial"",
+                ""LOCAL_CUSTODIAN_CODE"": 5210,
+                ""LOCAL_CUSTODIAN_CODE_DESCRIPTION"": ""CAMDEN"",
+                ""COUNTRY_CODE"": ""E"",
+                ""COUNTRY_CODE_DESCRIPTION"": ""This record is within England"",
+                ""POSTAL_ADDRESS_CODE"": ""C"",
+                ""POSTAL_ADDRESS_CODE_DESCRIPTION"": ""A record which is postal and has a parent record which is linked to PAF"",
+                ""BLPU_STATE_CODE"": ""2"",
+                ""BLPU_STATE_CODE_DESCRIPTION"": ""In use"",
+                ""TOPOGRAPHY_LAYER_TOID"": ""osgb1000000000000"",
+                ""PARENT_UPRN"": ""9090909"",
+                ""LAST_UPDATE_DATE"": ""25/03/2022"",
+                ""ENTRY_DATE"": ""08/10/2002"",
+                ""BLPU_STATE_DATE"": ""08/10/2002"",
+                ""STREET_STATE_CODE"": ""2"",
+                ""STREET_STATE_CODE_DESCRIPTION"": ""Open"",
+                ""STREET_CLASSIFICATION_CODE"": ""8"",
+                ""STREET_CLASSIFICATION_CODE_DESCRIPTION"": ""All vehicles"",
+                ""LPI_LOGICAL_STATUS_CODE"": ""0"",
+                ""LPI_LOGICAL_STATUS_CODE_DESCRIPTION"": ""APPROVED"",
+                ""LANGUAGE"": ""EN"",
+                ""MATCH"": 1.0,
+                ""MATCH_DESCRIPTION"": ""EXACT""
+            }
+        },
+        {
+            ""LPI"": {
+                ""UPRN"": ""12345678903"",
+                ""ADDRESS"": ""EXAMPLE ORGANISATION, PREMISES IN UNIT 1, EXAMPLE STUDIOS, 1-10, EXAMPLE ROAD, LONDON, CAMDEN, AB1 2CD"",
+                ""USRN"": ""9876543"",
+                ""LPI_KEY"": ""5150L000099999"",
+                ""ORGANISATION"": ""EXAMPLE ORGANISATION"",
+                ""SAO_TEXT"": ""PREMISES IN UNIT 1"",
+                ""PAO_START_NUMBER"": ""1"",
+                ""PAO_END_NUMBER"": ""10"",
+                ""PAO_TEXT"": ""EXAMPLE STUDIOS"",
+                ""STREET_DESCRIPTION"": ""EXAMPLE ROAD"",
+                ""TOWN_NAME"": ""LONDON"",
+                ""ADMINISTRATIVE_AREA"": ""CAMDEN"",
+                ""POSTCODE_LOCATOR"": ""AB1 2CD"",
+                ""RPC"": ""2"",
+                ""X_COORDINATE"": 1234567.78,
+                ""Y_COORDINATE"": 1234567.78,
+                ""STATUS"": ""APPROVED"",
+                ""LOGICAL_STATUS_CODE"": ""1"",
+                ""CLASSIFICATION_CODE"": ""CO06"",
+                ""CLASSIFICATION_CODE_DESCRIPTION"": ""Indoor / Outdoor Leisure / Sporting Activity / Centre"",
+                ""LOCAL_CUSTODIAN_CODE"": 5210,
+                ""LOCAL_CUSTODIAN_CODE_DESCRIPTION"": ""CAMDEN"",
+                ""COUNTRY_CODE"": ""E"",
+                ""COUNTRY_CODE_DESCRIPTION"": ""This record is within England"",
+                ""POSTAL_ADDRESS_CODE"": ""D"",
+                ""POSTAL_ADDRESS_CODE_DESCRIPTION"": ""A record which is linked to PAF"",
+                ""BLPU_STATE_CODE"": ""2"",
+                ""BLPU_STATE_CODE_DESCRIPTION"": ""In use"",
+                ""TOPOGRAPHY_LAYER_TOID"": ""osgb1000000000000"",
+                ""PARENT_UPRN"": ""9090909"",
+                ""LAST_UPDATE_DATE"": ""25/03/2022"",
+                ""ENTRY_DATE"": ""08/10/2002"",
+                ""BLPU_STATE_DATE"": ""08/10/2002"",
+                ""STREET_STATE_CODE"": ""2"",
+                ""STREET_STATE_CODE_DESCRIPTION"": ""Open"",
+                ""STREET_CLASSIFICATION_CODE"": ""8"",
+                ""STREET_CLASSIFICATION_CODE_DESCRIPTION"": ""All vehicles"",
+                ""LPI_LOGICAL_STATUS_CODE"": ""1"",
+                ""LPI_LOGICAL_STATUS_CODE_DESCRIPTION"": ""APPROVED"",
+                ""LANGUAGE"": ""EN"",
+                ""MATCH"": 1.0,
+                ""MATCH_DESCRIPTION"": ""EXACT""
+            }
+        },
+        {
+            ""LPI"": {
+                ""UPRN"": ""12345678904"",
+                ""ADDRESS"": ""PREMISES IN UNIT 2, EXAMPLE STUDIOS, 1-10, EXAMPLE ROAD, LONDON, CAMDEN, AB1 2CD"",
+                ""USRN"": ""9876543"",
+                ""LPI_KEY"": ""5150L000099999"",
+                ""SAO_TEXT"": ""PREMISES IN UNIT 2"",
+                ""PAO_START_NUMBER"": ""1"",
+                ""PAO_END_NUMBER"": ""10"",
+                ""PAO_TEXT"": ""EXAMPLE STUDIOS"",
+                ""STREET_DESCRIPTION"": ""EXAMPLE ROAD"",
+                ""TOWN_NAME"": ""LONDON"",
+                ""ADMINISTRATIVE_AREA"": ""CAMDEN"",
+                ""POSTCODE_LOCATOR"": ""AB1 2CD"",
+                ""RPC"": ""2"",
+                ""X_COORDINATE"": 1234567.78,
+                ""Y_COORDINATE"": 1234567.78,
+                ""STATUS"": ""APPROVED"",
+                ""LOGICAL_STATUS_CODE"": ""1"",
+                ""CLASSIFICATION_CODE"": ""RD02"",
+                ""CLASSIFICATION_CODE_DESCRIPTION"": ""Children’s Nursery / Crèche"",
+                ""LOCAL_CUSTODIAN_CODE"": 5210,
+                ""LOCAL_CUSTODIAN_CODE_DESCRIPTION"": ""CAMDEN"",
+                ""COUNTRY_CODE"": ""E"",
+                ""COUNTRY_CODE_DESCRIPTION"": ""This record is within England"",
+                ""POSTAL_ADDRESS_CODE"": ""C"",
+                ""POSTAL_ADDRESS_CODE_DESCRIPTION"": ""A record which is postal and has a parent record which is linked to PAF"",
+                ""BLPU_STATE_CODE"": ""2"",
+                ""BLPU_STATE_CODE_DESCRIPTION"": ""In use"",
+                ""TOPOGRAPHY_LAYER_TOID"": ""osgb1000000000000"",
+                ""PARENT_UPRN"": ""9090909"",
+                ""LAST_UPDATE_DATE"": ""25/03/2022"",
+                ""ENTRY_DATE"": ""08/10/2002"",
+                ""BLPU_STATE_DATE"": ""08/10/2002"",
                 ""STREET_STATE_CODE"": ""2"",
                 ""STREET_STATE_CODE_DESCRIPTION"": ""Open"",
                 ""STREET_CLASSIFICATION_CODE"": ""8"",

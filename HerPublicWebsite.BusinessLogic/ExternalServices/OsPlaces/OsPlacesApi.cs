@@ -46,14 +46,17 @@ public class OsPlacesApi : IOsPlacesApi
                 }
             }
             
-            // Join results based on UPRN
+            // Filter and parse DPA and LPI addresses
             var dpaAddresses = results
                 .Where(r => r.Dpa is not null)
                 .Select(r => r.Dpa.Parse());
+            
+            // The LPI dataset contains addresses that aren't residential properties, we want to filter those out
             var lpiAddresses = results
-                .Where(r => r.Lpi is not null)
+                .Where(r => r.Lpi is not null && r.Lpi.IsCurrentResidential())
                 .Select(r => r.Lpi.Parse());
 
+            // Join results based on UPRN
             var joinedAddresses = dpaAddresses.UnionBy(lpiAddresses, a => a.Uprn).ToList();
 
             var filteredResults = buildingNameOrNumber is null
