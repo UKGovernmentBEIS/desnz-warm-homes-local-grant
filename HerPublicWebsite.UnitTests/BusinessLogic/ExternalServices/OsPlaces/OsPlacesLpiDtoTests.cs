@@ -128,4 +128,39 @@ public class OsPlacesLpiDtoTests
         result.Uprn.Should().Be("123456789012");
         result.LocalCustodianCode.Should().Be("123");
     }
+    
+    [TestCase("C", "1", "RD06", true)] // Current residential postal address
+    [TestCase("C", "1", "CE01", true)] // Current educational postal address
+    [TestCase("C", "1", "X01", true)] // Current dual-use (residential and commercial) postal address
+    [TestCase("C", "1", "M01", true)] // Current military postal address
+    [TestCase("N", "1", "RD06", false)] // Current residential non-postal address
+    [TestCase("C", "0", "RD06", false)] // Non-current residential postal address
+    [TestCase("C", "1", "PP", false)] // Current non-residential/educational/etc postal address
+    public void IsCurrentResidential_WithVariousData_ReturnsAsExpected(
+        string postalAddressCode,
+        string lpiLogicalStatusCode,
+        string classificationCode,
+        bool expectedResult)
+    {
+        // Arrange
+        var underTest = new OsPlacesLpiDto
+        {
+            PostalAddressCode = postalAddressCode,
+            LpiLogicalStatusCode = lpiLogicalStatusCode,
+            ClassificationCode = classificationCode,
+            PaoText = "EXAMPLE HOUSE",
+            StreetDescription = "EXAMPLE ROAD",
+            TownName = "EXAMPLETON",
+            AdministrativeArea = "EXAMPLESHIRE",
+            PostcodeLocator = "AB1 2CD",
+            Uprn = "123456789012",
+            LocalCustodianCode = "123",
+        };
+        
+        // Act
+        var result = underTest.IsCurrentResidential();
+        
+        // Assert
+        result.Should().Be(expectedResult);
+    }
 }
