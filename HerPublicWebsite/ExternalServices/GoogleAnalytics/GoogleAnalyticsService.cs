@@ -30,7 +30,7 @@ public class GoogleAnalyticsService
     
     public async Task SendBoilerQuestionViewedEventAsync(HttpRequest request)
     {
-        await SendEvent(new GaRequestBody
+        await SendEventAsync(new GaRequestBody
         {
             ClientId = GetClientId(request),
             GaEvents = new List<GaEvent>
@@ -43,9 +43,9 @@ public class GoogleAnalyticsService
         });
     }
 
-    public async Task SendQuestionnaireCompletedEvent(HttpRequest request)
+    public async Task SendQuestionnaireCompletedEventAsync(HttpRequest request)
     {
-        await SendEvent(new GaRequestBody
+        await SendEventAsync(new GaRequestBody
         {
             ClientId = GetClientId(request),
             GaEvents = new List<GaEvent>
@@ -58,9 +58,9 @@ public class GoogleAnalyticsService
         });
     }
     
-    public async Task SendReferralGeneratedEvent(HttpRequest request)
+    public async Task SendReferralGeneratedEventAsync(HttpRequest request)
     {
-        await SendEvent(new GaRequestBody
+        await SendEventAsync(new GaRequestBody
         {
             ClientId = GetClientId(request),
             GaEvents = new List<GaEvent>
@@ -73,7 +73,7 @@ public class GoogleAnalyticsService
         });
     }
     
-    private async Task SendEvent(GaRequestBody body)
+    private async Task SendEventAsync(GaRequestBody body)
     {
         try
         {
