@@ -157,6 +157,11 @@ public record Questionnaire
 
     public bool IncomeIsTooHigh => IncomeBand is IncomeBandEnum.GreaterThan31000 && IsLsoaProperty is not true;
 
+    public bool IncomeBandIsValid =>
+        CustodianCode is not null
+        && IncomeBand is not null
+        && LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[CustodianCode].IncomeBandOptions.Contains(IncomeBand.Value);
+
     public void CreateUneditedData()
     {
         UneditedData = new Questionnaire();

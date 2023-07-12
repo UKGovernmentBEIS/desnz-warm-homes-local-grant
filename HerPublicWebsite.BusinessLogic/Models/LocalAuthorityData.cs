@@ -80,7 +80,7 @@ public class LocalAuthorityData
         { "4210", new LocalAuthorityDetails("Bury Metropolitan Borough Council", Hug2Status.NotTakingPart, "https://www.bury.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "6920", new LocalAuthorityDetails("Caerphilly County Borough Council", Hug2Status.NotTakingPart, "http://www.caerphilly.gov.uk", IncomeBandOptions[IncomeThreshold._31000]) },
         { "4710", new LocalAuthorityDetails("Calderdale Metropolitan Borough Council", Hug2Status.Pending, "http://www.calderdale.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
-        { "505", new LocalAuthorityDetails("Cambridge City Council", Hug2Status.Pending, "https://www.cambridge.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
+        { "505", new LocalAuthorityDetails("Cambridge City Council", Hug2Status.Pending, "https://www.cambridge.gov.uk/", IncomeBandOptions[IncomeThreshold._34000]) }, // TODO confirm which Cambridge LAs are at the higher threshold
         { "5210", new LocalAuthorityDetails("London Borough of Camden", Hug2Status.Pending, "https://www.camden.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "3405", new LocalAuthorityDetails("Cannock Chase District Council", Hug2Status.Pending, "http://www.cannockchasedc.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "2210", new LocalAuthorityDetails("Canterbury City Council", Hug2Status.Pending, "https://www.canterbury.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },

@@ -470,8 +470,9 @@ public class QuestionnaireController : Controller
     public IActionResult HouseholdIncome_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var viewModel = new HouseholdIncomeViewModel()
+        var viewModel = new HouseholdIncomeViewModel
         {
+            CustodianCode = questionnaire.CustodianCode,
             IncomeBand = questionnaire.IncomeBand,
             BackLink = GetBackUrl(QuestionFlowStep.HouseholdIncome, questionnaire, entryPoint)
         };

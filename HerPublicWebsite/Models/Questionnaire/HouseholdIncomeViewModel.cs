@@ -12,7 +12,8 @@ namespace HerPublicWebsite.Models.Questionnaire
         
         public string CustodianCode { get; set; }
 
-        public IEnumerable<IncomeBand> IncomeBandOptions =>
-            LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[CustodianCode].IncomeBandOptions;
+        public IEnumerable<IncomeBand> IncomeBandOptions => CustodianCode is null
+            ? null
+            : LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[CustodianCode].IncomeBandOptions;
     }
 }
