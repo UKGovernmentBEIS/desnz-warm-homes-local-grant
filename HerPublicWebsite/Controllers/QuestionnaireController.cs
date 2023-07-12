@@ -53,9 +53,17 @@ public class QuestionnaireController : Controller
 
     [HttpGet("boiler")]
     [ExcludeFromSessionExpiry]
-    public IActionResult GasBoiler_Get(QuestionFlowStep? entryPoint)
+    public async Task<IActionResult> GasBoiler_Get(QuestionFlowStep? entryPoint, bool triggerEvent = true)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
+
+        // This metric isn't very reliable, but we can cut out false triggers from editing answers and from validation
+        // failures.
+        if (questionnaire.HasGasBoiler is null && triggerEvent)
+        {
+            await googleAnalyticsService.SendBoilerQuestionViewedEventAsync(Request);
+        }
+        
         var viewModel = new GasBoilerViewModel
         {
             HasGasBoiler = questionnaire.HasGasBoiler,
@@ -67,11 +75,11 @@ public class QuestionnaireController : Controller
 
     [HttpPost("boiler")]
     [ExcludeFromSessionExpiry]
-    public IActionResult GasBoiler_Post(GasBoilerViewModel viewModel)
+    public async Task<IActionResult> GasBoiler_Post(GasBoilerViewModel viewModel)
     {
         if (!ModelState.IsValid)
         {
-            return GasBoiler_Get(viewModel.EntryPoint);
+            return await GasBoiler_Get(viewModel.EntryPoint, false);
         }
 
         var questionnaire = questionnaireService.UpdateGasBoiler(viewModel.HasGasBoiler!.Value, viewModel.EntryPoint);
@@ -511,7 +519,7 @@ public class QuestionnaireController : Controller
     [HttpPost("check")]
     public async Task<IActionResult> CheckAnswers_Post()
     {
-        await googleAnalyticsService.SendQuestionnaireCompletedEvent(Request);
+        await googleAnalyticsService.SendQuestionnaireCompletedEventAsync(Request);
         var questionnaire = await questionnaireService.ConfirmQuestionnaireAnswers();
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.CheckAnswers, questionnaire);
 
@@ -555,7 +563,7 @@ public class QuestionnaireController : Controller
             viewModel.CanContactByEmail is YesOrNo.Yes ? viewModel.EmailAddress : null,
             viewModel.CanContactByPhone is YesOrNo.Yes ? viewModel.Telephone : null);
 
-        await googleAnalyticsService.SendReferralGeneratedEvent(Request);
+        await googleAnalyticsService.SendReferralGeneratedEventAsync(Request);
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Eligible, questionnaire, viewModel.EntryPoint);
 
