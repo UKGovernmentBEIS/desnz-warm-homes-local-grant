@@ -1,6 +1,5 @@
 @using GovUkDesignSystem
 @using GovUkDesignSystem.GovUkDesignSystemComponents
-@using HerPublicWebsite.BusinessLogic.Models.Enums
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using HerPublicWebsite.Controllers
 
@@ -59,7 +58,8 @@
                                        })
                                </text>
                                
-                       }
+                       },
+                       overrideRadioValues: Model.IncomeBandOptions
                      )
 
             @(await Html.GovUkButton(new ButtonViewModel
