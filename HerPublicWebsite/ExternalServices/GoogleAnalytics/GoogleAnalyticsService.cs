@@ -7,33 +7,45 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
-using HerPublicWebsite.Services.Cookies;
 
 namespace HerPublicWebsite.ExternalServices.GoogleAnalytics;
 
 public class GoogleAnalyticsService
 {
     public readonly GoogleAnalyticsConfiguration Configuration;
-    private readonly CookieService cookieService;
     private readonly ILogger<GoogleAnalyticsService> logger;
 
     // If these strings are ever updated you will need to update the Google Analytics custom events on the GA site to match.
+    private const string EventNameBoilerQuestionViewed = "boiler_question_viewed";
     private const string EventNameQuestionnaireCompleted = "questionnaire_completed";
     private const string EventNameReferralGenerated = "referral_generated";
     
     public GoogleAnalyticsService(
         IOptions<GoogleAnalyticsConfiguration> options,
-        CookieService cookieService,
         ILogger<GoogleAnalyticsService> logger)
     {
         this.Configuration = options.Value;
-        this.cookieService = cookieService;
         this.logger = logger;
     }
-
-    public async Task SendQuestionnaireCompletedEvent(HttpRequest request)
+    
+    public async Task SendBoilerQuestionViewedEventAsync(HttpRequest request)
     {
-        await SendEvent(new GaRequestBody
+        await SendEventAsync(new GaRequestBody
+        {
+            ClientId = GetClientId(request),
+            GaEvents = new List<GaEvent>
+            {
+                new()
+                {
+                    Name = EventNameBoilerQuestionViewed
+                }
+            }
+        });
+    }
+
+    public async Task SendQuestionnaireCompletedEventAsync(HttpRequest request)
+    {
+        await SendEventAsync(new GaRequestBody
         {
             ClientId = GetClientId(request),
             GaEvents = new List<GaEvent>
@@ -46,9 +58,9 @@ public class GoogleAnalyticsService
         });
     }
     
-    public async Task SendReferralGeneratedEvent(HttpRequest request)
+    public async Task SendReferralGeneratedEventAsync(HttpRequest request)
     {
-        await SendEvent(new GaRequestBody
+        await SendEventAsync(new GaRequestBody
         {
             ClientId = GetClientId(request),
             GaEvents = new List<GaEvent>
@@ -61,7 +73,7 @@ public class GoogleAnalyticsService
         });
     }
     
-    private async Task SendEvent(GaRequestBody body)
+    private async Task SendEventAsync(GaRequestBody body)
     {
         try
         {
