@@ -411,7 +411,7 @@ public class QuestionnaireTests
     }
     
     [TestCase(IncomeBand.GreaterThan31000)]
-    [TestCase(IncomeBand.GreaterThan34000)]
+    [TestCase(IncomeBand.GreaterThan34500)]
     public void IncomeIsTooHigh_ForHighIncomeBandAndNonLsoa_ReturnsTrue(IncomeBand incomeBand)
     {
         // Arrange
@@ -429,7 +429,7 @@ public class QuestionnaireTests
     }
     
     [TestCase(IncomeBand.GreaterThan31000)]
-    [TestCase(IncomeBand.GreaterThan34000)]
+    [TestCase(IncomeBand.GreaterThan34500)]
     public void IncomeIsTooHigh_ForHighIncomeBandAndLsoa_ReturnsFalse(IncomeBand incomeBand)
     {
         // Arrange
@@ -448,8 +448,8 @@ public class QuestionnaireTests
     
     [TestCase(IncomeBand.UnderOrEqualTo31000, true)]
     [TestCase(IncomeBand.UnderOrEqualTo31000, false)]
-    [TestCase(IncomeBand.UnderOrEqualTo34000, true)]
-    [TestCase(IncomeBand.UnderOrEqualTo34000, false)]
+    [TestCase(IncomeBand.UnderOrEqualTo34500, true)]
+    [TestCase(IncomeBand.UnderOrEqualTo34500, false)]
     public void IncomeIsTooHigh_ForLowIncomeBand_ReturnsFalse(IncomeBand incomeBand, bool isLsoa)
     {
         // Arrange
@@ -483,8 +483,8 @@ public class QuestionnaireTests
         result.Should().BeFalse();
     }
     
-    [TestCase(IncomeBand.GreaterThan34000)]
-    [TestCase(IncomeBand.UnderOrEqualTo34000)]
+    [TestCase(IncomeBand.GreaterThan34500)]
+    [TestCase(IncomeBand.UnderOrEqualTo34500)]
     public void IncomeBandIsValid_ForBadIncomeBand_ReturnsFalse(IncomeBand incomeBand)
     {
         // Arrange

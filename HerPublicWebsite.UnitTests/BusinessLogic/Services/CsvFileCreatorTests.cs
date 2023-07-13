@@ -52,9 +52,9 @@ public class CsvFileCreatorTests
     }
     
     [TestCase(IncomeBand.GreaterThan31000, "£31k or above")]
-    [TestCase(IncomeBand.GreaterThan34000, "£34k or above")]
+    [TestCase(IncomeBand.GreaterThan34500, "£34.5k or above")]
     [TestCase(IncomeBand.UnderOrEqualTo31000, "Below £31k")]
-    [TestCase(IncomeBand.UnderOrEqualTo34000, "Below £34k")]
+    [TestCase(IncomeBand.UnderOrEqualTo34500, "Below £34.5k")]
     public void CreateFileData_CalledWithReferralRequestWithIncomeAbove31k_GeneratesExpectedFileData(IncomeBand incomeBand, string expectedValue)
     {
         // Arrange
