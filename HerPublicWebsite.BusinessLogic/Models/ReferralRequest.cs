@@ -33,9 +33,7 @@ public class ReferralRequest
     public bool ReferralWrittenToCsv { get; set; } = false;
 
     public string ReferralCode { get; set; }
-
-
-
+    
     public ReferralRequest()
     {
     }

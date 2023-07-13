@@ -392,4 +392,130 @@ public class QuestionnaireTests
         // Assert
         result.Should().Be("https://www.aberdeenshire.gov.uk/");
     }
+    
+    [Test]
+    public void IncomeBandIsValid_ForNullCustodianCode_ReturnsFalse()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire()
+        {
+            CustodianCode = null,
+            IncomeBand = IncomeBand.GreaterThan31000
+        };
+        
+        // Act
+        var result = questionnaire.IncomeBandIsValid;
+        
+        // Assert
+        result.Should().BeFalse();
+    }
+    
+    [TestCase(IncomeBand.GreaterThan31000)]
+    [TestCase(IncomeBand.GreaterThan34500)]
+    public void IncomeIsTooHigh_ForHighIncomeBandAndNonLsoa_ReturnsTrue(IncomeBand incomeBand)
+    {
+        // Arrange
+        var questionnaire = new Questionnaire()
+        {
+            IncomeBand = incomeBand,
+            IsLsoaProperty = false
+        };
+        
+        // Act
+        var result = questionnaire.IncomeIsTooHigh;
+        
+        // Assert
+        result.Should().BeTrue();
+    }
+    
+    [TestCase(IncomeBand.GreaterThan31000)]
+    [TestCase(IncomeBand.GreaterThan34500)]
+    public void IncomeIsTooHigh_ForHighIncomeBandAndLsoa_ReturnsFalse(IncomeBand incomeBand)
+    {
+        // Arrange
+        var questionnaire = new Questionnaire()
+        {
+            IncomeBand = incomeBand,
+            IsLsoaProperty = true
+        };
+        
+        // Act
+        var result = questionnaire.IncomeIsTooHigh;
+        
+        // Assert
+        result.Should().BeFalse();
+    }
+    
+    [TestCase(IncomeBand.UnderOrEqualTo31000, true)]
+    [TestCase(IncomeBand.UnderOrEqualTo31000, false)]
+    [TestCase(IncomeBand.UnderOrEqualTo34500, true)]
+    [TestCase(IncomeBand.UnderOrEqualTo34500, false)]
+    public void IncomeIsTooHigh_ForLowIncomeBand_ReturnsFalse(IncomeBand incomeBand, bool isLsoa)
+    {
+        // Arrange
+        var questionnaire = new Questionnaire()
+        {
+            IncomeBand = incomeBand,
+            IsLsoaProperty = isLsoa
+        };
+        
+        // Act
+        var result = questionnaire.IncomeIsTooHigh;
+        
+        // Assert
+        result.Should().BeFalse();
+    }
+    
+    [Test]
+    public void IncomeBandIsValid_ForNullIncomeBand_ReturnsFalse()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire()
+        {
+            CustodianCode = "9052", // Aberdeenshire is configure with a £31,000 threshold and shouldn't change as it isn't taking part in HUG2
+            IncomeBand = null
+        };
+        
+        // Act
+        var result = questionnaire.IncomeBandIsValid;
+        
+        // Assert
+        result.Should().BeFalse();
+    }
+    
+    [TestCase(IncomeBand.GreaterThan34500)]
+    [TestCase(IncomeBand.UnderOrEqualTo34500)]
+    public void IncomeBandIsValid_ForBadIncomeBand_ReturnsFalse(IncomeBand incomeBand)
+    {
+        // Arrange
+        var questionnaire = new Questionnaire()
+        {
+            CustodianCode = "9052", // Aberdeenshire is configure with a £31,000 threshold and shouldn't change as it isn't taking part in HUG2
+            IncomeBand = incomeBand
+        };
+        
+        // Act
+        var result = questionnaire.IncomeBandIsValid;
+        
+        // Assert
+        result.Should().BeFalse();
+    }
+    
+    [TestCase(IncomeBand.GreaterThan31000)]
+    [TestCase(IncomeBand.UnderOrEqualTo31000)]
+    public void IncomeBandIsValid_ForGoodIncomeBand_ReturnsTrue(IncomeBand incomeBand)
+    {
+        // Arrange
+        var questionnaire = new Questionnaire()
+        {
+            CustodianCode = "9052", // Aberdeenshire is configure with a £31,000 threshold and shouldn't change as it isn't taking part in HUG2
+            IncomeBand = incomeBand
+        };
+        
+        // Act
+        var result = questionnaire.IncomeBandIsValid;
+        
+        // Assert
+        result.Should().BeTrue();
+    }
 }
