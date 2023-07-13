@@ -13,7 +13,10 @@
     Func<object, object> otherGovernmentSchemesSection =
         @<text>
             <h2 class="govuk-heading-m">Other government schemes</h2>
-            <p class="govuk-body">If you are on certain benefits you might be eligible for <a class="govuk-link" href="https://www.gov.uk/energy-company-obligation">Energy Company Obligation (ECO)</a>.</p>
+            @if (!Model.EpcIsTooHigh)
+            {
+                <p class="govuk-body">If you are on certain benefits you might be eligible for <a class="govuk-link" href="https://www.gov.uk/energy-company-obligation">Energy Company Obligation (ECO)</a>.</p>
+            }
             <p class="govuk-body">You can also check if you might be eligible for the <a class="govuk-link" href="https://www.gov.uk/apply-boiler-upgrade-scheme/check-if-youre-eligible">Boiler Upgrade Scheme (BUS)</a>.</p>
          </text>;
 
