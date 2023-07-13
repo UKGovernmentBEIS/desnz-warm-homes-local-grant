@@ -30,9 +30,6 @@ namespace HerPublicWebsite.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CustodianCode")
-                        .HasColumnType("text");
-
                     b.Property<DateTime?>("EpcLodgementDate")
                         .HasColumnType("timestamp without time zone");
 
