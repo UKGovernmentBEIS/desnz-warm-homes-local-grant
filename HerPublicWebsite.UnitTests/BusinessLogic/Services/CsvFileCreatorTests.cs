@@ -51,12 +51,15 @@ public class CsvFileCreatorTests
 "2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,,2023-01-01 15:00:01,no,Below £31k,no,Owner\r\n");
     }
     
-    [Test]
-    public void CreateFileData_CalledWithReferralRequestWithIncomeAbove31k_GeneratesExpectedFileData()
+    [TestCase(IncomeBand.GreaterThan31000, "£31k or above")]
+    [TestCase(IncomeBand.GreaterThan34000, "£34k or above")]
+    [TestCase(IncomeBand.UnderOrEqualTo31000, "Below £31k")]
+    [TestCase(IncomeBand.UnderOrEqualTo34000, "Below £34k")]
+    public void CreateFileData_CalledWithReferralRequestWithIncomeAbove31k_GeneratesExpectedFileData(IncomeBand incomeBand, string expectedValue)
     {
         // Arrange
         var underTest = new CsvFileCreator();
-        var referralRequest = new ReferralRequestBuilder(1).WithIncomeBand(IncomeBand.GreaterThan31000).Build();
+        var referralRequest = new ReferralRequestBuilder(1).WithIncomeBand(incomeBand).Build();
         var referralRequests = new List<ReferralRequest>() { referralRequest };
 
         // Act
@@ -66,7 +69,7 @@ public class CsvFileCreatorTests
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
 "Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Is off gas grid,Household income band,Is eligible postcode,Tenure\r\n" +
-"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,,2023-01-01 15:00:01,yes,£31k or above,no,Owner\r\n");
+$"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,,2023-01-01 15:00:01,yes,{expectedValue},no,Owner\r\n");
     }
 
     [Test]
