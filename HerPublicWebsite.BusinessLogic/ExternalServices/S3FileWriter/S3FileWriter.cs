@@ -2,6 +2,8 @@
 using Amazon.S3;
 using Amazon.S3.Transfer;
 using HerPublicWebsite.BusinessLogic.Services.S3ReferralFileKeyGenerator;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -12,15 +14,18 @@ public class S3FileWriter : IS3FileWriter
     private readonly S3FileWriterConfiguration config;
     private readonly ILogger logger;
     private readonly S3ReferralFileKeyGenerator keyGenerator;
+    private readonly IWebHostEnvironment environment;
 
     public S3FileWriter(
         IOptions<S3FileWriterConfiguration> options,
         ILogger<S3FileWriter> logger,
-        S3ReferralFileKeyGenerator keyGenerator)
+        S3ReferralFileKeyGenerator keyGenerator,
+        IWebHostEnvironment environment)
     {
         this.config = options.Value;
         this.logger = logger;
         this.keyGenerator = keyGenerator;
+        this.environment = environment;
     }
 
     // Ideally we'd stream this file to S3 as we generate it. However S3 needs to know the file size up front so we
@@ -34,7 +39,22 @@ public class S3FileWriter : IS3FileWriter
         
         try
         {
-            var s3Client = new AmazonS3Client(RegionEndpoint.GetBySystemName(config.Region));
+            AmazonS3Client s3Client;
+            if (environment.IsEnvironment("Development"))
+            {
+                // For local development connect to a local instance of Minio
+                var clientConfig = new AmazonS3Config
+                {
+                    AuthenticationRegion = config.Region,
+                    ServiceURL = config.LocalDevOnly_ServiceUrl,
+                    ForcePathStyle = true,
+                };
+                s3Client = new AmazonS3Client(config.LocalDevOnly_AccessKey, config.LocalDevOnly_SecretKey, clientConfig);
+            }
+            else
+            {
+                s3Client = new AmazonS3Client(RegionEndpoint.GetBySystemName(config.Region));
+            }
 
             var fileTransferUtility = new TransferUtility(s3Client);
 
