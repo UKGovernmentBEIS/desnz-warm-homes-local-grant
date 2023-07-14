@@ -1,4 +1,6 @@
 using System;
+using Amazon;
+using Amazon.S3;
 using Community.Microsoft.Extensions.Caching.PostgreSql;
 using GovUkDesignSystem.ModelBinders;
 using Hangfire;
@@ -69,6 +71,7 @@ namespace HerPublicWebsite
             // This allows encrypted cookies to be understood across multiple web server instances
             services.AddDataProtection().PersistKeysToDbContext<HerDbContext>();
 
+            ConfigureS3Client(services);
             ConfigureS3FileWriter(services);
             ConfigureEpcApi(services);
             ConfigureOsPlacesApi(services);
@@ -165,11 +168,36 @@ namespace HerPublicWebsite
             services.Configure<GovUkNotifyConfiguration>(
                 configuration.GetSection(GovUkNotifyConfiguration.ConfigSection));
         }
-
+        
+        private void ConfigureS3Client(IServiceCollection services)
+        {
+            var s3Config = new S3Configuration();
+            configuration.GetSection(S3Configuration.ConfigSection).Bind(s3Config);
+            
+            if (webHostEnvironment.IsDevelopment())
+            {
+                services.AddScoped(_ =>
+                {
+                    // For local development connect to a local instance of Minio
+                    var clientConfig = new AmazonS3Config
+                    {
+                        AuthenticationRegion = s3Config.Region,
+                        ServiceURL = s3Config.LocalDevOnly_ServiceUrl,
+                        ForcePathStyle = true,
+                    };
+                    return new AmazonS3Client(s3Config.LocalDevOnly_AccessKey, s3Config.LocalDevOnly_SecretKey, clientConfig);
+                });
+            }
+            else
+            {
+                services.AddScoped(_ => new AmazonS3Client(RegionEndpoint.GetBySystemName(s3Config.Region)));
+            }
+        }
+        
         private void ConfigureS3FileWriter(IServiceCollection services)
         {
-            services.Configure<S3FileWriterConfiguration>(
-                configuration.GetSection(S3FileWriterConfiguration.ConfigSection));
+            services.Configure<S3Configuration>(
+                configuration.GetSection(S3Configuration.ConfigSection));
             services.AddScoped<IS3FileWriter, S3FileWriter>();
             services.AddScoped<S3ReferralFileKeyGenerator>();
         }

@@ -1,8 +1,6 @@
-﻿using Amazon;
+﻿namespace HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
 
-namespace HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
-
-public class S3FileWriterConfiguration
+public class S3Configuration
 {
     public const string ConfigSection = "S3";
 
