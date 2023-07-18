@@ -81,14 +81,14 @@ public class OsPlacesLpiDto
 
         var line1 = string.Join(", ", line1Parts.Where(p => !string.IsNullOrEmpty(p)));
         var line2 = string.Join(", ", line2Parts.Where(p => !string.IsNullOrEmpty(p)));
-        
+
         return new Address()
         {
             AddressLine1 = line1,
             AddressLine2 = line2,
             Town = ToTitleCase(TownName),
             Postcode = PostcodeLocator,
-            LocalCustodianCode = LocalCustodianCode,
+            LocalCustodianCode = LaMapping.GetCurrentCustodianCode(LocalCustodianCode),
             Uprn = Uprn
         };
     }
