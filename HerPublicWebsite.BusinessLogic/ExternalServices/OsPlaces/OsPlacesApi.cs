@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using HerPublicWebsite.BusinessLogic.Extensions;
 using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
 using HerPublicWebsite.BusinessLogic.Models;
@@ -11,6 +12,7 @@ public class OsPlacesApi : IOsPlacesApi
     private readonly OsPlacesConfiguration config;
     private readonly ILogger<OsPlacesApi> logger;
     private const int MaxResults = 100;
+    private readonly Regex NonAlphanumericCharacters = new Regex(@"[^a-zA-Z0-9]", RegexOptions.Compiled);
 
     public OsPlacesApi(IOptions<OsPlacesConfiguration> options, ILogger<OsPlacesApi> logger)
     {
@@ -66,12 +68,19 @@ public class OsPlacesApi : IOsPlacesApi
 
             var joinedAddresses = dpaAddresses.Concat(lpiAddresses.Where(la => !dpaUprns.Contains(la.Uprn))).ToList();
 
-            var filteredResults = buildingNameOrNumber is null
+            // Filter by the building name or number the user provided.
+            // Some users may fill in the full street address (e.g. 45 High Street), we'd like to match that if possible
+            var userFilterParts = NonAlphanumericCharacters
+                .Replace((buildingNameOrNumber ?? "").ToLower(), " ")
+                .Split(' ');
+
+            var filteredResults = userFilterParts.Length == 0
                 ? joinedAddresses
-                : joinedAddresses.Where(a =>
-                    a.AddressLine1.ToLower().Contains(buildingNameOrNumber.ToLower())
-                    || a.AddressLine2.ToLower().Contains(buildingNameOrNumber.ToLower()))
-                .ToList();
+                : joinedAddresses.Where(a => 
+                        userFilterParts.All(userFilterPart =>
+                            a.AddressLine1.ToLower().Contains(userFilterPart) ||
+                            a.AddressLine2.ToLower().Contains(userFilterPart)))
+                    .ToList();
 
             // If the filter doesn't match then show all the results we found.
             if (!filteredResults.Any())
