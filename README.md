@@ -54,8 +54,23 @@ For critical bug fixes on production
 - Install EF Core CLI tools (https://docs.microsoft.com/en-us/ef/core/cli/dotnet)
 - Node v14+ (https://nodejs.org/en/)
 - If you're using Rider then you will need to install the ".net core user secrets" plugin
+- If you need to work on the S3 file writing code, download and configure Minio for Windows (https://min.io/download#/windows) (see below)
 
 In HerPublicWebsite run `npm install`
+
+#### Minio
+
+The portal site lists files hosted in an S3 bucket. For local development we need a fake S3 bucket to connect to.
+To use [Minio](https://min.io/) to provide a local S3 bucket follow these steps:
+1. [Download minio](https://min.io/download#/windows)
+2. Put the executable somewhere on your machine (e.g. c:\Program Files\Minio)
+3. Decide on a folder for Minio to store its data in (e.g. c:\data\minio)
+4. In a PowerShell window go to the folder that you put Minio in
+5. Run `.\minio.exe server <path to data folder> --console-address :9090`
+6. The first time that you do this:
+   1. Visit http://localhost:9090
+   2. Login (default is minioadmin/minioadmin)
+   3. Create a new bucket called `desnz-her-portal-referrals`
 
 ### GovUkDesignSystem
 
@@ -114,6 +129,7 @@ cat secrets.json | dotnet user-secrets set
 
 ### Running Locally
 
+- If you're working on the S3 writing code, in your Minio folder run Minio `.\minio.exe server <path to data folder> --console-address :9090`
 - In Visual Studio / Rider build the solution
 - In `HerPublicWebsite` run `npm run watch`
 - In Visual Studio / Rider run the `HerPublicWebsite` project
