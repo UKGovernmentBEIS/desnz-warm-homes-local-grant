@@ -59,8 +59,8 @@ public class OsPlacesApiTests
             },
             new()
             {
-                AddressLine1 = "86, Test Road",
-                AddressLine2 = "",
+                AddressLine1 = "Flat 1",
+                AddressLine2 = "86, Test Road",
                 Town = "London",
                 Postcode = "AB1 2CD",
                 County = null,
@@ -122,6 +122,70 @@ public class OsPlacesApiTests
     }
     
     [Test]
+    public async Task GetAddressesAsync_CalledWithFullStreetAddress_OnlyReturnsMatch()
+    {
+        // Arrange
+        mockHttpHandler.Expect("http://test.com/search/places/v1/postcode?postcode=AB1%202CD")
+            .WithHeaders("Key", "testKey")
+            .Respond("application/json", DummyResponseWithJustLpiData);
+
+        // Act
+        var result = await underTest.GetAddressesAsync("AB1 2CD", "85 Test Road");
+        
+        // Assert
+        result.Count.Should().Be(1);
+        result.Single().AddressLine1.Should().Be("85, Test Road");
+    }
+    
+    [Test]
+    public async Task GetAddressesAsync_CalledWithPartialStreetAddress_OnlyReturnsMatch()
+    {
+        // Arrange
+        mockHttpHandler.Expect("http://test.com/search/places/v1/postcode?postcode=AB1%202CD")
+            .WithHeaders("Key", "testKey")
+            .Respond("application/json", DummyResponseWithJustLpiData);
+
+        // Act
+        var result = await underTest.GetAddressesAsync("AB1 2CD", "85 Test");
+        
+        // Assert
+        result.Count.Should().Be(1);
+        result.Single().AddressLine1.Should().Be("85, Test Road");
+    }
+    
+    [Test]
+    public async Task GetAddressesAsync_CalledWithPartialStreetAddressFromLine2_OnlyReturnsMatch()
+    {
+        // Arrange
+        mockHttpHandler.Expect("http://test.com/search/places/v1/postcode?postcode=AB1%202CD")
+            .WithHeaders("Key", "testKey")
+            .Respond("application/json", DummyResponseWithJustLpiData);
+
+        // Act
+        var result = await underTest.GetAddressesAsync("AB1 2CD", "86 Test");
+        
+        // Assert
+        result.Count.Should().Be(1);
+        result.Single().AddressLine1.Should().Be("Flat 1");
+    }
+    
+    [Test]
+    public async Task GetAddressesAsync_CalledWithExtraPunctuation_OnlyReturnsMatch()
+    {
+        // Arrange
+        mockHttpHandler.Expect("http://test.com/search/places/v1/postcode?postcode=AB1%202CD")
+            .WithHeaders("Key", "testKey")
+            .Respond("application/json", DummyResponseWithJustLpiData);
+
+        // Act
+        var result = await underTest.GetAddressesAsync("AB1 2CD", ",85-Test.Road");
+        
+        // Assert
+        result.Count.Should().Be(1);
+        result.Single().AddressLine1.Should().Be("85, Test Road");
+    }
+    
+    [Test]
     public async Task GetAddressesAsync_CalledWithoutMatchingHouseNumber_ReturnsAllResults()
     {
         // Arrange
@@ -135,7 +199,7 @@ public class OsPlacesApiTests
         // Assert
         result.Count.Should().Be(2);
         result.Should().ContainSingle(a => a.AddressLine1 == "85, Test Road");
-        result.Should().ContainSingle(a => a.AddressLine1 == "86, Test Road");
+        result.Should().ContainSingle(a => a.AddressLine1 == "Flat 1");
     }
 
     [Test]
@@ -268,7 +332,8 @@ public class OsPlacesApiTests
   {
     ""LPI"" : {
         ""UPRN"" : ""12345678905"",
-        ""ADDRESS"" : ""86, TEST ROAD, LONDON, KENSINGTON AND CHELSEA, AB1 2CD"",
+        ""SAO_TEXT"" : ""Flat 1"",
+        ""ADDRESS"" : ""FLAT 1, 86, TEST ROAD, LONDON, KENSINGTON AND CHELSEA, AB1 2CD"",
         ""USRN"" : ""21701205"",
         ""LPI_KEY"" : ""5600L000091364"",
         ""PAO_START_NUMBER"" : ""86"",
