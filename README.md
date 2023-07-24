@@ -90,6 +90,16 @@ If you need to make changes to the GovUkDesignSystem (e.g. to add a new componen
 - Get the PR reviewed and merged
 - From time to time create a PR to merge the `master` branch back to the Cabinet Office repository (https://github.com/cabinetoffice/govuk-design-system-dotnet)
 
+#### GOV.UK Frontend
+
+The GovUkDesignSystem project relies on the GOV.UK Frontend NPM package which contains images, fonts, styling, and JavaScript. When updating
+the GovUkDesignSystem you may also need to update the GOV.UK Frontend NPM package. To do this:
+
+- Update the version number of the GOV.UK Frontend package in package.json
+- Run `npm install`
+- Run `npm run update-govuk-assets`
+- Run `npm run build`
+
 ### APIs
 
 The app communicates with a number of APIs. You will need to obtain and configure credentials for these APIs in your user secrets file.
