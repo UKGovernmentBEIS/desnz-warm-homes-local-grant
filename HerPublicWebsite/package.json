@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "The public-facing website of the Home Upgrade Grant service",
   "dependencies": {
-    "govuk-frontend": "^4.0.0",
+    "govuk-frontend": "4.2.0",
     "html5shiv": "^3.7.3",
     "readline": "^1.3.0",
     "sass": "^1.49.0",

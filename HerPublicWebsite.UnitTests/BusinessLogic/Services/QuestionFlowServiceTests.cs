@@ -612,6 +612,16 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.CheckAnswers),
         new(
+            "Address selection continues to household income if authority is correct but income band is invalid and was changing answer",
+            new Input(
+                QuestionFlowStep.SelectAddress,
+                epcRating: EpcRating.D,
+                entryPoint: QuestionFlowStep.Address,
+                incomeBand: IncomeBand.GreaterThan31000,
+                custodianCode: "505" // Cambridge has income bands based on £34,000
+            ),
+            QuestionFlowStep.HouseholdIncome),
+        new(
             "Address selection continues to review EPC if EPC is high and was changing answer",
             new Input(
                 QuestionFlowStep.SelectAddress,
@@ -636,6 +646,16 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.CheckAnswers),
         new(
+            "Review EPC continues to household income if authority is correct but income band is invalid and was changing answer",
+            new Input(
+                QuestionFlowStep.ReviewEpc,
+                epcDetailsAreCorrect: EpcConfirmation.Yes,
+                entryPoint: QuestionFlowStep.Address,
+                incomeBand: IncomeBand.GreaterThan31000,
+                custodianCode: "505" // Cambridge has income bands based on £34,000
+            ),
+            QuestionFlowStep.HouseholdIncome),
+        new(
             "Review EPC continues to check answers if EPC is correct and was changing answer",
             new Input(
                 QuestionFlowStep.ReviewEpc,
@@ -658,13 +678,23 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
         new(
-            "Confirm local authority continues to select local authority if authority is incorrect if was changing answer",
+            "Confirm local authority continues to select local authority if authority is incorrect and was changing answer",
             new Input(
                 QuestionFlowStep.ConfirmLocalAuthority,
                 localAuthorityIsCorrect: false,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.SelectLocalAuthority),
+        new(
+            "Confirm local authority continues to household income if authority is correct but income band is invalid and was changing answer",
+            new Input(
+                QuestionFlowStep.ConfirmLocalAuthority,
+                localAuthorityIsCorrect: true,
+                entryPoint: QuestionFlowStep.Address,
+                incomeBand: IncomeBand.GreaterThan31000,
+                custodianCode: "505" // Cambridge has income bands based on £34,000
+            ),
+            QuestionFlowStep.HouseholdIncome),
         new(
             "Confirm local authority continues to check answers if authority is correct if was changing answer",
             new Input(
@@ -729,9 +759,9 @@ public class QuestionFlowServiceTests
             EpcConfirmation epcDetailsAreCorrect = EpcConfirmation.Yes,
             EpcRating? epcRating = null,
             DateTime? epcExpiry = null,
-            IncomeBand? incomeBand = null,
+            IncomeBand? incomeBand = IncomeBand.UnderOrEqualTo31000,
             bool localAuthorityIsCorrect = false,
-            string custodianCode = null,
+            string custodianCode = "3805", // Adur has income threshold of £31,000
             QuestionFlowStep? entryPoint = null)
         {
             Page = page;

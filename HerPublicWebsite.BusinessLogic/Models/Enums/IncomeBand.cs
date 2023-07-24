@@ -10,5 +10,9 @@ public enum IncomeBand
     [GovUkRadioCheckboxLabelText(Text = "£31,000 or less")]
     UnderOrEqualTo31000,
     [GovUkRadioCheckboxLabelText(Text = "More than £31,000")]
-    GreaterThan31000
+    GreaterThan31000,
+    [GovUkRadioCheckboxLabelText(Text = "£34,500 or less")]
+    UnderOrEqualTo34500,
+    [GovUkRadioCheckboxLabelText(Text = "More than £34,500")]
+    GreaterThan34500
 }

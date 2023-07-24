@@ -165,16 +165,20 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep HouseholdIncomeBackDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
-            if (questionnaire.FoundEpcBandIsTooHigh)
+            if (entryPoint is QuestionFlowStep.HouseholdIncome)
+            {
+                return QuestionFlowStep.CheckAnswers;
+            }
+            else if (questionnaire.FoundEpcBandIsTooHigh)
             {
                 return QuestionFlowStep.ReviewEpc;
             }
-            return (entryPoint, questionnaire.Uprn) switch
+            else if (questionnaire.Uprn is null)
             {
-                (QuestionFlowStep.HouseholdIncome, _) => QuestionFlowStep.CheckAnswers,
-                (_, null) => QuestionFlowStep.ConfirmLocalAuthority,
-                _ => QuestionFlowStep.Address
-            };
+                return QuestionFlowStep.ConfirmLocalAuthority;
+            }
+
+            return QuestionFlowStep.Address;
         }
 
         private QuestionFlowStep CheckAnswersBackDestination(Questionnaire questionnaire)
@@ -243,22 +247,34 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
-            return (entryPoint, questionnaire.LocalAuthorityHug2Status, questionnaire.FoundEpcBandIsTooHigh) switch
+            if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotTakingPart)
             {
-                (_, LocalAuthorityData.Hug2Status.NotTakingPart, _) => QuestionFlowStep.NotTakingPart,
-                (_, _, true) => QuestionFlowStep.ReviewEpc,
-                (QuestionFlowStep.Address, _, _) => QuestionFlowStep.CheckAnswers,
-                _ => QuestionFlowStep.HouseholdIncome
-            };
+                return QuestionFlowStep.NotTakingPart;
+            }
+            else if (questionnaire.FoundEpcBandIsTooHigh)
+            {
+                return QuestionFlowStep.ReviewEpc;
+            }
+            // If the LA has changed and the income band the user selected previously is no longer valid then we don't
+            // go back to the check your answers page as the user will need to select a new income band.
+            else if (entryPoint is QuestionFlowStep.Address && questionnaire.IncomeBandIsValid)
+            {
+                return QuestionFlowStep.CheckAnswers;
+            }
+
+            return QuestionFlowStep.HouseholdIncome;
         }
 
         private QuestionFlowStep ReviewEpcForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
-            return entryPoint switch
+            // If the LA has changed and the income band the user selected previously is no longer valid then we don't
+            // go back to the check your answers page as the user will need to select a new income band.
+            if (entryPoint is QuestionFlowStep.Address && questionnaire.IncomeBandIsValid)
             {
-                QuestionFlowStep.Address => QuestionFlowStep.CheckAnswers,
-                _ => QuestionFlowStep.HouseholdIncome
-            };
+                return QuestionFlowStep.CheckAnswers;
+            }
+
+            return QuestionFlowStep.HouseholdIncome;
         }
 
         private QuestionFlowStep ManualAddressForwardDestination(Questionnaire questionnaire)
@@ -273,13 +289,22 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep ConfirmLocalAuthorityForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
-            return (entryPoint, questionnaire.LocalAuthorityHug2Status, questionnaire.LocalAuthorityConfirmed) switch
+            if (questionnaire.LocalAuthorityConfirmed is not true)
             {
-                (_, _, not true) => QuestionFlowStep.SelectLocalAuthority,
-                (_, LocalAuthorityData.Hug2Status.NotTakingPart, _) => QuestionFlowStep.NotTakingPart,
-                (QuestionFlowStep.Address, _, _) => QuestionFlowStep.CheckAnswers,
-                _ => QuestionFlowStep.HouseholdIncome
-            };
+                return QuestionFlowStep.SelectLocalAuthority;
+            }
+            else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotTakingPart)
+            {
+                return QuestionFlowStep.NotTakingPart;
+            }
+            // If the LA has changed and the income band the user selected previously is no longer valid then we don't
+            // go back to the check your answers page as the user will need to select a new income band.
+            else if (entryPoint is QuestionFlowStep.Address && questionnaire.IncomeBandIsValid)
+            {
+                return QuestionFlowStep.CheckAnswers;
+            }
+
+            return QuestionFlowStep.HouseholdIncome;
         }
 
         private QuestionFlowStep NotTakingPartForwardDestination(Questionnaire questionnaire)

@@ -155,7 +155,12 @@ public record Questionnaire
 
     public bool EpcIsTooHigh => EffectiveEpcBand is EpcRating.A or EpcRating.B or EpcRating.C;
 
-    public bool IncomeIsTooHigh => IncomeBand is IncomeBandEnum.GreaterThan31000 && IsLsoaProperty is not true;
+    public bool IncomeIsTooHigh => IncomeBand is (IncomeBandEnum.GreaterThan31000 or IncomeBandEnum.GreaterThan34500) && IsLsoaProperty is not true;
+
+    public bool IncomeBandIsValid =>
+        CustodianCode is not null
+        && IncomeBand is not null
+        && LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[CustodianCode].IncomeBandOptions.Contains(IncomeBand.Value);
 
     public void CreateUneditedData()
     {

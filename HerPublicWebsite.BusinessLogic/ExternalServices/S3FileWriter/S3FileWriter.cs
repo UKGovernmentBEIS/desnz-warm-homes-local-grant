@@ -1,5 +1,4 @@
-﻿using Amazon;
-using Amazon.S3;
+﻿using Amazon.S3;
 using Amazon.S3.Transfer;
 using HerPublicWebsite.BusinessLogic.Services.S3ReferralFileKeyGenerator;
 using Microsoft.Extensions.Logging;
@@ -9,18 +8,21 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
 
 public class S3FileWriter : IS3FileWriter
 {
-    private readonly S3FileWriterConfiguration config;
+    private readonly S3Configuration config;
     private readonly ILogger logger;
     private readonly S3ReferralFileKeyGenerator keyGenerator;
+    private readonly AmazonS3Client s3Client;
 
     public S3FileWriter(
-        IOptions<S3FileWriterConfiguration> options,
+        IOptions<S3Configuration> options,
         ILogger<S3FileWriter> logger,
-        S3ReferralFileKeyGenerator keyGenerator)
+        S3ReferralFileKeyGenerator keyGenerator,
+        AmazonS3Client s3Client)
     {
         this.config = options.Value;
         this.logger = logger;
         this.keyGenerator = keyGenerator;
+        this.s3Client = s3Client;
     }
 
     // Ideally we'd stream this file to S3 as we generate it. However S3 needs to know the file size up front so we
@@ -34,8 +36,6 @@ public class S3FileWriter : IS3FileWriter
         
         try
         {
-            var s3Client = new AmazonS3Client(RegionEndpoint.GetBySystemName(config.Region));
-
             var fileTransferUtility = new TransferUtility(s3Client);
 
             await fileTransferUtility.UploadAsync(fileContent, config.BucketName, keyName);
