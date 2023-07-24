@@ -16,11 +16,10 @@ public class StaticPagesController : Controller
     [HttpGet("/")]
     public IActionResult Index()
     {
-        // TODO: BEISHER-504 enable redirect to gov pages
-        // if (environment.IsProduction())
-        // {
-        //     return Redirect(Constants.SERVICE_URL);
-        // }
+        if (environment.IsProduction())
+        {
+            return Redirect(Constants.SERVICE_URL);
+        }
 
         return View("Index");
     }
