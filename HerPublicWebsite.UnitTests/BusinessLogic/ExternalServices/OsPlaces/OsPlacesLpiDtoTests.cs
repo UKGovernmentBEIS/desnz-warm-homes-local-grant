@@ -163,4 +163,60 @@ public class OsPlacesLpiDtoTests
         // Assert
         result.Should().Be(expectedResult);
     }
+    
+    
+    // Normal
+    [TestCase("505", "505")]
+    [TestCase("4325", "4325")]
+    // Somerset
+    [TestCase("3305", "3300")]
+    [TestCase("3310", "3300")]
+    [TestCase("3300", "3300")]
+    [TestCase("3330", "3300")]
+    [TestCase("3325", "3300")]
+    // Cumberland
+    [TestCase("905", "940")]
+    [TestCase("915", "940")]
+    [TestCase("920", "940")]
+    [TestCase("940", "940")]
+    // North Yorkshire
+    [TestCase("2705", "2745")]
+    [TestCase("2710", "2745")]
+    [TestCase("2715", "2745")]
+    [TestCase("2745", "2745")]
+    [TestCase("2720", "2745")]
+    [TestCase("2725", "2745")]
+    [TestCase("2730", "2745")]
+    [TestCase("2735", "2745")]
+    // Westmorland and Furness
+    [TestCase("910", "935")]
+    [TestCase("925", "935")]
+    [TestCase("930", "935")]
+    [TestCase("935", "935")]
+    // Buckinghamshire
+    [TestCase("405", "440")]
+    [TestCase("410", "440")]
+    [TestCase("415", "440")]
+    [TestCase("425", "440")]
+    [TestCase("440", "440")]
+    public void Parse_GivenCustodianCodes_MapsCodeOnlyWhenMerged(string givenCustodianCode, string expectedCustodianCode)
+    {
+        // Arrange
+        var underTest = new OsPlacesLpiDto
+        {
+            PaoText = "UNIT 1",
+            StreetDescription = "EXAMPLE ROAD",
+            TownName = "EXAMPLETON",
+            AdministrativeArea = "EXAMPLESHIRE",
+            PostcodeLocator = "AB1 2CD",
+            Uprn = "123456789012",
+            LocalCustodianCode = givenCustodianCode
+        };
+        
+        // Act
+        var result = underTest.Parse();
+        
+        // Assert
+        result.LocalCustodianCode.Should().Be(expectedCustodianCode);
+    }
 }

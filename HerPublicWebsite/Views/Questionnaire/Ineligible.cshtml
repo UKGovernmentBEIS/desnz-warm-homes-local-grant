@@ -9,6 +9,45 @@
 
 @{
     ViewBag.Title = "You are not eligible";
+
+    Func<object, object> otherGovernmentSchemesSection =
+        @<text>
+            <h2 class="govuk-heading-m">Other government schemes</h2>
+            @if (!Model.EpcIsTooHigh)
+            {
+                <p class="govuk-body">If you are on certain benefits you might be eligible for <a class="govuk-link" href="https://www.gov.uk/energy-company-obligation">Energy Company Obligation (ECO)</a>.</p>
+            }
+            <p class="govuk-body">You can also check if you might be eligible for the <a class="govuk-link" href="https://www.gov.uk/apply-boiler-upgrade-scheme/check-if-youre-eligible">Boiler Upgrade Scheme (BUS)</a>.</p>
+         </text>;
+
+    Func<object, object> contactYourLaSection =
+        @<text>
+            <h2 class="govuk-heading-m">Contact your local authority</h2>
+            <p class="govuk-body">
+                <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName</a> might have
+                additional grants or supports available. Contact them to find out more or visit their website.
+            </p>
+            <p class="govuk-body">
+                Based on the postcode and address you provided, your local authority is <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName</a>.
+                If this does not look right, you can <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your local council here</a>
+            </p>
+         </text>;
+    
+    Func<object, object> yourLaMayBeAbleToHelpSection =
+        @<text>
+            <h2 class="govuk-heading-m">Your local authority may be able to help</h2>
+            <p class="govuk-body">
+                Many local authorities have additional support available and can determine your eligibility using different
+                methods. Contact <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName</a>
+                to find out what support you could get.
+            </p>
+            <p class="govuk-body">
+                Based on the postcode and address you provided, your local authority is <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName</a>.
+                If this does not look right, you can <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your local council here</a>
+            </p>
+         </text>;
+
+    var incomeHighButEpcLow = !Model.EpcIsTooHigh && Model.IncomeIsTooHigh;
 }
 
 @section BeforeMain {
@@ -24,35 +63,38 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         
-        <h1 class="govuk-heading-l">You are not eligible</h1>
+        <h1 class="govuk-heading-l">We do not think you are eligible</h1>
         
         <p class="govuk-body">
             @{
                 switch (Model.EpcIsTooHigh, Model.IncomeIsTooHigh)  {
                     case (true, true):
                         <text>
-                            You are not eligible for the Home Upgrade Grant because your EPC rating is A, B, or C and your income is more than £31,000 but you may be able to get other help for your energy needs.
-                         </text>;
+                            We do not think you are eligible for the Home Upgrade Grant because your EPC rating is A, B, or C and your income is more than £31,000 but you may be able to get other help for your energy needs.
+                        </text>;
                         break;
                     case (true, false):
                         <text>
-                            You are not eligible for the Home Upgrade Grant because your EPC rating is A, B, or C but you may be able to get other help for your energy needs.
-                         </text>;
+                            We do not think you are eligible for the Home Upgrade Grant because your EPC rating is A, B, or C but you may be able to get other help for your energy needs.
+                        </text>;
                         break;
                     default:
                         <text>
-                            You are not eligible for the Home Upgrade Grant because your income is more than £31,000 but you may be able to get other help for your energy needs.
-                         </text>;
+                            We do not think you are eligible for the Home Upgrade Grant because your income is more than £31,000 but you may be able to get other help for your energy needs.
+                        </text>;
                         break;
-                    };
+                };
             }
-       </p>
+        </p>
         
-        <h2 class="govuk-heading-m">Other government schemes</h2>
-
-        <p class="govuk-body">If you are on certain benefits you might be eligible for <a class="govuk-link" href="https://www.gov.uk/energy-company-obligation">Energy Company Obligation (ECO)</a>.</p>
-                              
-        <p class="govuk-body">You can also check if you might be eligible for the <a class="govuk-link" href="https://www.gov.uk/apply-boiler-upgrade-scheme/check-if-youre-eligible">Boiler Upgrade Scheme (BUS)</a>.</p>
+        @if (incomeHighButEpcLow)
+        {
+            @yourLaMayBeAbleToHelpSection(new object())
+        }
+        else
+        {
+            @otherGovernmentSchemesSection(new object())
+        }
         
         @if (Model.Submitted)
         {
@@ -112,16 +154,15 @@
             </form>
         }
         
-        <h2 class="govuk-heading-m">Contact your local authority</h2>
-        <p class="govuk-body">
-            <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName</a> might have
-            additional grants or supports available. Contact them to find out more or visit their website.
-        </p>
-        <p class="govuk-body">
-            Based on the postcode and address you provided, your local authority is <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName</a>.
-            If this does not look right, you can <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your local council here</a>
-        </p>
-        
+        @if (incomeHighButEpcLow)
+        {
+            @otherGovernmentSchemesSection(new object())
+        }
+        else
+        {
+            @contactYourLaSection(new object())
+        }
+
         <h2 class="govuk-heading-m">Find further support</h2>
         <p class="govuk-body">
             Other ways you might save energy can be found by:
