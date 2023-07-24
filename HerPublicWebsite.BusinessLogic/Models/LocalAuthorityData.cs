@@ -204,7 +204,7 @@ public class LocalAuthorityData
         { "5690", new LocalAuthorityDetails("London Borough of Lewisham", Hug2Status.Pending, "https://lewisham.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "3415", new LocalAuthorityDetails("Lichfield District Council", Hug2Status.Pending, "https://www.lichfielddc.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "2515", new LocalAuthorityDetails("City of Lincoln Council", Hug2Status.Pending, "http://www.lincoln.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
-        { "4310", new LocalAuthorityDetails("Liverpool City Council", Hug2Status.Live, "https://liverpool.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) }, // TODO: BEISHER-620 revert this after testing
+        { "4310", new LocalAuthorityDetails("Liverpool City Council", Hug2Status.Pending, "https://liverpool.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "5180", new LocalAuthorityDetails("London Borough of Bromley", Hug2Status.Pending, "https://www.bromley.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "5420", new LocalAuthorityDetails("London Borough of Haringey", Hug2Status.Pending, "https://www.haringey.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "5540", new LocalAuthorityDetails("London Borough of Hounslow", Hug2Status.Pending, "https://www.hounslow.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },

@@ -13,7 +13,7 @@ Migrations will be run automatically on deployment. If a migration needs to be r
    2. [Install EF Core CLI tools](https://docs.microsoft.com/en-us/ef/core/cli/dotnet) if you haven't already
    3. Generate a rollback script using `dotnet ef migrations script 2022010112345678_BadMigration 2022010112345678_LastGoodMigration -o revert.sql` from the `HerPublicWebsite` directory
    4. Review the script 
-   5. TODO Add instructions for running the script on the Azure environment
+   5. Connect to the database and run the script
 
 ## Development
 
