@@ -48,7 +48,7 @@ public class QuestionnaireController : Controller
     [ExcludeFromSessionExpiry]
     public IActionResult Index()
     {
-        return RedirectToAction(nameof(StaticPagesController.Index), "StaticPages");
+        return RedirectToAction(nameof(GasBoiler_Get), "Questionnaire");
     }
 
     [HttpGet("boiler")]
