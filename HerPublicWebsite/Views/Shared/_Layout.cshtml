@@ -2,16 +2,18 @@
 @using GovUkDesignSystem.GovUkDesignSystemComponents
 @using HerPublicWebsite.ExternalServices.GoogleAnalytics
 @using HerPublicWebsite.Controllers
-@using HerPublicWebsite.Helpers
 @using HerPublicWebsite.Middleware
 @using HerPublicWebsite.Services
 @using HerPublicWebsite.Services.Cookies
+@using Microsoft.Extensions.Hosting
 @inject StaticAssetsVersioningService StaticAssetsVersioning
 @inject CookieService CookieService
 @inject GoogleAnalyticsService GoogleAnalytics
 @{
     string assetsPath = "/assets/images";
 }
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
+
 <!DOCTYPE html>
 <html lang="en" class="govuk-template app-html-class">
 <head>
@@ -75,7 +77,7 @@
             ServiceName = Constants.SERVICE_NAME,
             AssetsPath = assetsPath,
             HomepageUrl = "https://www.gov.uk",
-            ServiceUrl = Url.Action(nameof(StaticPagesController.Index), "StaticPages"),
+            ServiceUrl = WebHostEnvironment.IsProduction() ? Constants.SERVICE_URL : Url.Action(nameof(StaticPagesController.Index), "StaticPages"),
             Navigation = headerNavigationLinks
         }))
 
