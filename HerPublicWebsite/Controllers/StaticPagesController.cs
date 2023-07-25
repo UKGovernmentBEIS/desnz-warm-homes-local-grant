@@ -18,7 +18,7 @@ public class StaticPagesController : Controller
     {
         if (environment.IsProduction())
         {
-            return Redirect(Constants.SERVICE_URL);
+            return RedirectToAction(nameof(QuestionnaireController.GasBoiler_Get), "Questionnaire");
         }
 
         return View("Index");
