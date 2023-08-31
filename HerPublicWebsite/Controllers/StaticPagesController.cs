@@ -16,12 +16,7 @@ public class StaticPagesController : Controller
     [HttpGet("/")]
     public IActionResult Index()
     {
-        if (environment.IsProduction())
-        {
-            return RedirectToAction(nameof(QuestionnaireController.GasBoiler_Get), "Questionnaire");
-        }
-
-        return View("Index");
+        return RedirectToAction(nameof(QuestionnaireController.GasBoiler_Get), "Questionnaire");
     }
 
     [HttpGet("/accessibility-statement")]
