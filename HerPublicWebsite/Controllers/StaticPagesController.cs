@@ -16,7 +16,7 @@ public class StaticPagesController : Controller
     [HttpGet("/")]
     public IActionResult Index()
     {
-        return RedirectToAction(nameof(QuestionnaireController.GasBoiler_Get), "Questionnaire");
+        return Redirect("https://www.gov.uk/apply-home-upgrade-grant");
     }
 
     [HttpGet("/accessibility-statement")]
