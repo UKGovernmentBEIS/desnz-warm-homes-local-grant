@@ -67,7 +67,7 @@ public class QuestionnaireController : Controller
         var viewModel = new GasBoilerViewModel
         {
             HasGasBoiler = questionnaire.HasGasBoiler,
-            BackLink = GetBackUrl(QuestionFlowStep.GasBoiler, questionnaire, entryPoint)
+            BackLink = "https://www.gov.uk/apply-home-upgrade-grant"
         };
 
         return View("GasBoiler", viewModel);
