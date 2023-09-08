@@ -19,6 +19,8 @@ public class GoogleAnalyticsService
     private const string EventNameBoilerQuestionViewed = "boiler_question_viewed";
     private const string EventNameQuestionnaireCompleted = "questionnaire_completed";
     private const string EventNameReferralGenerated = "referral_generated";
+    private const string EventNameDigitalAssistance = "digital_assistance";
+
     
     public GoogleAnalyticsService(
         IOptions<GoogleAnalyticsConfiguration> options,
@@ -70,6 +72,25 @@ public class GoogleAnalyticsService
                     Name = EventNameReferralGenerated
                 }
             }
+        });
+    }
+    
+    public async Task SendDigitalAssistanceEventAsync(HttpRequest request)
+    {
+        await SendEventAsync(new GaRequestBody
+        {
+            ClientId = GetClientId(request),
+            GaEvents = new List<GaEvent>
+            {
+                new()
+                {
+                    Name = EventNameDigitalAssistance,
+                    Parameters = new Dictionary<string, object>
+                    {
+                        {"digitalassistance", true}
+                    }
+                }
+            },
         });
     }
     
