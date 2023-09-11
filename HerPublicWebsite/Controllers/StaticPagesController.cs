@@ -42,7 +42,7 @@ public class StaticPagesController : Controller
         return View("SessionExpired");
     }
     
-    [HttpGet("/digital-assistance")]
+    [HttpGet("/digitalassistance")]
     public async Task<IActionResult> DigitalAssistance()
     {
         await googleAnalyticsService.SendDigitalAssistanceEventAsync(Request);
