@@ -81,7 +81,7 @@ namespace HerPublicWebsite
             ConfigureDatabaseContext(services);
             ConfigureGoogleAnalyticsService(services);
 
-            if (!webHostEnvironment.IsDevelopment())
+            if (!webHostEnvironment.IsDevelopment() && !webHostEnvironment.IsProduction())
             {
                 services.Configure<BasicAuthMiddlewareConfiguration>(
                     configuration.GetSection(BasicAuthMiddlewareConfiguration.ConfigSection));
