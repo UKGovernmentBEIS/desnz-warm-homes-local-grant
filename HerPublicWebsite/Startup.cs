@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Amazon;
 using Amazon.S3;
 using Community.Microsoft.Extensions.Caching.PostgreSql;
@@ -236,7 +237,22 @@ namespace HerPublicWebsite
                 // In production we terminate TLS at the load balancer and redirect there
                 app.UseHttpsRedirection();
             }
-
+            
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path.StartsWithSegments("/robots.txt"))
+                {
+                    var robotsTxtPath = Path.Combine(env.ContentRootPath, "robots.txt");
+                    var output = "User-agent: *  \nDisallow: /";
+                    if (File.Exists(robotsTxtPath))
+                    {
+                        output = await File.ReadAllTextAsync(robotsTxtPath);
+                    }
+                    context.Response.ContentType = "text/plain";
+                    await context.Response.WriteAsync(output);
+                }
+                else await next();
+            });
 
             app.UseStaticFiles();
 
