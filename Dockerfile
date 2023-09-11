@@ -1,6 +1,6 @@
 # Learn about building .NET container images:
 # https://github.com/dotnet/dotnet-docker/blob/main/samples/README.md
-FROM node:18 AS node_base
+FROM public.ecr.aws/docker/library/node:18 AS node_base
 COPY HerPublicWebsite /HerPublicWebsite
 WORKDIR /HerPublicWebsite
 RUN npm ci
