@@ -274,7 +274,7 @@ namespace HerPublicWebsite
 
         private void ConfigureHttpBasicAuth(IApplicationBuilder app)
         {
-            if (!webHostEnvironment.IsDevelopment())
+            if (!webHostEnvironment.IsDevelopment()&& !webHostEnvironment.IsProduction())
             {
                 // Add HTTP Basic Authentication in our non-local-development and non-production environments
                 // to make sure people don't accidentally stumble across the site
