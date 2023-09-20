@@ -243,7 +243,7 @@ namespace HerPublicWebsite
                 if (context.Request.Path.StartsWithSegments("/robots.txt"))
                 {
                     var robotsTxtPath = Path.Combine(env.ContentRootPath, "robots.txt");
-                    var output = "User-agent: *  \nDisallow: /";
+                    var output = "User-agent: * \nAllow: /questionnaire/ \nDisallow: /";
                     if (File.Exists(robotsTxtPath))
                     {
                         output = await File.ReadAllTextAsync(robotsTxtPath);
