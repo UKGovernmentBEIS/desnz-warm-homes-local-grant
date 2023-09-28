@@ -139,6 +139,7 @@ namespace HerPublicWebsite
         {
             services.Configure<CookieServiceConfiguration>(
                 configuration.GetSection(CookieServiceConfiguration.ConfigSection));
+            
             // Change the default antiforgery cookie name so it doesn't include Asp.Net for security reasons
             services.AddAntiforgery(options =>
             {
@@ -169,12 +170,12 @@ namespace HerPublicWebsite
             services.Configure<GovUkNotifyConfiguration>(
                 configuration.GetSection(GovUkNotifyConfiguration.ConfigSection));
         }
-        
+
         private void ConfigureS3Client(IServiceCollection services)
         {
             var s3Config = new S3Configuration();
             configuration.GetSection(S3Configuration.ConfigSection).Bind(s3Config);
-            
+
             if (webHostEnvironment.IsDevelopment())
             {
                 services.AddScoped(_ =>
@@ -194,7 +195,7 @@ namespace HerPublicWebsite
                 services.AddScoped(_ => new AmazonS3Client(RegionEndpoint.GetBySystemName(s3Config.Region)));
             }
         }
-        
+
         private void ConfigureS3FileWriter(IServiceCollection services)
         {
             services.Configure<S3Configuration>(
@@ -237,7 +238,7 @@ namespace HerPublicWebsite
                 // In production we terminate TLS at the load balancer and redirect there
                 app.UseHttpsRedirection();
             }
-            
+
             app.Use(async (context, next) =>
             {
                 if (context.Request.Path.StartsWithSegments("/robots.txt"))
@@ -274,7 +275,7 @@ namespace HerPublicWebsite
 
         private void ConfigureHttpBasicAuth(IApplicationBuilder app)
         {
-            if (!webHostEnvironment.IsDevelopment()&& !webHostEnvironment.IsProduction())
+            if (!webHostEnvironment.IsDevelopment() && !webHostEnvironment.IsProduction())
             {
                 // Add HTTP Basic Authentication in our non-local-development and non-production environments
                 // to make sure people don't accidentally stumble across the site
