@@ -465,6 +465,48 @@ public class QuestionnaireController : Controller
                         );
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
+    
+    [HttpGet("pending")]
+    public IActionResult Pending_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new PendingViewModel()
+        {
+            LocalAuthorityName = questionnaire.LocalAuthorityName,
+            Submitted = emailPreferenceSubmitted,
+            EmailAddress = questionnaire.NotificationEmailAddress,
+            CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
+            EntryPoint = entryPoint,
+            BackLink = GetBackUrl(QuestionFlowStep.Pending, questionnaire, entryPoint)
+        };
+
+        return View("Pending", viewModel);
+    }
+
+    [HttpPost("pending")]
+    public async Task<IActionResult> Pending_Post(IneligibleViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return Pending_Get(viewModel.EntryPoint, false);
+        }
+
+        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
+            viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
+            viewModel.EmailAddress
+        );
+
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.Pending, questionnaire, viewModel.EntryPoint);
+        var forwardArgs = GetActionArgumentsForQuestion(
+            nextStep,
+            viewModel.EntryPoint,
+            extraRouteValues: new Dictionary<string, object>
+            {
+                { "emailPreferenceSubmitted", true }
+            }
+        );
+        return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
+    }
 
     [HttpGet("income")]
     public IActionResult HouseholdIncome_Get(QuestionFlowStep? entryPoint)
@@ -727,6 +769,7 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.SelectLocalAuthority => new PathByActionArguments(nameof(SelectLocalAuthority_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.ConfirmLocalAuthority => new PathByActionArguments(nameof(ConfirmLocalAuthority_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.NotTakingPart => new PathByActionArguments(nameof(NotTakingPart_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.Pending => new PathByActionArguments(nameof(Pending_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.HouseholdIncome => new PathByActionArguments(nameof(HouseholdIncome_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.CheckAnswers => new PathByActionArguments(nameof(CheckAnswers_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
             QuestionFlowStep.Ineligible => new PathByActionArguments(nameof(Ineligible_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
