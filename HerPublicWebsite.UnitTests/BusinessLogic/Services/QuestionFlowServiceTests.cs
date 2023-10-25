@@ -611,6 +611,7 @@ public class QuestionFlowServiceTests
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.CheckAnswers),
+        // disabling this test as we don't have live local authority on HUG2 with income bands based on £34,000 at the moment
         // new(
         //     "Address selection continues to household income if authority is correct but income band is invalid and was changing answer",
         //     new Input(
@@ -645,6 +646,7 @@ public class QuestionFlowServiceTests
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.CheckAnswers),
+        // disabling this test as we don't have live local authority on HUG2 with income bands based on £34,000 at the moment
         // new(
         //     "Review EPC continues to household income if authority is correct but income band is invalid and was changing answer",
         //     new Input(
@@ -685,6 +687,7 @@ public class QuestionFlowServiceTests
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.SelectLocalAuthority),
+        // disabling this test as we don't have live local authority on HUG2 with income bands based on £34,000 at the moment
         // new(
         //     "Confirm local authority continues to household income if authority is correct but income band is invalid and was changing answer",
         //     new Input(
@@ -761,7 +764,7 @@ public class QuestionFlowServiceTests
             DateTime? epcExpiry = null,
             IncomeBand? incomeBand = IncomeBand.UnderOrEqualTo31000,
             bool localAuthorityIsCorrect = false,
-            string custodianCode = "3505", // Babergh has income threshold of £31,000
+            string custodianCode = "3505", // Babergh has income threshold of £31,000 and is live
             QuestionFlowStep? entryPoint = null)
         {
             Page = page;

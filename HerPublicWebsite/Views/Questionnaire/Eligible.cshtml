@@ -22,24 +22,10 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
-        @if (Model.LocalAuthorityIsLiveWithHug2)
-        {
-            <h1 class="govuk-heading-l">We think you might be eligible</h1>
-        }
-        else
-        {
-            <h1 class="govuk-heading-l">We think you might be eligible but your local authority is not ready to process applications yet</h1>
-        }
+        
+        <h1 class="govuk-heading-l">We think you might be eligible</h1>
         
         <h2 class="govuk-heading-m">What to do next</h2>
-        
-        @if (!Model.LocalAuthorityIsLiveWithHug2)
-        {
-            <p class="govuk-body">Based on the information you provided, it looks like your local authority,
-                <strong>@Model.LocalAuthorityName or their official contractor</strong> is still onboarding.
-                This means that they might be slower to process your application.</p>
-        }
         
         <p class="govuk-body">We will send your answers and contact details to <strong>@Model.LocalAuthorityName or their official contractor</strong>.
             They will contact you for further information about your eligibility and property before they can book a home survey.</p>
