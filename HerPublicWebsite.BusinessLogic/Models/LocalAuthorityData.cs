@@ -61,7 +61,7 @@ public class LocalAuthorityData
         { "1010", new LocalAuthorityDetails("Bolsover District Council", Hug2Status.NotTakingPart, "https://www.bolsover.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "4205", new LocalAuthorityDetails("Bolton Metropolitan Borough Council", Hug2Status.NotTakingPart, "http://www.bolton.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "2505", new LocalAuthorityDetails("Boston Borough Council", Hug2Status.Pending, "https://www.boston.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
-        { "1260", new LocalAuthorityDetails("Bournemouth, Christchurch and Poole Council", Hug2Status.Pending, "https://www.bcpcouncil.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
+        { "1260", new LocalAuthorityDetails("Bournemouth, Christchurch and Poole Council", Hug2Status.Live, "https://www.bcpcouncil.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "335", new LocalAuthorityDetails("Bracknell Forest Council", Hug2Status.Pending, "https://www.bracknell-forest.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "4705", new LocalAuthorityDetails("City of Bradford Metropolitan District Council", Hug2Status.NotTakingPart, "https://www.bradford.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "1510", new LocalAuthorityDetails("Braintree District Council", Hug2Status.Pending, "http://www.braintree.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
