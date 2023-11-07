@@ -80,7 +80,7 @@ public class LocalAuthorityData
         { "4210", new LocalAuthorityDetails("Bury Metropolitan Borough Council", Hug2Status.NotTakingPart, "https://www.bury.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "6920", new LocalAuthorityDetails("Caerphilly County Borough Council", Hug2Status.NotTakingPart, "http://www.caerphilly.gov.uk", IncomeBandOptions[IncomeThreshold._31000]) },
         { "4710", new LocalAuthorityDetails("Calderdale Metropolitan Borough Council", Hug2Status.Pending, "http://www.calderdale.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
-        { "505", new LocalAuthorityDetails("Cambridge City Council", Hug2Status.Pending, "https://www.cambridge.gov.uk/", IncomeBandOptions[IncomeThreshold._34500]) }, // Part of Cambridge City Council Consortium
+        { "505", new LocalAuthorityDetails("Cambridge City Council", Hug2Status.Live, "https://www.cambridge.gov.uk/", IncomeBandOptions[IncomeThreshold._34500]) }, // Part of Cambridge City Council Consortium
         { "5210", new LocalAuthorityDetails("London Borough of Camden", Hug2Status.Pending, "https://www.camden.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "3405", new LocalAuthorityDetails("Cannock Chase District Council", Hug2Status.Pending, "http://www.cannockchasedc.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "2210", new LocalAuthorityDetails("Canterbury City Council", Hug2Status.Pending, "https://www.canterbury.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
@@ -128,7 +128,7 @@ public class LocalAuthorityData
         { "1355", new LocalAuthorityDetails("Durham County Council", Hug2Status.Pending, "http://www.durham.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "5270", new LocalAuthorityDetails("London Borough of Ealing", Hug2Status.Pending, "http://www.ealing.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "9060", new LocalAuthorityDetails("East Ayrshire Council", Hug2Status.NotTakingPart, "https://www.east-ayrshire.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
-        { "510", new LocalAuthorityDetails("East Cambridgeshire District Council", Hug2Status.Pending, "http://www.eastcambs.gov.uk/", IncomeBandOptions[IncomeThreshold._34500]) }, // Part of Cambridge City Council Consortium
+        { "510", new LocalAuthorityDetails("East Cambridgeshire District Council", Hug2Status.Live, "http://www.eastcambs.gov.uk/", IncomeBandOptions[IncomeThreshold._34500]) }, // Part of Cambridge City Council Consortium
         { "1105", new LocalAuthorityDetails("East Devon District Council", Hug2Status.Live, "http://eastdevon.gov.uk", IncomeBandOptions[IncomeThreshold._31000]) },
         { "9061", new LocalAuthorityDetails("East Dunbartonshire Council", Hug2Status.NotTakingPart, "https://www.eastdunbarton.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "1710", new LocalAuthorityDetails("East Hampshire District Council", Hug2Status.Live, "http://www.easthants.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
@@ -149,7 +149,7 @@ public class LocalAuthorityData
         { "1110", new LocalAuthorityDetails("Exeter City Council", Hug2Status.Live, "https://exeter.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "9065", new LocalAuthorityDetails("Falkirk Council", Hug2Status.NotTakingPart, "https://www.falkirk.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "1720", new LocalAuthorityDetails("Fareham Borough Council", Hug2Status.Live, "https://www.fareham.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
-        { "515", new LocalAuthorityDetails("Fenland District Council", Hug2Status.Pending, "http://www.fenland.gov.uk/", IncomeBandOptions[IncomeThreshold._34500]) }, // Part of Cambridge City Council Consortium
+        { "515", new LocalAuthorityDetails("Fenland District Council", Hug2Status.Live, "http://www.fenland.gov.uk/", IncomeBandOptions[IncomeThreshold._34500]) }, // Part of Cambridge City Council Consortium
         { "9066", new LocalAuthorityDetails("Fife Council", Hug2Status.NotTakingPart, "https://www.fife.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "6835", new LocalAuthorityDetails("Flintshire County Council", Hug2Status.NotTakingPart, "http://www.flintshire.gov.uk", IncomeBandOptions[IncomeThreshold._31000]) },
         { "2250", new LocalAuthorityDetails("Folkestone and Hythe District Council", Hug2Status.Pending, "https://www.folkestone-hythe.gov.uk/home", IncomeBandOptions[IncomeThreshold._31000]) },
@@ -182,7 +182,7 @@ public class LocalAuthorityData
         { "5510", new LocalAuthorityDetails("London Borough of Hillingdon", Hug2Status.Pending, "https://www.hillingdon.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "2420", new LocalAuthorityDetails("Hinckley and Bosworth Borough Council", Hug2Status.Pending, "https://www.hinckley-bosworth.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "3825", new LocalAuthorityDetails("Horsham District Council", Hug2Status.Live, "https://www.horsham.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
-        { "520", new LocalAuthorityDetails("Huntingdonshire District Council", Hug2Status.Pending, "https://www.huntingdonshire.gov.uk/", IncomeBandOptions[IncomeThreshold._34500]) }, // Part of Cambridge City Council Consortium
+        { "520", new LocalAuthorityDetails("Huntingdonshire District Council", Hug2Status.Live, "https://www.huntingdonshire.gov.uk/", IncomeBandOptions[IncomeThreshold._34500]) }, // Part of Cambridge City Council Consortium
         { "2330", new LocalAuthorityDetails("Hyndburn Borough Council", Hug2Status.Live, "https://www.hyndburnbc.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "9069", new LocalAuthorityDetails("Inverclyde Council", Hug2Status.NotTakingPart, "https://www.inverclyde.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "3515", new LocalAuthorityDetails("Ipswich Borough Council", Hug2Status.Live, "https://www.ipswich.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
@@ -297,7 +297,7 @@ public class LocalAuthorityData
         { "4625", new LocalAuthorityDetails("Solihull Metropolitan Borough Council", Hug2Status.Pending, "https://www.solihull.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "3300", new LocalAuthorityDetails("Somerset Council", Hug2Status.Pending, "https://www.somerset.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) }, // Somerset appears to now cover Mendip, Sedgemoor, Somerset West and Taunton, and South Somerset. 
         { "9076", new LocalAuthorityDetails("South Ayrshire Council", Hug2Status.NotTakingPart, "https://www.south-ayrshire.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
-        { "530", new LocalAuthorityDetails("South Cambridgeshire District Council", Hug2Status.Pending, "http://www.scambs.gov.uk/", IncomeBandOptions[IncomeThreshold._34500]) }, // Part of Cambridge City Council Consortium
+        { "530", new LocalAuthorityDetails("South Cambridgeshire District Council", Hug2Status.Live, "http://www.scambs.gov.uk/", IncomeBandOptions[IncomeThreshold._34500]) }, // Part of Cambridge City Council Consortium
         { "1040", new LocalAuthorityDetails("South Derbyshire District Council", Hug2Status.Pending, "https://www.southderbyshire.gov.uk", IncomeBandOptions[IncomeThreshold._31000]) },
         { "119", new LocalAuthorityDetails("South Gloucestershire Council", Hug2Status.Live, "http://www.southglos.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "1125", new LocalAuthorityDetails("South Hams District Council", Hug2Status.Pending, "http://www.southhams.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
