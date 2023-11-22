@@ -198,7 +198,7 @@ public class LocalAuthorityData
         { "4305", new LocalAuthorityDetails("Knowsley Metropolitan Borough Council", Hug2Status.Live, "http://www.knowsley.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "5660", new LocalAuthorityDetails("London Borough of Lambeth", Hug2Status.Pending, "http://www.lambeth.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "2335", new LocalAuthorityDetails("Lancaster City Council", Hug2Status.Live, "https://www.lancaster.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
-        { "4720", new LocalAuthorityDetails("Leeds City Council", Hug2Status.Pending, "https://www.leeds.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
+        { "4720", new LocalAuthorityDetails("Leeds City Council", Hug2Status.Live, "https://www.leeds.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "2465", new LocalAuthorityDetails("Leicester City Council", Hug2Status.Live, "https://www.leicester.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "1425", new LocalAuthorityDetails("Lewes District Council", Hug2Status.Pending, "https://www.lewes-eastbourne.gov.uk", IncomeBandOptions[IncomeThreshold._31000]) },
         { "5690", new LocalAuthorityDetails("London Borough of Lewisham", Hug2Status.Pending, "https://lewisham.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
