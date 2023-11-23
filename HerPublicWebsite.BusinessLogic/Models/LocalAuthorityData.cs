@@ -245,7 +245,7 @@ public class LocalAuthorityData
         { "2620", new LocalAuthorityDetails("North Norfolk District Council", Hug2Status.Pending, "https://www.north-norfolk.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "2840", new LocalAuthorityDetails("North Northamptonshire Council", Hug2Status.Pending, "https://www.northnorthants.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "121", new LocalAuthorityDetails("North Somerset Council", Hug2Status.Live, "http://www.n-somerset.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
-        { "4515", new LocalAuthorityDetails("North Tyneside Council", Hug2Status.Pending, "https://my.northtyneside.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
+        { "4515", new LocalAuthorityDetails("North Tyneside Council", Hug2Status.Live, "https://my.northtyneside.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "3705", new LocalAuthorityDetails("North Warwickshire Borough Council", Hug2Status.Pending, "https://www.northwarks.gov.uk/site/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "2435", new LocalAuthorityDetails("North West Leicestershire District Council", Hug2Status.Pending, "http://www.nwleics.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "2745", new LocalAuthorityDetails("North Yorkshire County Council", Hug2Status.Pending, "http://www.northyorks.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
