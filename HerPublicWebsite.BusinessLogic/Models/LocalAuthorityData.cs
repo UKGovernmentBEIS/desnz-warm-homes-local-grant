@@ -340,7 +340,7 @@ public class LocalAuthorityData
         { "2260", new LocalAuthorityDetails("Thanet District Council", Hug2Status.Pending, "http://thanet.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "1940", new LocalAuthorityDetails("Three Rivers District Council", Hug2Status.NotTakingPart, "http://www.threerivers.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "1595", new LocalAuthorityDetails("Thurrock Council", Hug2Status.Pending, "http://www.thurrock.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
-        { "2265", new LocalAuthorityDetails("Tonbridge and Malling Borough Council", Hug2Status.Pending, "https://www.tmbc.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
+        { "2265", new LocalAuthorityDetails("Tonbridge and Malling Borough Council", Hug2Status.Live, "https://www.tmbc.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "1165", new LocalAuthorityDetails("Torbay Council", Hug2Status.Live, "http://www.torbay.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "6945", new LocalAuthorityDetails("Torfaen County Borough Council", Hug2Status.NotTakingPart, "http://www.torfaen.gov.uk", IncomeBandOptions[IncomeThreshold._31000]) },
         { "1145", new LocalAuthorityDetails("Torridge District Council", Hug2Status.Live, "https://www.torridge.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
