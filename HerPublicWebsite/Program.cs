@@ -36,7 +36,7 @@ namespace HerPublicWebsite
                 .AddOrUpdate<RegularJobsService>(
                     "Nightly tasks",
                     rjs => rjs.RunNightlyTasksAsync(),
-                    "* * * * *");
+                    "30 0 * * *");
             
             app.Run();
         }
