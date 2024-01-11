@@ -60,7 +60,7 @@ public class RegularJobsService : IRegularJobsService
     public async Task<IList<ReferralRequest>> GetReferralsPassedTenWorkingDayThresholdWithNoFollowUp()
     {
         var startDate = await AddWorkingDaysToDateTime(DateTime.Now, -10);
-        var newReferrals = await dataProvider.GetReferralRequestsWithNoFollowUpBeforeDate(startDate);
+        var newReferrals = await dataProvider.GetReferralRequestsWithNoFollowUpAfterDate(startDate);
         return newReferrals;
     }
 
