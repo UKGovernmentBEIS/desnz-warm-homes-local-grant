@@ -9,7 +9,7 @@ public interface IRegularJobsService
     public Task RunNightlyTasksAsync();
     public Task WriteUnsubmittedReferralRequestToCsv();
     public Task<IList<ReferralRequest>> GetReferralsPassedTenWorkingDayThresholdWithNoFollowUp();
-    public Task<DateTime> AddWorkingDaysToDateTime(DateTime dateTime, int workingDaysToAdd);
+    public Task<DateTime> AddWorkingDaysToDateTime(DateTime initialDateTime, int workingDaysToAdd);
 }
 
 public class RegularJobsService : IRegularJobsService
