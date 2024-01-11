@@ -86,9 +86,4 @@ public class ReferralRequestBuilder
         referralRequest.EpcConfirmation = confirmation;
         return this;
     }
-
-    public ReferralRequestBuilder WithFollowUpEmailSent(Boolean followUpEmailSent) {
-        referralRequest.FollowUpEmailSent = followUpEmailSent;
-        return this;
-    }
 }
