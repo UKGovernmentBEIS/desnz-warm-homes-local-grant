@@ -2,59 +2,25 @@
 using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
 using HerPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+namespace HerPublicWebsite.BusinessLogic.Services.ReferralFollowUp;
 
-public interface IRegularJobsService
+public interface IReferralFollowUpService
 {
-    public Task RunNightlyTasksAsync();
-    public Task WriteUnsubmittedReferralRequestToCsv();
     public Task<IList<ReferralRequest>> GetReferralsPassedTenWorkingDayThresholdWithNoFollowUp();
     public Task<DateTime> AddWorkingDaysToDateTime(DateTime initialDateTime, int workingDaysToAdd);
 }
 
-public class RegularJobsService : IRegularJobsService
+public class ReferralFollowUpService : IReferralFollowUpService
 {
     private readonly IDataAccessProvider dataProvider;
-    private readonly IS3FileWriter s3FileWriter;
     private readonly CsvFileCreator.CsvFileCreator csvFileCreator;
 
-    public RegularJobsService(
+    public ReferralFollowUpService(
         IDataAccessProvider dataProvider,
-        IS3FileWriter s3FileWriter,
         CsvFileCreator.CsvFileCreator csvFileCreator)
     {
         this.dataProvider = dataProvider;
-        this.s3FileWriter = s3FileWriter;
         this.csvFileCreator = csvFileCreator;
-    }
-
-    public async Task RunNightlyTasksAsync()
-    {
-        await WriteUnsubmittedReferralRequestToCsv();
-        await GetReferralsPassedTenWorkingDayThresholdWithNoFollowUp();
-    }
-
-    public async Task WriteUnsubmittedReferralRequestToCsv() 
-    {
-        var newReferrals = await dataProvider.GetUnsubmittedReferralRequestsAsync();
-
-        foreach (var referralsByCustodianMonthAndYear in newReferrals.GroupBy(nr => new { nr.CustodianCode, nr.RequestDate.Month, nr.RequestDate.Year }))
-        {
-            var grouping = referralsByCustodianMonthAndYear.Key;
-            var referralsForFile = await dataProvider.GetReferralRequestsByCustodianAndRequestDateAsync(grouping.CustodianCode, grouping.Month, grouping.Year);
-
-            using (var fileData = csvFileCreator.CreateFileData(referralsForFile))
-            {
-                await s3FileWriter.WriteFileAsync(grouping.CustodianCode, grouping.Month, grouping.Year, fileData);
-            }
-
-            foreach (var referralRequest in referralsForFile)
-            {
-                referralRequest.ReferralWrittenToCsv = true;
-            }
-
-            await dataProvider.PersistAllChangesAsync();
-        }
     }
 
     public async Task<IList<ReferralRequest>> GetReferralsPassedTenWorkingDayThresholdWithNoFollowUp()
