@@ -1,28 +1,23 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using HerPublicWebsite.BusinessLogic;
-using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using NUnit.Framework;
-using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUp;
-using Moq;
 using RichardSzalay.MockHttp;
 using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
+using HerPublicWebsite.BusinessLogic.Services.WorkingDayHelper;
 
 namespace Tests.BusinessLogic.Services;
 
 [TestFixture]
-public class ReferralFollowUpServiceTests
+public class WorkingDayHelperServiceTests
 {
-    private IReferralFollowUpService referralFollowUpService;
-    private Mock<IDataAccessProvider> mockDataAccessProvider;
+    private IWorkingDayHelperService workingDayHelperService;
     private MockHttpMessageHandler mockHttpHandler;
     
     [SetUp]
     public void Setup()
     {
-        mockDataAccessProvider = new Mock<IDataAccessProvider>();
-        referralFollowUpService = new ReferralFollowUpService(mockDataAccessProvider.Object, new CsvFileCreator());
+        workingDayHelperService = new WorkingDayHelperService();
         mockHttpHandler = new MockHttpMessageHandler();
         HttpRequestHelper.handler = mockHttpHandler;
     }
@@ -54,8 +49,7 @@ public class ReferralFollowUpServiceTests
 }"
         );
         // Act
-        var newDateTime = await referralFollowUpService.AddWorkingDaysToDateTime(initialDateTime, -10);
-
+        var newDateTime = await workingDayHelperService.AddWorkingDaysToDateTime(initialDateTime, -10);
 
         // Assert
         newDateTime.Should().BeSameDateAs(new DateTime(2023, 03, 08));
