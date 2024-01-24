@@ -31,7 +31,7 @@ public class ReferralFollowUpServiceTests
     public async Task AddWorkingDaysToDateTime_WhenCalledOnADayFollowingABankHoliday_ReturnsThoseReferrals()
     {
         // Arrange
-        DateTime initialDateTime = new DateTime(2023, 03, 23);
+        var initialDateTime = new DateTime(2023, 03, 23);
         mockHttpHandler.Expect("https://www.gov.uk/bank-holidays.json")
             .Respond("application/json", @"{
   'england-and-wales': {

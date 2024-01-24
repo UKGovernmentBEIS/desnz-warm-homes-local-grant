@@ -31,9 +31,9 @@ public class ReferralFollowUpService : IReferralFollowUpService
 
     public async Task<DateTime> AddWorkingDaysToDateTime(DateTime initialDateTime, int workingDaysToAdd)
     {
-        int direction = workingDaysToAdd < 0 ? -1 : 1;
-        List<DateTime> holidays = await getHolidays();
-        DateTime newDateTime = initialDateTime;
+        var direction = workingDaysToAdd < 0 ? -1 : 1;
+        var holidays = await getHolidays();
+        var newDateTime = initialDateTime;
         while (workingDaysToAdd != 0)
             {
             newDateTime = newDateTime.AddDays(direction);
