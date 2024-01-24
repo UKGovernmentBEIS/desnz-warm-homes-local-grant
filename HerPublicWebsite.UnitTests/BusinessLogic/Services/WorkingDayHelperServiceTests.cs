@@ -23,7 +23,7 @@ public class WorkingDayHelperServiceTests
     }
     
     [Test]
-    public async Task AddWorkingDaysToDateTime_WhenCalledOnADayFollowingABankHoliday_ReturnsThoseReferrals()
+    public async Task AddWorkingDaysToDateTime_WhenCalledOnADayFollowingABankHoliday_CorrectlyCalculatesANewDate()
     {
         // Arrange
         var initialDateTime = new DateTime(2023, 03, 23);
