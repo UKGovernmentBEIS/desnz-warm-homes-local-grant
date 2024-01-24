@@ -26,8 +26,7 @@ public class ReferralFollowUpService : IReferralFollowUpService
     public async Task<IList<ReferralRequest>> GetReferralsPassedTenWorkingDayThresholdWithNoFollowUp()
     {
         var startDate = await AddWorkingDaysToDateTime(DateTime.Now, -10);
-        var newReferrals = await dataProvider.GetReferralRequestsWithNoFollowUpAfterDate(startDate);
-        return newReferrals;
+        return await dataProvider.GetReferralRequestsWithNoFollowUpAfterDate(startDate);
     }
 
     public async Task<DateTime> AddWorkingDaysToDateTime(DateTime initialDateTime, int workingDaysToAdd)
