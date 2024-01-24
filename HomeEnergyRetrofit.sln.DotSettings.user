@@ -1,8 +1,6 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e03048c0_002Daec8_002D41c9_002Dbc94_002D24b1018eaede/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="CreateReferralRequestOverviewFileData_CalledWithReferralRequest_GeneratesExpectedFileData" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
-    &lt;TestId&gt;NUnit3x::BC27E00A-BCB1-40DD-872A-3FF0A46A5FFF::net6.0::Tests.BusinessLogic.Services.ReferralFollowUpServiceTests&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::BC27E00A-BCB1-40DD-872A-3FF0A46A5FFF::net6.0::Tests.BusinessLogic.Services.UnsubmittedReferralRequestsServiceTests.WriteUnsubmittedReferralRequestsToCsv_WhenCalledWithNewReferral_UpdatesReferralCreated&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::BC27E00A-BCB1-40DD-872A-3FF0A46A5FFF::net6.0::Tests.BusinessLogic.Services.UnsubmittedReferralRequestsServiceTests&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::BC27E00A-BCB1-40DD-872A-3FF0A46A5FFF::net6.0::Tests.BusinessLogic.Services.WorkingDayHelperServiceTests.AddWorkingDaysToDateTime_WhenCalledOnADayFollowingABankHoliday_CorrectlyCalculatesANewDate&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -27,26 +28,9 @@ public class WorkingDayHelperServiceTests
     {
         // Arrange
         var initialDateTime = new DateTime(2023, 03, 23);
+        var bankHolidayResponse = await File.ReadAllTextAsync("MockHttpResponses/bank-holidays.json");
         mockHttpHandler.Expect("https://www.gov.uk/bank-holidays.json")
-            .Respond("application/json", @"{
-  'england-and-wales': {
-    'division': 'england-and-wales',
-    'events': [
-        {
-            'title':'New Year’s Day',
-            'date':'2023-01-01',
-        },
-        {
-            'title':'Fake Bank Holiday on Weekday',
-            'date':'2023-03-20',
-        },
-        {
-            'title':'Fake Holiday on Weekend',
-            'date':'2023-03-19',
-        }
-        ]
-    }
-}"
+            .Respond("application/json", bankHolidayResponse
         );
         // Act
         var newDateTime = await workingDayHelperService.AddWorkingDaysToDateTime(initialDateTime, -10);

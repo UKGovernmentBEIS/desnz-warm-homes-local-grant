@@ -1,0 +1,19 @@
+{
+  "england-and-wales": {
+    "division": "england-and-wales",
+    "events": [
+      {
+        "title":"New Year’s Day",
+        "date":"2023-01-01"
+      },
+      {
+        "title":"Fake Bank Holiday on Weekday",
+        "date":"2023-03-20"
+      },
+      {
+        "title":"Fake Holiday on Weekend",
+        "date":"2023-03-19"
+      }
+    ]
+  }
+}
