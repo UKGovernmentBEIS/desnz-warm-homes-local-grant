@@ -27,6 +27,7 @@ public class ReferralRequestBuilder
             IncomeBand = IncomeBand.UnderOrEqualTo31000,
             Uprn = $"100 111 222 {id:D3}",
             ReferralWrittenToCsv = false,
+            FollowUpEmailSent = false,
             RequestDate = new DateTime(2023, 01, 01, 13, 00, id),
             IsLsoaProperty = false,
             ContactEmailAddress = $"contact{id}@example.com",

@@ -20,5 +20,9 @@
     <ItemGroup>
       <ProjectReference Include="..\HerPublicWebsite\HerPublicWebsite.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+        <None Update="MockHttpResponses\*" CopyToOutputDirectory="Always" />
+    </ItemGroup>
 
 </Project>
