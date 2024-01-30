@@ -19,7 +19,7 @@ public class WorkingDayHelperService : IWorkingDayHelperService
             newDateTime = newDateTime.AddDays(direction);
             if (newDateTime.DayOfWeek != DayOfWeek.Saturday && 
                 newDateTime.DayOfWeek != DayOfWeek.Sunday && 
-                !holidays.Contains(newDateTime))
+                !holidays.Contains(newDateTime.Date))
             {
                 workingDaysToAdd -= direction;
             }
