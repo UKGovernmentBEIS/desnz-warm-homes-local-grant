@@ -29,6 +29,12 @@ namespace HerPublicWebsite
             var dbContext = scope.ServiceProvider.GetRequiredService<HerDbContext>();
             dbContext.Database.Migrate();
 
+            // Remove deprecated nightly tasks service
+            app
+                .Services
+                .GetService<IRecurringJobManager>()
+                .RemoveIfExists("Nightly tasks");
+            
             // Run nightly tasks at 00:30 UTC daily
             app
                 .Services
