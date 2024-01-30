@@ -50,7 +50,7 @@ namespace HerPublicWebsite
                 .AddOrUpdate<UnsubmittedReferralRequestsService>(
                     "Write unsubmitted referral requests to csv",
                     rjs => rjs.WriteUnsubmittedReferralRequestsToCsv(),
-                    "30 0 * * *");
+                    "45 0 * * *");
             
             app.Run();
         }
