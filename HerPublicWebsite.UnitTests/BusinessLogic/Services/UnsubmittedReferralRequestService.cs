@@ -8,7 +8,7 @@ using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using NUnit.Framework;
-using HerPublicWebsite.BusinessLogic.Services.UnsubmittedReferralRequests;
+using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 using Moq;
 using Tests.Builders;
 using RichardSzalay.MockHttp;

@@ -1,6 +1,5 @@
 using Hangfire;
-using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUp;
-using HerPublicWebsite.BusinessLogic.Services.UnsubmittedReferralRequests;
+using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

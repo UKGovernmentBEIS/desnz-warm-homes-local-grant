@@ -1,7 +1,7 @@
 ﻿using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Services.WorkingDayHelper;
+using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
-namespace HerPublicWebsite.BusinessLogic.Services.ReferralFollowUp;
+namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public interface IReferralFollowUpService
 {

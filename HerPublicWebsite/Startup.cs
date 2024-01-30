@@ -20,7 +20,7 @@ using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
 using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
-using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUp;
+using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 using HerPublicWebsite.BusinessLogic.Services.S3ReferralFileKeyGenerator;
 using HerPublicWebsite.Data;
 using HerPublicWebsite.ErrorHandling;

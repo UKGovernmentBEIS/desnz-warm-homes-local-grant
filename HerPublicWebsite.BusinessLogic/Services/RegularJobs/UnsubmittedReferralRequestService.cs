@@ -1,6 +1,6 @@
 using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
 
-namespace HerPublicWebsite.BusinessLogic.Services.UnsubmittedReferralRequests;
+namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public interface IUnsubmittedReferralRequestsService
 {

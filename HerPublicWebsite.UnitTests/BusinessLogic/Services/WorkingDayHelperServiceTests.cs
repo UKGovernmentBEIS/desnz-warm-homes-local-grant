@@ -5,7 +5,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
 using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
-using HerPublicWebsite.BusinessLogic.Services.WorkingDayHelper;
+using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 namespace Tests.BusinessLogic.Services;
 
