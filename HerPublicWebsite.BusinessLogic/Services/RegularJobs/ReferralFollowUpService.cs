@@ -1,11 +1,10 @@
 ﻿using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public interface IReferralFollowUpService
 {
-    public Task<IList<ReferralRequest>> GetReferralsPassedTenWorkingDayThresholdWithNoFollowUp();
+    public Task<IList<ReferralRequest>> GetReferralsPastTenWorkingDayThresholdWithNoFollowUp();
 }
 
 public class ReferralFollowUpService : IReferralFollowUpService
@@ -24,7 +23,7 @@ public class ReferralFollowUpService : IReferralFollowUpService
         this.workingDayHelperService = workingDayHelperService;
     }
 
-    public async Task<IList<ReferralRequest>> GetReferralsPassedTenWorkingDayThresholdWithNoFollowUp()
+    public async Task<IList<ReferralRequest>> GetReferralsPastTenWorkingDayThresholdWithNoFollowUp()
     {
         var endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Today, -10);
         return await dataProvider.GetReferralRequestsWithNoFollowUpBeforeDate(endDate);
