@@ -23,7 +23,7 @@ public class UnsubmittedReferralRequestsService : IUnsubmittedReferralRequestsSe
         this.csvFileCreator = csvFileCreator;
     }
     
-    public async Task WriteUnsubmittedReferralRequestsToCsv() 
+    public async Task WriteUnsubmittedReferralRequestsToCsv()
     {
         var newReferrals = await dataProvider.GetUnsubmittedReferralRequestsAsync();
 
