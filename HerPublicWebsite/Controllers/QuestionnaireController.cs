@@ -473,6 +473,7 @@ public class QuestionnaireController : Controller
         var viewModel = new PendingViewModel()
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
+            LocalAuthorityMessagePartialViewPath = GetLocalAuthorityPendingMessagePartialViewPath(questionnaire),
             Submitted = emailPreferenceSubmitted,
             EmailAddress = questionnaire.NotificationEmailAddress,
             CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
@@ -621,6 +622,7 @@ public class QuestionnaireController : Controller
         {
             ReferenceCode = questionnaire.ReferralCode,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
+            LocalAuthorityMessagePartialViewPath = GetLocalAuthorityConfirmationMessagePartialViewPath(questionnaire),
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
             LocalAuthorityIsLiveWithHug2 = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Live,
             ConfirmationSentToEmailAddress = questionnaire.LaContactEmailAddress ?? questionnaire.ConfirmationEmailAddress,
@@ -809,5 +811,24 @@ public class QuestionnaireController : Controller
             Controller = controller;
             Values = values;
         }
+    }
+    
+    private static string GetLocalAuthorityPendingMessagePartialViewPath(Questionnaire questionnaire)
+    {
+        var partialViewName = questionnaire.CustodianCode switch
+        {
+            "2610" => "Broadland",
+            _ => "Default"
+        };
+        return $"~/Views/Partials/LocalAuthorityMessages/Pending/{partialViewName}.cshtml";
+    }
+    
+    private static string GetLocalAuthorityConfirmationMessagePartialViewPath(Questionnaire questionnaire)
+    {
+        var partialViewName = questionnaire.CustodianCode switch
+        {
+            _ => "Default"
+        };
+        return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";
     }
 }

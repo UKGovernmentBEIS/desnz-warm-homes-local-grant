@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -11,26 +11,31 @@ using NUnit.Framework;
 using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 using Moq;
 using Tests.Builders;
+using RichardSzalay.MockHttp;
+using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
 
 namespace Tests.BusinessLogic.Services;
 
 [TestFixture]
-public class RegularJobsServiceTests
+public class UnsubmittedReferralRequestsServiceTests
 {
-    private IRegularJobsService regularJobsService;
+    private IUnsubmittedReferralRequestsService unsubmittedReferralRequestsService;
     private Mock<IDataAccessProvider> mockDataAccessProvider;
     private Mock<IS3FileWriter> mockS3FileWriter;
+    private MockHttpMessageHandler mockHttpHandler;
     
     [SetUp]
     public void Setup()
     {
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
         mockS3FileWriter = new Mock<IS3FileWriter>();
-        regularJobsService = new RegularJobsService(mockDataAccessProvider.Object, mockS3FileWriter.Object, new CsvFileCreator());
+        unsubmittedReferralRequestsService = new UnsubmittedReferralRequestsService(mockDataAccessProvider.Object, mockS3FileWriter.Object, new CsvFileCreator());
+        mockHttpHandler = new MockHttpMessageHandler();
+        HttpRequestHelper.handler = mockHttpHandler;
     }
 
     [Test]
-    public async Task RunNightlyTasksAsync_WhenCalledWithNewReferral_UpdatesReferralCreated()
+    public async Task WriteUnsubmittedReferralRequestsToCsv_WhenCalledWithNewReferral_UpdatesReferralCreated()
     {
         // Arrange
         var newReferralList = new List<ReferralRequest>
@@ -42,7 +47,7 @@ public class RegularJobsServiceTests
             .Returns(newReferralList);
         
         // Act
-        await regularJobsService.RunNightlyTasksAsync();
+        await unsubmittedReferralRequestsService.WriteUnsubmittedReferralRequestsToCsv();
 
         // Assert
         newReferralList.Should().AllSatisfy(rr => rr.ReferralWrittenToCsv.Should().BeTrue());
@@ -50,7 +55,7 @@ public class RegularJobsServiceTests
     }
     
     [Test]
-    public async Task RunNightlyTasksAsync_WhenCalledWithNewReferral_CreatesFile()
+    public async Task WriteUnsubmittedReferralRequestsToCsv_WhenCalledWithNewReferral_CreatesFile()
     {
         // Arrange
         var newReferralList = new List<ReferralRequest>
@@ -62,7 +67,7 @@ public class RegularJobsServiceTests
             .Returns(newReferralList);
         
         // Act
-        await regularJobsService.RunNightlyTasksAsync();
+        await unsubmittedReferralRequestsService.WriteUnsubmittedReferralRequestsToCsv();
 
         // Assert
         mockS3FileWriter.Verify(fw =>
@@ -70,7 +75,7 @@ public class RegularJobsServiceTests
     }
     
     [Test]
-    public async Task RunNightlyTasksAsync_WhenCalledWithNewReferralForSameMonthAsOldReferrals_UpdatesReferralCreated()
+    public async Task WriteUnsubmittedReferralRequestsToCsv_WhenCalledWithNewReferralForSameMonthAsOldReferrals_UpdatesReferralCreated()
     {
         // Arrange
         var oldReferral = new ReferralRequestBuilder(1)
@@ -95,7 +100,7 @@ public class RegularJobsServiceTests
             .Returns(allReferralList);
         
         // Act
-        await regularJobsService.RunNightlyTasksAsync();
+        await unsubmittedReferralRequestsService.WriteUnsubmittedReferralRequestsToCsv();
 
         // Assert
         allReferralList.Should().AllSatisfy(rr => rr.ReferralWrittenToCsv.Should().BeTrue());
@@ -103,7 +108,7 @@ public class RegularJobsServiceTests
     }
     
     [Test]
-    public async Task RunNightlyTasksAsync_WhenCalledWithMultipleNewReferralsForDifferentCustodianCodes_CreatesMultipleFiles()
+    public async Task WriteUnsubmittedReferralRequestsToCsv_WhenCalledWithMultipleNewReferralsForDifferentCustodianCodes_CreatesMultipleFiles()
     {
         // Arrange
         var newReferral1 = new ReferralRequestBuilder(1)
@@ -127,7 +132,7 @@ public class RegularJobsServiceTests
             .Returns(allReferralListForCustodianCode6);
         
         // Act
-        await regularJobsService.RunNightlyTasksAsync();
+        await unsubmittedReferralRequestsService.WriteUnsubmittedReferralRequestsToCsv();
 
         // Assert
         mockS3FileWriter.Verify(fw =>
@@ -136,8 +141,9 @@ public class RegularJobsServiceTests
             fw.WriteFileAsync("6", 3, 2023, It.IsAny<MemoryStream>()));
     }
     
+   
     [Test]
-    public async Task RunNightlyTasksAsync_WhenCalledWritingTheSecondFileFails_UpdatesTheReferralsInTheFirstFileButNotTheSecond()
+    public async Task WriteUnsubmittedReferralRequestsToCsv_WhenCalledWritingTheSecondFileFails_UpdatesTheReferralsInTheFirstFileButNotTheSecond()
     {
         // Arrange
         var newReferral1 = new ReferralRequestBuilder(1)
@@ -165,7 +171,7 @@ public class RegularJobsServiceTests
         // Act
         try
         {
-            await regularJobsService.RunNightlyTasksAsync();
+            await unsubmittedReferralRequestsService.WriteUnsubmittedReferralRequestsToCsv();
         }
         catch (InvalidOperationException e) when (e.Message == "Test exception")
         {

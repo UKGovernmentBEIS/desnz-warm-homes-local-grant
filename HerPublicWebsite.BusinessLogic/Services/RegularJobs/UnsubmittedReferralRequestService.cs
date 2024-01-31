@@ -1,19 +1,19 @@
-﻿using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
+using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
 
 namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
-public interface IRegularJobsService
+public interface IUnsubmittedReferralRequestsService
 {
-    public Task RunNightlyTasksAsync();
+    public Task WriteUnsubmittedReferralRequestsToCsv();
 }
 
-public class RegularJobsService : IRegularJobsService
+public class UnsubmittedReferralRequestsService : IUnsubmittedReferralRequestsService
 {
     private readonly IDataAccessProvider dataProvider;
     private readonly IS3FileWriter s3FileWriter;
     private readonly CsvFileCreator.CsvFileCreator csvFileCreator;
 
-    public RegularJobsService(
+    public UnsubmittedReferralRequestsService(
         IDataAccessProvider dataProvider,
         IS3FileWriter s3FileWriter,
         CsvFileCreator.CsvFileCreator csvFileCreator)
@@ -22,8 +22,8 @@ public class RegularJobsService : IRegularJobsService
         this.s3FileWriter = s3FileWriter;
         this.csvFileCreator = csvFileCreator;
     }
-
-    public async Task RunNightlyTasksAsync()
+    
+    public async Task WriteUnsubmittedReferralRequestsToCsv()
     {
         var newReferrals = await dataProvider.GetUnsubmittedReferralRequestsAsync();
 
@@ -46,3 +46,4 @@ public class RegularJobsService : IRegularJobsService
         }
     }
 }
+
