@@ -1,6 +1,5 @@
 @using GovUkDesignSystem
 @using GovUkDesignSystem.GovUkDesignSystemComponents
-@using HerPublicWebsite.BusinessLogic.Models.Enums
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using HerPublicWebsite.Controllers
 @using HerPublicWebsite.Models.Enums
@@ -27,10 +26,8 @@
         <h1 class="govuk-heading-l">Your Local Authority is not ready to process applications yet</h1>
         
         <h2 class="govuk-heading-m">What to do next</h2>
-
-        <p class="govuk-body">
-            Based on the information you provided, it looks like your local authority, <strong class="govuk-!-font-weight-bold">@Model.LocalAuthorityName</strong>, is not signed up to use this service yet. This means you are unable to create an application at this time. 
-        </p>
+        
+        @await Html.PartialAsync(Model.LocalAuthorityMessagePartialViewPath)
         
         <p class="govuk-body">
             If your local authority does not seem right, <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your correct local authority</a> and contact them directly.

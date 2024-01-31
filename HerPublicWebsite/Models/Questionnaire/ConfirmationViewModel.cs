@@ -8,6 +8,7 @@ public class ConfirmationViewModel : QuestionFlowViewModel
 {
     public string ReferenceCode { get; set; }
     public string LocalAuthorityName { get; set; }
+    public string LocalAuthorityMessagePartialViewPath { get; set; }
     public string LocalAuthorityWebsite { get; set; }
     public bool LocalAuthorityIsLiveWithHug2 { get; set; }
     public bool RequestEmailAddress { get; set; }

@@ -179,6 +179,9 @@ namespace HerPublicWebsite.Data.Migrations
                     b.Property<int>("EpcRating")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("FollowUpEmailSent")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("FullName")
                         .HasColumnType("text");
 
