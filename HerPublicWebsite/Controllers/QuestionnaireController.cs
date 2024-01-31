@@ -818,6 +818,11 @@ public class QuestionnaireController : Controller
         var partialViewName = questionnaire.CustodianCode switch
         {
             "2610" => "Broadland",
+            "2605" => "Broadland",
+            "2620" => "Broadland",
+            "2625" => "Broadland",
+            "2630" => "Broadland",
+            "2635" => "Broadland",
             _ => "Default"
         };
         return $"~/Views/Partials/LocalAuthorityMessages/Pending/{partialViewName}.cshtml";
