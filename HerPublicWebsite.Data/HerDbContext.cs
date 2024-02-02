@@ -12,6 +12,7 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<AnonymisedReport> AnonymisedReports { get; set; }
     public DbSet<PerReferralReport> PerReferralReports { get; set; }
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
+    public DbSet<ReferralRequestFollowUp> ReferralRequestFollowUps { get; set; }
 
     public HerDbContext(DbContextOptions<HerDbContext> options) : base(options)
     {
@@ -23,6 +24,7 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
         SetupContactDetails(modelBuilder);
         SetupAnonymisedReports(modelBuilder);
         SetupPerReferralReports(modelBuilder);
+        SetupReferralRequestFollowUps(modelBuilder);
     }
 
     private void SetupReferralRequests(ModelBuilder modelBuilder)
@@ -94,6 +96,25 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
 
         // Per referral reports row versioning
         AddRowVersionColumn(modelBuilder.Entity<PerReferralReport>());
+    }
+
+    private void SetupReferralRequestFollowUps(ModelBuilder modelBuilder)
+    {
+        // Referral request follow up primary key
+        modelBuilder.Entity<ReferralRequestFollowUp>()
+            .Property<int>("Id")
+            .HasColumnType("integer")
+            .ValueGeneratedOnAdd();
+        modelBuilder.Entity<ReferralRequestFollowUp>()
+            .HasKey("Id");
+        modelBuilder.Entity<ReferralRequestFollowUp>()
+            .HasIndex(rrfu => rrfu.Token).IsUnique();
+        modelBuilder.Entity<ReferralRequestFollowUp>()
+            .Property(rrfu => rrfu.DateOfFollowUpResponse)
+            .HasColumnType("timestamp without time zone");
+
+        // Referral request follow up row versioning
+        AddRowVersionColumn(modelBuilder.Entity<ReferralRequestFollowUp>());
     }
 
     private void AddRowVersionColumn<T>(EntityTypeBuilder<T> builder) where T : class

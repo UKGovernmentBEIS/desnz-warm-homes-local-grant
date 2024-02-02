@@ -94,6 +94,47 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             };
             SendEmail(emailModel);
         }
+
+        public void SendFollowUpEmail
+        (
+            ReferralRequest referralRequest,
+            string followUpLink
+        ) {
+            var template = govUkNotifyConfig.ReferralFollowUpTemplate;
+            LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
+            try
+            {
+                localAuthorityDetails = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referralRequest.CustodianCode];
+
+                var personalisation = new Dictionary<string, dynamic>
+                {
+                    { template.RecipientNamePlaceholder, referralRequest.FullName },
+                    { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
+                    { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
+                    { template.ReferralDatePlaceholder, referralRequest.RequestDate.ToShortDateString() },
+                    { template.FollowUpLinkPlaceholder, followUpLink },
+                };
+                var emailModel = new GovUkNotifyEmailModel
+                {
+                    EmailAddress = referralRequest.ContactEmailAddress,
+                    TemplateId = template.Id,
+                    Personalisation = personalisation
+                };
+                SendEmail(emailModel);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogError
+                (
+                    ex,
+                    "Failed to send follow up email for referral request \"{referralRequest.Id}\" with invalid custodian code",
+                    referralRequest.Id
+                );
+            }
+            
+            
+
+        }
     }
 
     internal class GovUkNotifyEmailModel

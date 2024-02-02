@@ -216,6 +216,42 @@ namespace HerPublicWebsite.Data.Migrations
                     b.ToTable("ReferralRequests");
                 });
 
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ReferralRequestFollowUp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("DateOfFollowUpResponse")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("ReferralRequestId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("WasFollowedUp")
+                        .HasColumnType("boolean");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReferralRequestId")
+                        .IsUnique();
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.ToTable("ReferralRequestFollowUps");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
                 {
                     b.Property<int>("Id")
@@ -242,6 +278,22 @@ namespace HerPublicWebsite.Data.Migrations
                         .HasForeignKey("ReferralRequestId");
 
                     b.Navigation("ReferralRequest");
+                });
+
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ReferralRequestFollowUp", b =>
+                {
+                    b.HasOne("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", "ReferralRequest")
+                        .WithOne("FollowUp")
+                        .HasForeignKey("HerPublicWebsite.BusinessLogic.Models.ReferralRequestFollowUp", "ReferralRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ReferralRequest");
+                });
+
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", b =>
+                {
+                    b.Navigation("FollowUp");
                 });
 #pragma warning restore 612, 618
         }
