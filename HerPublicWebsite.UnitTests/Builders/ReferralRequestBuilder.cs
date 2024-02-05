@@ -6,7 +6,7 @@ namespace Tests.Builders;
 
 public class ReferralRequestBuilder
 {
-    private ReferralRequest referralRequest;
+    private readonly ReferralRequest referralRequest;
 
     public ReferralRequestBuilder(int id)
     {
@@ -84,6 +84,16 @@ public class ReferralRequestBuilder
 
     public ReferralRequestBuilder WithEpcConfirmation(EpcConfirmation confirmation) {
         referralRequest.EpcConfirmation = confirmation;
+        return this;
+    }
+
+    public ReferralRequestBuilder WithWrittenToCsv(bool writtenToCsv) {
+        referralRequest.ReferralWrittenToCsv = writtenToCsv;
+        return this;
+    }
+
+    public ReferralRequestBuilder WithFollowUp(ReferralRequestFollowUpBuilder requestFollowUpBuilder) {
+        referralRequest.FollowUp = requestFollowUpBuilder.Build(referralRequest);
         return this;
     }
 }

@@ -13,6 +13,8 @@ using Moq;
 using Tests.Builders;
 using RichardSzalay.MockHttp;
 using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
+using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
+using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 
 namespace Tests.BusinessLogic.Services;
 
