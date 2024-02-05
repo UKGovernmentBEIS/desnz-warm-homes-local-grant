@@ -22,6 +22,14 @@ public class DataAccessProvider : IDataAccessProvider
         return referralRequest;
     }
 
+    public async Task<ReferralRequest> UpdateReferralRequestByIdWithFollowUpSentAsync(int id)
+    {   
+        var referralRequest = await context.ReferralRequests.SingleAsync(rr => rr.Id == id);
+        referralRequest.FollowUpEmailSent = true;
+        await context.SaveChangesAsync();
+        return referralRequest;
+    }
+
     public async Task PersistNotificationConsentAsync(string referralCode, NotificationDetails details)
     {
         if (details.FutureSchemeNotificationConsent)
@@ -29,8 +37,8 @@ public class DataAccessProvider : IDataAccessProvider
             if (referralCode is not null)
             {
                 var referralRequest =
-                    context.ReferralRequests
-                    .Single(rr => rr.ReferralCode == referralCode);
+                    await context.ReferralRequests
+                    .SingleAsync(rr => rr.ReferralCode == referralCode);
 
                 details.ReferralRequest = referralRequest;
             }
@@ -63,10 +71,10 @@ public class DataAccessProvider : IDataAccessProvider
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetReferralRequestsWithNoFollowUpBeforeDate(DateTime cutoffDate)
+    public async Task<IList<ReferralRequest>> GetReferralRequestsWithNoFollowUpBetweenDates(DateTime startDate, DateTime endDate)
     {
         return await context.ReferralRequests
-            .Where(rr => rr.RequestDate <= cutoffDate && !rr.FollowUpEmailSent)
+            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.FollowUpEmailSent)
             .ToListAsync();
     }
 
@@ -75,6 +83,28 @@ public class DataAccessProvider : IDataAccessProvider
         return await context.ReferralRequests
             .Where(rr => rr.CustodianCode == custodianCode && rr.RequestDate.Month == month && rr.RequestDate.Year == year)
             .ToListAsync();
+    }
+
+    public async Task<ReferralRequestFollowUp> PersistReferralFollowUpToken(ReferralRequestFollowUp referralRequestFollowUp)
+    {
+        context.ReferralRequestFollowUps
+            .Add(referralRequestFollowUp);
+        await context.SaveChangesAsync();
+        return referralRequestFollowUp;
+    }
+
+    public async Task<ReferralRequestFollowUp> GetReferralFollowUpByToken(string token)
+    {
+        return await context.ReferralRequestFollowUps.Include(rrfu => rrfu.ReferralRequest).SingleAsync(rrfu => rrfu.Token == token);
+    }
+    
+    public async Task<ReferralRequestFollowUp> UpdateReferralFollowUpByTokenWithWasFollowedUp(string token, bool wasFollowedUp)
+    {   
+        var referralRequestFollowUp = await context.ReferralRequestFollowUps.SingleAsync(rrfu => rrfu.Token == token);
+        referralRequestFollowUp.WasFollowedUp = wasFollowedUp;
+        referralRequestFollowUp.DateOfFollowUpResponse = DateTime.Now;
+        await context.SaveChangesAsync();
+        return referralRequestFollowUp;
     }
 
     public async Task PersistAllChangesAsync()

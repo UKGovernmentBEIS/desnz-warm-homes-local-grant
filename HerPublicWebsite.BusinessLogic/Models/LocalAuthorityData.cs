@@ -212,7 +212,7 @@ public class LocalAuthorityData
         { "2235", new LocalAuthorityDetails("Maidstone Borough Council", Hug2Status.Pending, "http://www.maidstone.gov.uk", IncomeBandOptions[IncomeThreshold._31000]) },
         { "1545", new LocalAuthorityDetails("Maldon District Council", Hug2Status.Pending, "http://www.maldon.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "1820", new LocalAuthorityDetails("Malvern Hills District Council", Hug2Status.Pending, "https://www.malvernhills.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
-        { "4215", new LocalAuthorityDetails("Manchester City Council", Hug2Status.Pending, "http://www.manchester.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
+        { "4215", new LocalAuthorityDetails("Manchester City Council", Hug2Status.Live, "http://www.manchester.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "3025", new LocalAuthorityDetails("Mansfield District Council", Hug2Status.Pending, "https://www.mansfield.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "2280", new LocalAuthorityDetails("Medway Council", Hug2Status.Pending, "https://www.medway.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },
         { "2430", new LocalAuthorityDetails("Melton Borough Council", Hug2Status.Pending, "http://www.melton.gov.uk/", IncomeBandOptions[IncomeThreshold._31000]) },

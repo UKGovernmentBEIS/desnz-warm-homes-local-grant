@@ -39,9 +39,9 @@ namespace HerPublicWebsite
             app
                 .Services
                 .GetService<IRecurringJobManager>()
-                .AddOrUpdate<ReferralFollowUpService>(
+                .AddOrUpdate<ReferralFollowUpNotificationService>(
                     "Get referrals passed ten day working threshold with no follow up",
-                    rjs => rjs.GetReferralsPastTenWorkingDayThresholdWithNoFollowUp(),
+                    rjs => rjs.SendReferralFollowUpNotifications(),
                     "30 0 * * *");
             
             app
