@@ -11,10 +11,10 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <p class="govuk-body-m">@Model.ReferralCode</p>
+        <p class="govuk-body-m">Reference code: <strong class="govuk-!-font-weight-bold">@Model.ReferralCode</strong></p>
         <div class="govuk-body">
             <p>Thank you for taking part in the HUG 2 Eligibility Checker on @Model.RequestDate.ToShortDateString().</p>
-            <p>We are writing to check whether you have been contacted by your LA (or their official contractor) in the last 10 working days.</p>
+            <p>We are writing to check whether you have been contacted by your local authority (or their official contractor) in the last 10 working days.</p>
             <p>Please indicate in the boxes below whether you have been contacted:</p>
         </div>
         <form action="@Url.Action(nameof(ReferralRequestFollowUpController.RespondPage_Post), "ReferralRequestFollowUp")" method="post" novalidate>
@@ -26,7 +26,7 @@
                 {
                     Legend = new LegendViewModel
                     {
-                        Text = "Have you been contacted by your LA (or their official contractor)?",
+                        Text = "Have you been contacted by your local authority (or their official contractor)?",
                         Classes = "govuk-fieldset__legend--m",
                     },
                 })
