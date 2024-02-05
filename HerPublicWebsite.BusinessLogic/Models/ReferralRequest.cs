@@ -33,7 +33,9 @@ public class ReferralRequest
     public bool ReferralWrittenToCsv { get; set; }
     
     public bool FollowUpEmailSent { get; set; }
-
+    
+    public ReferralRequestFollowUp? FollowUp {get; set;}
+    
     public string ReferralCode { get; set; }
     
     public ReferralRequest()

@@ -1,4 +1,5 @@
 using Hangfire;
+using HerPublicWebsite.BusinessLogic.Services.PolicyTeamUpdate;
 using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -52,6 +53,15 @@ namespace HerPublicWebsite
                     rjs => rjs.WriteUnsubmittedReferralRequestsToCsv(),
                     "45 0 * * *");
             
+            // Run weekly tasks at 00:30 UTC every Monday
+            app
+                .Services
+                .GetService<IRecurringJobManager>()
+                .AddOrUpdate<PolicyTeamUpdateService>(
+                    "Send policy team update email",
+                    rjs => rjs.SendPolicyTeamUpdate(),
+                    "0 7 * * 1");
+
             app.Run();
         }
     }
