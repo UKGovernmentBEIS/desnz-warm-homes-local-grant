@@ -373,7 +373,7 @@ public class LocalAuthorityData
         { "9020", new LocalAuthorityDetails("Comhairle nan Eilean Siar", Hug2Status.NotTakingPart, "https://www.cne-siar.gov.uk/", IncomeBandOptions[IncomeThreshold._31000],null) },
         { "935", new LocalAuthorityDetails("Westmorland and Furness Council", Hug2Status.NotTakingPart, "https://www.westmorlandandfurness.gov.uk/", IncomeBandOptions[IncomeThreshold._31000],"Eden District Council") },
         { "4250", new LocalAuthorityDetails("Wigan Metropolitan Borough Council", Hug2Status.NotTakingPart, "http://www.wigan.gov.uk", IncomeBandOptions[IncomeThreshold._31000],null) },
-        { "3940", new LocalAuthorityDetails("Wiltshire Council", Hug2Status.Pending, "https://www.wiltshire.gov.uk/", IncomeBandOptions[IncomeThreshold._31000],null) },
+        { "3940", new LocalAuthorityDetails("Wiltshire Council", Hug2Status.Live, "https://www.wiltshire.gov.uk/", IncomeBandOptions[IncomeThreshold._31000],null) },
         { "1765", new LocalAuthorityDetails("Winchester City Council", Hug2Status.Live, "https://www.winchester.gov.uk/", IncomeBandOptions[IncomeThreshold._31000],"Portsmouth") },
         { "355", new LocalAuthorityDetails("Royal Borough of Windsor and Maidenhead", Hug2Status.Pending, "http://www.rbwm.gov.uk/", IncomeBandOptions[IncomeThreshold._31000],"Cambridgeshire & Peterborough Combined Authority") },
         { "4325", new LocalAuthorityDetails("Wirral Council", Hug2Status.Live, "http://www.wirral.gov.uk/", IncomeBandOptions[IncomeThreshold._31000],null) },
