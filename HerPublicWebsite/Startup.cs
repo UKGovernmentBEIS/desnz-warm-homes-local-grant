@@ -32,6 +32,8 @@ using HerPublicWebsite.Services.Cookies;
 using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using Microsoft.AspNetCore.Http;
+using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
+using GlobalConfiguration = HerPublicWebsite.BusinessLogic.GlobalConfiguration;
 
 namespace HerPublicWebsite
 {
@@ -62,10 +64,11 @@ namespace HerPublicWebsite
             services.AddScoped<CsvFileCreator>();
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
             services.AddScoped<IEligiblePostcodeService, EligiblePostcodeService>();
+            services.AddScoped<IReferralFollowUpService, ReferralFollowUpService>();
+            services.AddScoped<IGuidService, GuidService>();
             services.AddScoped<QuestionnaireService>();
             services.AddScoped<QuestionnaireUpdater>();
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
-            services.AddScoped<IReferralFollowUpService, ReferralFollowUpService>();
             services.AddScoped<IUnsubmittedReferralRequestsService, UnsubmittedReferralRequestsService>();
             services.AddScoped<IWorkingDayHelperService, WorkingDayHelperService>();
 
@@ -74,6 +77,7 @@ namespace HerPublicWebsite
             // This allows encrypted cookies to be understood across multiple web server instances
             services.AddDataProtection().PersistKeysToDbContext<HerDbContext>();
 
+            ConfigureReferralFollowUpNotificationService(services);
             ConfigureS3Client(services);
             ConfigureS3FileWriter(services);
             ConfigureEpcApi(services);
@@ -204,6 +208,15 @@ namespace HerPublicWebsite
                 configuration.GetSection(S3Configuration.ConfigSection));
             services.AddScoped<IS3FileWriter, S3FileWriter>();
             services.AddScoped<S3ReferralFileKeyGenerator>();
+        }
+        
+        private void ConfigureReferralFollowUpNotificationService(IServiceCollection services)
+        {
+            services.Configure<GlobalConfiguration>(
+                configuration.GetSection(GlobalConfiguration.ConfigSection));
+            services.Configure<ReferralRequestNotificationConfiguration>(
+                configuration.GetSection(ReferralRequestNotificationConfiguration.ConfigSection));
+            services.AddScoped<IReferralFollowUpNotificationService, ReferralFollowUpNotificationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

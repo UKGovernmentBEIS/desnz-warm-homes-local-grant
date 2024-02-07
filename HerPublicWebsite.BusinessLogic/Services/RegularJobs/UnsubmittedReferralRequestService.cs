@@ -32,7 +32,7 @@ public class UnsubmittedReferralRequestsService : IUnsubmittedReferralRequestsSe
             var grouping = referralsByCustodianMonthAndYear.Key;
             var referralsForFile = await dataProvider.GetReferralRequestsByCustodianAndRequestDateAsync(grouping.CustodianCode, grouping.Month, grouping.Year);
 
-            using (var fileData = csvFileCreator.CreateFileData(referralsForFile))
+            using (var fileData = csvFileCreator.CreateReferralRequestFileData(referralsForFile))
             {
                 await s3FileWriter.WriteFileAsync(grouping.CustodianCode, grouping.Month, grouping.Year, fileData);
             }
