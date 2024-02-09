@@ -4,37 +4,38 @@ namespace HerPublicWebsite.BusinessLogic.Models;
 
 public class LocalAuthorityData
 {
-        public enum Hug2Status
-        {
-                NotTakingPart,
-                Pending,
-                Live
-        }
+    public enum Hug2Status
+    {
+        NotParticipating,
+        NotTakingPart,
+        Pending,
+        Live
+    }
 
-        public record LocalAuthorityDetails(
-            string Name,
-            Hug2Status Status,
-            string WebsiteUrl,
-            IncomeBand[] IncomeBandOptions,
-            string? Consortium);
+    public record LocalAuthorityDetails(
+        string Name,
+        Hug2Status Status,
+        string WebsiteUrl,
+        IncomeBand[] IncomeBandOptions,
+        string? Consortium);
 
-        private enum IncomeThreshold
-        {
-                _31000,
-                _34500
-        }
+    private enum IncomeThreshold
+    {
+        _31000,
+        _34500
+    }
 
-        private static readonly Dictionary<IncomeThreshold, IncomeBand[]> IncomeBandOptions = new()
+    private static readonly Dictionary<IncomeThreshold, IncomeBand[]> IncomeBandOptions = new()
     {
         { IncomeThreshold._31000, new[] { IncomeBand.UnderOrEqualTo31000, IncomeBand.GreaterThan31000 } },
         { IncomeThreshold._34500, new[] { IncomeBand.UnderOrEqualTo34500, IncomeBand.GreaterThan34500 } }
     };
 
-        // The list of custodian codes comes from the publicly available "Local custodian codes" download link
-        // on https://www.ordnancesurvey.co.uk/business-government/tools-support/addressbase-support
-        // The local authority names and websites mainly come from the local-links-manager Gov.UK service
-        // https://docs.publishing.service.gov.uk/repos/local-links-manager/checking-links.html
-        public static readonly Dictionary<string, LocalAuthorityDetails> LocalAuthorityDetailsByCustodianCode = new()
+    // The list of custodian codes comes from the publicly available "Local custodian codes" download link
+    // on https://www.ordnancesurvey.co.uk/business-government/tools-support/addressbase-support
+    // The local authority names and websites mainly come from the local-links-manager Gov.UK service
+    // https://docs.publishing.service.gov.uk/repos/local-links-manager/checking-links.html
+    public static readonly Dictionary<string, LocalAuthorityDetails> LocalAuthorityDetailsByCustodianCode = new()
     {
         { "9052", new LocalAuthorityDetails("Aberdeenshire Council", Hug2Status.NotTakingPart, "https://www.aberdeenshire.gov.uk/", IncomeBandOptions[IncomeThreshold._31000],null) },
         { "3805", new LocalAuthorityDetails("Adur District Council", Hug2Status.Live, "https://www.adur-worthing.gov.uk/", IncomeBandOptions[IncomeThreshold._31000],"Portsmouth") },
