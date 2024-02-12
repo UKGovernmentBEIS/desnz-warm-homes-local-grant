@@ -37,16 +37,10 @@
             @(Html.HiddenFor(m => m.EntryPoint))
             @Html.AntiForgeryToken()
 
-            @await Html.GovUkCheckboxFromBoolFor(
-                       m => m.UserAcknowledgesApplicationNotProcessedUntilLocalAuthorityLive,
-                       fieldsetOptions: new FieldsetViewModel
+            @await Html.GovUkCheckboxFromBoolFor(m => m.UserAcknowledgesApplicationNotProcessedUntilLocalAuthorityLive, 
+                       label: new LabelViewModel
                        {
-                           Legend = new LegendViewModel
-                           {
-                               Html = @<text>
-                                          <p class="govuk-body">I want to create a referral and acknowledge that my application will not be processed until my local authority is signed up to use this service</p>
-                                       </text>
-                           },
+                           Text = "I want to create a referral and acknowledge that my application will not be processed until my local authority is signed up to use this service"
                        })
             <div class="govuk-button-group">
                 @(await Html.GovUkButton(new ButtonViewModel
@@ -55,21 +49,5 @@
                 }))
             </div>
         </form>
-        
-        <h2 class="govuk-heading-m">You might be able to get help from your energy supplier</h2>
-        <p class="govuk-body">
-            You might be able to get help for energy-saving improvements to your home if you either:
-        </p>
-        <ul class="govuk-list govuk-list--bullet">
-            <li>
-                claim certain benefits and live in private housing (for example you own your home or rent from a private landlord) 
-            </li>
-            <li>
-                live in social housing
-            </li>
-        </ul>
-        <p class="govuk-body">
-            Check if you are eligible for the <a class="govuk-link" href="https://www.gov.uk/energy-company-obligation">
-            Energy Company Obligation</a> scheme.</p>
     </div>
 </div>

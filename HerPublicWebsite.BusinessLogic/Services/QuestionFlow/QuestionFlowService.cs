@@ -277,10 +277,6 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             {
                 return QuestionFlowStep.NotParticipating;
             }
-            else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Pending)
-            {
-                return QuestionFlowStep.Pending;
-            }
             else if (questionnaire.FoundEpcBandIsTooHigh)
             {
                 return QuestionFlowStep.ReviewEpc;
@@ -357,7 +353,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         
         private QuestionFlowStep PendingForwardDestination(Questionnaire questionnaire)
         {
-            return QuestionFlowStep.Pending;
+            return QuestionFlowStep.HouseholdIncome;
         }
 
         private QuestionFlowStep HouseholdIncomeForwardDestination(Questionnaire questionnaire)

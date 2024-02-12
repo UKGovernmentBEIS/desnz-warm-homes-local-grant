@@ -517,6 +517,7 @@ public class QuestionnaireController : Controller
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityMessagePartialViewPath = GetLocalAuthorityPendingMessagePartialViewPath(questionnaire),
+            UserAcknowledgesApplicationNotProcessedUntilLocalAuthorityLive = false,
             Submitted = emailPreferenceSubmitted,
             EntryPoint = entryPoint,
             BackLink = GetBackUrl(QuestionFlowStep.Pending, questionnaire, entryPoint)
@@ -526,26 +527,17 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("pending")]
-    public async Task<IActionResult> Pending_Post(IneligibleViewModel viewModel)
+    public async Task<IActionResult> Pending_Post(PendingViewModel viewModel)
     {
         if (!ModelState.IsValid)
         {
             return Pending_Get(viewModel.EntryPoint, false);
         }
-
-        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
-            viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
-            viewModel.EmailAddress
-        );
-
+        var questionnaire = questionnaireService.GetQuestionnaire();
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Pending, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
-            viewModel.EntryPoint,
-            extraRouteValues: new Dictionary<string, object>
-            {
-                { "emailPreferenceSubmitted", true }
-            }
+            viewModel.EntryPoint
         );
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
