@@ -518,8 +518,6 @@ public class QuestionnaireController : Controller
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityMessagePartialViewPath = GetLocalAuthorityPendingMessagePartialViewPath(questionnaire),
             Submitted = emailPreferenceSubmitted,
-            EmailAddress = questionnaire.NotificationEmailAddress,
-            CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
             EntryPoint = entryPoint,
             BackLink = GetBackUrl(QuestionFlowStep.Pending, questionnaire, entryPoint)
         };
