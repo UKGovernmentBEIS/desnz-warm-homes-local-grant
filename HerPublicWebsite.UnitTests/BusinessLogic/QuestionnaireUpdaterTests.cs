@@ -234,7 +234,7 @@ public class QuestionnaireUpdaterTests
                 It.Is<ReferralRequest>(rr => rr.CustodianCode == testCustodianCode)
             )).ReturnsAsync(referral);
         mockEmailSender.Setup(es =>
-            es.SendReferenceCodeEmail
+            es.SendReferenceCodeLiveLAEmail
             (
                 testEmailAddress,
                 testName,
@@ -253,7 +253,7 @@ public class QuestionnaireUpdaterTests
         );
         
         // Assert
-        mockEmailSender.Verify(es => es.SendReferenceCodeEmail
+        mockEmailSender.Verify(es => es.SendReferenceCodeLiveLAEmail
         (
             testEmailAddress,
             testName,
@@ -283,7 +283,7 @@ public class QuestionnaireUpdaterTests
         mockDataAccessProvider.Setup(dap =>
             dap.PersistNewReferralRequestAsync(It.IsAny<ReferralRequest>())).ReturnsAsync(referral);
         mockEmailSender.Setup(es =>
-            es.SendReferenceCodeEmail
+            es.SendReferenceCodeLiveLAEmail
             (
                 It.IsAny<string>(),
                 It.IsAny<string>(),
@@ -302,7 +302,7 @@ public class QuestionnaireUpdaterTests
         );
         
         // Assert
-        mockEmailSender.Verify(es => es.SendReferenceCodeEmail
+        mockEmailSender.Verify(es => es.SendReferenceCodeLiveLAEmail
         (
             It.IsAny<string>(),
             It.IsAny<string>(),
@@ -385,7 +385,7 @@ public class QuestionnaireUpdaterTests
             CustodianCode = testCustodianCode,
         };
         mockEmailSender.Setup(es =>
-            es.SendReferenceCodeEmail
+            es.SendReferenceCodeLiveLAEmail
             (
                 testEmailAddress,
                 testName,
@@ -405,7 +405,7 @@ public class QuestionnaireUpdaterTests
         );
         
         // Assert
-        mockEmailSender.Verify(es => es.SendReferenceCodeEmail
+        mockEmailSender.Verify(es => es.SendReferenceCodeLiveLAEmail
         (
             testEmailAddress,
             testName,
@@ -433,7 +433,7 @@ public class QuestionnaireUpdaterTests
             CustodianCode = testCustodianCode,
         };
         mockEmailSender.Setup(es =>
-            es.SendReferenceCodeEmail
+            es.SendReferenceCodeLiveLAEmail
             (
                 It.IsAny<string>(),
                 It.IsAny<string>(),
@@ -453,7 +453,7 @@ public class QuestionnaireUpdaterTests
         );
         
         // Assert
-        mockEmailSender.Verify(es => es.SendReferenceCodeEmail
+        mockEmailSender.Verify(es => es.SendReferenceCodeLiveLAEmail
         (
             It.IsAny<string>(),
             It.IsAny<string>(),

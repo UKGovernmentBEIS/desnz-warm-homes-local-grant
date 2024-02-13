@@ -4,7 +4,15 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 
 public interface IEmailSender
 {
-    public void SendReferenceCodeEmail
+    public void SendReferenceCodeLiveLAEmail
+    (
+        string emailAddress,
+        string recipientName,
+        string referenceCode,
+        string custodianCode
+    );
+
+    public void SendReferenceCodePendingLAEmail
     (
         string emailAddress,
         string recipientName,

@@ -48,14 +48,14 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             }
         }
 
-        public void SendReferenceCodeEmail
+        private void SendReferenceCodeEmail
         (
             string emailAddress,
             string recipientName,
             string referenceCode,
-            string custodianCode
+            string custodianCode,
+            ReferenceCodeConfiguration template
         ) {
-            var template = govUkNotifyConfig.ReferenceCodeTemplate;
             LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
             try
             {
@@ -75,7 +75,6 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                     ex
                 );
             }
-            
             var personalisation = new Dictionary<string, dynamic>
             {
                 { template.RecipientNamePlaceholder, recipientName },
@@ -90,6 +89,27 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 Personalisation = personalisation
             };
             SendEmail(emailModel);
+        }
+        public void SendReferenceCodePendingLAEmail
+        (
+            string emailAddress,
+            string recipientName,
+            string referenceCode,
+            string custodianCode
+        )
+        {
+            SendReferenceCodeEmail(emailAddress, recipientName, referenceCode, custodianCode, govUkNotifyConfig.ReferenceCodePendingLATemplate);
+        }
+
+        public void SendReferenceCodeLiveLAEmail
+        (
+            string emailAddress,
+            string recipientName,
+            string referenceCode,
+            string custodianCode
+        )
+        {
+            SendReferenceCodeEmail(emailAddress, recipientName, referenceCode, custodianCode, govUkNotifyConfig.ReferenceCodeTemplate);
         }
 
         public void SendFollowUpEmail
