@@ -489,7 +489,7 @@ public class QuestionnaireController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return NotParticipating_Get(viewModel.EntryPoint, false);
+            return NotParticipating_Get(viewModel.EntryPoint);
         }
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
@@ -870,12 +870,7 @@ public class QuestionnaireController : Controller
     {
         var partialViewName = questionnaire.CustodianCode switch
         {
-            "2610" => "Broadland",
-            "2605" => "Broadland",
-            "2620" => "Broadland",
-            "2625" => "Broadland",
-            "2630" => "Broadland",
-            "2635" => "Broadland",
+            "2605" or "2610" or "2620" or "2625" or "2630" or "2635" => "Broadland",
             _ => "Default"
         };
         return $"~/Views/Partials/LocalAuthorityMessages/NotParticipating/{partialViewName}.cshtml";
