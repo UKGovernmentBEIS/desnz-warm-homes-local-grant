@@ -11,7 +11,6 @@ namespace HerPublicWebsite.Models.Questionnaire;
 
 public class PendingViewModel : QuestionFlowViewModel
 {
-
     public string LocalAuthorityName { get; set; }
     
     public string LocalAuthorityMessagePartialViewPath { get; set; }
