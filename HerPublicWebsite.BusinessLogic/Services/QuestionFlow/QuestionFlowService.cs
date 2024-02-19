@@ -176,6 +176,15 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             };
         }
         
+        private QuestionFlowStep NotParticipatingBackDestination(Questionnaire questionnaire)
+        {
+            return questionnaire.Uprn switch
+            {
+                null => QuestionFlowStep.ConfirmLocalAuthority,
+                _ => QuestionFlowStep.Address
+            };
+        }
+        
         private QuestionFlowStep PendingBackDestination(Questionnaire questionnaire)
         {
             return questionnaire.Uprn switch
@@ -272,6 +281,10 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotTakingPart)
             {
                 return QuestionFlowStep.NotTakingPart;
+            }
+            else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotParticipating)
+            {
+                return QuestionFlowStep.NotParticipating;
             }
             else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotParticipating)
             {
