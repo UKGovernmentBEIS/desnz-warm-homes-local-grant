@@ -470,7 +470,7 @@ public class QuestionnaireController : Controller
     public IActionResult NotParticipating_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var viewModel = new NotParticipatingViewModel()
+        var viewModel = new NotParticipatingViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             Submitted = emailPreferenceSubmitted,
