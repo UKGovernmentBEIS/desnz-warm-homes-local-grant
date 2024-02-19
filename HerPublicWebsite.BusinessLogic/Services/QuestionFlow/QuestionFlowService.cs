@@ -323,13 +323,13 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             {
                 return QuestionFlowStep.SelectLocalAuthority;
             }
-            else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotParticipating)
-            {
-                return QuestionFlowStep.NotParticipating;
-            }
             else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotTakingPart)
             {
                 return QuestionFlowStep.NotTakingPart;
+            }
+            else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotParticipating)
+            {
+                return QuestionFlowStep.NotParticipating;
             }
             else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Pending)
             {

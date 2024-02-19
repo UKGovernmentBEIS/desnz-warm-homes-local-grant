@@ -1,14 +1,12 @@
 ﻿@using GovUkDesignSystem
 @using GovUkDesignSystem.GovUkDesignSystemComponents
-@using HerPublicWebsite.BusinessLogic.Models.Enums
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using HerPublicWebsite.Controllers
 @using HerPublicWebsite.Models.Enums
-
 @model HerPublicWebsite.Models.Questionnaire.NotParticipatingViewModel
 
 @{
-    ViewBag.Title = "Your local authority is not taking part"; 
+    ViewBag.Title = "Your Local Authority is not receiving applications via this service";
 }
 
 @section BeforeMain {
@@ -16,35 +14,35 @@
         @await Html.GovUkBackLink(new BackLinkViewModel
         {
             Text = "Back",
-            Href = Model.BackLink,
+            Href = Model.BackLink
         })
     </nav>
 }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        
+
         <h1 class="govuk-heading-l">Your Local Authority is not receiving applications via this service.</h1>
-        
+
         <h2 class="govuk-heading-m">What to do next</h2>
 
         @await Html.PartialAsync(Model.LocalAuthorityMessagePartialViewPath)
 
         <p class="govuk-body">
-            If your local authority does not seem right, <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your correct local authority</a> and contact them directly.
+            If your local authority does not seem to be right, <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your correct local authority</a> and contact them directly.
         </p>
-        
+
         @if (Model.Submitted)
         {
             @await Html.GovUkNotificationBanner(
-                       new NotificationBannerViewModel
-                       {
-                           Type = "success",
-                           TitleText = "Success",
-                           Text = "Your contact details have been submitted.",
-                           Role = "alert"
-                       }
-                       )
+                new NotificationBannerViewModel
+                {
+                    Type = "success",
+                    TitleText = "Success",
+                    Text = "Your contact details have been submitted.",
+                    Role = "alert"
+                }
+            )
         }
         else
         {
@@ -53,59 +51,62 @@
                 @Html.AntiForgeryToken()
 
                 @await Html.GovUkRadiosFor(
-                           m => m.CanContactByEmailAboutFutureSchemes,
-                           fieldsetOptions: new FieldsetViewModel
-                           {
-                               Legend = new LegendViewModel
-                               {
-                                   Html = @<text>
-                                              <h2 class="govuk-fieldset__legend--m">Can we email you about future energy grants?</h2>
-                                              <p class="govuk-body">We will only email you when new grants for homes become available.</p>
-                                           </text>
-                               },
-                           },
-                           conditionalOptions: new Dictionary<YesOrNo, Conditional>
-                           {
-                               {
-                                   YesOrNo.Yes,
-                                   new Conditional
-                                   {
-                                       Html = (@<text>
-                                                   @await Html.GovUkTextInputFor(
-                                                              m => m.EmailAddress,
-                                                              labelOptions: new LabelViewModel
-                                                              {
-                                                                  Text = "Email address",
-                                                              },
-                                                              classes: "govuk-input govuk-input--width-20",
-                                                              autocomplete: "email")
-                                                </text>)
-                                   }
-                               }
-                           })
+                    m => m.CanContactByEmailAboutFutureSchemes,
+                    fieldsetOptions: new FieldsetViewModel
+                    {
+                        Legend = new LegendViewModel
+                        {
+                            Html = @<text>
+                                        <h2 class="govuk-fieldset__legend--m">Can we email you about future energy grants?</h2>
+                                        <p class="govuk-body">We will only email you when new grants for homes become available.</p>
+                                    </text>
+                        }
+                    },
+                    conditionalOptions: new Dictionary<YesOrNo, Conditional>
+                    {
+                        {
+                            YesOrNo.Yes,
+                            new Conditional
+                            {
+                                Html = (@<text>
+                                             @await Html.GovUkTextInputFor(
+                                                 m => m.EmailAddress,
+                                                 new LabelViewModel
+                                                 {
+                                                     Text = "Email address"
+                                                 },
+                                                 classes: "govuk-input govuk-input--width-20",
+                                                 autocomplete: "email")
+                                         </text>)
+                            }
+                        }
+                    })
                 <div class="govuk-button-group">
                     @(await Html.GovUkButton(new ButtonViewModel
                     {
-                        Text = "Submit",
+                        Text = "Submit"
                     }))
                 </div>
             </form>
         }
-        
+
         <h2 class="govuk-heading-m">You might be able to get help from your energy supplier</h2>
         <p class="govuk-body">
             You might be able to get help for energy-saving improvements to your home if you either:
         </p>
         <ul class="govuk-list govuk-list--bullet">
             <li>
-                claim certain benefits and live in private housing (for example you own your home or rent from a private landlord) 
+                claim certain benefits and live in private housing (for example you own your home or rent from a private landlord)
             </li>
             <li>
                 live in social housing
             </li>
         </ul>
         <p class="govuk-body">
-            Check if you are eligible for the <a class="govuk-link" href="https://www.gov.uk/energy-company-obligation">
-            Energy Company Obligation</a> scheme.</p>
+            Check if you are eligible for the
+            <a class="govuk-link" href="https://www.gov.uk/energy-company-obligation">
+                Energy Company Obligation
+            </a> scheme.
+        </p>
     </div>
 </div>
