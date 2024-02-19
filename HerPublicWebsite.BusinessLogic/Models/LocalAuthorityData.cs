@@ -4,12 +4,13 @@ namespace HerPublicWebsite.BusinessLogic.Models;
 
 public class LocalAuthorityData
 {
-        public enum Hug2Status
-        {
-                NotTakingPart,
-                Pending,
-                Live
-        }
+    public enum Hug2Status
+    {
+        NotParticipating,
+        NotTakingPart,
+        Pending,
+        Live
+    }
 
         public record LocalAuthorityDetails(
             string Name,
