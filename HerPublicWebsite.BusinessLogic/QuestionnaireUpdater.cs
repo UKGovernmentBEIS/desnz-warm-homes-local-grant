@@ -127,28 +127,16 @@ public class QuestionnaireUpdater
 
         questionnaire.ReferralCode = referralRequest.ReferralCode;
         questionnaire.ReferralCreated = referralRequest.RequestDate;
-
+        
         if (!string.IsNullOrEmpty(emailAddress))
         {
-            if(questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending)
+            if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending)
             {
-                emailSender.SendReferenceCodePendingLAEmail
-                (
-                    emailAddress,
-                    name,
-                    referralRequest.ReferralCode,
-                    referralRequest.CustodianCode
-                );
+                emailSender.SendReferenceCodeEmailForPendingLocalAuthority(emailAddress, name, referralRequest);
             }
             else
             {
-                emailSender.SendReferenceCodeLiveLAEmail
-                (
-                    emailAddress,
-                    name,
-                    referralRequest.ReferralCode,
-                    referralRequest.CustodianCode
-                );
+                emailSender.SendReferenceCodeEmailForLiveLocalAuthority(emailAddress, name, referralRequest);
             }
         }
 
@@ -220,12 +208,11 @@ public class QuestionnaireUpdater
 
         if (confirmationConsentGranted)
         {
-            emailSender.SendReferenceCodeLiveLAEmail
+            emailSender.SendReferenceCodeEmailForLiveLocalAuthority
             (
                 confirmationEmailAddress,
                 questionnaire.LaContactName,
-                questionnaire.ReferralCode,
-                questionnaire.CustodianCode
+                new ReferralRequest(questionnaire)
             );
         }
 

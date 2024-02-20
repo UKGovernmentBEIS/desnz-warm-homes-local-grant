@@ -6,8 +6,8 @@ public class GovUkNotifyConfiguration
         
     public string ApiKey { get; set; }
     public string ComplianceEmailRecipients { get; set; }
-    public ReferenceCodeConfiguration ReferenceCodeTemplate { get; set; }
-    public ReferenceCodeConfiguration ReferenceCodePendingLATemplate { get; set; }
+    public ReferenceCodeConfiguration ReferenceCodeForLiveLocalAuthorityTemplate { get; set; }
+    public ReferenceCodeConfiguration ReferenceCodeForPendingLocalAuthorityTemplate { get; set; }
     public ReferralFollowUpConfiguration ReferralFollowUpTemplate { get; set; }
     public ComplianceReportConfiguration ComplianceReportTemplate { get; set; }
 }
