@@ -857,18 +857,11 @@ public class QuestionnaireController : Controller
     
     private static string GetLocalAuthorityConfirmationMessagePartialViewPath(Questionnaire questionnaire)
     {
-        var partialViewName = "";
-        if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending)
+        var partialViewName = (questionnaire.LocalAuthorityHug2Status, questionnaire.CustodianCode) switch
         {
-            partialViewName = "Pending";
-        }
-        else
-        {
-             partialViewName = questionnaire.CustodianCode switch
-            {
-                _ => "Default"
-            };
-        }
-        return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";
+            (LocalAuthorityData.Hug2Status.Pending, _) => "Pending",
+            _ => "Default"
+        };
+        return partialViewName;
     }
 }
