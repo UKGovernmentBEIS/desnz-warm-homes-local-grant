@@ -6,8 +6,8 @@ public class LocalAuthorityData
 {
     public enum Hug2Status
     {
-        NotParticipating,
         NotTakingPart,
+        NotParticipating,
         Pending,
         Live
     }
