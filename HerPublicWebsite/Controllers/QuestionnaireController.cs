@@ -510,15 +510,13 @@ public class QuestionnaireController : Controller
     }
     
     [HttpGet("pending")]
-    public IActionResult Pending_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
+    public IActionResult Pending_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new PendingViewModel()
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
-            LocalAuthorityMessagePartialViewPath = GetLocalAuthorityPendingMessagePartialViewPath(questionnaire),
-            UserAcknowledgesApplicationNotProcessedUntilLocalAuthorityLive = false,
-            Submitted = emailPreferenceSubmitted,
+            UserAcknowledgedPending = false,
             EntryPoint = entryPoint,
             BackLink = GetBackUrl(QuestionFlowStep.Pending, questionnaire, entryPoint)
         };
@@ -531,7 +529,7 @@ public class QuestionnaireController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return Pending_Get(viewModel.EntryPoint, false);
+            return Pending_Get(viewModel.EntryPoint);
         }
         var questionnaire = questionnaireService.GetQuestionnaire();
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Pending, questionnaire, viewModel.EntryPoint);
@@ -845,15 +843,6 @@ public class QuestionnaireController : Controller
             Controller = controller;
             Values = values;
         }
-    }
-    
-    private static string GetLocalAuthorityPendingMessagePartialViewPath(Questionnaire questionnaire)
-    {
-        var partialViewName = questionnaire.CustodianCode switch
-        {
-            _ => "Default"
-        };
-        return $"~/Views/Partials/LocalAuthorityMessages/Pending/{partialViewName}.cshtml";
     }
     
     private static string GetLocalAuthorityNotParticipatingMessagePartialViewPath(Questionnaire questionnaire)

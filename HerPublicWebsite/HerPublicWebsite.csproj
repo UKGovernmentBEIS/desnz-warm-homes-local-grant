@@ -35,4 +35,8 @@
         </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Partials\LocalAuthorityMessages\Pending\Default.cshtml" />
+    </ItemGroup>
+
 </Project>

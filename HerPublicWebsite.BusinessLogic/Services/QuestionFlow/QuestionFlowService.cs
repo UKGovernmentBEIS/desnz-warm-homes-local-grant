@@ -191,6 +191,10 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             {
                 return QuestionFlowStep.CheckAnswers;
             }
+            else if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending)
+            {
+                return QuestionFlowStep.Pending;
+            }
             else if (questionnaire.FoundEpcBandIsTooHigh)
             {
                 return QuestionFlowStep.ReviewEpc;
@@ -277,13 +281,13 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             {
                 return QuestionFlowStep.NotParticipating;
             }
-            else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotParticipating)
-            {
-                return QuestionFlowStep.NotParticipating;
-            }
             else if (questionnaire.FoundEpcBandIsTooHigh)
             {
                 return QuestionFlowStep.ReviewEpc;
+            }
+            else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Pending)
+            {
+                return QuestionFlowStep.Pending;
             }
             // If the LA has changed and the income band the user selected previously is no longer valid then we don't
             // go back to the check your answers page as the user will need to select a new income band.
@@ -331,15 +335,15 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             {
                 return QuestionFlowStep.NotParticipating;
             }
-            else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Pending)
-            {
-                return QuestionFlowStep.Pending;
-            }
             // If the LA has changed and the income band the user selected previously is no longer valid then we don't
             // go back to the check your answers page as the user will need to select a new income band.
             else if (entryPoint is QuestionFlowStep.Address && questionnaire.IncomeBandIsValid)
             {
                 return QuestionFlowStep.CheckAnswers;
+            }
+            else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Pending)
+            {
+                return QuestionFlowStep.Pending;
             }
 
             return QuestionFlowStep.HouseholdIncome;
