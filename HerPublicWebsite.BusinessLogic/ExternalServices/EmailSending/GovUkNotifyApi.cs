@@ -47,56 +47,13 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 }
             }
         }
-
-        private void SendReferenceCodeEmail
-        (
-            string emailAddress,
-            string recipientName,
-            string referenceCode,
-            string custodianCode,
-            ReferenceCodeConfiguration template
-        ) {
-            LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
-            try
-            {
-                localAuthorityDetails = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[custodianCode];
-            }
-            catch (KeyNotFoundException ex)
-            {
-                logger.LogError
-                (
-                    ex,
-                    "Attempted to send reference code email with invalid custodian code \"{CustodianCode}\"",
-                    custodianCode
-                );
-                throw new ArgumentOutOfRangeException
-                (
-                    $"Attempted to send reference code email with invalid custodian code \"{custodianCode}\"",
-                    ex
-                );
-            }
-            var personalisation = new Dictionary<string, dynamic>
-            {
-                { template.RecipientNamePlaceholder, recipientName },
-                { template.ReferenceCodePlaceholder, referenceCode },
-                { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
-                { template.LocalAuthorityWebsiteUrlPlaceholder, localAuthorityDetails.WebsiteUrl },
-            };
-            var emailModel = new GovUkNotifyEmailModel
-            {
-                EmailAddress = emailAddress,
-                TemplateId = template.Id,
-                Personalisation = personalisation
-            };
-            SendEmail(emailModel);
-        }
+        
         public void SendReferenceCodePendingLAEmail
         (
             string emailAddress,
             string recipientName,
             string referenceCode,
-            string custodianCode
-        )
+            string custodianCode)
         {
             SendReferenceCodeEmail(emailAddress, recipientName, referenceCode, custodianCode, govUkNotifyConfig.ReferenceCodePendingLATemplate);
         }
@@ -106,8 +63,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             string emailAddress,
             string recipientName,
             string referenceCode,
-            string custodianCode
-        )
+            string custodianCode)
         {
             SendReferenceCodeEmail(emailAddress, recipientName, referenceCode, custodianCode, govUkNotifyConfig.ReferenceCodeTemplate);
         }
@@ -185,6 +141,48 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                     
                 }    
 
+        private void SendReferenceCodeEmail
+        (
+            string emailAddress,
+            string recipientName,
+            string referenceCode,
+            string custodianCode,
+            ReferenceCodeConfiguration template)
+        {
+            LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
+            try
+            {
+                localAuthorityDetails = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[custodianCode];
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogError
+                (
+                    ex,
+                    "Attempted to send reference code email with invalid custodian code \"{CustodianCode}\"",
+                    custodianCode
+                );
+                throw new ArgumentOutOfRangeException
+                (
+                    $"Attempted to send reference code email with invalid custodian code \"{custodianCode}\"",
+                    ex
+                );
+            }
+            var personalisation = new Dictionary<string, dynamic>
+            {
+                { template.RecipientNamePlaceholder, recipientName },
+                { template.ReferenceCodePlaceholder, referenceCode },
+                { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
+                { template.LocalAuthorityWebsiteUrlPlaceholder, localAuthorityDetails.WebsiteUrl },
+            };
+            var emailModel = new GovUkNotifyEmailModel
+            {
+                EmailAddress = emailAddress,
+                TemplateId = template.Id,
+                Personalisation = personalisation
+            };
+            SendEmail(emailModel);
+        }
     }
     
     internal class GovUkNotifyEmailModel
