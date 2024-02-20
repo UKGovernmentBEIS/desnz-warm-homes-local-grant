@@ -862,6 +862,6 @@ public class QuestionnaireController : Controller
             (LocalAuthorityData.Hug2Status.Pending, _) => "Pending",
             _ => "Default"
         };
-        return partialViewName;
+        return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";
     }
 }
