@@ -113,7 +113,7 @@ public class LocalAuthorityData
         { "1610", new LocalAuthorityDetails("Cotswold District Council", Hug2Status.Live, "https://www.cotswold.gov.uk/", IncomeBandOptions[IncomeThreshold._31000],"Stroud") },
         { "4610", new LocalAuthorityDetails("Coventry City Council", Hug2Status.Pending, "https://www.coventry.gov.uk/", IncomeBandOptions[IncomeThreshold._31000],"Midlands NetZero Hub") },
         { "3820", new LocalAuthorityDetails("Crawley Borough Council", Hug2Status.Live, "https://crawley.gov.uk/", IncomeBandOptions[IncomeThreshold._31000],"Portsmouth") },
-        { "5240", new LocalAuthorityDetails("London Borough of Croydon", Hug2Status.Pending, "http://www.croydon.gov.uk", IncomeBandOptions[IncomeThreshold._31000],"Greater London Authority") },
+        { "5240", new LocalAuthorityDetails("London Borough of Croydon", Hug2Status.Live, "http://www.croydon.gov.uk", IncomeBandOptions[IncomeThreshold._31000],"Greater London Authority") },
         { "940", new LocalAuthorityDetails("Cumberland Council", Hug2Status.NotTakingPart, "https://www.cumberland.gov.uk/", IncomeBandOptions[IncomeThreshold._31000],"Eden District Council") },
         { "1910", new LocalAuthorityDetails("Dacorum Borough Council", Hug2Status.Pending, "http://www.dacorum.gov.uk/", IncomeBandOptions[IncomeThreshold._31000],"Cambridgeshire & Peterborough Combined Authority") },
         { "1350", new LocalAuthorityDetails("Darlington Borough Council", Hug2Status.Pending, "https://www.darlington.gov.uk/", IncomeBandOptions[IncomeThreshold._31000],"Darlington Borough Council") },
