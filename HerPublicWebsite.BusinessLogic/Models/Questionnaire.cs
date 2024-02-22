@@ -78,7 +78,7 @@ public record Questionnaire
         }
     }
 
-    public virtual LocalAuthorityData.Hug2Status? LocalAuthorityHug2Status
+    public LocalAuthorityData.Hug2Status? LocalAuthorityHug2Status
     {
         get
         {
