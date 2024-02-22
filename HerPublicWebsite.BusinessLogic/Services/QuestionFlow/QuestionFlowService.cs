@@ -61,7 +61,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.ConfirmLocalAuthority => ConfirmLocalAuthorityForwardDestination(questionnaire, entryPoint),
                 QuestionFlowStep.NotParticipating => NotParticipatingForwardDestination(questionnaire),
                 QuestionFlowStep.NotTakingPart => NotTakingPartForwardDestination(questionnaire),
-                QuestionFlowStep.Pending => PendingForwardDestination(questionnaire),
+                QuestionFlowStep.Pending => PendingForwardDestination(questionnaire, entryPoint),
                 QuestionFlowStep.HouseholdIncome => HouseholdIncomeForwardDestination(questionnaire),
                 QuestionFlowStep.CheckAnswers => CheckAnswersForwardDestination(questionnaire),
                 QuestionFlowStep.Eligible => EligibleForwardDestination(questionnaire),
@@ -301,9 +301,13 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
 
         private QuestionFlowStep ReviewEpcForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
+            if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Pending)
+            {
+                return QuestionFlowStep.Pending;
+            }
             // If the LA has changed and the income band the user selected previously is no longer valid then we don't
             // go back to the check your answers page as the user will need to select a new income band.
-            if (entryPoint is QuestionFlowStep.Address && questionnaire.IncomeBandIsValid)
+            else if (entryPoint is QuestionFlowStep.Address && questionnaire.IncomeBandIsValid)
             {
                 return QuestionFlowStep.CheckAnswers;
             }
@@ -335,15 +339,15 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             {
                 return QuestionFlowStep.NotParticipating;
             }
+            else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Pending)
+            {
+                return QuestionFlowStep.Pending;
+            }
             // If the LA has changed and the income band the user selected previously is no longer valid then we don't
             // go back to the check your answers page as the user will need to select a new income band.
             else if (entryPoint is QuestionFlowStep.Address && questionnaire.IncomeBandIsValid)
             {
                 return QuestionFlowStep.CheckAnswers;
-            }
-            else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Pending)
-            {
-                return QuestionFlowStep.Pending;
             }
 
             return QuestionFlowStep.HouseholdIncome;
@@ -359,8 +363,12 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             return QuestionFlowStep.NotParticipating;
         }
         
-        private QuestionFlowStep PendingForwardDestination(Questionnaire questionnaire)
+        private QuestionFlowStep PendingForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
+            if (entryPoint is QuestionFlowStep.Address && questionnaire.IncomeBandIsValid)
+            {
+                return QuestionFlowStep.CheckAnswers;
+            }
             return QuestionFlowStep.HouseholdIncome;
         }
 
