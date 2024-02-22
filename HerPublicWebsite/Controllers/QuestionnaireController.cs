@@ -516,7 +516,7 @@ public class QuestionnaireController : Controller
         var viewModel = new PendingViewModel()
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
-            UserAcknowledgedPending = false,
+            UserAcknowledgedPending = questionnaire.AcknowledgedPending ?? false,
             EntryPoint = entryPoint,
             BackLink = GetBackUrl(QuestionFlowStep.Pending, questionnaire, entryPoint)
         };
@@ -531,7 +531,7 @@ public class QuestionnaireController : Controller
         {
             return Pending_Get(viewModel.EntryPoint);
         }
-        var questionnaire = questionnaireService.GetQuestionnaire();
+        var questionnaire = questionnaireService.UpdateAcknowledgedPending(viewModel.UserAcknowledgedPending, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Pending, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
