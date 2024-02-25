@@ -857,8 +857,9 @@ public class QuestionnaireController : Controller
     
     private static string GetLocalAuthorityConfirmationMessagePartialViewPath(Questionnaire questionnaire)
     {
-        var partialViewName = questionnaire.CustodianCode switch
+        var partialViewName = (questionnaire.LocalAuthorityHug2Status, questionnaire.CustodianCode) switch
         {
+            (LocalAuthorityData.Hug2Status.Pending, _) => "Pending",
             _ => "Default"
         };
         return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";
