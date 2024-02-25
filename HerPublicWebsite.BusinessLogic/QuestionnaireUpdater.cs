@@ -137,13 +137,14 @@ public class QuestionnaireUpdater
 
         if (!string.IsNullOrEmpty(emailAddress))
         {
-            emailSender.SendReferenceCodeEmail
-            (
-                emailAddress,
-                name,
-                referralRequest.ReferralCode,
-                referralRequest.CustodianCode
-            );
+            if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending)
+            {
+                emailSender.SendReferenceCodeEmailForPendingLocalAuthority(emailAddress, name, referralRequest);
+            }
+            else
+            {
+                emailSender.SendReferenceCodeEmailForLiveLocalAuthority(emailAddress, name, referralRequest);
+            }
         }
 
         try
@@ -214,13 +215,20 @@ public class QuestionnaireUpdater
 
         if (confirmationConsentGranted)
         {
-            emailSender.SendReferenceCodeEmail
-            (
-                confirmationEmailAddress,
-                questionnaire.LaContactName,
-                questionnaire.ReferralCode,
-                questionnaire.CustodianCode
-            );
+            if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending)
+            {
+                emailSender.SendReferenceCodeEmailForPendingLocalAuthority(
+                    confirmationEmailAddress, 
+                    questionnaire.LaContactName,                 
+                    new ReferralRequest(questionnaire));
+            }
+            else
+            {
+                emailSender.SendReferenceCodeEmailForLiveLocalAuthority(
+                    confirmationEmailAddress, 
+                    questionnaire.LaContactName, 
+                    new ReferralRequest(questionnaire));
+            }
         }
 
         return questionnaire;
