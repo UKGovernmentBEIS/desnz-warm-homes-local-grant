@@ -105,6 +105,13 @@ public class QuestionnaireUpdater
         return UpdateQuestionnaire(q => q.LocalAuthorityConfirmed = confirmed, questionnaire,
             QuestionFlowStep.ConfirmLocalAuthority, entryPoint);
     }
+    
+    public Questionnaire UpdateAcknowledgedPending(Questionnaire questionnaire, bool? acknowledgedPending,
+        QuestionFlowStep? entryPoint)
+    {
+        return UpdateQuestionnaire(q => q.AcknowledgedPending = acknowledgedPending, questionnaire,
+            QuestionFlowStep.Pending, entryPoint);
+    }
 
     public Questionnaire UpdateHouseholdIncome(Questionnaire questionnaire, IncomeBand incomeBand,
         QuestionFlowStep? entryPoint)

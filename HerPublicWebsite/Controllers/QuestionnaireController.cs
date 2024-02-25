@@ -510,16 +510,13 @@ public class QuestionnaireController : Controller
     }
     
     [HttpGet("pending")]
-    public IActionResult Pending_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
+    public IActionResult Pending_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new PendingViewModel()
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
-            LocalAuthorityMessagePartialViewPath = GetLocalAuthorityPendingMessagePartialViewPath(questionnaire),
-            Submitted = emailPreferenceSubmitted,
-            EmailAddress = questionnaire.NotificationEmailAddress,
-            CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
+            UserAcknowledgedPending = questionnaire.AcknowledgedPending ?? false,
             EntryPoint = entryPoint,
             BackLink = GetBackUrl(QuestionFlowStep.Pending, questionnaire, entryPoint)
         };
@@ -528,26 +525,17 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("pending")]
-    public async Task<IActionResult> Pending_Post(IneligibleViewModel viewModel)
+    public async Task<IActionResult> Pending_Post(PendingViewModel viewModel)
     {
         if (!ModelState.IsValid)
         {
-            return Pending_Get(viewModel.EntryPoint, false);
+            return Pending_Get(viewModel.EntryPoint);
         }
-
-        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
-            viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
-            viewModel.EmailAddress
-        );
-
+        var questionnaire = questionnaireService.UpdateAcknowledgedPending(viewModel.UserAcknowledgedPending, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Pending, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
-            viewModel.EntryPoint,
-            extraRouteValues: new Dictionary<string, object>
-            {
-                { "emailPreferenceSubmitted", true }
-            }
+            viewModel.EntryPoint
         );
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
@@ -855,15 +843,6 @@ public class QuestionnaireController : Controller
             Controller = controller;
             Values = values;
         }
-    }
-    
-    private static string GetLocalAuthorityPendingMessagePartialViewPath(Questionnaire questionnaire)
-    {
-        var partialViewName = questionnaire.CustodianCode switch
-        {
-            _ => "Default"
-        };
-        return $"~/Views/Partials/LocalAuthorityMessages/Pending/{partialViewName}.cshtml";
     }
     
     private static string GetLocalAuthorityNotParticipatingMessagePartialViewPath(Questionnaire questionnaire)
