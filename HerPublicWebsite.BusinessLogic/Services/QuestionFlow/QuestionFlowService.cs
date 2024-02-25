@@ -178,11 +178,16 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         
         private QuestionFlowStep PendingBackDestination(Questionnaire questionnaire)
         {
-            return questionnaire.Uprn switch
+            if (questionnaire.FoundEpcBandIsTooHigh)
             {
-                null => QuestionFlowStep.ConfirmLocalAuthority,
-                _ => QuestionFlowStep.Address
-            };
+                return QuestionFlowStep.ReviewEpc;
+            }
+            else if (questionnaire.Uprn is null)
+            {
+                return QuestionFlowStep.ConfirmLocalAuthority;
+            }
+
+            return QuestionFlowStep.Address;
         }
 
         private QuestionFlowStep HouseholdIncomeBackDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
@@ -365,6 +370,8 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         
         private QuestionFlowStep PendingForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
         {
+            // If the LA has changed and the income band the user selected previously is no longer valid then we don't
+            // go back to the check your answers page as the user will need to select a new income band.
             if (entryPoint is QuestionFlowStep.Address && questionnaire.IncomeBandIsValid)
             {
                 return QuestionFlowStep.CheckAnswers;
