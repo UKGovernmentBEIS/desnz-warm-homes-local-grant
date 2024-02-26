@@ -466,17 +466,57 @@ public class QuestionnaireController : Controller
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
     
+    [HttpGet("not-participating")]
+    public IActionResult NotParticipating_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new NotParticipatingViewModel
+        {
+            LocalAuthorityName = questionnaire.LocalAuthorityName,
+            Submitted = emailPreferenceSubmitted,
+            EmailAddress = questionnaire.NotificationEmailAddress,
+            LocalAuthorityMessagePartialViewPath = GetLocalAuthorityNotParticipatingMessagePartialViewPath(questionnaire),
+            CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
+            EntryPoint = entryPoint,
+            BackLink = GetBackUrl(QuestionFlowStep.NotTakingPart, questionnaire, entryPoint)
+        };
+
+        return View("NotParticipating", viewModel);
+    }
+    
+    [HttpPost("not-participating")]
+    public async Task<IActionResult> NotParticipating_Post(IneligibleViewModel viewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return NotParticipating_Get(viewModel.EntryPoint);
+        }
+
+        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
+            viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
+            viewModel.EmailAddress
+        );
+
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.NotParticipating, questionnaire, viewModel.EntryPoint);
+        var forwardArgs = GetActionArgumentsForQuestion(
+            nextStep,
+            viewModel.EntryPoint,
+            extraRouteValues: new Dictionary<string, object>
+            {
+                { "emailPreferenceSubmitted", true }
+            }
+        );
+        return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
+    }
+    
     [HttpGet("pending")]
-    public IActionResult Pending_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
+    public IActionResult Pending_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new PendingViewModel()
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
-            LocalAuthorityMessagePartialViewPath = GetLocalAuthorityPendingMessagePartialViewPath(questionnaire),
-            Submitted = emailPreferenceSubmitted,
-            EmailAddress = questionnaire.NotificationEmailAddress,
-            CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
+            UserAcknowledgedPending = questionnaire.AcknowledgedPending ?? false,
             EntryPoint = entryPoint,
             BackLink = GetBackUrl(QuestionFlowStep.Pending, questionnaire, entryPoint)
         };
@@ -485,26 +525,17 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("pending")]
-    public async Task<IActionResult> Pending_Post(IneligibleViewModel viewModel)
+    public async Task<IActionResult> Pending_Post(PendingViewModel viewModel)
     {
         if (!ModelState.IsValid)
         {
-            return Pending_Get(viewModel.EntryPoint, false);
+            return Pending_Get(viewModel.EntryPoint);
         }
-
-        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
-            viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
-            viewModel.EmailAddress
-        );
-
+        var questionnaire = questionnaireService.UpdateAcknowledgedPending(viewModel.UserAcknowledgedPending, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Pending, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
-            viewModel.EntryPoint,
-            extraRouteValues: new Dictionary<string, object>
-            {
-                { "emailPreferenceSubmitted", true }
-            }
+            viewModel.EntryPoint
         );
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
@@ -770,6 +801,7 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.ManualAddress => new PathByActionArguments(nameof(ManualAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.SelectLocalAuthority => new PathByActionArguments(nameof(SelectLocalAuthority_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.ConfirmLocalAuthority => new PathByActionArguments(nameof(ConfirmLocalAuthority_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.NotParticipating => new PathByActionArguments(nameof(NotParticipating_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.NotTakingPart => new PathByActionArguments(nameof(NotTakingPart_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.Pending => new PathByActionArguments(nameof(Pending_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.HouseholdIncome => new PathByActionArguments(nameof(HouseholdIncome_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
@@ -813,25 +845,21 @@ public class QuestionnaireController : Controller
         }
     }
     
-    private static string GetLocalAuthorityPendingMessagePartialViewPath(Questionnaire questionnaire)
+    private static string GetLocalAuthorityNotParticipatingMessagePartialViewPath(Questionnaire questionnaire)
     {
         var partialViewName = questionnaire.CustodianCode switch
         {
-            "2610" => "Broadland",
-            "2605" => "Broadland",
-            "2620" => "Broadland",
-            "2625" => "Broadland",
-            "2630" => "Broadland",
-            "2635" => "Broadland",
+            "2605" or "2610" or "2620" or "2625" or "2630" or "2635" => "Broadland",
             _ => "Default"
         };
-        return $"~/Views/Partials/LocalAuthorityMessages/Pending/{partialViewName}.cshtml";
+        return $"~/Views/Partials/LocalAuthorityMessages/NotParticipating/{partialViewName}.cshtml";
     }
     
     private static string GetLocalAuthorityConfirmationMessagePartialViewPath(Questionnaire questionnaire)
     {
-        var partialViewName = questionnaire.CustodianCode switch
+        var partialViewName = (questionnaire.LocalAuthorityHug2Status, questionnaire.CustodianCode) switch
         {
+            (LocalAuthorityData.Hug2Status.Pending, _) => "Pending",
             _ => "Default"
         };
         return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";

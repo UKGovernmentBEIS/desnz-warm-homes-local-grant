@@ -22,6 +22,7 @@ public class QuestionnaireTests
             AddressPostcode = "PST C0D",
             CustodianCode = "5210",
             LocalAuthorityConfirmed = true,
+            AcknowledgedPending = false,
             Uprn = "123456789123",
             EpcDetails = new EpcDetails(),
             EpcDetailsAreCorrect = EpcConfirmation.Yes,

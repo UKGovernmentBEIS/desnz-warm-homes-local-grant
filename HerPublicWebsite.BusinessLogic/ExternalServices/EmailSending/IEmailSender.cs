@@ -4,13 +4,15 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 
 public interface IEmailSender
 {
-    public void SendReferenceCodeEmail
-    (
+    public void SendReferenceCodeEmailForLiveLocalAuthority(
         string emailAddress,
         string recipientName,
-        string referenceCode,
-        string custodianCode
-    );
+        ReferralRequest referralRequest);
+
+    public void SendReferenceCodeEmailForPendingLocalAuthority(
+        string emailAddress,
+        string recipientName,
+        ReferralRequest referralRequest);
 
     public void SendFollowUpEmail
     (

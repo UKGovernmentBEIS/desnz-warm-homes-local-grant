@@ -67,6 +67,14 @@ public class QuestionnaireService
 
     {
         var questionnaire = GetQuestionnaire();
+        if (questionnaire.AddressLine1 != address.AddressLine1 || 
+            questionnaire.AddressLine2 != address.AddressLine2 ||
+            questionnaire.AddressCounty != address.County || 
+            questionnaire.AddressTown != address.Town ||
+            questionnaire.AddressPostcode != address.Postcode)
+        {
+            questionnaire = questionnaireUpdater.UpdateAcknowledgedPending(questionnaire, false, entryPoint);
+        }
         questionnaire = await questionnaireUpdater.UpdateAddressAsync(questionnaire, address, entryPoint);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
@@ -83,6 +91,10 @@ public class QuestionnaireService
     public Questionnaire UpdateLocalAuthority(string custodianCode, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
+        if (questionnaire.CustodianCode != custodianCode)
+        {
+            questionnaire = questionnaireUpdater.UpdateAcknowledgedPending(questionnaire, false, entryPoint);
+        }
         questionnaire = questionnaireUpdater.UpdateLocalAuthority(questionnaire, custodianCode, entryPoint);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
@@ -92,6 +104,14 @@ public class QuestionnaireService
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = questionnaireUpdater.UpdateLocalAuthorityIsCorrect(questionnaire, laIsCorrect, entryPoint);
+        SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+    
+    public Questionnaire UpdateAcknowledgedPending(bool acknowledgedPending, QuestionFlowStep? entryPoint)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdateAcknowledgedPending(questionnaire, acknowledgedPending, entryPoint);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }

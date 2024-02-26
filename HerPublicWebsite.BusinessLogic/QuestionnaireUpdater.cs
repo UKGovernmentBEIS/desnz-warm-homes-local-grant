@@ -105,6 +105,13 @@ public class QuestionnaireUpdater
         return UpdateQuestionnaire(q => q.LocalAuthorityConfirmed = confirmed, questionnaire,
             QuestionFlowStep.ConfirmLocalAuthority, entryPoint);
     }
+    
+    public Questionnaire UpdateAcknowledgedPending(Questionnaire questionnaire, bool? acknowledgedPending,
+        QuestionFlowStep? entryPoint)
+    {
+        return UpdateQuestionnaire(q => q.AcknowledgedPending = acknowledgedPending, questionnaire,
+            QuestionFlowStep.Pending, entryPoint);
+    }
 
     public Questionnaire UpdateHouseholdIncome(Questionnaire questionnaire, IncomeBand incomeBand,
         QuestionFlowStep? entryPoint)
@@ -130,13 +137,14 @@ public class QuestionnaireUpdater
 
         if (!string.IsNullOrEmpty(emailAddress))
         {
-            emailSender.SendReferenceCodeEmail
-            (
-                emailAddress,
-                name,
-                referralRequest.ReferralCode,
-                referralRequest.CustodianCode
-            );
+            if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending)
+            {
+                emailSender.SendReferenceCodeEmailForPendingLocalAuthority(emailAddress, name, referralRequest);
+            }
+            else
+            {
+                emailSender.SendReferenceCodeEmailForLiveLocalAuthority(emailAddress, name, referralRequest);
+            }
         }
 
         try
@@ -207,13 +215,20 @@ public class QuestionnaireUpdater
 
         if (confirmationConsentGranted)
         {
-            emailSender.SendReferenceCodeEmail
-            (
-                confirmationEmailAddress,
-                questionnaire.LaContactName,
-                questionnaire.ReferralCode,
-                questionnaire.CustodianCode
-            );
+            if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending)
+            {
+                emailSender.SendReferenceCodeEmailForPendingLocalAuthority(
+                    confirmationEmailAddress, 
+                    questionnaire.LaContactName,                 
+                    new ReferralRequest(questionnaire));
+            }
+            else
+            {
+                emailSender.SendReferenceCodeEmailForLiveLocalAuthority(
+                    confirmationEmailAddress, 
+                    questionnaire.LaContactName, 
+                    new ReferralRequest(questionnaire));
+            }
         }
 
         return questionnaire;

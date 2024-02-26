@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using System.Reflection;
+using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
 using Tests.BusinessLogic.Models.ExpectedLocalAuthorityData;
@@ -29,6 +31,19 @@ namespace Tests.BusinessLogic.Models;
 public class LocalAuthorityDataTests
 {
     [Test]
+    public void LocalAuthorityDetailsByCustodianCode_EachPropertyHasOwnSeparateExpectedDataClass()
+    {
+        // Ensure that all properties of a local authority are documented in these tests
+        // and that those expectations are NOT combined by later refactoring, as per the class comment.
+        var localAuthorityProperties = typeof(LocalAuthorityDetails).GetProperties();
+        var expectedDataClasses = Assembly
+            .GetExecutingAssembly()
+            .GetTypes()
+            .Where(type => type.Namespace == typeof(LocalAuthorityNames).Namespace);
+        expectedDataClasses.Should().HaveSameCount(localAuthorityProperties);
+    }
+
+    [Test]
     public void LocalAuthorityDetailsByCustodianCode_HasCorrectNameForEveryLocalAuthority()
     {
         // Arrange
@@ -38,7 +53,7 @@ public class LocalAuthorityDataTests
         const string fieldName = nameof(LocalAuthorityDetails.Name);
         foreach (var (code, name) in expectedNamesByCode)
         {
-            using var _ = new AssertionScope($"{fieldName} for LA with code \"{code}\"");
+            using var _ = LocalAuthorityPropertyAssertionScope(fieldName, code);
             var localAuthority = LocalAuthorityDetailsByCustodianCode[code];
             localAuthority.Name.Should().Be(name);
         }
@@ -56,7 +71,7 @@ public class LocalAuthorityDataTests
         const string fieldName = nameof(LocalAuthorityDetails.Status);
         foreach (var (code, status) in expectedStatusesByCode)
         {
-            using var _ = new AssertionScope($"{fieldName} for LA with code \"{code}\"");
+            using var _ = LocalAuthorityPropertyAssertionScope(fieldName, code);
             var localAuthority = LocalAuthorityDetailsByCustodianCode[code];
             localAuthority.Status.Should().Be(status);
         }
@@ -74,7 +89,7 @@ public class LocalAuthorityDataTests
         const string fieldName = nameof(LocalAuthorityDetails.WebsiteUrl);
         foreach (var (code, websiteUrl) in expectedWebsiteUrlsByCustodianCode)
         {
-            using var _ = new AssertionScope($"{fieldName} for LA with code \"{code}\"");
+            using var _ = LocalAuthorityPropertyAssertionScope(fieldName, code);
             var localAuthority = LocalAuthorityDetailsByCustodianCode[code];
             localAuthority.WebsiteUrl.Should().Be(websiteUrl);
         }
@@ -92,7 +107,7 @@ public class LocalAuthorityDataTests
         const string fieldName = nameof(LocalAuthorityDetails.IncomeBandOptions);
         foreach (var (code, incomeBandOptions) in expectedIncomeBandOptionsByCustodianCode)
         {
-            using var _ = new AssertionScope($"{fieldName} for LA with code \"{code}\"");
+            using var _ = LocalAuthorityPropertyAssertionScope(fieldName, code);
             var localAuthority = LocalAuthorityDetailsByCustodianCode[code];
             localAuthority.IncomeBandOptions.Should().Equal(incomeBandOptions);
         }
@@ -110,11 +125,16 @@ public class LocalAuthorityDataTests
         const string fieldName = nameof(LocalAuthorityDetails.Consortium);
         foreach (var (code, consortium) in expectedConsortiumsByCustodianCode)
         {
-            using var _ = new AssertionScope($"{fieldName} for LA with code \"{code}\"");
+            using var _ = LocalAuthorityPropertyAssertionScope(fieldName, code);
             var localAuthority = LocalAuthorityDetailsByCustodianCode[code];
             localAuthority.Consortium.Should().Be(consortium);
         }
 
         LocalAuthorityDetailsByCustodianCode.Should().HaveSameCount(expectedConsortiumsByCustodianCode);
+    }
+
+    private static AssertionScope LocalAuthorityPropertyAssertionScope(string fieldName, string code)
+    {
+        return new AssertionScope($"{fieldName} for local authority with code \"{code}\"");
     }
 }
