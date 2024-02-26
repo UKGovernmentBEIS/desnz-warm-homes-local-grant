@@ -46,7 +46,7 @@
         }
         else
         {
-            <form action="@Url.Action(nameof(QuestionnaireController.NotTakingPart_Post), "Questionnaire")" method="post" novalidate>
+            <form action="@Url.Action(nameof(QuestionnaireController.NotParticipating_Post), "Questionnaire")" method="post" novalidate>
                 @(Html.HiddenFor(m => m.EntryPoint))
                 @Html.AntiForgeryToken()
 
