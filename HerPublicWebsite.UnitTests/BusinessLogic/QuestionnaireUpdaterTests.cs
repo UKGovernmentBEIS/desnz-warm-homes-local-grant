@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using HerPublicWebsite.BusinessLogic;
@@ -11,6 +12,7 @@ using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Tests.Builders;
 
 namespace Tests.BusinessLogic;
 
@@ -24,11 +26,14 @@ public class QuestionnaireUpdaterTests
     private Mock<IEmailSender> mockEmailSender;
     private Mock<IQuestionFlowService> mockQuestionFlowService;
     private Mock<ILogger<QuestionnaireUpdater>> mockLogger;
-    
+    private string liveCustodianCode;
+    private string pendingCustodianCode;
     
     [SetUp]
     public void Setup()
     {
+        liveCustodianCode = GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Live);
+        pendingCustodianCode = GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Pending);
         mockEpcApi = new Mock<IEpcApi>();
         mockPostCodeService = new Mock<IEligiblePostcodeService>();
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
@@ -207,13 +212,14 @@ public class QuestionnaireUpdaterTests
     }
     
     [Test]
-    public async Task GenerateReferralAsync_WhenCalledWithEmail_SendOneEmailWithReferralCode()
+    public async Task GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsLive_SendOneEmailWithReferralCodeWithLiveTemplate()
     {
         // Arrange
-        const string testCustodianCode = "1234";
-        const string testReferralCode = "referral code";
+        string testCustodianCode = liveCustodianCode;
+        const int testReferralId = 12;
         const string testName = "Example Person";
         const string testEmailAddress = "test@example.com";
+
         var questionnaire = new Questionnaire
         {
             CustodianCode = testCustodianCode,
@@ -222,24 +228,23 @@ public class QuestionnaireUpdaterTests
             HasGasBoiler = HasGasBoiler.No
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
-        var referral = new ReferralRequest
-        {
-            CustodianCode = testCustodianCode,
-            ReferralCode = testReferralCode,
-            RequestDate = creationDate
-        };
+        
+        var referral = new ReferralRequestBuilder(testReferralId);
+        referral.WithCustodianCode(testCustodianCode);
+        referral.WithRequestDate(creationDate);
+        var testReferralRequest = referral.Build();
+        
         mockDataAccessProvider.Setup(dap =>
             dap.PersistNewReferralRequestAsync
             (
                 It.Is<ReferralRequest>(rr => rr.CustodianCode == testCustodianCode)
-            )).ReturnsAsync(referral);
+            )).ReturnsAsync(testReferralRequest);
         mockEmailSender.Setup(es =>
-            es.SendReferenceCodeEmail
+            es.SendReferenceCodeEmailForLiveLocalAuthority
             (
                 testEmailAddress,
                 testName,
-                testReferralCode,
-                testCustodianCode
+                testReferralRequest
             )
         );
 
@@ -253,12 +258,64 @@ public class QuestionnaireUpdaterTests
         );
         
         // Assert
-        mockEmailSender.Verify(es => es.SendReferenceCodeEmail
+        mockEmailSender.Verify(es => es.SendReferenceCodeEmailForLiveLocalAuthority
         (
             testEmailAddress,
             testName,
-            testReferralCode,
-            testCustodianCode
+            testReferralRequest
+        ), Times.Once);
+    }
+    
+    [Test]
+    public async Task GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsPending_SendOneEmailWithReferralCodeWithPendingTemplate()
+    {
+        // Arrange
+        string testCustodianCode = pendingCustodianCode;
+        const int testReferralId = 12;
+        const string testName = "Example Person";
+        const string testEmailAddress = "test@example.com";
+
+        var questionnaire = new Questionnaire
+        {
+            CustodianCode = testCustodianCode,
+            IsLsoaProperty = false,
+            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            HasGasBoiler = HasGasBoiler.No
+        };
+        var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
+        
+        var referral = new ReferralRequestBuilder(testReferralId);
+        referral.WithCustodianCode(testCustodianCode);
+        referral.WithRequestDate(creationDate);
+        var testReferralRequest = referral.Build();
+        
+        mockDataAccessProvider.Setup(dap =>
+            dap.PersistNewReferralRequestAsync
+            (
+                It.Is<ReferralRequest>(rr => rr.CustodianCode == testCustodianCode)
+            )).ReturnsAsync(testReferralRequest);
+        mockEmailSender.Setup(es =>
+            es.SendReferenceCodeEmailForPendingLocalAuthority(
+                testEmailAddress,
+                testName,
+                testReferralRequest)
+        );
+
+        // Act
+        var result = await underTest.GenerateReferralAsync
+        (
+            questionnaire,
+            testName,
+            testEmailAddress,
+            ""
+        );
+        
+        // Assert
+        mockEmailSender.Verify(es => es.SendReferenceCodeEmailForPendingLocalAuthority
+        (
+            testEmailAddress,
+            testName,
+            testReferralRequest
         ), Times.Once);
     }
     
@@ -283,12 +340,11 @@ public class QuestionnaireUpdaterTests
         mockDataAccessProvider.Setup(dap =>
             dap.PersistNewReferralRequestAsync(It.IsAny<ReferralRequest>())).ReturnsAsync(referral);
         mockEmailSender.Setup(es =>
-            es.SendReferenceCodeEmail
+            es.SendReferenceCodeEmailForLiveLocalAuthority
             (
                 It.IsAny<string>(),
                 It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()
+                It.IsAny<ReferralRequest>()
             )
         );
 
@@ -302,12 +358,11 @@ public class QuestionnaireUpdaterTests
         );
         
         // Assert
-        mockEmailSender.Verify(es => es.SendReferenceCodeEmail
+        mockEmailSender.Verify(es => es.SendReferenceCodeEmailForLiveLocalAuthority
         (
             It.IsAny<string>(),
             It.IsAny<string>(),
-            It.IsAny<string>(),
-            It.IsAny<string>()
+            It.IsAny<ReferralRequest>()
         ), Times.Never);
     }
     
@@ -366,15 +421,16 @@ public class QuestionnaireUpdaterTests
 
     [TestCase(true, "test@example.com")]
     [TestCase(false, "")]
-    public async Task RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentGrantedAndEmailGiven_SendsOneEmailWithReferralCode
+    public async Task RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentGrantedAndEmailGivenAndLocalAuthorityIsLive_SendsOneLiveTemplateEmailWithReferralCode
     (
         bool notificationConsentGranted,
         string notificationEmailAddress
     )
     {
         // Arrange
-        const string testCustodianCode = "1234";
+        string testCustodianCode = liveCustodianCode;
         const string testReferralCode = "referral code";
+        const int testReferralId = 12;
         const string testName = "Example Person";
         const string testEmailAddress = "test@example.com";
         var questionnaire = new Questionnaire
@@ -383,15 +439,21 @@ public class QuestionnaireUpdaterTests
             LaContactEmailAddress = testEmailAddress,
             ReferralCode = testReferralCode,
             CustodianCode = testCustodianCode,
+            IsLsoaProperty = false,
+            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            HasGasBoiler = HasGasBoiler.No
         };
+        var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
+
+        var referral = new ReferralRequestBuilder(testReferralId);
+        referral.WithCustodianCode(testCustodianCode);
+        referral.WithRequestDate(creationDate);
+        var testReferralRequest = referral.Build();
         mockEmailSender.Setup(es =>
-            es.SendReferenceCodeEmail
-            (
+            es.SendReferenceCodeEmailForLiveLocalAuthority(
                 testEmailAddress,
                 testName,
-                testReferralCode,
-                testCustodianCode
-            )
+                testReferralRequest)
         );
         
         // Act
@@ -405,13 +467,67 @@ public class QuestionnaireUpdaterTests
         );
         
         // Assert
-        mockEmailSender.Verify(es => es.SendReferenceCodeEmail
-        (
+        mockEmailSender.Verify(es => es.SendReferenceCodeEmailForLiveLocalAuthority(
             testEmailAddress,
             testName,
-            testReferralCode,
-            testCustodianCode
-        ), Times.Once);
+            It.IsAny<ReferralRequest>()), 
+            Times.Once);
+    }
+    
+    [TestCase(true, "test@example.com")]
+    [TestCase(false, "")]
+    public async Task RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentGrantedAndEmailGivenAndLocalAuthorityIsPending_SendsOnePendingTemplateEmailWithReferralCode
+    (
+        bool notificationConsentGranted,
+        string notificationEmailAddress
+    )
+    {
+        // Arrange
+        string testCustodianCode = pendingCustodianCode;
+        const string testReferralCode = "referral code";
+        const int testReferralId = 12;
+        const string testName = "Example Person";
+        const string testEmailAddress = "test@example.com";
+        var questionnaire = new Questionnaire
+        {
+            LaContactName = testName,
+            LaContactEmailAddress = testEmailAddress,
+            ReferralCode = testReferralCode,
+            CustodianCode = testCustodianCode,
+            IsLsoaProperty = false,
+            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            HasGasBoiler = HasGasBoiler.No
+        };
+        var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
+
+        var referral = new ReferralRequestBuilder(testReferralId);
+        referral.WithCustodianCode(testCustodianCode);
+        referral.WithRequestDate(creationDate);
+        var testReferralRequest = referral.Build();
+        
+        mockEmailSender.Setup(es =>
+            es.SendReferenceCodeEmailForPendingLocalAuthority(
+                testEmailAddress,
+                testName,
+                testReferralRequest)
+        );
+        
+        // Act
+        var result = await underTest.RecordConfirmationAndNotificationConsentAsync
+        (
+            questionnaire,
+            notificationConsentGranted,
+            notificationEmailAddress,
+            true,
+            testEmailAddress
+        );
+        
+        // Assert
+        mockEmailSender.Verify(es => es.SendReferenceCodeEmailForPendingLocalAuthority(
+            testEmailAddress,
+            testName,
+            It.IsAny<ReferralRequest>()), 
+            Times.Once);
     }
     
     [TestCase(true, "test@example.com")]
@@ -433,12 +549,11 @@ public class QuestionnaireUpdaterTests
             CustodianCode = testCustodianCode,
         };
         mockEmailSender.Setup(es =>
-            es.SendReferenceCodeEmail
+            es.SendReferenceCodeEmailForLiveLocalAuthority
             (
                 It.IsAny<string>(),
                 It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()
+                It.IsAny<ReferralRequest>()
             )
         );
         
@@ -453,12 +568,11 @@ public class QuestionnaireUpdaterTests
         );
         
         // Assert
-        mockEmailSender.Verify(es => es.SendReferenceCodeEmail
+        mockEmailSender.Verify(es => es.SendReferenceCodeEmailForLiveLocalAuthority
         (
             It.IsAny<string>(),
             It.IsAny<string>(),
-            It.IsAny<string>(),
-            It.IsAny<string>()
+            It.IsAny<ReferralRequest>()
         ), Times.Never);
     }
 
@@ -537,5 +651,12 @@ public class QuestionnaireUpdaterTests
 
         // Assert
         result.UneditedData.Should().BeNull();
+    }
+    
+    private string GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status status)
+    {
+        return LocalAuthorityData.LocalAuthorityDetailsByCustodianCode
+            .First(entry => entry.Value.Status == status)
+            .Key;
     }
 }

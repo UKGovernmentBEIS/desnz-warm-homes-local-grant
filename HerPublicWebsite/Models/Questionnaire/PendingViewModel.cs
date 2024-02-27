@@ -1,23 +1,24 @@
-using GovUkDesignSystem.Attributes.ValidationAttributes;
-using HerPublicWebsite.Models.Enums;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using GovUkDesignSystem.ModelBinders;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HerPublicWebsite.Models.Questionnaire;
 
-public class PendingViewModel : QuestionFlowViewModel
+public class PendingViewModel : QuestionFlowViewModel, IValidatableObject
 {
     public string LocalAuthorityName { get; set; }
     
-    public string LocalAuthorityMessagePartialViewPath { get; set; }
-
-    [EmailAddress(ErrorMessage = "Enter an email address in the correct format, like name@example.com")]
-    [GovUkValidateRequiredIf(ErrorMessageIfMissing = "Enter your email address", IsRequiredPropertyName = nameof(IsEmailAddressRequired))]
-    public string EmailAddress { get; set; }
-
-    [GovUkValidateRequired(ErrorMessageIfMissing = "Select whether you would like to be contacted about future grants")]
-    public YesOrNo? CanContactByEmailAboutFutureSchemes { get; set; }
-
-    public bool IsEmailAddressRequired => CanContactByEmailAboutFutureSchemes is YesOrNo.Yes;
-
-    public bool Submitted { get; set; }
+    [ModelBinder(typeof(GovUkCheckboxBoolBinder))]
+    public bool UserAcknowledgedPending { get; set; }
+    
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (!UserAcknowledgedPending)
+        {
+            yield return new ValidationResult(
+                "You must acknowledge that your application will not be processed until your local authority has signed up to use the service",
+                new[] { nameof(UserAcknowledgedPending) });
+        }
+    }
 }

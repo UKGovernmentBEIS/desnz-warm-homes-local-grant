@@ -47,49 +47,23 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 }
             }
         }
-
-        public void SendReferenceCodeEmail
+        
+        public void SendReferenceCodeEmailForLiveLocalAuthority
+        (
+            string emailAddress,
+            string recipientName, 
+            ReferralRequest referralRequest)
+        {
+            SendReferenceCodeEmail(emailAddress, recipientName, referralRequest, govUkNotifyConfig.ReferenceCodeForLiveLocalAuthorityTemplate);
+        }
+        
+        public void SendReferenceCodeEmailForPendingLocalAuthority
         (
             string emailAddress,
             string recipientName,
-            string referenceCode,
-            string custodianCode
-        ) {
-            var template = govUkNotifyConfig.ReferenceCodeTemplate;
-            LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
-            try
-            {
-                localAuthorityDetails = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[custodianCode];
-            }
-            catch (KeyNotFoundException ex)
-            {
-                logger.LogError
-                (
-                    ex,
-                    "Attempted to send reference code email with invalid custodian code \"{CustodianCode}\"",
-                    custodianCode
-                );
-                throw new ArgumentOutOfRangeException
-                (
-                    $"Attempted to send reference code email with invalid custodian code \"{custodianCode}\"",
-                    ex
-                );
-            }
-            
-            var personalisation = new Dictionary<string, dynamic>
-            {
-                { template.RecipientNamePlaceholder, recipientName },
-                { template.ReferenceCodePlaceholder, referenceCode },
-                { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
-                { template.LocalAuthorityWebsiteUrlPlaceholder, localAuthorityDetails.WebsiteUrl },
-            };
-            var emailModel = new GovUkNotifyEmailModel
-            {
-                EmailAddress = emailAddress,
-                TemplateId = template.Id,
-                Personalisation = personalisation
-            };
-            SendEmail(emailModel);
+            ReferralRequest referralRequest)
+        {
+            SendReferenceCodeEmail(emailAddress, recipientName, referralRequest, govUkNotifyConfig.ReferenceCodeForPendingLocalAuthorityTemplate);
         }
 
         public void SendFollowUpEmail
@@ -165,6 +139,47 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                     
                 }    
 
+        private void SendReferenceCodeEmail
+        (
+            string emailAddress,
+            string recipientName,
+            ReferralRequest referralRequest,
+            ReferenceCodeConfiguration template)
+        {
+            LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
+            try
+            {
+                localAuthorityDetails = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referralRequest.CustodianCode];
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogError
+                (
+                    ex,
+                    "Attempted to send reference code email with invalid custodian code \"{CustodianCode}\"",
+                    referralRequest.CustodianCode
+                );
+                throw new ArgumentOutOfRangeException
+                (
+                    $"Attempted to send reference code email with invalid custodian code \"{referralRequest.CustodianCode}\"",
+                    ex
+                );
+            }
+            var personalisation = new Dictionary<string, dynamic>
+            {
+                { template.RecipientNamePlaceholder, recipientName },
+                { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
+                { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
+                { template.LocalAuthorityWebsiteUrlPlaceholder, localAuthorityDetails.WebsiteUrl },
+            };
+            var emailModel = new GovUkNotifyEmailModel
+            {
+                EmailAddress = emailAddress,
+                TemplateId = template.Id,
+                Personalisation = personalisation
+            };
+            SendEmail(emailModel);
+        }
     }
     
     internal class GovUkNotifyEmailModel

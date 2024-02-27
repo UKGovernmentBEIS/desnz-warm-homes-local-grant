@@ -27,6 +27,7 @@ public record Questionnaire
     public EpcConfirmation? EpcDetailsAreCorrect { get; set; }
     public bool? IsLsoaProperty { get; set; }
     public HasGasBoilerEnum? HasGasBoiler { get; set; }
+    public bool? AcknowledgedPending { get; set; }
     public IncomeBandEnum? IncomeBand { get; set; }
 
     public DateTime ReferralCreated { get; set; }
