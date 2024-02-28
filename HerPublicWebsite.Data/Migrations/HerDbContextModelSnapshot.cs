@@ -194,6 +194,9 @@ namespace HerPublicWebsite.Data.Migrations
                     b.Property<bool>("IsLsoaProperty")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("PendingLocalAuthorityWhenSubmitted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("ReferralCode")
                         .HasColumnType("text");
 

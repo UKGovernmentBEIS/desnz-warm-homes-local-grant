@@ -28,6 +28,7 @@ public class ReferralRequest
     public string ContactEmailAddress { get; set; }
     public string ContactTelephone { get; set; }
 
+    public bool PendingLocalAuthorityWhenSubmitted { get; set; }
     public DateTime RequestDate { get; set; }
 
     public bool ReferralWrittenToCsv { get; set; }
@@ -61,6 +62,8 @@ public class ReferralRequest
         ContactEmailAddress = questionnaire.LaContactEmailAddress;
         ContactTelephone = questionnaire.LaContactTelephone;
         RequestDate = DateTime.Now;
+        PendingLocalAuthorityWhenSubmitted =
+            questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending;
     }
 
     public void UpdateReferralCode()
