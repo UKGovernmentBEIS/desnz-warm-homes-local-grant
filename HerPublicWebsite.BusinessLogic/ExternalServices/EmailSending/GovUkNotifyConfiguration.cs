@@ -45,4 +45,5 @@ public class ComplianceReportConfiguration
 public class PendingReferralReportConfiguration
 {
     public string Id { get; set; }
+    public string Link { get; set; }
 }

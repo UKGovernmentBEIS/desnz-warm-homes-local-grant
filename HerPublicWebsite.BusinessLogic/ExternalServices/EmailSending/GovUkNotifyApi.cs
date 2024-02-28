@@ -147,12 +147,17 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 return;
             }
             var template = govUkNotifyConfig.PendingReferralReportTemplate;
+            Dictionary<String, dynamic> personalisation = new Dictionary<String, dynamic>
+            {
+                { "Link", "https://www.gov.uk/apply-home-upgrade-grant" },
+            };
             foreach (var emailAddress in recipientList.Split(","))
             {
                 var emailModel = new GovUkNotifyEmailModel
                 {
                     EmailAddress = emailAddress.Trim(),
                     TemplateId = template.Id,
+                    Personalisation = personalisation
                 };
                 SendEmail(emailModel);
             }
