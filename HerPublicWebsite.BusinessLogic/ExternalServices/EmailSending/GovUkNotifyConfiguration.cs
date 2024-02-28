@@ -11,6 +11,7 @@ public class GovUkNotifyConfiguration
     public ReferenceCodeConfiguration ReferenceCodeForPendingLocalAuthorityTemplate { get; set; }
     public ReferralFollowUpConfiguration ReferralFollowUpTemplate { get; set; }
     public ComplianceReportConfiguration ComplianceReportTemplate { get; set; }
+    public PendingReferralReportConfiguration PendingReferralReportTemplate { get; set; }
 }
 
 public class ReferenceCodeConfiguration
@@ -39,4 +40,9 @@ public class ComplianceReportConfiguration
     public string File1Link { get; set; }
     public string File2Link { get; set; }
     public string File3Link { get; set; }
+}
+
+public class PendingReferralReportConfiguration
+{
+    public string Id { get; set; }
 }

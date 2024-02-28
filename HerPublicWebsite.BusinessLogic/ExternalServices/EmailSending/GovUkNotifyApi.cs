@@ -137,7 +137,26 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                         SendEmail(emailModel);
                     }
                     
-                }    
+                }
+
+        public void SendPendingReferralReportEmail()
+        {
+            var recipientList = govUkNotifyConfig.PendingReferralEmailRecipients;
+            if (String.IsNullOrEmpty(recipientList))
+            {
+                return;
+            }
+            var template = govUkNotifyConfig.PendingReferralReportTemplate;
+            foreach (var emailAddress in recipientList.Split(","))
+            {
+                var emailModel = new GovUkNotifyEmailModel
+                {
+                    EmailAddress = emailAddress.Trim(),
+                    TemplateId = template.Id,
+                };
+                SendEmail(emailModel);
+            }
+        }
 
         private void SendReferenceCodeEmail
         (
