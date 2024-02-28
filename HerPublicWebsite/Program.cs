@@ -61,6 +61,14 @@ namespace HerPublicWebsite
                     "Send policy team update email",
                     rjs => rjs.SendPolicyTeamUpdate(),
                     "0 7 * * 1");
+            
+            app
+                .Services
+                .GetService<IRecurringJobManager>()
+                .AddOrUpdate<PendingReferralNotificationService>(
+                    "Send monthly pending referral report",
+                    rjs => rjs.SendPendingReferralNotifications(),
+                    "0 0 1 * *");
 
             app.Run();
         }
