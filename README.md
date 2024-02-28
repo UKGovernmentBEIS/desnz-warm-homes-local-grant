@@ -198,6 +198,7 @@ Secrets must be configured in the ECS tasks, corresponding to the variables in `
 - `GoogleAnalytics__ApiKey`
 - `GovUkNotify__ApiKey`
 - `GovUkNotify__ComplianceEmailRecipients`
+- `GovUkNotify__PendingReferralEmailRecipients`
 - `OsPlaces__Key`
 
 To prevent public access to DEV and UAT environments, we should also override the basic auth credentials:
