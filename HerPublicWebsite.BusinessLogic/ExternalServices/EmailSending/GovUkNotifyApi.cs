@@ -3,19 +3,20 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Notify.Client;
 using Notify.Exceptions;
+using Notify.Interfaces;
 
 namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
 {
     public class GovUkNotifyApi : IEmailSender
     {
-        private readonly NotificationClient client;
+        private readonly INotificationClient client;
         private readonly GovUkNotifyConfiguration govUkNotifyConfig;
         private readonly ILogger<GovUkNotifyApi> logger;
         
-        public GovUkNotifyApi(IOptions<GovUkNotifyConfiguration> config, ILogger<GovUkNotifyApi> logger)
+        public GovUkNotifyApi(IOptions<GovUkNotifyConfiguration> config, ILogger<GovUkNotifyApi> logger, INotificationClient client)
         {
             govUkNotifyConfig = config.Value;
-            client = new NotificationClient(govUkNotifyConfig.ApiKey);
+            this.client = client;
             this.logger = logger;
         }
 
