@@ -30,12 +30,12 @@ public static class QuestionnaireHelper
             LaContactName = "Contact Name",
             LaCanContactByEmail = true,
             LaCanContactByPhone = true,
-            LaContactEmailAddress = "person@place.com",
+            LaContactEmailAddress = "person@example.com",
             LaContactTelephone = "07123456789",
             NotificationConsent = true,
             ConfirmationConsent = true,
-            NotificationEmailAddress = "person@place.com",
-            ConfirmationEmailAddress = "person@place.com",
+            NotificationEmailAddress = "person@example.com",
+            ConfirmationEmailAddress = "person@example.com",
             UneditedData = new Questionnaire()
         };
     }
