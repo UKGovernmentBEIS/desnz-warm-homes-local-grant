@@ -39,7 +39,7 @@ public class ReferralRequestTests
     
     [TestCase (LocalAuthorityData.Hug2Status.Live, false)]
     [TestCase (LocalAuthorityData.Hug2Status.Pending, true)]
-    public void ReferralCode_IfLocalAuthorityIsPending_WasSubmittedToPendingIsTrue(LocalAuthorityData.Hug2Status localAuthorityStatus, bool expectedWasSubmittedToPendingLocalAuthorityValue)
+    public void WasSubmittedToPendingFlag_IfLocalAuthorityIsPending_WasSubmittedToPendingIsTrueOtherwiseFalse(LocalAuthorityData.Hug2Status localAuthorityStatus, bool expectedWasSubmittedToPendingLocalAuthorityValue)
     {
         // Arrange
         var testQuestionnaire = QuestionnaireHelper.InitializeQuestionnaire();
