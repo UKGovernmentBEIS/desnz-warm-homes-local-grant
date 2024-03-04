@@ -3,52 +3,18 @@ using FluentAssertions;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using NUnit.Framework;
+using Tests.Helpers;
 
 namespace Tests.BusinessLogic.Models;
 
 [TestFixture]
 public class QuestionnaireTests
 {
-    private Questionnaire InitializeQuestionnaire()
-    {
-        return new Questionnaire
-        {
-            Country = Country.England,
-            OwnershipStatus = OwnershipStatus.OwnerOccupancy,
-            AddressLine1 = "Address Line 1",
-            AddressLine2 = "Address Line 2",
-            AddressTown = "A Town",
-            AddressCounty = "A County",
-            AddressPostcode = "PST C0D",
-            CustodianCode = "5210",
-            LocalAuthorityConfirmed = true,
-            AcknowledgedPending = false,
-            Uprn = "123456789123",
-            EpcDetails = new EpcDetails(),
-            EpcDetailsAreCorrect = EpcConfirmation.Yes,
-            IsLsoaProperty = true,
-            HasGasBoiler = HasGasBoiler.No,
-            IncomeBand = IncomeBand.UnderOrEqualTo31000,
-            ReferralCreated = default,
-            ReferralCode = "HUG21023",
-            LaContactName = "Contact Name",
-            LaCanContactByEmail = true,
-            LaCanContactByPhone = true,
-            LaContactEmailAddress = "person@place.com",
-            LaContactTelephone = "07123456789",
-            NotificationConsent = true,
-            ConfirmationConsent = true,
-            NotificationEmailAddress = "person@place.com",
-            ConfirmationEmailAddress = "person@place.com",
-            UneditedData = new Questionnaire()
-        };
-    }
-    
     [Test]
     public void UneditedData_WhenCreated_CopiesAllAnswers()
     {
         // Arrange
-        var questionnaire = InitializeQuestionnaire();
+        var questionnaire = QuestionnaireHelper.InitializeQuestionnaire();
 
         // Act
         questionnaire.CreateUneditedData();
@@ -71,7 +37,7 @@ public class QuestionnaireTests
     public void UneditedData_WhenCommitEdits_UneditedDataIsNull()
     {
         // Arrange
-        var questionnaire = InitializeQuestionnaire();
+        var questionnaire = QuestionnaireHelper.InitializeQuestionnaire();
         
         // Act
         questionnaire.CommitEdits();
