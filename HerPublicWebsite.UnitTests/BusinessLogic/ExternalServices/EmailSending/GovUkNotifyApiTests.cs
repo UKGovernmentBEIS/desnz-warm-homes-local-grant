@@ -8,20 +8,20 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Notify.Interfaces;
 using NUnit.Framework;
+using Tests.Helpers;
 
 namespace Tests.BusinessLogic.ExternalServices.EmailSending;
 
 [TestFixture]
 public class GovUkNotifyApiTests
 {
-    private Mock<IOptions<GovUkNotifyConfiguration>> mockConfig;
+    private GovUkNotifyConfiguration config;
     private ILogger<GovUkNotifyApi> logger;
     private Mock<INotificationClient> mockNotificationClient;
 
     [SetUp]
     public void Setup()
     {
-        mockConfig = new Mock<IOptions<GovUkNotifyConfiguration>>();
         logger = new NullLogger<GovUkNotifyApi>();
         mockNotificationClient = new Mock<INotificationClient>();
     }
@@ -33,7 +33,7 @@ public class GovUkNotifyApiTests
         const string exampleRecipient = "email1@example.com";
         const string exampleId = "0";
         const string exampleLink = "https://www.gov.uk/apply-home-upgrade-grant";
-        var configValue = new GovUkNotifyConfiguration
+        config = new GovUkNotifyConfiguration
         {
             PendingReferralEmailRecipients = exampleRecipient,
             PendingReferralReportTemplate = new PendingReferralReportConfiguration
@@ -42,8 +42,7 @@ public class GovUkNotifyApiTests
                 LinkPlaceholder = exampleLink
             }
         };
-        mockConfig.Setup(config => config.Value).Returns(configValue);
-        var emailSender = new GovUkNotifyApi(mockNotificationClient.Object, mockConfig.Object, logger);
+        var emailSender = new GovUkNotifyApi(mockNotificationClient.Object, config.AsOptions(), logger);
         
         // Act
         emailSender.SendPendingReferralReportEmail();
@@ -54,7 +53,7 @@ public class GovUkNotifyApiTests
             exampleId,
             new Dictionary<string, object>
             {
-                { configValue.PendingReferralReportTemplate.LinkPlaceholder, exampleLink }
+                { config.PendingReferralReportTemplate.LinkPlaceholder, exampleLink }
             },
             null, null));
     }
@@ -66,7 +65,7 @@ public class GovUkNotifyApiTests
         string[] exampleRecipients = { "email1@example.com", "email2@example.com", "email3@example.com" };
         const string exampleId = "0";
         const string exampleLink = "https://www.gov.uk/apply-home-upgrade-grant";
-        var configValue = new GovUkNotifyConfiguration
+        config = new GovUkNotifyConfiguration
         {
             PendingReferralEmailRecipients = String.Join(",", exampleRecipients),
             PendingReferralReportTemplate = new PendingReferralReportConfiguration
@@ -75,8 +74,7 @@ public class GovUkNotifyApiTests
                 LinkPlaceholder = exampleLink
             }
         };
-        mockConfig.Setup(config => config.Value).Returns(configValue);
-        var emailSender = new GovUkNotifyApi(mockNotificationClient.Object, mockConfig.Object, logger);
+        var emailSender = new GovUkNotifyApi(mockNotificationClient.Object, config.AsOptions(), logger);
         
         // Act
         emailSender.SendPendingReferralReportEmail();
@@ -96,7 +94,7 @@ public class GovUkNotifyApiTests
                 exampleId,
                 new Dictionary<string, object>
                 {
-                    { configValue.PendingReferralReportTemplate.LinkPlaceholder, exampleLink }
+                    { config.PendingReferralReportTemplate.LinkPlaceholder, exampleLink }
                 },
                 null, null));
         }
