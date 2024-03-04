@@ -2,7 +2,7 @@
 using FluentAssertions;
 using NUnit.Framework;
 using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
+using Tests.Helpers;
 
 namespace Tests.BusinessLogic.Models;
 
@@ -35,5 +35,20 @@ public class ReferralRequestTests
 
         // Assert
         act.Should().Throw<InvalidOperationException>();
+    }
+    
+    [TestCase (LocalAuthorityData.Hug2Status.Live, false)]
+    [TestCase (LocalAuthorityData.Hug2Status.Pending, true)]
+    public void ReferralCode_IfLocalAuthorityIsPending_WasSubmittedToPendingIsTrue(LocalAuthorityData.Hug2Status localAuthorityStatus, bool expectedWasSubmittedToPendingLocalAuthorityValue)
+    {
+        // Arrange
+        var testQuestionnaire = QuestionnaireHelper.InitializeQuestionnaire();
+        testQuestionnaire.CustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(localAuthorityStatus);
+        
+        // Act
+        var underTest = new ReferralRequest(testQuestionnaire);
+        
+        // Assert
+        underTest.WasSubmittedToPendingLocalAuthority.Should().Be(expectedWasSubmittedToPendingLocalAuthorityValue);
     }
 }
