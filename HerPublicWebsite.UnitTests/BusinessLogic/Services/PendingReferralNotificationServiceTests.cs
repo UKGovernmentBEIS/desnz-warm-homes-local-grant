@@ -21,8 +21,6 @@ public class PendingReferralNotificationServiceTests
     [Test]
     public void SendPendingReferralNotifications_WhenCalled_CallsSendPendingReferralReportEmail()
     {
-        // Arrange
-        
         // Act
         pendingReferralNotificationService.SendPendingReferralNotifications();
         
