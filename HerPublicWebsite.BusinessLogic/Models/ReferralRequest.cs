@@ -27,7 +27,6 @@ public class ReferralRequest
     public string FullName { get; set; }
     public string ContactEmailAddress { get; set; }
     public string ContactTelephone { get; set; }
-    
     public DateTime RequestDate { get; set; }
     public bool WasSubmittedToPendingLocalAuthority { get; set; }
     
