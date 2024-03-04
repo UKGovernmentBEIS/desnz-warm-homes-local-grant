@@ -120,9 +120,9 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             var template = govUkNotifyConfig.ComplianceReportTemplate;
             var personalisation = new Dictionary<string, dynamic>
             {
-                { template.File1Link, NotificationClient.PrepareUpload(recentReferralRequestOverviewFileData.ToArray(), true)},
-                { template.File2Link, NotificationClient.PrepareUpload(recentReferralRequestFollowUpFileData.ToArray(), true)},
-                { template.File3Link, NotificationClient.PrepareUpload(historicReferralRequestFollowUpFileData.ToArray(), true)},
+                { "File1Link", NotificationClient.PrepareUpload(recentReferralRequestOverviewFileData.ToArray(), true)},
+                { "File2Link", NotificationClient.PrepareUpload(recentReferralRequestFollowUpFileData.ToArray(), true)},
+                { "File3Link", NotificationClient.PrepareUpload(historicReferralRequestFollowUpFileData.ToArray(), true)},
             };
             SendEmailToRecipients(recipientList, template.Id, personalisation);
         }
