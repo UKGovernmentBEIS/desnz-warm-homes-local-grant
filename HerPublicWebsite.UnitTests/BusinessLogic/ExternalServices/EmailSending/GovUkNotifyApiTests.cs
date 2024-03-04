@@ -54,7 +54,7 @@ public class GovUkNotifyApiTests
             exampleId,
             new Dictionary<string, object>
             {
-                { "Link", exampleLink }
+                { configValue.PendingReferralReportTemplate.Link, exampleLink }
             },
             null, null));
     }
@@ -96,7 +96,7 @@ public class GovUkNotifyApiTests
                 exampleId,
                 new Dictionary<string, object>
                 {
-                    { "Link", exampleLink }
+                    { configValue.PendingReferralReportTemplate.Link, exampleLink }
                 },
                 null, null));
         }

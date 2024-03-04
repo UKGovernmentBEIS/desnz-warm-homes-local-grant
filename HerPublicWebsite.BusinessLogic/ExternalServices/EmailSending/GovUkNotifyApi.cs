@@ -115,11 +115,6 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 )
                 {
                     var recipientList = govUkNotifyConfig.ComplianceEmailRecipients;
-                    if (String.IsNullOrEmpty(recipientList))
-                    {
-                        return;
-                    }
-                    
                     var template = govUkNotifyConfig.ComplianceReportTemplate;
                     Dictionary<String, dynamic> personalisation = new Dictionary<String, dynamic>
                     {
@@ -127,41 +122,18 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                         { "File2Link", NotificationClient.PrepareUpload(recentReferralRequestFollowUpFileData.ToArray(), true)},
                         { "File3Link", NotificationClient.PrepareUpload(historicReferralRequestFollowUpFileData.ToArray(), true)},
                     };
-                    foreach (var emailAddress in recipientList.Split(","))
-                    {
-                        var emailModel = new GovUkNotifyEmailModel
-                        {
-                            EmailAddress = emailAddress.Trim(),
-                            TemplateId = template.Id,
-                            Personalisation = personalisation
-                        };
-                        SendEmail(emailModel);
-                    }
-                    
+                    SendEmailToRecipients(recipientList, template.Id, personalisation);
                 }
 
         public void SendPendingReferralReportEmail()
         {
             var recipientList = govUkNotifyConfig.PendingReferralEmailRecipients;
-            if (string.IsNullOrEmpty(recipientList))
-            {
-                return;
-            }
             var template = govUkNotifyConfig.PendingReferralReportTemplate;
             var personalisation = new Dictionary<string, dynamic>
             {
-                { "Link", "https://www.gov.uk/apply-home-upgrade-grant" },
+                { template.Link, "https://www.gov.uk/apply-home-upgrade-grant" },
             };
-            foreach (var emailAddress in recipientList.Split(","))
-            {
-                var emailModel = new GovUkNotifyEmailModel
-                {
-                    EmailAddress = emailAddress.Trim(),
-                    TemplateId = template.Id,
-                    Personalisation = personalisation
-                };
-                SendEmail(emailModel);
-            }
+            SendEmailToRecipients(recipientList, template.Id, personalisation);
         }
 
         private void SendReferenceCodeEmail
@@ -204,6 +176,28 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 Personalisation = personalisation
             };
             SendEmail(emailModel);
+        }
+
+        private void SendEmailToRecipients(
+            string recipientList, 
+            string templateId,
+            Dictionary<string, dynamic> personalisation)
+        {
+            if (string.IsNullOrEmpty(recipientList))
+            {
+                return;
+            }
+            var emailAddresses = recipientList.Split(",").Select(emailAddress => emailAddress.Trim());
+            foreach (var emailAddress in emailAddresses)
+            {
+                var emailModel = new GovUkNotifyEmailModel
+                {
+                    EmailAddress = emailAddress,
+                    TemplateId = templateId,
+                    Personalisation = personalisation
+                };
+                SendEmail(emailModel);
+            }
         }
     }
     
