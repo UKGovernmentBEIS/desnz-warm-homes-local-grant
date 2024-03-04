@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
 using Moq;
 using Notify.Interfaces;
 using NUnit.Framework;
@@ -18,42 +15,42 @@ public class GovUkNotifyApiTests
     private GovUkNotifyConfiguration config;
     private ILogger<GovUkNotifyApi> logger;
     private Mock<INotificationClient> mockNotificationClient;
+    private GovUkNotifyApi govUkNotifyApi;
 
     [SetUp]
     public void Setup()
     {
         logger = new NullLogger<GovUkNotifyApi>();
         mockNotificationClient = new Mock<INotificationClient>();
+        
+        config = new GovUkNotifyConfiguration
+        {
+            PendingReferralReportTemplate = new PendingReferralReportConfiguration
+            {
+                Id = "test-pending-template-id",
+                LinkPlaceholder = "link"
+            }
+        };
+        govUkNotifyApi = new GovUkNotifyApi(mockNotificationClient.Object, config.AsOptions(), logger);
     }
 
     [Test]
     public void SendPendingReferralReportEmail_WhenCalled_CallsSendEmailOnEmailInConfig()
     {
         // Arrange
-        const string exampleRecipient = "email1@example.com";
-        const string exampleId = "0";
-        const string exampleLink = "https://www.gov.uk/apply-home-upgrade-grant";
-        config = new GovUkNotifyConfiguration
-        {
-            PendingReferralEmailRecipients = exampleRecipient,
-            PendingReferralReportTemplate = new PendingReferralReportConfiguration
-            {
-                Id = exampleId,
-                LinkPlaceholder = exampleLink
-            }
-        };
-        var emailSender = new GovUkNotifyApi(mockNotificationClient.Object, config.AsOptions(), logger);
+        const string recipient = "email1@example.com";
+        config.PendingReferralEmailRecipients = recipient;
         
         // Act
-        emailSender.SendPendingReferralReportEmail();
+        govUkNotifyApi.SendPendingReferralReportEmail();
         
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(
-            exampleRecipient,
-            exampleId,
+            recipient,
+            config.PendingReferralReportTemplate.Id,
             new Dictionary<string, object>
             {
-                { config.PendingReferralReportTemplate.LinkPlaceholder, exampleLink }
+                { config.PendingReferralReportTemplate.LinkPlaceholder, "https://www.gov.uk/apply-home-upgrade-grant" }
             },
             null, null));
     }
@@ -62,39 +59,31 @@ public class GovUkNotifyApiTests
     public void SendPendingReferralReportEmail_WhenCalled_CallsSendEmailOnAllEmailsInConfig()
     {
         // Arrange
-        string[] exampleRecipients = { "email1@example.com", "email2@example.com", "email3@example.com" };
-        const string exampleId = "0";
-        const string exampleLink = "https://www.gov.uk/apply-home-upgrade-grant";
-        config = new GovUkNotifyConfiguration
-        {
-            PendingReferralEmailRecipients = String.Join(",", exampleRecipients),
-            PendingReferralReportTemplate = new PendingReferralReportConfiguration
-            {
-                Id = exampleId,
-                LinkPlaceholder = exampleLink
-            }
-        };
-        var emailSender = new GovUkNotifyApi(mockNotificationClient.Object, config.AsOptions(), logger);
+        var recipients = new[] { "email1@example.com", "email2@example.com", "email3@example.com" };
+        config.PendingReferralEmailRecipients = string.Join(",", recipients);
         
         // Act
-        emailSender.SendPendingReferralReportEmail();
+        govUkNotifyApi.SendPendingReferralReportEmail();
         
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(
             It.IsAny<string>(),
-            It.IsAny<string>(),
-            It.IsAny<Dictionary<string, dynamic>>(),
+            config.PendingReferralReportTemplate.Id,
+            new Dictionary<string, object>
+            {
+                { config.PendingReferralReportTemplate.LinkPlaceholder, "https://www.gov.uk/apply-home-upgrade-grant" }
+            },
             null, null),
-            Times.Exactly(exampleRecipients.Length));
+            Times.Exactly(recipients.Length));
         
-        foreach (var recipient in exampleRecipients)
+        foreach (var recipient in recipients)
         {
             mockNotificationClient.Verify(nc => nc.SendEmail(
                 recipient,
-                exampleId,
+                config.PendingReferralReportTemplate.Id,
                 new Dictionary<string, object>
                 {
-                    { config.PendingReferralReportTemplate.LinkPlaceholder, exampleLink }
+                    { config.PendingReferralReportTemplate.LinkPlaceholder, "https://www.gov.uk/apply-home-upgrade-grant" }
                 },
                 null, null));
         }
