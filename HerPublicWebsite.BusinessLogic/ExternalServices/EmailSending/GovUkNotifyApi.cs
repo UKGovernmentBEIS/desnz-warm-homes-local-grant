@@ -13,10 +13,13 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
         private readonly GovUkNotifyConfiguration govUkNotifyConfig;
         private readonly ILogger<GovUkNotifyApi> logger;
         
-        public GovUkNotifyApi(IOptions<GovUkNotifyConfiguration> config, ILogger<GovUkNotifyApi> logger, INotificationClient client)
+        public GovUkNotifyApi(
+            INotificationClient client,
+            IOptions<GovUkNotifyConfiguration> config,
+            ILogger<GovUkNotifyApi> logger)
         {
-            govUkNotifyConfig = config.Value;
             this.client = client;
+            govUkNotifyConfig = config.Value;
             this.logger = logger;
         }
 

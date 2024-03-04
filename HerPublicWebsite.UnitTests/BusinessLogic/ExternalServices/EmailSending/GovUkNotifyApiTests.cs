@@ -43,7 +43,7 @@ public class GovUkNotifyApiTests
             }
         };
         mockConfig.Setup(config => config.Value).Returns(configValue);
-        var emailSender = new GovUkNotifyApi(mockConfig.Object, logger, mockNotificationClient.Object);
+        var emailSender = new GovUkNotifyApi(mockNotificationClient.Object, mockConfig.Object, logger);
         
         // Act
         emailSender.SendPendingReferralReportEmail();
@@ -76,7 +76,7 @@ public class GovUkNotifyApiTests
             }
         };
         mockConfig.Setup(config => config.Value).Returns(configValue);
-        var emailSender = new GovUkNotifyApi(mockConfig.Object, logger, mockNotificationClient.Object);
+        var emailSender = new GovUkNotifyApi(mockNotificationClient.Object, mockConfig.Object, logger);
         
         // Act
         emailSender.SendPendingReferralReportEmail();
