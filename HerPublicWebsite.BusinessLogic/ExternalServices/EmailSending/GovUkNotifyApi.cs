@@ -109,21 +109,20 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
         }
         
         public void SendComplianceEmail(
-                MemoryStream recentReferralRequestOverviewFileData,
-                MemoryStream recentReferralRequestFollowUpFileData,
-                MemoryStream historicReferralRequestFollowUpFileData
-                )
-                {
-                    var recipientList = govUkNotifyConfig.ComplianceEmailRecipients;
-                    var template = govUkNotifyConfig.ComplianceReportTemplate;
-                    Dictionary<String, dynamic> personalisation = new Dictionary<String, dynamic>
-                    {
-                        { "File1Link", NotificationClient.PrepareUpload(recentReferralRequestOverviewFileData.ToArray(), true)},
-                        { "File2Link", NotificationClient.PrepareUpload(recentReferralRequestFollowUpFileData.ToArray(), true)},
-                        { "File3Link", NotificationClient.PrepareUpload(historicReferralRequestFollowUpFileData.ToArray(), true)},
-                    };
-                    SendEmailToRecipients(recipientList, template.Id, personalisation);
-                }
+            MemoryStream recentReferralRequestOverviewFileData,
+            MemoryStream recentReferralRequestFollowUpFileData,
+            MemoryStream historicReferralRequestFollowUpFileData)
+        {
+            var recipientList = govUkNotifyConfig.ComplianceEmailRecipients;
+            var template = govUkNotifyConfig.ComplianceReportTemplate;
+            var personalisation = new Dictionary<string, dynamic>
+            {
+                { template.File1Link, NotificationClient.PrepareUpload(recentReferralRequestOverviewFileData.ToArray(), true)},
+                { template.File2Link, NotificationClient.PrepareUpload(recentReferralRequestFollowUpFileData.ToArray(), true)},
+                { template.File3Link, NotificationClient.PrepareUpload(historicReferralRequestFollowUpFileData.ToArray(), true)},
+            };
+            SendEmailToRecipients(recipientList, template.Id, personalisation);
+        }
 
         public void SendPendingReferralReportEmail()
         {
