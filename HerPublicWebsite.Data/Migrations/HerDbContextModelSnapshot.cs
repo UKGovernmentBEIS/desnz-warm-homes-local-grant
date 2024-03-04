@@ -194,9 +194,6 @@ namespace HerPublicWebsite.Data.Migrations
                     b.Property<bool>("IsLsoaProperty")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("PendingLocalAuthorityWhenSubmitted")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("ReferralCode")
                         .HasColumnType("text");
 
@@ -208,6 +205,9 @@ namespace HerPublicWebsite.Data.Migrations
 
                     b.Property<string>("Uprn")
                         .HasColumnType("text");
+
+                    b.Property<bool>("WasSubmittedToPendingLocalAuthority")
+                        .HasColumnType("boolean");
 
                     b.Property<uint>("xmin")
                         .IsConcurrencyToken()

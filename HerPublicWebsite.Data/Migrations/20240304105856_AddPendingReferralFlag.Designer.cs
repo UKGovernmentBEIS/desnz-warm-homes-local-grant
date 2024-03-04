@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HerPublicWebsite.Data.Migrations
 {
     [DbContext(typeof(HerDbContext))]
-    [Migration("20240228170716_AddPendingReferralFlag")]
+    [Migration("20240304105856_AddPendingReferralFlag")]
     partial class AddPendingReferralFlag
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -196,9 +196,6 @@ namespace HerPublicWebsite.Data.Migrations
                     b.Property<bool>("IsLsoaProperty")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("PendingLocalAuthorityWhenSubmitted")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("ReferralCode")
                         .HasColumnType("text");
 
@@ -210,6 +207,9 @@ namespace HerPublicWebsite.Data.Migrations
 
                     b.Property<string>("Uprn")
                         .HasColumnType("text");
+
+                    b.Property<bool>("WasSubmittedToPendingLocalAuthority")
+                        .HasColumnType("boolean");
 
                     b.Property<uint>("xmin")
                         .IsConcurrencyToken()
