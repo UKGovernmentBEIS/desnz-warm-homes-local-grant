@@ -3,19 +3,23 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Notify.Client;
 using Notify.Exceptions;
+using Notify.Interfaces;
 
 namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
 {
     public class GovUkNotifyApi : IEmailSender
     {
-        private readonly NotificationClient client;
+        private readonly INotificationClient client;
         private readonly GovUkNotifyConfiguration govUkNotifyConfig;
         private readonly ILogger<GovUkNotifyApi> logger;
         
-        public GovUkNotifyApi(IOptions<GovUkNotifyConfiguration> config, ILogger<GovUkNotifyApi> logger)
+        public GovUkNotifyApi(
+            INotificationClient client,
+            IOptions<GovUkNotifyConfiguration> config,
+            ILogger<GovUkNotifyApi> logger)
         {
+            this.client = client;
             govUkNotifyConfig = config.Value;
-            client = new NotificationClient(govUkNotifyConfig.ApiKey);
             this.logger = logger;
         }
 
@@ -108,36 +112,31 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
         }
         
         public void SendComplianceEmail(
-                MemoryStream recentReferralRequestOverviewFileData,
-                MemoryStream recentReferralRequestFollowUpFileData,
-                MemoryStream historicReferralRequestFollowUpFileData
-                )
-                {
-                    var recipientList = govUkNotifyConfig.ComplianceEmailRecipients;
-                    if (String.IsNullOrEmpty(recipientList))
-                    {
-                        return;
-                    }
-                    
-                    var template = govUkNotifyConfig.ComplianceReportTemplate;
-                    Dictionary<String, dynamic> personalisation = new Dictionary<String, dynamic>
-                    {
-                        { "File1Link", NotificationClient.PrepareUpload(recentReferralRequestOverviewFileData.ToArray(), true)},
-                        { "File2Link", NotificationClient.PrepareUpload(recentReferralRequestFollowUpFileData.ToArray(), true)},
-                        { "File3Link", NotificationClient.PrepareUpload(historicReferralRequestFollowUpFileData.ToArray(), true)},
-                    };
-                    foreach (var emailAddress in recipientList.Split(","))
-                    {
-                        var emailModel = new GovUkNotifyEmailModel
-                        {
-                            EmailAddress = emailAddress.Trim(),
-                            TemplateId = template.Id,
-                            Personalisation = personalisation
-                        };
-                        SendEmail(emailModel);
-                    }
-                    
-                }    
+            MemoryStream recentReferralRequestOverviewFileData,
+            MemoryStream recentReferralRequestFollowUpFileData,
+            MemoryStream historicReferralRequestFollowUpFileData)
+        {
+            var recipientList = govUkNotifyConfig.ComplianceEmailRecipients;
+            var template = govUkNotifyConfig.ComplianceReportTemplate;
+            var personalisation = new Dictionary<string, dynamic>
+            {
+                { "File1Link", NotificationClient.PrepareUpload(recentReferralRequestOverviewFileData.ToArray(), true)},
+                { "File2Link", NotificationClient.PrepareUpload(recentReferralRequestFollowUpFileData.ToArray(), true)},
+                { "File3Link", NotificationClient.PrepareUpload(historicReferralRequestFollowUpFileData.ToArray(), true)},
+            };
+            SendEmailToRecipients(recipientList, template.Id, personalisation);
+        }
+
+        public void SendPendingReferralReportEmail()
+        {
+            var recipientList = govUkNotifyConfig.PendingReferralEmailRecipients;
+            var template = govUkNotifyConfig.PendingReferralReportTemplate;
+            var personalisation = new Dictionary<string, dynamic>
+            {
+                { template.LinkPlaceholder, "https://www.gov.uk/apply-home-upgrade-grant" },
+            };
+            SendEmailToRecipients(recipientList, template.Id, personalisation);
+        }
 
         private void SendReferenceCodeEmail
         (
@@ -179,6 +178,28 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 Personalisation = personalisation
             };
             SendEmail(emailModel);
+        }
+
+        private void SendEmailToRecipients(
+            string recipientList, 
+            string templateId,
+            Dictionary<string, dynamic> personalisation)
+        {
+            if (string.IsNullOrEmpty(recipientList))
+            {
+                return;
+            }
+            var emailAddresses = recipientList.Split(",").Select(emailAddress => emailAddress.Trim());
+            foreach (var emailAddress in emailAddresses)
+            {
+                var emailModel = new GovUkNotifyEmailModel
+                {
+                    EmailAddress = emailAddress,
+                    TemplateId = templateId,
+                    Personalisation = personalisation
+                };
+                SendEmail(emailModel);
+            }
         }
     }
     

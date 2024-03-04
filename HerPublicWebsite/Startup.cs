@@ -33,6 +33,9 @@ using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using Microsoft.AspNetCore.Http;
 using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
+using Microsoft.Extensions.Options;
+using Notify.Client;
+using Notify.Interfaces;
 using GlobalConfiguration = HerPublicWebsite.BusinessLogic.GlobalConfiguration;
 
 namespace HerPublicWebsite
@@ -175,6 +178,11 @@ namespace HerPublicWebsite
             services.AddScoped<IEmailSender, GovUkNotifyApi>();
             services.Configure<GovUkNotifyConfiguration>(
                 configuration.GetSection(GovUkNotifyConfiguration.ConfigSection));
+            services.AddScoped<INotificationClient, NotificationClient>(serviceProvider =>
+            {
+                var govUkNotifyConfiguration = serviceProvider.GetService<IOptions<GovUkNotifyConfiguration>>();
+                return new NotificationClient(govUkNotifyConfiguration.Value.ApiKey);
+            });
         }
 
         private void ConfigureS3Client(IServiceCollection services)
