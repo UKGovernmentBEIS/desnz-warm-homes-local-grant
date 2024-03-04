@@ -88,4 +88,39 @@ public class GovUkNotifyApiTests
                 null, null));
         }
     }
+
+    [Test]
+    public void SendPendingReferralReportEmail_WhenCalled_DoesNotCallSendEmailIfEmailConfigIsEmpty()
+    {
+        // Arrange
+        const string recipient = "";
+        config.PendingReferralEmailRecipients = recipient;
+        
+        // Act
+        govUkNotifyApi.SendPendingReferralReportEmail();
+        
+        // Assert
+        mockNotificationClient.Verify(nc => nc.SendEmail(
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<Dictionary<string, dynamic>>(),
+            null, null), Times.Never);
+    }
+
+    [Test]
+    public void SendPendingReferralReportEmail_WhenCalled_DoesNotCallSendEmailIfEmailConfigIsNull()
+    {
+        // Arrange
+        config.PendingReferralEmailRecipients = null;
+        
+        // Act
+        govUkNotifyApi.SendPendingReferralReportEmail();
+        
+        // Assert
+        mockNotificationClient.Verify(nc => nc.SendEmail(
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<Dictionary<string, dynamic>>(),
+            null, null), Times.Never);
+    }
 }
