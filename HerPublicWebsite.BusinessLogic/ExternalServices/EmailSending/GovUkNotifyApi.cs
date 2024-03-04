@@ -133,7 +133,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             var template = govUkNotifyConfig.PendingReferralReportTemplate;
             var personalisation = new Dictionary<string, dynamic>
             {
-                { template.Link, "https://www.gov.uk/apply-home-upgrade-grant" },
+                { template.LinkPlaceholder, "https://www.gov.uk/apply-home-upgrade-grant" },
             };
             SendEmailToRecipients(recipientList, template.Id, personalisation);
         }

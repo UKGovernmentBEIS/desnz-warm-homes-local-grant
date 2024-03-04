@@ -39,7 +39,7 @@ public class GovUkNotifyApiTests
             PendingReferralReportTemplate = new PendingReferralReportConfiguration
             {
                 Id = exampleId,
-                Link = exampleLink
+                LinkPlaceholder = exampleLink
             }
         };
         mockConfig.Setup(config => config.Value).Returns(configValue);
@@ -54,7 +54,7 @@ public class GovUkNotifyApiTests
             exampleId,
             new Dictionary<string, object>
             {
-                { configValue.PendingReferralReportTemplate.Link, exampleLink }
+                { configValue.PendingReferralReportTemplate.LinkPlaceholder, exampleLink }
             },
             null, null));
     }
@@ -72,7 +72,7 @@ public class GovUkNotifyApiTests
             PendingReferralReportTemplate = new PendingReferralReportConfiguration
             {
                 Id = exampleId,
-                Link = exampleLink
+                LinkPlaceholder = exampleLink
             }
         };
         mockConfig.Setup(config => config.Value).Returns(configValue);
@@ -96,7 +96,7 @@ public class GovUkNotifyApiTests
                 exampleId,
                 new Dictionary<string, object>
                 {
-                    { configValue.PendingReferralReportTemplate.Link, exampleLink }
+                    { configValue.PendingReferralReportTemplate.LinkPlaceholder, exampleLink }
                 },
                 null, null));
         }
