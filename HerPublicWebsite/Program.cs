@@ -30,45 +30,30 @@ namespace HerPublicWebsite
             var dbContext = scope.ServiceProvider.GetRequiredService<HerDbContext>();
             dbContext.Database.Migrate();
 
+            var recurringJobManager = app.Services.GetService<IRecurringJobManager>();
+
             // Remove deprecated nightly tasks service
-            app
-                .Services
-                .GetService<IRecurringJobManager>()
-                .RemoveIfExists("Nightly tasks");
+            recurringJobManager.RemoveIfExists("Nightly tasks");
             
-            // Run nightly tasks at 00:30 UTC daily
-            app
-                .Services
-                .GetService<IRecurringJobManager>()
-                .AddOrUpdate<ReferralFollowUpNotificationService>(
-                    "Get referrals passed ten day working threshold with no follow up",
-                    rjs => rjs.SendReferralFollowUpNotifications(),
-                    "30 0 * * *");
+            recurringJobManager.AddOrUpdate<ReferralFollowUpNotificationService>(
+                "Get referrals passed ten day working threshold with no follow up",
+                service => service.SendReferralFollowUpNotifications(),
+                "30 0 * * *"); // at 00:30 every day
             
-            app
-                .Services
-                .GetService<IRecurringJobManager>()
-                .AddOrUpdate<UnsubmittedReferralRequestsService>(
-                    "Write unsubmitted referral requests to csv",
-                    rjs => rjs.WriteUnsubmittedReferralRequestsToCsv(),
-                    "45 0 * * *");
+            recurringJobManager.AddOrUpdate<UnsubmittedReferralRequestsService>(
+                "Write unsubmitted referral requests to csv",
+                service => service.WriteUnsubmittedReferralRequestsToCsv(),
+                "45 0 * * *"); // at 00:45 every day
             
-            // Run weekly tasks at 00:30 UTC every Monday
-            app
-                .Services
-                .GetService<IRecurringJobManager>()
-                .AddOrUpdate<PolicyTeamUpdateService>(
-                    "Send policy team update email",
-                    rjs => rjs.SendPolicyTeamUpdate(),
-                    "0 7 * * 1");
-            
-            app
-                .Services
-                .GetService<IRecurringJobManager>()
-                .AddOrUpdate<PendingReferralNotificationService>(
-                    "Send monthly pending referral report",
-                    rjs => rjs.SendPendingReferralNotifications(),
-                    "0 0 1 * *");
+            recurringJobManager.AddOrUpdate<PolicyTeamUpdateService>(
+                "Send policy team update email",
+                service => service.SendPolicyTeamUpdate(),
+                "0 7 * * 1"); // at 07:00 on Monday
+                
+            recurringJobManager.AddOrUpdate<PendingReferralNotificationService>(
+                "Send monthly pending referral report",
+                service => service.SendPendingReferralNotifications(),
+                "15 7 1 * *"); // at 07:15 on 1st of the month
 
             app.Run();
         }
