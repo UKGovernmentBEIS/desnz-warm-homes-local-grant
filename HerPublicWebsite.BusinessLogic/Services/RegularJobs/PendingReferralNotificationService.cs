@@ -2,18 +2,11 @@
 
 namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
-public interface IPendingReferralNotificationService
+public class PendingReferralNotificationService
 {
-    public void SendPendingReferralNotifications();
-}
-
-public class PendingReferralNotificationService : IPendingReferralNotificationService
-{
-    private IEmailSender emailSender;
+    private readonly IEmailSender emailSender;
     
-    public PendingReferralNotificationService(
-        IEmailSender emailSender
-    )
+    public PendingReferralNotificationService(IEmailSender emailSender)
     {
         this.emailSender = emailSender;
     }
