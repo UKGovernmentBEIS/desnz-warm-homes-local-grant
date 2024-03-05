@@ -27,8 +27,8 @@ public class PendingReferralNotificationService
     private async Task<MemoryStream> BuildPendingReferralRequestsFileData()
     {
         // it is known that emails are sent on the 1st of the new month
-        DateTime startDate = DateTime.Now.AddMonths(-1); // 1st of previous month
-        DateTime endDate = DateTime.Now.AddDays(-1); // 31st of previous month
+        var startDate = DateTime.Now.AddMonths(-1); // 1st of previous month
+        var endDate = DateTime.Now.AddDays(-1); // 31st of previous month
         var pendingReferralRequests = await dataProvider.GetPendingReferralRequestsBetweenDates(startDate, endDate);
         return csvFileCreator.CreatePendingReferralRequestFileData(pendingReferralRequests);
     }
