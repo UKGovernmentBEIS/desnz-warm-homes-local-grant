@@ -102,10 +102,15 @@ public class DataAccessProvider : IDataAccessProvider
 
     public async Task<IList<ReferralRequest>> GetPendingReferralRequestsBetweenDates(DateTime startDate, DateTime endDate)
     {
-        return await context.ReferralRequests
+        var monthlyRequests = await context.ReferralRequests
             .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate)
-            .Where(rr => rr.WasSubmittedToPendingLocalAuthority | LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Status == LocalAuthorityData.Hug2Status.Pending)
             .ToListAsync();
+        return monthlyRequests
+            .Where(rr =>
+                rr.WasSubmittedToPendingLocalAuthority |
+                LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Status ==
+                LocalAuthorityData.Hug2Status.Pending)
+            .ToList();
     }
 
     public async Task<ReferralRequestFollowUp> PersistReferralFollowUpToken(ReferralRequestFollowUp referralRequestFollowUp)
