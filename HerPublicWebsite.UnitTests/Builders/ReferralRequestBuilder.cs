@@ -76,6 +76,12 @@ public class ReferralRequestBuilder
         return this;
     }
 
+    public ReferralRequestBuilder WithEmailAddress(string contactEmailAddress)
+    {
+        referralRequest.ContactEmailAddress = contactEmailAddress;
+        return this;
+    }
+
     public ReferralRequestBuilder WithTelephone(string telephone)
     {
         referralRequest.ContactTelephone = telephone;
@@ -94,6 +100,18 @@ public class ReferralRequestBuilder
 
     public ReferralRequestBuilder WithFollowUp(ReferralRequestFollowUpBuilder requestFollowUpBuilder) {
         referralRequest.FollowUp = requestFollowUpBuilder.Build(referralRequest);
+        return this;
+    }
+
+    public ReferralRequestBuilder WithWasSubmittedToPendingLocalAuthority(bool wasSubmmitedToPendingLocalAuthority)
+    {
+        referralRequest.WasSubmittedToPendingLocalAuthority = wasSubmmitedToPendingLocalAuthority;
+        return this;
+    }
+
+    public ReferralRequestBuilder WithReferralCode(string referralCode)
+    {
+        referralRequest.ReferralCode = referralCode;
         return this;
     }
 }
