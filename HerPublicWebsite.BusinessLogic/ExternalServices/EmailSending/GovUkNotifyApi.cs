@@ -127,13 +127,13 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             SendEmailToRecipients(recipientList, template.Id, personalisation);
         }
 
-        public void SendPendingReferralReportEmail()
+        public void SendPendingReferralReportEmail(MemoryStream pendingReferralRequestsFileData)
         {
             var recipientList = govUkNotifyConfig.PendingReferralEmailRecipients;
             var template = govUkNotifyConfig.PendingReferralReportTemplate;
             var personalisation = new Dictionary<string, dynamic>
             {
-                { template.LinkPlaceholder, "https://www.gov.uk/apply-home-upgrade-grant" },
+                { template.LinkPlaceholder, NotificationClient.PrepareUpload(pendingReferralRequestsFileData.ToArray(), true) },
             };
             SendEmailToRecipients(recipientList, template.Id, personalisation);
         }

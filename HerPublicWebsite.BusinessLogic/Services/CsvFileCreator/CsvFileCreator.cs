@@ -38,6 +38,14 @@ public class CsvFileCreator
         return GenerateCsvMemoryStreamFromFileRows(rows);
     }
 
+    public MemoryStream CreatePendingReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests)
+    {
+        var rows = referralRequests
+            .Select(rr => new CsvRowPendingReferralRequest(rr));
+
+        return GenerateCsvMemoryStreamFromFileRows(rows);
+    }
+
     private class CsvRowReferralCodes
     {
         [Index(0)]
@@ -260,6 +268,57 @@ public class CsvFileCreator
             };
             EligiblePostcode = request.IsLsoaProperty;
             Tenure = "Owner";
+        }
+    }
+    
+    private class CsvRowPendingReferralRequest
+    {
+        [Index(0)]
+        public string Consortium { get; set; }
+        
+        [Index(1)]
+        [Name("Local Authority")]
+        public string LocalAuthority { get; set; }
+        
+        [Index(2)]
+        [Name("Referral Date")]
+        public string ReferralDate { get; set; }
+        
+        [Index(3)]
+        [Name("Referral Code")]
+        public string ReferralCode { get; set; }
+        
+        [Index(4)]
+        public string Name { get; set; }
+        
+        [Index(5)]
+        public string Email { get; set; }
+        
+        [Index(6)]
+        public string Telephone { get; set; }
+        
+        [Index(7)]
+        [Name("Local Authority Status")]
+        public string LaStatus { get; set; }
+
+        public CsvRowPendingReferralRequest(ReferralRequest referralRequest)
+        {
+            var localAuthority = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referralRequest.CustodianCode];
+            Consortium = localAuthority.Consortium;
+            LocalAuthority = localAuthority.Name;
+            ReferralDate = referralRequest.RequestDate.ToString("yyyy-MM-dd HH:mm:ss");
+            ReferralCode = referralRequest.ReferralCode;
+            Name = referralRequest.FullName;
+            Email = referralRequest.ContactEmailAddress;
+            Telephone = referralRequest.ContactTelephone;
+            LaStatus = localAuthority.Status switch
+            {
+                LocalAuthorityData.Hug2Status.Live => "Live",
+                LocalAuthorityData.Hug2Status.Pending => "Pending",
+                LocalAuthorityData.Hug2Status.NotParticipating => "Not Participating",
+                LocalAuthorityData.Hug2Status.NotTakingPart => "Not Taking Part",
+                _ => throw new ArgumentOutOfRangeException("localAuthority.Status", "Unrecognised Hug2Status value: " + localAuthority.Status)
+            };
         }
     }
 
