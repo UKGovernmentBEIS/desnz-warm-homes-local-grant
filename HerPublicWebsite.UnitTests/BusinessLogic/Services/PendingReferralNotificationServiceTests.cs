@@ -37,7 +37,7 @@ public class PendingReferralNotificationServiceTests
     {
         // Arrange
         mockDataAccessProvider
-            .Setup(dap => dap.GetPendingReferralRequestsBetweenDates(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+            .Setup(dap => dap.GetReferralRequestsBetweenDates(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
             .ReturnsAsync(new List<ReferralRequest>());
         
         // Act

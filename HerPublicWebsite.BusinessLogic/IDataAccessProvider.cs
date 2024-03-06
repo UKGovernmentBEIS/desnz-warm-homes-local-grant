@@ -12,7 +12,6 @@ public interface IDataAccessProvider
     Task<IList<ReferralRequest>> GetReferralRequestsBetweenDates(DateTime startDate, DateTime endDate);
     Task<IList<ReferralRequest>> GetReferralRequestsWithNoFollowUpBetweenDates(DateTime startDate, DateTime endDate);
     Task<IList<ReferralRequest>> GetReferralRequestsByCustodianAndRequestDateAsync(string custodianCode, int month, int year);
-    Task<IList<ReferralRequest>> GetPendingReferralRequestsBetweenDates(DateTime startDate, DateTime endDate);
     Task<AnonymisedReport> PersistAnonymisedReportAsync(AnonymisedReport report);
     Task<PerReferralReport> PersistPerReferralReportAsync(PerReferralReport report);
     Task PersistAllChangesAsync();

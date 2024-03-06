@@ -1,4 +1,5 @@
 ﻿using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
+using HerPublicWebsite.BusinessLogic.Models;
 
 namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
@@ -29,7 +30,14 @@ public class PendingReferralNotificationService
         // it is known that emails are sent on the 1st of the new month
         var startDate = DateTime.Now.AddMonths(-1); // 1st of previous month
         var endDate = DateTime.Now.AddDays(-1); // 31st of previous month
-        var pendingReferralRequests = await dataProvider.GetPendingReferralRequestsBetweenDates(startDate, endDate);
+        var referralRequests = await dataProvider.GetReferralRequestsBetweenDates(startDate, endDate);
+        
+        var pendingReferralRequests = referralRequests.Where(rr =>
+            rr.WasSubmittedToPendingLocalAuthority |
+            LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Status ==
+            LocalAuthorityData.Hug2Status.Pending)
+            .ToList();
+
         return csvFileCreator.CreatePendingReferralRequestFileData(pendingReferralRequests);
     }
 }
