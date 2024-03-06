@@ -222,12 +222,14 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
             .WithReferralCode("TEST0002")
             .WithFullName("Test User 2")
             .WithEmailAddress("test2@example.com")
+            .WithTelephone("")
             .Build();
         var referralRequest3 = new ReferralRequestBuilder(3)
             .WithCustodianCode("121")
             .WithRequestDate(new DateTime(2024, 1, 5, 1, 0, 0))
             .WithReferralCode("TEST0003")
             .WithFullName("Test User 3")
+            .WithEmailAddress("")
             .WithTelephone("333")
             .Build();
 
@@ -242,6 +244,6 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
             "Consortium,Local Authority,Referral Date,Referral Code,Name,Email,Telephone,Local Authority Status\r\n" + 
             "Bristol,Bath and North East Somerset Council,2024-03-05 01:00:00,TEST0001,Test User 1,test1@example.com,111,Live\r\n" +
             "Cambridgeshire & Peterborough Combined Authority,Bedford Borough Council,2024-02-05 01:00:00,TEST0002,Test User 2,test2@example.com,,Pending\r\n" +
-            "Bristol,North Somerset Council,2024-01-05 01:00:00,TEST0003,Test User 3,,333,Live");
+            "Bristol,North Somerset Council,2024-01-05 01:00:00,TEST0003,Test User 3,,333,Live\r\n");
     }
 }
