@@ -8,15 +8,18 @@ public class PendingReferralNotificationService
     private readonly IDataAccessProvider dataProvider;
     private readonly CsvFileCreator.CsvFileCreator csvFileCreator;
     private readonly IEmailSender emailSender;
+    private readonly IPendingReferralFilterService pendingReferralFilterService;
     
     public PendingReferralNotificationService(
         IDataAccessProvider dataProvider,
         CsvFileCreator.CsvFileCreator csvFileCreator,
-        IEmailSender emailSender)
+        IEmailSender emailSender,
+        IPendingReferralFilterService pendingReferralFilterService)
     {
         this.dataProvider = dataProvider;
         this.csvFileCreator = csvFileCreator;
         this.emailSender = emailSender;
+        this.pendingReferralFilterService = pendingReferralFilterService;
     }
     
     public async Task SendPendingReferralNotifications()
@@ -27,16 +30,9 @@ public class PendingReferralNotificationService
 
     private async Task<MemoryStream> BuildPendingReferralRequestsFileData()
     {
-        // it is known that emails are sent on the 1st of the new month
-        var startDate = DateTime.Now.AddMonths(-1); // 1st of previous month
-        var endDate = DateTime.Now.AddDays(-1); // 31st of previous month
-        var referralRequests = await dataProvider.GetReferralRequestsBetweenDates(startDate, endDate);
-        
-        var pendingReferralRequests = referralRequests.Where(rr =>
-            rr.WasSubmittedToPendingLocalAuthority |
-            LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Status ==
-            LocalAuthorityData.Hug2Status.Pending)
-            .ToList();
+        var referralRequests = await dataProvider.GetAllReferralRequests();
+
+        var pendingReferralRequests = pendingReferralFilterService.FilterForPendingReferralReport(referralRequests);
 
         return csvFileCreator.CreatePendingReferralRequestFileData(pendingReferralRequests);
     }

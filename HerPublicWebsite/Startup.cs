@@ -75,6 +75,7 @@ namespace HerPublicWebsite
             services.AddScoped<IUnsubmittedReferralRequestsService, UnsubmittedReferralRequestsService>();
             services.AddScoped<IWorkingDayHelperService, WorkingDayHelperService>();
             services.AddScoped<StartOfMonthService>();
+            services.AddScoped<IPendingReferralFilterService, PendingReferralFilterService>();
 
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();
