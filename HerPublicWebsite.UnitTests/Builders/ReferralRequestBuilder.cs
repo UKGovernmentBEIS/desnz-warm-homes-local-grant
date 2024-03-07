@@ -103,9 +103,9 @@ public class ReferralRequestBuilder
         return this;
     }
 
-    public ReferralRequestBuilder WithWasSubmittedToPendingLocalAuthority(bool wasSubmmitedToPendingLocalAuthority)
+    public ReferralRequestBuilder WithWasSubmittedToPendingLocalAuthority(bool wasSubmittedToPendingLocalAuthority)
     {
-        referralRequest.WasSubmittedToPendingLocalAuthority = wasSubmmitedToPendingLocalAuthority;
+        referralRequest.WasSubmittedToPendingLocalAuthority = wasSubmittedToPendingLocalAuthority;
         return this;
     }
 
