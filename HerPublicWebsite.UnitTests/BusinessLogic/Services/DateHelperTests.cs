@@ -4,12 +4,12 @@ using NUnit.Framework;
 
 namespace Tests.BusinessLogic.Services;
 
-public class StartOfMonthServiceTests
+public class DateHelperTests
 {
     public void StartOfMonthService_WhenCalledWithoutParameter_ReturnsAPreviousDate()
     {
         // arrange
-        var startOfMonthService = new StartOfMonthService();
+        var startOfMonthService = new DateHelper();
         
         // act
         var result = startOfMonthService.GetStartOfPreviousMonth();
@@ -22,7 +22,7 @@ public class StartOfMonthServiceTests
     public void StartOfMonthService_WhenCalledWithoutParameter_ReturnsFirstDayOfAMonth()
     {
         // arrange
-        var startOfMonthService = new StartOfMonthService();
+        var startOfMonthService = new DateHelper();
         
         // act
         var result = startOfMonthService.GetStartOfPreviousMonth();
@@ -36,7 +36,7 @@ public class StartOfMonthServiceTests
     {
         // arrange
         var date = DateTime.Today;
-        var startOfMonthService = new StartOfMonthService(date);
+        var startOfMonthService = new DateHelper(() => date);
         
         // act
         var result = startOfMonthService.GetStartOfPreviousMonth();
@@ -52,7 +52,7 @@ public class StartOfMonthServiceTests
     public void StartOfMonthService_WhenCalledWithParameter_ReturnsFirstOfPreviousMonth(DateTime testDate, DateTime assertDate)
     {
         // arrange
-        var startOfMonthService = new StartOfMonthService(testDate);
+        var startOfMonthService = new DateHelper(() => testDate);
         
         // act
         var result = startOfMonthService.GetStartOfPreviousMonth();

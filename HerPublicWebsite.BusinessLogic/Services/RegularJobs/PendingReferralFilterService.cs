@@ -9,16 +9,16 @@ public interface IPendingReferralFilterService
 
 public class PendingReferralFilterService : IPendingReferralFilterService
 {
-    private readonly StartOfMonthService startOfMonthService;
+    private readonly DateHelper dateHelper;
 
-    public PendingReferralFilterService(StartOfMonthService startOfMonthService)
+    public PendingReferralFilterService(DateHelper dateHelper)
     {
-        this.startOfMonthService = startOfMonthService;
+        this.dateHelper = dateHelper;
     }
     
     public IEnumerable<ReferralRequest> FilterForPendingReferralReport(IEnumerable<ReferralRequest> referralRequests)
     {
-        var startDate = startOfMonthService.GetStartOfPreviousMonth();
+        var startDate = dateHelper.GetStartOfPreviousMonth();
 
         return referralRequests.Where(rr => ShouldIncludeInReport(rr, startDate));
     }
