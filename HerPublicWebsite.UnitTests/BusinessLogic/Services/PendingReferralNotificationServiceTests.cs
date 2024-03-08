@@ -16,7 +16,7 @@ namespace Tests.BusinessLogic.Services;
 public class PendingReferralNotificationServiceTests
 {
     private Mock<IDataAccessProvider> mockDataAccessProvider;
-    private Mock<CsvFileCreator> mockCsvFileCreator;
+    private Mock<ICsvFileCreator> mockCsvFileCreator;
     private Mock<IEmailSender> mockEmailSender;
     private Mock<IPendingReferralFilterService> mockPendingReferralFilterService;
     private PendingReferralNotificationService pendingReferralNotificationService;
@@ -25,7 +25,7 @@ public class PendingReferralNotificationServiceTests
     public void Setup()
     {
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
-        mockCsvFileCreator = new Mock<CsvFileCreator>();
+        mockCsvFileCreator = new Mock<ICsvFileCreator>();
         mockEmailSender = new Mock<IEmailSender>();
         mockPendingReferralFilterService = new Mock<IPendingReferralFilterService>();
         pendingReferralNotificationService = new PendingReferralNotificationService(
@@ -39,18 +39,26 @@ public class PendingReferralNotificationServiceTests
     public async Task SendPendingReferralNotifications_WhenCalled_CallsSendPendingReferralReportEmail()
     {
         // Arrange
+        var allReferralRequests = new List<ReferralRequest>();
         mockDataAccessProvider
-            .Setup(dap => dap.GetReferralRequestsBetweenDates(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
-            .ReturnsAsync(new List<ReferralRequest>());
+            .Setup(dap => dap.GetAllReferralRequests())
+            .ReturnsAsync(allReferralRequests);
 
+        var filteredReferralRequests = new List<ReferralRequest>();
         mockPendingReferralFilterService
-            .Setup(prfs => prfs.FilterForPendingReferralReport(It.IsAny<IEnumerable<ReferralRequest>>()))
-            .Returns(new List<ReferralRequest>());
+            .Setup(prfs => prfs.FilterForPendingReferralReport(allReferralRequests))
+            .Returns(filteredReferralRequests);
+
+        var bytes = new byte[] { 0x0, 0x1, 0x2, 0x3 };
+        var memoryStream = new MemoryStream(bytes);
+        mockCsvFileCreator
+            .Setup(cfc => cfc.CreatePendingReferralRequestFileData(filteredReferralRequests))
+            .Returns(memoryStream);
         
         // Act
         await pendingReferralNotificationService.SendPendingReferralNotifications();
         
         // Assert
-        mockEmailSender.Verify(es => es.SendPendingReferralReportEmail(It.IsAny<MemoryStream>()));
+        mockEmailSender.Verify(es => es.SendPendingReferralReportEmail(memoryStream));
     }
 }

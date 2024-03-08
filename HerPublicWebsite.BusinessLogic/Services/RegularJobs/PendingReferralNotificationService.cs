@@ -1,18 +1,18 @@
 ﻿using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
-using HerPublicWebsite.BusinessLogic.Models;
+using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 
 namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public class PendingReferralNotificationService
 {
     private readonly IDataAccessProvider dataProvider;
-    private readonly CsvFileCreator.CsvFileCreator csvFileCreator;
+    private readonly ICsvFileCreator csvFileCreator;
     private readonly IEmailSender emailSender;
     private readonly IPendingReferralFilterService pendingReferralFilterService;
     
     public PendingReferralNotificationService(
         IDataAccessProvider dataProvider,
-        CsvFileCreator.CsvFileCreator csvFileCreator,
+        ICsvFileCreator csvFileCreator,
         IEmailSender emailSender,
         IPendingReferralFilterService pendingReferralFilterService)
     {

@@ -64,7 +64,7 @@ namespace HerPublicWebsite
             // Add the Hangfire processing server as IHostedService
             services.AddHangfireServer();
 
-            services.AddScoped<CsvFileCreator>();
+            services.AddScoped<ICsvFileCreator, CsvFileCreator>();
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
             services.AddScoped<IEligiblePostcodeService, EligiblePostcodeService>();
             services.AddScoped<IReferralFollowUpService, ReferralFollowUpService>();
@@ -74,7 +74,7 @@ namespace HerPublicWebsite
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
             services.AddScoped<IUnsubmittedReferralRequestsService, UnsubmittedReferralRequestsService>();
             services.AddScoped<IWorkingDayHelperService, WorkingDayHelperService>();
-            services.AddScoped<DateHelper>();
+            services.AddScoped<IDateHelper, DateHelper>();
             services.AddScoped<IPendingReferralFilterService, PendingReferralFilterService>();
 
             services.AddMemoryCache();

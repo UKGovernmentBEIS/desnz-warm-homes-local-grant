@@ -1,6 +1,11 @@
 ﻿namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
-public class DateHelper
+public interface IDateHelper
+{
+    public DateTime GetStartOfPreviousMonth();
+}
+
+public class DateHelper : IDateHelper
 {
     private readonly Func<DateTime> getToday;
     
