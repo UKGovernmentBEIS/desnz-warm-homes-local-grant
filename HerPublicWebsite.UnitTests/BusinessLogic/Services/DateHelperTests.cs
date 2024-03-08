@@ -6,6 +6,7 @@ namespace Tests.BusinessLogic.Services;
 
 public class DateHelperTests
 {
+    [Test]
     public void StartOfMonthService_WhenCalledWithoutParameter_ReturnsAPreviousDate()
     {
         // arrange
@@ -47,8 +48,12 @@ public class DateHelperTests
     
     [TestCase("2024-10-12", "2024-9-1")]
     [TestCase("2024-9-1", "2024-8-1")]
-    [TestCase("2024-2-29", "2024-1-1")] //Leap day tests
-    [TestCase("2024-3-29", "2024-2-1")] //Leap day tests
+    [TestCase("2024-2-29", "2024-1-1")] // Leap day tests
+    [TestCase("2024-3-29", "2024-2-1")] // Leap day tests
+    [TestCase("2024-4-30", "2024-3-1")] // End of differently sized month
+    [TestCase("2024-5-31", "2024-4-1")] // End of differently sized month
+    [TestCase("2024-8-31", "2024-7-1")] // End of same sized month
+    [TestCase("2025-1-31", "2024-12-1")] // Across year boundary
     public void StartOfMonthService_WhenCalledWithParameter_ReturnsFirstOfPreviousMonth(DateTime testDate, DateTime assertDate)
     {
         // arrange
