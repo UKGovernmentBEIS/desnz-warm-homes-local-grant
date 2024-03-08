@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using FluentAssertions;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -53,6 +54,21 @@ public class GovUkNotifyApiTests
             config.PendingReferralReportTemplate.Id,
             It.IsAny<Dictionary<string, object>>(),
             null, null));
+    }
+
+    [Test]
+    public void SendPendingReferralReportEmail_WhenCalled_IncludesALinkInPersonalisation()
+    {
+        // Arrange
+        const string recipient = "email1@example.com";
+        config.PendingReferralEmailRecipients = recipient;
+        
+        // Act
+        govUkNotifyApi.SendPendingReferralReportEmail(blankMemoryStream);
+        
+        // Assert
+        var personalisation = (Dictionary<string, object>)mockNotificationClient.Invocations[0].Arguments[2];
+        personalisation.Should().ContainKey("link");
     }
 
     [Test]
