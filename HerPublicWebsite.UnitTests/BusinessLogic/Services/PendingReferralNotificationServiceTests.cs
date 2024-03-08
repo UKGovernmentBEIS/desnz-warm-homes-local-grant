@@ -16,7 +16,7 @@ namespace Tests.BusinessLogic.Services;
 public class PendingReferralNotificationServiceTests
 {
     private Mock<IDataAccessProvider> mockDataAccessProvider;
-    private Mock<CsvFileCreator> mockCsvFileCreator;
+    private Mock<ICsvFileCreator> mockCsvFileCreator;
     private Mock<IEmailSender> mockEmailSender;
     private Mock<IPendingReferralFilterService> mockPendingReferralFilterService;
     private PendingReferralNotificationService pendingReferralNotificationService;
@@ -25,7 +25,7 @@ public class PendingReferralNotificationServiceTests
     public void Setup()
     {
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
-        mockCsvFileCreator = new Mock<CsvFileCreator>();
+        mockCsvFileCreator = new Mock<ICsvFileCreator>();
         mockEmailSender = new Mock<IEmailSender>();
         mockPendingReferralFilterService = new Mock<IPendingReferralFilterService>();
         pendingReferralNotificationService = new PendingReferralNotificationService(

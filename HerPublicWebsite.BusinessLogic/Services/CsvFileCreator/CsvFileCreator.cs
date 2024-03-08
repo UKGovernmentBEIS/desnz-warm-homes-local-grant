@@ -8,7 +8,15 @@ using HerPublicWebsite.BusinessLogic.Models.Enums;
 
 namespace HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 
-public class CsvFileCreator
+public interface ICsvFileCreator
+{
+    public MemoryStream CreateReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests);
+    public MemoryStream CreateReferralRequestOverviewFileData(IEnumerable<ReferralRequest> referralRequests);
+    public MemoryStream CreateReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests);
+    public MemoryStream CreatePendingReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests);
+}
+
+public class CsvFileCreator : ICsvFileCreator
 {
     public MemoryStream CreateReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests)
     {
