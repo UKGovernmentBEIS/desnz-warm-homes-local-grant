@@ -25,15 +25,13 @@ public class PendingReferralNotificationService
     public async Task SendPendingReferralNotifications()
     {
         var pendingReferralRequestsFileData = await BuildPendingReferralRequestsFileData();
-        this.emailSender.SendPendingReferralReportEmail(pendingReferralRequestsFileData);
+        emailSender.SendPendingReferralReportEmail(pendingReferralRequestsFileData);
     }
 
     private async Task<MemoryStream> BuildPendingReferralRequestsFileData()
     {
         var referralRequests = await dataProvider.GetAllReferralRequests();
-
         var pendingReferralRequests = pendingReferralFilterService.FilterForPendingReferralReport(referralRequests);
-
         return csvFileCreator.CreatePendingReferralRequestFileData(pendingReferralRequests);
     }
 }
