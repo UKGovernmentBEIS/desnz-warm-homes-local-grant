@@ -319,14 +319,7 @@ public class CsvFileCreator : ICsvFileCreator
             Name = referralRequest.FullName;
             Email = referralRequest.ContactEmailAddress;
             Telephone = referralRequest.ContactTelephone;
-            LaStatus = localAuthority.Status switch
-            {
-                LocalAuthorityData.Hug2Status.Live => "Live",
-                LocalAuthorityData.Hug2Status.Pending => "Pending",
-                LocalAuthorityData.Hug2Status.NotParticipating => "Not Participating",
-                LocalAuthorityData.Hug2Status.NotTakingPart => "Not Taking Part",
-                _ => throw new ArgumentOutOfRangeException("localAuthority.Status", "Unrecognised Hug2Status value: " + localAuthority.Status)
-            };
+            LaStatus = localAuthority.Status.ToString();
         }
     }
 
