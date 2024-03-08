@@ -1,6 +1,7 @@
 ﻿using HerPublicWebsite.BusinessLogic.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
 using Notify.Client;
 using Notify.Exceptions;
 using Notify.Interfaces;
@@ -120,9 +121,9 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             var template = govUkNotifyConfig.ComplianceReportTemplate;
             var personalisation = new Dictionary<string, dynamic>
             {
-                { "File1Link", NotificationClient.PrepareUpload(recentReferralRequestOverviewFileData.ToArray(), true)},
-                { "File2Link", NotificationClient.PrepareUpload(recentReferralRequestFollowUpFileData.ToArray(), true)},
-                { "File3Link", NotificationClient.PrepareUpload(historicReferralRequestFollowUpFileData.ToArray(), true)},
+                { "File1Link", PrepareCsvUpload(recentReferralRequestOverviewFileData)},
+                { "File2Link", PrepareCsvUpload(recentReferralRequestFollowUpFileData)},
+                { "File3Link", PrepareCsvUpload(historicReferralRequestFollowUpFileData)},
             };
             SendEmailToRecipients(recipientList, template.Id, personalisation);
         }
@@ -133,7 +134,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             var template = govUkNotifyConfig.PendingReferralReportTemplate;
             var personalisation = new Dictionary<string, dynamic>
             {
-                { template.LinkPlaceholder, NotificationClient.PrepareUpload(pendingReferralRequestsFileData.ToArray(), true) },
+                { template.LinkPlaceholder, PrepareCsvUpload(pendingReferralRequestsFileData) },
             };
             SendEmailToRecipients(recipientList, template.Id, personalisation);
         }
@@ -178,6 +179,11 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 Personalisation = personalisation
             };
             SendEmail(emailModel);
+        }
+
+        private JObject PrepareCsvUpload(MemoryStream csvData)
+        {
+            return NotificationClient.PrepareUpload(csvData.ToArray(), true);
         }
 
         private void SendEmailToRecipients(
