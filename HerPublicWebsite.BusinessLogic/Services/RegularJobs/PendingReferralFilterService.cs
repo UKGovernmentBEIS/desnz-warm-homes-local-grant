@@ -4,7 +4,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public interface IPendingReferralFilterService
 {
-    public List<ReferralRequest> FilterForPendingReferralReport(IEnumerable<ReferralRequest> referralRequests);
+    public IEnumerable<ReferralRequest> FilterForPendingReferralReport(IEnumerable<ReferralRequest> referralRequests);
 }
 
 public class PendingReferralFilterService : IPendingReferralFilterService
@@ -16,14 +16,22 @@ public class PendingReferralFilterService : IPendingReferralFilterService
         this.startOfMonthService = startOfMonthService;
     }
     
-    public List<ReferralRequest> FilterForPendingReferralReport(IEnumerable<ReferralRequest> referralRequests)
+    public IEnumerable<ReferralRequest> FilterForPendingReferralReport(IEnumerable<ReferralRequest> referralRequests)
     {
         var startDate = startOfMonthService.GetStartOfPreviousMonth();
-        
-        return referralRequests.Where(rr =>
-            LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Status ==
-                LocalAuthorityData.Hug2Status.Pending |
-            rr.WasSubmittedToPendingLocalAuthority && rr.RequestDate >= startDate)
-            .ToList();
+
+        return referralRequests.Where(rr => ShouldIncludeInReport(rr, startDate));
+    }
+    
+    private static bool ShouldIncludeInReport(ReferralRequest referral, DateTime startDate)
+    {
+        var localAuthority = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referral.CustodianCode];
+        var localAuthorityIsPending = localAuthority.Status == LocalAuthorityData.Hug2Status.Pending;
+
+        // Also include referrals to local authorities that have gone from Pending to another status in the last month.
+        var wasSubmittedToPendingLocalAuthorityInLastMonth =
+            referral.WasSubmittedToPendingLocalAuthority && referral.RequestDate >= startDate;
+
+        return localAuthorityIsPending || wasSubmittedToPendingLocalAuthorityInLastMonth;
     }
 }
