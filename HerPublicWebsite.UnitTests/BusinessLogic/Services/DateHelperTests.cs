@@ -16,7 +16,7 @@ public class DateHelperTests
     }
     
     [Test]
-    public void StartOfMonthService_WhenGetStartOfPreviousMonthCalled_ReturnsAPreviousDate()
+    public void GetStartOfPreviousMonth_WhenCalled_ReturnsAPreviousDate()
     {
         // Arrange
         todayValue = DateTime.Today;
@@ -29,7 +29,7 @@ public class DateHelperTests
     }
     
     [Test]
-    public void StartOfMonthService_WhenGetStartOfPreviousMonthCalled_ReturnsFirstDayOfAMonth()
+    public void GetStartOfPreviousMonth_WhenCalled_ReturnsFirstDayOfAMonth()
     {
         // Arrange
         todayValue = DateTime.Today;
@@ -49,7 +49,7 @@ public class DateHelperTests
     [TestCase("2024-05-31", "2024-04-01")] // End of differently sized month
     [TestCase("2024-08-31", "2024-07-01")] // End of same sized month
     [TestCase("2025-01-31", "2024-12-01")] // Across year boundary
-    public void StartOfMonthService_WhenGetStartOfPreviousMonthCalled_ReturnsFirstOfPreviousMonth(
+    public void GetStartOfPreviousMonth_WhenCalled_ReturnsFirstOfPreviousMonth(
         DateTime testDate, DateTime assertDate)
     {
         // Arrange
