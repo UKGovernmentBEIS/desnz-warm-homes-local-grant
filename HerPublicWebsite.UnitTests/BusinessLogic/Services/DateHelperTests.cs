@@ -6,63 +6,59 @@ namespace Tests.BusinessLogic.Services;
 
 public class DateHelperTests
 {
-    [Test]
-    public void StartOfMonthService_WhenCalledWithoutParameter_ReturnsAPreviousDate()
+    private DateTime todayValue;
+    private DateHelper dateHelper;
+
+    [SetUp]
+    public void Setup()
     {
-        // arrange
-        var startOfMonthService = new DateHelper();
+        dateHelper = new DateHelper(() => todayValue);
+    }
+    
+    [Test]
+    public void StartOfMonthService_WhenGetStartOfPreviousMonthCalled_ReturnsAPreviousDate()
+    {
+        // Arrange
+        todayValue = DateTime.Today;
         
-        // act
-        var result = startOfMonthService.GetStartOfPreviousMonth();
+        // Act
+        var result = dateHelper.GetStartOfPreviousMonth();
         
-        // assert
+        // Assert
         Assert.That(result <= DateTime.Today);
     }
     
     [Test]
-    public void StartOfMonthService_WhenCalledWithoutParameter_ReturnsFirstDayOfAMonth()
+    public void StartOfMonthService_WhenGetStartOfPreviousMonthCalled_ReturnsFirstDayOfAMonth()
     {
-        // arrange
-        var startOfMonthService = new DateHelper();
+        // Arrange
+        todayValue = DateTime.Today;
         
-        // act
-        var result = startOfMonthService.GetStartOfPreviousMonth();
+        // Act
+        var result = dateHelper.GetStartOfPreviousMonth();
         
-        // assert
-        Assert.That(result.Day == 1);
+        // Assert
+        Assert.AreEqual(result.Day, 1);
     }
     
-    [Test]
-    public void StartOfMonthService_WhenCalledWithParameter_ReturnsAPreviousDate()
+    [TestCase("2024-10-12", "2024-09-01")]
+    [TestCase("2024-09-01", "2024-08-01")]
+    [TestCase("2024-02-29", "2024-01-01")] // Leap day tests
+    [TestCase("2024-03-29", "2024-02-01")] // Leap day tests
+    [TestCase("2024-04-30", "2024-03-01")] // End of differently sized month
+    [TestCase("2024-05-31", "2024-04-01")] // End of differently sized month
+    [TestCase("2024-08-31", "2024-07-01")] // End of same sized month
+    [TestCase("2025-01-31", "2024-12-01")] // Across year boundary
+    public void StartOfMonthService_WhenGetStartOfPreviousMonthCalled_ReturnsFirstOfPreviousMonth(
+        DateTime testDate, DateTime assertDate)
     {
-        // arrange
-        var date = DateTime.Today;
-        var startOfMonthService = new DateHelper(() => date);
+        // Arrange
+        todayValue = testDate;
         
-        // act
-        var result = startOfMonthService.GetStartOfPreviousMonth();
+        // Act
+        var result = dateHelper.GetStartOfPreviousMonth();
         
-        // assert
-        Assert.That(result <= date);
-    }
-    
-    [TestCase("2024-10-12", "2024-9-1")]
-    [TestCase("2024-9-1", "2024-8-1")]
-    [TestCase("2024-2-29", "2024-1-1")] // Leap day tests
-    [TestCase("2024-3-29", "2024-2-1")] // Leap day tests
-    [TestCase("2024-4-30", "2024-3-1")] // End of differently sized month
-    [TestCase("2024-5-31", "2024-4-1")] // End of differently sized month
-    [TestCase("2024-8-31", "2024-7-1")] // End of same sized month
-    [TestCase("2025-1-31", "2024-12-1")] // Across year boundary
-    public void StartOfMonthService_WhenCalledWithParameter_ReturnsFirstOfPreviousMonth(DateTime testDate, DateTime assertDate)
-    {
-        // arrange
-        var startOfMonthService = new DateHelper(() => testDate);
-        
-        // act
-        var result = startOfMonthService.GetStartOfPreviousMonth();
-        
-        // assert
-        Assert.That(result == assertDate);
+        // Assert
+        Assert.AreEqual(result, assertDate);
     }
 }
