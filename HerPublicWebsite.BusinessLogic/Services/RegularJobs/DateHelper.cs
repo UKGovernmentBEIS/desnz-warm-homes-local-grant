@@ -16,7 +16,7 @@ public class DateHelper
     public DateTime GetStartOfPreviousMonth()
     {
         var today = getToday();
-        var oneMonthAgo = today.AddMonths(-1);
-        return oneMonthAgo.AddDays(1 - oneMonthAgo.Day); // Remove a month, and set day to 1st
+        var oneMonthAgo = today.AddMonths(-1); // Set day to 1st
+        return oneMonthAgo.AddDays(1 - oneMonthAgo.Day); 
     }
 }
