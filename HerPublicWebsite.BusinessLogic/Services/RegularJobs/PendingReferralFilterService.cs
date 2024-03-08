@@ -9,9 +9,9 @@ public interface IPendingReferralFilterService
 
 public class PendingReferralFilterService : IPendingReferralFilterService
 {
-    private readonly DateHelper dateHelper;
+    private readonly IDateHelper dateHelper;
 
-    public PendingReferralFilterService(DateHelper dateHelper)
+    public PendingReferralFilterService(IDateHelper dateHelper)
     {
         this.dateHelper = dateHelper;
     }
