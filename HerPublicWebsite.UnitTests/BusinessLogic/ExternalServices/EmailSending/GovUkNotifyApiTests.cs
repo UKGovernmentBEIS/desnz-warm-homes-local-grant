@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using FluentAssertions;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 using Microsoft.Extensions.Logging;
@@ -18,7 +19,7 @@ public class GovUkNotifyApiTests
     private ILogger<GovUkNotifyApi> logger;
     private Mock<INotificationClient> mockNotificationClient;
     private GovUkNotifyApi govUkNotifyApi;
-    private MemoryStream blankMemoryStream;
+    private MemoryStream memoryStream;
 
     [SetUp]
     public void Setup()
@@ -35,7 +36,7 @@ public class GovUkNotifyApiTests
             }
         };
         govUkNotifyApi = new GovUkNotifyApi(mockNotificationClient.Object, config.AsOptions(), logger);
-        blankMemoryStream = new MemoryStream();
+        memoryStream = new MemoryStream(Encoding.ASCII.GetBytes("csv data"));
     }
 
     [Test]
@@ -46,7 +47,7 @@ public class GovUkNotifyApiTests
         config.PendingReferralEmailRecipients = recipient;
         
         // Act
-        govUkNotifyApi.SendPendingReferralReportEmail(blankMemoryStream);
+        govUkNotifyApi.SendPendingReferralReportEmail(memoryStream);
         
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(
@@ -64,7 +65,7 @@ public class GovUkNotifyApiTests
         config.PendingReferralEmailRecipients = recipient;
         
         // Act
-        govUkNotifyApi.SendPendingReferralReportEmail(blankMemoryStream);
+        govUkNotifyApi.SendPendingReferralReportEmail(memoryStream);
         
         // Assert
         var personalisation = (Dictionary<string, object>)mockNotificationClient.Invocations[0].Arguments[2];
@@ -79,7 +80,7 @@ public class GovUkNotifyApiTests
         config.PendingReferralEmailRecipients = string.Join(",", recipients);
         
         // Act
-        govUkNotifyApi.SendPendingReferralReportEmail(blankMemoryStream);
+        govUkNotifyApi.SendPendingReferralReportEmail(memoryStream);
         
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(
@@ -107,7 +108,7 @@ public class GovUkNotifyApiTests
         config.PendingReferralEmailRecipients = recipient;
         
         // Act
-        govUkNotifyApi.SendPendingReferralReportEmail(blankMemoryStream);
+        govUkNotifyApi.SendPendingReferralReportEmail(memoryStream);
         
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(
@@ -124,7 +125,7 @@ public class GovUkNotifyApiTests
         config.PendingReferralEmailRecipients = null;
         
         // Act
-        govUkNotifyApi.SendPendingReferralReportEmail(blankMemoryStream);
+        govUkNotifyApi.SendPendingReferralReportEmail(memoryStream);
         
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(
