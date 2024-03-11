@@ -121,9 +121,9 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             var template = govUkNotifyConfig.ComplianceReportTemplate;
             var personalisation = new Dictionary<string, dynamic>
             {
-                { "File1Link", PrepareCsvUpload(recentReferralRequestOverviewFileData)},
-                { "File2Link", PrepareCsvUpload(recentReferralRequestFollowUpFileData)},
-                { "File3Link", PrepareCsvUpload(historicReferralRequestFollowUpFileData)},
+                { "File1Link", PrepareCsvUpload(recentReferralRequestOverviewFileData) },
+                { "File2Link", PrepareCsvUpload(recentReferralRequestFollowUpFileData) },
+                { "File3Link", PrepareCsvUpload(historicReferralRequestFollowUpFileData) },
             };
             SendEmailToRecipients(recipientList, template.Id, personalisation);
         }
@@ -181,7 +181,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             SendEmail(emailModel);
         }
 
-        private JObject PrepareCsvUpload(MemoryStream csvData)
+        private static JObject PrepareCsvUpload(MemoryStream csvData)
         {
             return NotificationClient.PrepareUpload(csvData.ToArray(), true);
         }
