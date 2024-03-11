@@ -6,10 +6,12 @@ public class GovUkNotifyConfiguration
         
     public string ApiKey { get; set; }
     public string ComplianceEmailRecipients { get; set; }
+    public string PendingReferralEmailRecipients { get; set; }
     public ReferenceCodeConfiguration ReferenceCodeForLiveLocalAuthorityTemplate { get; set; }
     public ReferenceCodeConfiguration ReferenceCodeForPendingLocalAuthorityTemplate { get; set; }
     public ReferralFollowUpConfiguration ReferralFollowUpTemplate { get; set; }
     public ComplianceReportConfiguration ComplianceReportTemplate { get; set; }
+    public PendingReferralReportConfiguration PendingReferralReportTemplate { get; set; }
 }
 
 public class ReferenceCodeConfiguration
@@ -38,4 +40,10 @@ public class ComplianceReportConfiguration
     public string File1Link { get; set; }
     public string File2Link { get; set; }
     public string File3Link { get; set; }
+}
+
+public class PendingReferralReportConfiguration
+{
+    public string Id { get; set; }
+    public string LinkPlaceholder { get; set; }
 }

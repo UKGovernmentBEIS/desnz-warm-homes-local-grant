@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using FluentAssertions;
@@ -200,5 +201,49 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
             "Bristol,False,3,60,False,2,40,North Somerset Council,1,33.333333333333336,1,33.333333333333336,3,100\r\n"+ // Custodian Code 121
             ",False,1,33.333333333333336,False,2,66.66666666666667,Aberdeenshire Council,1,33.333333333333336,2,66.66666666666667,3,100\r\n" // Custodian Code 9052
             );
+    }
+
+    [Test]
+    public void CreatePendingReferralRequestFileData_CalledWithReferralRequest_GeneratesExpectedFileData()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest1 = new ReferralRequestBuilder(1)
+            .WithCustodianCode("114")
+            .WithRequestDate(new DateTime(2024, 3, 5, 1, 0, 0))
+            .WithReferralCode("TEST0001")
+            .WithFullName("Test User 1")
+            .WithEmailAddress("test1@example.com")
+            .WithTelephone("111")
+            .Build();
+        var referralRequest2 = new ReferralRequestBuilder(6)
+            .WithCustodianCode("235")
+            .WithRequestDate(new DateTime(2024, 2, 5, 1, 0, 0))
+            .WithReferralCode("TEST0002")
+            .WithFullName("Test User 2")
+            .WithEmailAddress("test2@example.com")
+            .WithTelephone("")
+            .Build();
+        var referralRequest3 = new ReferralRequestBuilder(3)
+            .WithCustodianCode("121")
+            .WithRequestDate(new DateTime(2024, 1, 5, 1, 0, 0))
+            .WithReferralCode("TEST0003")
+            .WithFullName("Test User 3")
+            .WithEmailAddress("")
+            .WithTelephone("333")
+            .Build();
+
+        var referralRequests = new List<ReferralRequest> { referralRequest1, referralRequest2, referralRequest3 };
+
+        // Act
+        var data = underTest.CreatePendingReferralRequestFileData(referralRequests);
+        
+        // Assert
+        var reader = new StreamReader(data, Encoding.UTF8);
+        reader.ReadToEnd().Should().Be(
+            "Consortium,Local Authority,Referral Date,Referral Code,Name,Email,Telephone,Local Authority Status\r\n" + 
+            "Bristol,Bath and North East Somerset Council,2024-03-05 01:00:00,TEST0001,Test User 1,test1@example.com,111,Live\r\n" +
+            "Cambridgeshire & Peterborough Combined Authority,Bedford Borough Council,2024-02-05 01:00:00,TEST0002,Test User 2,test2@example.com,,Pending\r\n" +
+            "Bristol,North Somerset Council,2024-01-05 01:00:00,TEST0003,Test User 3,,333,Live\r\n");
     }
 }

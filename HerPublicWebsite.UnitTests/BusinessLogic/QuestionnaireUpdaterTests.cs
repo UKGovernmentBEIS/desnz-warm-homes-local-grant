@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Tests.Builders;
+using Tests.Helpers;
 
 namespace Tests.BusinessLogic;
 
@@ -32,8 +33,8 @@ public class QuestionnaireUpdaterTests
     [SetUp]
     public void Setup()
     {
-        liveCustodianCode = GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Live);
-        pendingCustodianCode = GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Pending);
+        liveCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Live);
+        pendingCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Pending);
         mockEpcApi = new Mock<IEpcApi>();
         mockPostCodeService = new Mock<IEligiblePostcodeService>();
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
@@ -651,12 +652,5 @@ public class QuestionnaireUpdaterTests
 
         // Assert
         result.UneditedData.Should().BeNull();
-    }
-    
-    private string GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status status)
-    {
-        return LocalAuthorityData.LocalAuthorityDetailsByCustodianCode
-            .First(entry => entry.Value.Status == status)
-            .Key;
     }
 }
