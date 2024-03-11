@@ -28,12 +28,12 @@ public class PendingReferralFilterServiceTests
         pendingReferralFilterService = new PendingReferralFilterService(mockDateHelper.Object);
     }
 
-    // if LA is now pending, include
+    // If LA is now pending, include.
     [TestCase(true, false, false)]
     [TestCase(true, false, true)]
     [TestCase(true, true, false)]
     [TestCase(true, true, true)]
-    // if LA is not now pending but referral was submitted in the last month to a then pending LA, include
+    // If LA is not now pending but referral was submitted in the last month to a then pending LA, include.
     [TestCase(false, true, true)]
     public void FilterForPendingReferralReport_WhenCalledWithEmailPendingReferral_IncludesInFilter(
         bool localAuthorityIsNowPending,
