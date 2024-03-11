@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 using NUnit.Framework;
 
@@ -25,7 +26,7 @@ public class DateHelperTests
         var result = dateHelper.GetStartOfPreviousMonth();
         
         // Assert
-        Assert.That(result <= DateTime.Today);
+        result.Should().BeOnOrBefore(DateTime.Today);
     }
     
     [Test]
@@ -38,7 +39,7 @@ public class DateHelperTests
         var result = dateHelper.GetStartOfPreviousMonth();
         
         // Assert
-        Assert.AreEqual(result.Day, 1);
+        result.Should().HaveDay(1);
     }
     
     [TestCase("2024-10-12", "2024-09-01")]
@@ -59,6 +60,6 @@ public class DateHelperTests
         var result = dateHelper.GetStartOfPreviousMonth();
         
         // Assert
-        Assert.AreEqual(result, assertDate);
+        result.Should().Be(assertDate);
     }
 }
