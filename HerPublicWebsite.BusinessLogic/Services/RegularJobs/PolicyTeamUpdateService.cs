@@ -1,4 +1,5 @@
 using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
+using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 namespace HerPublicWebsite.BusinessLogic.Services.PolicyTeamUpdate;
@@ -11,13 +12,13 @@ public interface IPolicyTeamUpdate
 public class PolicyTeamUpdateService : IPolicyTeamUpdate
 {
     private readonly IDataAccessProvider dataProvider;
-    private readonly CsvFileCreator.CsvFileCreator csvFileCreator;
+    private readonly ICsvFileCreator csvFileCreator;
     private readonly IWorkingDayHelperService workingDayHelperService;
     private readonly IEmailSender emailSender;
     
     public PolicyTeamUpdateService(
         IDataAccessProvider dataProvider,
-        CsvFileCreator.CsvFileCreator csvFileCreator, 
+        ICsvFileCreator csvFileCreator, 
         IWorkingDayHelperService workingDayHelperService,
         IEmailSender emailSender
     )

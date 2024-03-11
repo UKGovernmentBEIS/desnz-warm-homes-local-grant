@@ -27,5 +27,5 @@ public interface IEmailSender
         MemoryStream historicReferralRequestFollowUpFileData
     );
     
-    public void SendPendingReferralReportEmail();
+    public void SendPendingReferralReportEmail(MemoryStream pendingReferralRequestsFileData);
 }

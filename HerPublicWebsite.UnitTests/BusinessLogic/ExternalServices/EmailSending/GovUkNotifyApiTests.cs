@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using FluentAssertions;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -16,6 +19,7 @@ public class GovUkNotifyApiTests
     private ILogger<GovUkNotifyApi> logger;
     private Mock<INotificationClient> mockNotificationClient;
     private GovUkNotifyApi govUkNotifyApi;
+    private MemoryStream memoryStream;
 
     [SetUp]
     public void Setup()
@@ -32,6 +36,7 @@ public class GovUkNotifyApiTests
             }
         };
         govUkNotifyApi = new GovUkNotifyApi(mockNotificationClient.Object, config.AsOptions(), logger);
+        memoryStream = new MemoryStream(Encoding.ASCII.GetBytes("csv data"));
     }
 
     [Test]
@@ -42,17 +47,29 @@ public class GovUkNotifyApiTests
         config.PendingReferralEmailRecipients = recipient;
         
         // Act
-        govUkNotifyApi.SendPendingReferralReportEmail();
+        govUkNotifyApi.SendPendingReferralReportEmail(memoryStream);
         
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(
             recipient,
             config.PendingReferralReportTemplate.Id,
-            new Dictionary<string, object>
-            {
-                { config.PendingReferralReportTemplate.LinkPlaceholder, "https://www.gov.uk/apply-home-upgrade-grant" }
-            },
+            It.IsAny<Dictionary<string, object>>(),
             null, null));
+    }
+
+    [Test]
+    public void SendPendingReferralReportEmail_WhenCalled_IncludesALinkInPersonalisation()
+    {
+        // Arrange
+        const string recipient = "email1@example.com";
+        config.PendingReferralEmailRecipients = recipient;
+        
+        // Act
+        govUkNotifyApi.SendPendingReferralReportEmail(memoryStream);
+        
+        // Assert
+        var personalisation = (Dictionary<string, object>)mockNotificationClient.Invocations[0].Arguments[2];
+        personalisation.Should().ContainKey("link");
     }
 
     [Test]
@@ -63,16 +80,13 @@ public class GovUkNotifyApiTests
         config.PendingReferralEmailRecipients = string.Join(",", recipients);
         
         // Act
-        govUkNotifyApi.SendPendingReferralReportEmail();
+        govUkNotifyApi.SendPendingReferralReportEmail(memoryStream);
         
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(
             It.IsAny<string>(),
             config.PendingReferralReportTemplate.Id,
-            new Dictionary<string, object>
-            {
-                { config.PendingReferralReportTemplate.LinkPlaceholder, "https://www.gov.uk/apply-home-upgrade-grant" }
-            },
+            It.IsAny<Dictionary<string, object>>(),
             null, null),
             Times.Exactly(recipients.Length));
         
@@ -81,10 +95,7 @@ public class GovUkNotifyApiTests
             mockNotificationClient.Verify(nc => nc.SendEmail(
                 recipient,
                 config.PendingReferralReportTemplate.Id,
-                new Dictionary<string, object>
-                {
-                    { config.PendingReferralReportTemplate.LinkPlaceholder, "https://www.gov.uk/apply-home-upgrade-grant" }
-                },
+                It.IsAny<Dictionary<string, object>>(),
                 null, null));
         }
     }
@@ -97,7 +108,7 @@ public class GovUkNotifyApiTests
         config.PendingReferralEmailRecipients = recipient;
         
         // Act
-        govUkNotifyApi.SendPendingReferralReportEmail();
+        govUkNotifyApi.SendPendingReferralReportEmail(memoryStream);
         
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(
@@ -114,7 +125,7 @@ public class GovUkNotifyApiTests
         config.PendingReferralEmailRecipients = null;
         
         // Act
-        govUkNotifyApi.SendPendingReferralReportEmail();
+        govUkNotifyApi.SendPendingReferralReportEmail(memoryStream);
         
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(

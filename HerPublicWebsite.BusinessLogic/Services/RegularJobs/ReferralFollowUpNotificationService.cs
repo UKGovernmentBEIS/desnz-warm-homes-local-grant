@@ -1,4 +1,5 @@
 ﻿using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
+using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 using Microsoft.Extensions.Options;
 
@@ -14,7 +15,7 @@ public class ReferralFollowUpNotificationService : IReferralFollowUpNotification
     private readonly GlobalConfiguration globalConfig;
     private readonly ReferralRequestNotificationConfiguration referralRequestNotificationConfig;
     private readonly IDataAccessProvider dataProvider;
-    private readonly CsvFileCreator.CsvFileCreator csvFileCreator;
+    private readonly ICsvFileCreator csvFileCreator;
     private readonly IWorkingDayHelperService workingDayHelperService;
     private readonly IReferralFollowUpService referralFollowUpManager;
     private readonly IEmailSender emailSender;
@@ -24,7 +25,7 @@ public class ReferralFollowUpNotificationService : IReferralFollowUpNotification
         IOptions<ReferralRequestNotificationConfiguration> referralRequestNotificationConfig,
         IEmailSender emailSender,
         IDataAccessProvider dataProvider,
-        CsvFileCreator.CsvFileCreator csvFileCreator, 
+        ICsvFileCreator csvFileCreator,
         IWorkingDayHelperService workingDayHelperService,
         IReferralFollowUpService referralFollowUpManager
         )
