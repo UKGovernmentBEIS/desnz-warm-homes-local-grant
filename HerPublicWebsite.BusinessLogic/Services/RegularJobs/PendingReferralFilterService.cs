@@ -1,4 +1,5 @@
-﻿using HerPublicWebsite.BusinessLogic.Models;
+﻿using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
+using HerPublicWebsite.BusinessLogic.Models;
 
 namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
@@ -25,7 +26,8 @@ public class PendingReferralFilterService : IPendingReferralFilterService
     
     private static bool ShouldIncludeInReport(ReferralRequest referral, DateTime startDate)
     {
-        var localAuthority = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referral.CustodianCode];
+        var custodianCode = LaMapping.GetCurrentCustodianCode(referral.CustodianCode);
+        var localAuthority = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[custodianCode];
         var localAuthorityIsPending = localAuthority.Status == LocalAuthorityData.Hug2Status.Pending;
 
         // Also include referrals to local authorities that have gone from Pending to another status in the last month.
