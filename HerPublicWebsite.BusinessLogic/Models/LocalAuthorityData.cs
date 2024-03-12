@@ -259,7 +259,7 @@ public class LocalAuthorityData
         { "4220", new LocalAuthorityDetails("Oldham Metropolitan Borough Council", Hug2Status.NotTakingPart, "https://www.oldham.gov.uk/", IncomeBandOptions[IncomeThreshold._31000], null) },
         { "7655", new LocalAuthorityDetails("Ordnance Survey", Hug2Status.NotTakingPart, "", IncomeBandOptions[IncomeThreshold._31000], null) },
         { "9000", new LocalAuthorityDetails("Orkney Islands Council", Hug2Status.NotTakingPart, "https://www.orkney.gov.uk/", IncomeBandOptions[IncomeThreshold._31000], null) },
-        { "3110", new LocalAuthorityDetails("Oxford City Council", Hug2Status.Pending, "https://www.oxford.gov.uk/", IncomeBandOptions[IncomeThreshold._31000], "Oxfordshire County Council") },
+        { "3110", new LocalAuthorityDetails("Oxford City Council", Hug2Status.Pending, "https://www.oxford.gov.uk/", IncomeBandOptions[IncomeThreshold._31000], "Cambridgeshire & Peterborough Combined Authority") },
         { "6845", new LocalAuthorityDetails("Pembrokeshire County Council", Hug2Status.NotTakingPart, "http://www.pembrokeshire.gov.uk", IncomeBandOptions[IncomeThreshold._31000], null) },
         { "2340", new LocalAuthorityDetails("Pendle Borough Council", Hug2Status.Live, "https://www.pendle.gov.uk/", IncomeBandOptions[IncomeThreshold._31000], "Blackpool") },
         { "9074", new LocalAuthorityDetails("Perth and Kinross Council", Hug2Status.NotTakingPart, "https://www.pkc.gov.uk/", IncomeBandOptions[IncomeThreshold._31000], null) },

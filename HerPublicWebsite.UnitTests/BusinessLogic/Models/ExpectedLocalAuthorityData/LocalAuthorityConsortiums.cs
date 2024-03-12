@@ -230,7 +230,7 @@ internal static class LocalAuthorityConsortiums
             { "4220", null },
             { "7655", null },
             { "9000", null },
-            { "3110", "Oxfordshire County Council" },
+            { "3110", "Cambridgeshire & Peterborough Combined Authority" },
             { "6845", null },
             { "2340", "Blackpool" },
             { "9074", null },
