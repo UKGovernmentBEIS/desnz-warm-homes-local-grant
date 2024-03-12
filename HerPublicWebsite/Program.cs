@@ -53,9 +53,7 @@ namespace HerPublicWebsite
             recurringJobManager.AddOrUpdate<PendingReferralNotificationService>(
                 "Send monthly pending referral report",
                 service => service.SendPendingReferralNotifications(),
-                // TODO: PC-883 Revert test value.
-                // "15 7 1 * *"); // at 07:15 on 1st of the month
-                "*/15 * * * *"); // Every 15 minutes during UAT
+                "15 7 1 * *"); // at 07:15 on 1st of the month
 
             app.Run();
         }
