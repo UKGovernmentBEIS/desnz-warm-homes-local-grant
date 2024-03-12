@@ -20,7 +20,7 @@ internal static class LocalAuthorityConsortiums
             { "5060", "Greater London Authority" },
             { "5090", "Greater London Authority" },
             { "4405", null },
-            { "1505", "Cambridgeshire & Peterborough Combined Authority" },
+            { "1505", null },
             { "1705", "Portsmouth" },
             { "3010", "Midlands Net Zero Hub" },
             { "114", "Bristol" },

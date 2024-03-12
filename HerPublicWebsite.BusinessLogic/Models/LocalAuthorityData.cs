@@ -49,7 +49,7 @@ public class LocalAuthorityData
         { "5060", new LocalAuthorityDetails("London Borough of Barking and Dagenham", Hug2Status.NotParticipating, "https://www.lbbd.gov.uk/", IncomeBandOptions[IncomeThreshold._31000], "Greater London Authority") },
         { "5090", new LocalAuthorityDetails("London Borough of Barnet", Hug2Status.NotParticipating, "https://www.barnet.gov.uk/", IncomeBandOptions[IncomeThreshold._31000], "Greater London Authority") },
         { "4405", new LocalAuthorityDetails("Barnsley Metropolitan Borough Council", Hug2Status.NotTakingPart, "https://www.barnsley.gov.uk/", IncomeBandOptions[IncomeThreshold._31000], null) },
-        { "1505", new LocalAuthorityDetails("Basildon Borough Council", Hug2Status.Live, "https://www.basildon.gov.uk/", IncomeBandOptions[IncomeThreshold._31000], "Cambridgeshire & Peterborough Combined Authority") },
+        { "1505", new LocalAuthorityDetails("Basildon Borough Council", Hug2Status.Live, "https://www.basildon.gov.uk/", IncomeBandOptions[IncomeThreshold._31000], null) },
         { "1705", new LocalAuthorityDetails("Basingstoke and Deane Borough Council", Hug2Status.Live, "http://www.basingstoke.gov.uk/", IncomeBandOptions[IncomeThreshold._31000], "Portsmouth") },
         { "3010", new LocalAuthorityDetails("Bassetlaw District Council", Hug2Status.Pending, "https://www.bassetlaw.gov.uk/", IncomeBandOptions[IncomeThreshold._31000], "Midlands Net Zero Hub") },
         { "114", new LocalAuthorityDetails("Bath and North East Somerset Council", Hug2Status.Live, "http://www.bathnes.gov.uk/", IncomeBandOptions[IncomeThreshold._31000], "Bristol") },
