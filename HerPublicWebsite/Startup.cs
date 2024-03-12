@@ -33,6 +33,9 @@ using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using Microsoft.AspNetCore.Http;
 using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
+using Microsoft.Extensions.Options;
+using Notify.Client;
+using Notify.Interfaces;
 using GlobalConfiguration = HerPublicWebsite.BusinessLogic.GlobalConfiguration;
 
 namespace HerPublicWebsite
@@ -61,7 +64,7 @@ namespace HerPublicWebsite
             // Add the Hangfire processing server as IHostedService
             services.AddHangfireServer();
 
-            services.AddScoped<CsvFileCreator>();
+            services.AddScoped<ICsvFileCreator, CsvFileCreator>();
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
             services.AddScoped<IEligiblePostcodeService, EligiblePostcodeService>();
             services.AddScoped<IReferralFollowUpService, ReferralFollowUpService>();
@@ -71,6 +74,8 @@ namespace HerPublicWebsite
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
             services.AddScoped<IUnsubmittedReferralRequestsService, UnsubmittedReferralRequestsService>();
             services.AddScoped<IWorkingDayHelperService, WorkingDayHelperService>();
+            services.AddScoped<IDateHelper, DateHelper>();
+            services.AddScoped<IPendingReferralFilterService, PendingReferralFilterService>();
 
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();
@@ -175,6 +180,11 @@ namespace HerPublicWebsite
             services.AddScoped<IEmailSender, GovUkNotifyApi>();
             services.Configure<GovUkNotifyConfiguration>(
                 configuration.GetSection(GovUkNotifyConfiguration.ConfigSection));
+            services.AddScoped<INotificationClient, NotificationClient>(serviceProvider =>
+            {
+                var govUkNotifyConfiguration = serviceProvider.GetService<IOptions<GovUkNotifyConfiguration>>();
+                return new NotificationClient(govUkNotifyConfiguration.Value.ApiKey);
+            });
         }
 
         private void ConfigureS3Client(IServiceCollection services)

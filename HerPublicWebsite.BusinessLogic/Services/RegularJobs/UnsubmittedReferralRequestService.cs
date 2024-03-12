@@ -1,4 +1,5 @@
 using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
+using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 
 namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
@@ -11,12 +12,12 @@ public class UnsubmittedReferralRequestsService : IUnsubmittedReferralRequestsSe
 {
     private readonly IDataAccessProvider dataProvider;
     private readonly IS3FileWriter s3FileWriter;
-    private readonly CsvFileCreator.CsvFileCreator csvFileCreator;
+    private readonly ICsvFileCreator csvFileCreator;
 
     public UnsubmittedReferralRequestsService(
         IDataAccessProvider dataProvider,
         IS3FileWriter s3FileWriter,
-        CsvFileCreator.CsvFileCreator csvFileCreator)
+        ICsvFileCreator csvFileCreator)
     {
         this.dataProvider = dataProvider;
         this.s3FileWriter = s3FileWriter;
