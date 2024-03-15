@@ -24,7 +24,7 @@ public static class QuestionnaireHelper
             EpcDetailsAreCorrect = EpcConfirmation.Yes,
             IsLsoaProperty = true,
             HasGasBoiler = HasGasBoiler.No,
-            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            IncomeBand = IncomeBand.UnderOrEqualTo36000,
             ReferralCreated = default,
             ReferralCode = "HUG21023",
             LaContactName = "Contact Name",

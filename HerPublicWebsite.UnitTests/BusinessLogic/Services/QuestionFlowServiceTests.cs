@@ -487,7 +487,7 @@ public class QuestionFlowServiceTests
                 OwnershipStatus.OwnerOccupancy,
                 Country.England,
                 epcDetailsAreCorrect: EpcConfirmation.No,
-                incomeBand: IncomeBand.UnderOrEqualTo31000
+                incomeBand: IncomeBand.UnderOrEqualTo36000
             ),
             QuestionFlowStep.Eligible),
         new(
@@ -762,7 +762,7 @@ public class QuestionFlowServiceTests
             EpcConfirmation epcDetailsAreCorrect = EpcConfirmation.Yes,
             EpcRating? epcRating = null,
             DateTime? epcExpiry = null,
-            IncomeBand? incomeBand = IncomeBand.UnderOrEqualTo31000,
+            IncomeBand? incomeBand = IncomeBand.UnderOrEqualTo36000,
             bool localAuthorityIsCorrect = false,
             string custodianCode = "3505", // Babergh has income threshold of £31,000 and is live
             QuestionFlowStep? entryPoint = null)

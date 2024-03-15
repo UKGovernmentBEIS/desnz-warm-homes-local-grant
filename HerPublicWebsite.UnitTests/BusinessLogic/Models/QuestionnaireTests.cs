@@ -244,21 +244,21 @@ public class QuestionnaireTests
         result.Should().Be(false);
     }
 
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, true)] // Eligible low income
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, null, null, false, IncomeBand.UnderOrEqualTo31000, true)] // Eligible no EPC found
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.No, EpcRating.A, false, IncomeBand.UnderOrEqualTo31000, true)] // Eligible wrong EPC found
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Unknown, EpcRating.A, false, IncomeBand.UnderOrEqualTo31000, true)] // Eligible unsure EPC found
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, true, IncomeBand.GreaterThan31000, true)] // Eligible high income but LSOA
-    [TestCase(HasGasBoiler.Yes, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible gas boiler
-    [TestCase(HasGasBoiler.No, Country.Scotland, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible country
-    [TestCase(HasGasBoiler.No, Country.Wales, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible country
-    [TestCase(HasGasBoiler.No, Country.NorthernIreland, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible country
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.Landlord, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible ownership
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.PrivateTenancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible ownership
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.A, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible EPC rating
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.B, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible EPC rating
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.C, false, IncomeBand.UnderOrEqualTo31000, false)] // Ineligible EPC rating
-    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.GreaterThan31000, false)] // Ineligible high income
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, true)] // Eligible low income
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, null, null, false, IncomeBand.UnderOrEqualTo36000, true)] // Eligible no EPC found
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.No, EpcRating.A, false, IncomeBand.UnderOrEqualTo36000, true)] // Eligible wrong EPC found
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Unknown, EpcRating.A, false, IncomeBand.UnderOrEqualTo36000, true)] // Eligible unsure EPC found
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, true, IncomeBand.GreaterThan36000, true)] // Eligible high income but LSOA
+    [TestCase(HasGasBoiler.Yes, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible gas boiler
+    [TestCase(HasGasBoiler.No, Country.Scotland, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible country
+    [TestCase(HasGasBoiler.No, Country.Wales, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible country
+    [TestCase(HasGasBoiler.No, Country.NorthernIreland, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible country
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.Landlord, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible ownership
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.PrivateTenancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible ownership
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.A, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible EPC rating
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.B, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible EPC rating
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.C, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible EPC rating
+    [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.GreaterThan36000, false)] // Ineligible high income
     public void IsEligibleForHug2_ForVariousAnswers_IsCorrect(
         HasGasBoiler hasGasBoiler,
         Country country,
@@ -367,7 +367,7 @@ public class QuestionnaireTests
         var questionnaire = new Questionnaire()
         {
             CustodianCode = null,
-            IncomeBand = IncomeBand.GreaterThan31000
+            IncomeBand = IncomeBand.GreaterThan36000
         };
         
         // Act
@@ -379,6 +379,7 @@ public class QuestionnaireTests
     
     [TestCase(IncomeBand.GreaterThan31000)]
     [TestCase(IncomeBand.GreaterThan34500)]
+    [TestCase(IncomeBand.GreaterThan36000)]
     public void IncomeIsTooHigh_ForHighIncomeBandAndNonLsoa_ReturnsTrue(IncomeBand incomeBand)
     {
         // Arrange
@@ -397,6 +398,7 @@ public class QuestionnaireTests
     
     [TestCase(IncomeBand.GreaterThan31000)]
     [TestCase(IncomeBand.GreaterThan34500)]
+    [TestCase(IncomeBand.GreaterThan36000)]
     public void IncomeIsTooHigh_ForHighIncomeBandAndLsoa_ReturnsFalse(IncomeBand incomeBand)
     {
         // Arrange
@@ -417,6 +419,8 @@ public class QuestionnaireTests
     [TestCase(IncomeBand.UnderOrEqualTo31000, false)]
     [TestCase(IncomeBand.UnderOrEqualTo34500, true)]
     [TestCase(IncomeBand.UnderOrEqualTo34500, false)]
+    [TestCase(IncomeBand.UnderOrEqualTo36000, true)]
+    [TestCase(IncomeBand.UnderOrEqualTo36000, false)]
     public void IncomeIsTooHigh_ForLowIncomeBand_ReturnsFalse(IncomeBand incomeBand, bool isLsoa)
     {
         // Arrange
@@ -468,8 +472,8 @@ public class QuestionnaireTests
         result.Should().BeFalse();
     }
     
-    [TestCase(IncomeBand.GreaterThan31000)]
-    [TestCase(IncomeBand.UnderOrEqualTo31000)]
+    [TestCase(IncomeBand.GreaterThan36000)]
+    [TestCase(IncomeBand.UnderOrEqualTo36000)]
     public void IncomeBandIsValid_ForGoodIncomeBand_ReturnsTrue(IncomeBand incomeBand)
     {
         // Arrange
