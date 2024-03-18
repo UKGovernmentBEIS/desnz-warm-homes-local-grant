@@ -21,15 +21,11 @@ public class LocalAuthorityData
 
     private enum IncomeThreshold
     {
-        _31000,
-        _34500,
         _36000
     }
 
     private static readonly Dictionary<IncomeThreshold, IncomeBand[]> IncomeBandOptions = new()
     {
-        { IncomeThreshold._31000, new[] { IncomeBand.UnderOrEqualTo31000, IncomeBand.GreaterThan31000 } },
-        { IncomeThreshold._34500, new[] { IncomeBand.UnderOrEqualTo34500, IncomeBand.GreaterThan34500 } },
         { IncomeThreshold._36000, new[] { IncomeBand.UnderOrEqualTo36000, IncomeBand.GreaterThan36000 } }
     };
 

@@ -7,12 +7,16 @@ namespace HerPublicWebsite.BusinessLogic.Models.Enums;
 // invalid
 public enum IncomeBand
 {
+    [Obsolete("Income band no longer used by any LA's. Kept to ensure legacy compatibility")]
     [GovUkRadioCheckboxLabelText(Text = "£31,000 or less")]
     UnderOrEqualTo31000,
+    [Obsolete("Income band no longer used by any LA's. Kept to ensure legacy compatibility")]
     [GovUkRadioCheckboxLabelText(Text = "More than £31,000")]
     GreaterThan31000,
+    [Obsolete("Income band no longer used by any LA's. Kept to ensure legacy compatibility")]
     [GovUkRadioCheckboxLabelText(Text = "£34,500 or less")]
     UnderOrEqualTo34500,
+    [Obsolete("Income band no longer used by any LA's. Kept to ensure legacy compatibility")]
     [GovUkRadioCheckboxLabelText(Text = "More than £34,500")]
     GreaterThan34500,
     [GovUkRadioCheckboxLabelText(Text = "£36,000 or less")]

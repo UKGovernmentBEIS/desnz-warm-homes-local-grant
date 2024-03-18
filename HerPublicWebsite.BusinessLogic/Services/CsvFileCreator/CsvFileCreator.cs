@@ -268,10 +268,13 @@ public class CsvFileCreator : ICsvFileCreator
             };
             HouseholdIncome = request.IncomeBand switch
             {
-                IncomeBand.UnderOrEqualTo31000 => "Below £31k",
-                IncomeBand.GreaterThan31000 => "£31k or above",
+                //Obsolete Income Bands used to preserve backwards-compatibility
+                #pragma warning disable CS0618
+                IncomeBand.UnderOrEqualTo31000 => "Below £31k", 
+                IncomeBand.GreaterThan31000 => "£31k or above", 
                 IncomeBand.UnderOrEqualTo34500 => "Below £34.5k",
-                IncomeBand.GreaterThan34500 => "£34.5k or above",
+                IncomeBand.GreaterThan34500 => "£34.5k or above", 
+                #pragma warning restore CS0618
                 IncomeBand.UnderOrEqualTo36000 => "£36k or below",
                 IncomeBand.GreaterThan36000 => "Above £36k",
                 _ => throw new ArgumentOutOfRangeException("request.IncomeBand", "Unrecognised IncomeBand value: " + request.IncomeBand)
