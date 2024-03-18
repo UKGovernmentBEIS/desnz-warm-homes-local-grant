@@ -275,8 +275,8 @@ public class CsvFileCreator : ICsvFileCreator
                 IncomeBand.UnderOrEqualTo34500 => "Below £34.5k",
                 IncomeBand.GreaterThan34500 => "£34.5k or above", 
                 #pragma warning restore CS0618
-                IncomeBand.UnderOrEqualTo36000 => "£36k or below",
-                IncomeBand.GreaterThan36000 => "Above £36k",
+                IncomeBand.UnderOrEqualTo36000 => "£36,000 or less",
+                IncomeBand.GreaterThan36000 => "More than £36,000",
                 _ => throw new ArgumentOutOfRangeException("request.IncomeBand", "Unrecognised IncomeBand value: " + request.IncomeBand)
             };
             EligiblePostcode = request.IsLsoaProperty;
