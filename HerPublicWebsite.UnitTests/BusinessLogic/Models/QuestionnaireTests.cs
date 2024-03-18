@@ -377,9 +377,11 @@ public class QuestionnaireTests
         result.Should().BeFalse();
     }
     
-    [TestCase(IncomeBand.GreaterThan31000)]
-    [TestCase(IncomeBand.GreaterThan34500)]
+    #pragma warning disable CS0618 
+    [TestCase(IncomeBand.GreaterThan31000)] //Test case tests backwards compatibility with obsolete bands
+    [TestCase(IncomeBand.GreaterThan34500)] //Test case tests backwards compatibility with obsolete bands
     [TestCase(IncomeBand.GreaterThan36000)]
+    #pragma warning restore CS0618 
     public void IncomeIsTooHigh_ForHighIncomeBandAndNonLsoa_ReturnsTrue(IncomeBand incomeBand)
     {
         // Arrange
@@ -396,9 +398,11 @@ public class QuestionnaireTests
         result.Should().BeTrue();
     }
     
-    [TestCase(IncomeBand.GreaterThan31000)]
-    [TestCase(IncomeBand.GreaterThan34500)]
+    #pragma warning disable CS0618 
+    [TestCase(IncomeBand.GreaterThan31000)] //Test case tests backwards compatibility with obsolete bands
+    [TestCase(IncomeBand.GreaterThan34500)] //Test case tests backwards compatibility with obsolete bands
     [TestCase(IncomeBand.GreaterThan36000)]
+    #pragma warning restore CS0618 
     public void IncomeIsTooHigh_ForHighIncomeBandAndLsoa_ReturnsFalse(IncomeBand incomeBand)
     {
         // Arrange
@@ -415,12 +419,14 @@ public class QuestionnaireTests
         result.Should().BeFalse();
     }
     
-    [TestCase(IncomeBand.UnderOrEqualTo31000, true)]
-    [TestCase(IncomeBand.UnderOrEqualTo31000, false)]
-    [TestCase(IncomeBand.UnderOrEqualTo34500, true)]
-    [TestCase(IncomeBand.UnderOrEqualTo34500, false)]
+    #pragma warning disable CS0618 
+    [TestCase(IncomeBand.UnderOrEqualTo31000, true)] //Test case tests backwards compatibility with obsolete bands
+    [TestCase(IncomeBand.UnderOrEqualTo31000, false)] //Test case tests backwards compatibility with obsolete bands
+    [TestCase(IncomeBand.UnderOrEqualTo34500, true)] //Test case tests backwards compatibility with obsolete bands
+    [TestCase(IncomeBand.UnderOrEqualTo34500, false)] //Test case tests backwards compatibility with obsolete bands
     [TestCase(IncomeBand.UnderOrEqualTo36000, true)]
     [TestCase(IncomeBand.UnderOrEqualTo36000, false)]
+    #pragma warning restore CS0618 
     public void IncomeIsTooHigh_ForLowIncomeBand_ReturnsFalse(IncomeBand incomeBand, bool isLsoa)
     {
         // Arrange
@@ -454,8 +460,10 @@ public class QuestionnaireTests
         result.Should().BeFalse();
     }
     
-    [TestCase(IncomeBand.GreaterThan34500)]
-    [TestCase(IncomeBand.UnderOrEqualTo34500)]
+    #pragma warning disable CS0618 
+    [TestCase(IncomeBand.GreaterThan34500)] //Test case tests backwards compatibility with obsolete bands
+    [TestCase(IncomeBand.UnderOrEqualTo34500)] //Test case tests backwards compatibility with obsolete bands
+    #pragma warning restore CS0618 
     public void IncomeBandIsValid_ForBadIncomeBand_ReturnsFalse(IncomeBand incomeBand)
     {
         // Arrange
