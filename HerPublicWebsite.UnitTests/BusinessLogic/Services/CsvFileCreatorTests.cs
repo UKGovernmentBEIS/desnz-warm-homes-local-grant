@@ -52,14 +52,15 @@ public class CsvFileCreatorTests
 "2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,,2023-01-01 15:00:01,no,\"£36,000 or less\",no,Owner\r\n");
     }
     
-    #pragma warning disable CS0618 
-    [TestCase(IncomeBand.GreaterThan31000, "£31k or above")] //Test case tests backwards compatibility with obsolete bands
-    [TestCase(IncomeBand.GreaterThan34500, "£34.5k or above")] //Test case tests backwards compatibility with obsolete bands
+    
+#pragma warning disable CS0618 // Obsolete IncomeBands used to preserve backwards-compatibility
+    [TestCase(IncomeBand.GreaterThan31000, "£31k or above")] 
+    [TestCase(IncomeBand.GreaterThan34500, "£34.5k or above")] 
+    [TestCase(IncomeBand.UnderOrEqualTo34500, "Below £34.5k")] 
+    [TestCase(IncomeBand.UnderOrEqualTo31000, "Below £31k")] 
+#pragma warning restore CS0618 
     [TestCase(IncomeBand.GreaterThan36000, "\"More than £36,000\"")]
-    [TestCase(IncomeBand.UnderOrEqualTo31000, "Below £31k")] //Test case tests backwards compatibility with obsolete bands
-    [TestCase(IncomeBand.UnderOrEqualTo34500, "Below £34.5k")] //Test case tests backwards compatibility with obsolete bands
     [TestCase(IncomeBand.UnderOrEqualTo36000, "\"£36,000 or less\"")]
-    #pragma warning restore CS0618 
     public void CreateReferralRequestFileData_CalledWithReferralRequestWithIncomeAbove31k_GeneratesExpectedFileData(IncomeBand incomeBand, string expectedValue)
     {
         // Arrange
