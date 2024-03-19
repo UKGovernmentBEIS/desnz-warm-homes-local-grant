@@ -37,6 +37,6 @@ public class HouseholdIncomeViewModelTests
         var result = underTest.IncomeBandOptions;
         
         // Assert
-        result.Should().BeEquivalentTo(new [] { IncomeBand.UnderOrEqualTo31000, IncomeBand.GreaterThan31000 });
+        result.Should().BeEquivalentTo(new [] { IncomeBand.UnderOrEqualTo36000, IncomeBand.GreaterThan36000 });
     }
 }

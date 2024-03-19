@@ -150,7 +150,7 @@ public class QuestionnaireUpdaterTests
         var questionnaire = new Questionnaire
         {
             IsLsoaProperty = false,
-            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            IncomeBand = IncomeBand.UnderOrEqualTo36000,
             HasGasBoiler = HasGasBoiler.No
         };
         mockDataAccessProvider.Setup(dap =>
@@ -170,7 +170,7 @@ public class QuestionnaireUpdaterTests
         var questionnaire = new Questionnaire
         {
             IsLsoaProperty = false,
-            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            IncomeBand = IncomeBand.UnderOrEqualTo36000,
             HasGasBoiler = HasGasBoiler.No
         };
         mockDataAccessProvider.Setup(dap =>
@@ -192,7 +192,7 @@ public class QuestionnaireUpdaterTests
         var questionnaire = new Questionnaire
         {
             IsLsoaProperty = false,
-            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            IncomeBand = IncomeBand.UnderOrEqualTo36000,
             HasGasBoiler = HasGasBoiler.No
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
@@ -225,7 +225,7 @@ public class QuestionnaireUpdaterTests
         {
             CustodianCode = testCustodianCode,
             IsLsoaProperty = false,
-            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            IncomeBand = IncomeBand.UnderOrEqualTo36000,
             HasGasBoiler = HasGasBoiler.No
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
@@ -280,7 +280,7 @@ public class QuestionnaireUpdaterTests
         {
             CustodianCode = testCustodianCode,
             IsLsoaProperty = false,
-            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            IncomeBand = IncomeBand.UnderOrEqualTo36000,
             HasGasBoiler = HasGasBoiler.No
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
@@ -329,7 +329,7 @@ public class QuestionnaireUpdaterTests
         var questionnaire = new Questionnaire
         {
             IsLsoaProperty = false,
-            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            IncomeBand = IncomeBand.UnderOrEqualTo36000,
             HasGasBoiler = HasGasBoiler.No
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
@@ -441,7 +441,7 @@ public class QuestionnaireUpdaterTests
             ReferralCode = testReferralCode,
             CustodianCode = testCustodianCode,
             IsLsoaProperty = false,
-            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            IncomeBand = IncomeBand.UnderOrEqualTo36000,
             HasGasBoiler = HasGasBoiler.No
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
@@ -496,7 +496,7 @@ public class QuestionnaireUpdaterTests
             ReferralCode = testReferralCode,
             CustodianCode = testCustodianCode,
             IsLsoaProperty = false,
-            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            IncomeBand = IncomeBand.UnderOrEqualTo36000,
             HasGasBoiler = HasGasBoiler.No
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
