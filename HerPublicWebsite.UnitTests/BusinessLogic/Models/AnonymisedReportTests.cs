@@ -23,7 +23,7 @@ public class AnonymisedReportTests
             OwnershipStatus = OwnershipStatus.Landlord,
             EpcDetailsAreCorrect = EpcConfirmation.Yes,
             IsLsoaProperty = true,
-            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            IncomeBand = IncomeBand.UnderOrEqualTo36000
         };
 
         // Act

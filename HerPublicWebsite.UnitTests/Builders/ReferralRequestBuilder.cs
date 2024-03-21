@@ -24,7 +24,7 @@ public class ReferralRequestBuilder
             EpcLodgementDate = new DateTime(2023, 01, 01, 15, 00, id),
             HasGasBoiler = HasGasBoiler.No,
             Id = id,
-            IncomeBand = IncomeBand.UnderOrEqualTo31000,
+            IncomeBand = IncomeBand.UnderOrEqualTo36000,
             Uprn = $"100 111 222 {id:D3}",
             ReferralWrittenToCsv = false,
             FollowUpEmailSent = false,
