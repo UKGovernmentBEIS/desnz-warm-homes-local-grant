@@ -156,7 +156,10 @@ public record Questionnaire
 
     public bool EpcIsTooHigh => EffectiveEpcBand is EpcRating.A or EpcRating.B or EpcRating.C;
 
-    public bool IncomeIsTooHigh => IncomeBand is (IncomeBandEnum.GreaterThan31000 or IncomeBandEnum.GreaterThan34500) && IsLsoaProperty is not true;
+#pragma warning disable CS0618 // Obsolete Income Bands used to preserve backwards-compatibility
+    public bool IncomeIsTooHigh => IncomeBand is (IncomeBandEnum.GreaterThan31000 or IncomeBandEnum.GreaterThan34500 or IncomeBandEnum.GreaterThan36000) && IsLsoaProperty is not true;
+#pragma warning restore CS0618
+
 
     public bool IncomeBandIsValid =>
         CustodianCode is not null
