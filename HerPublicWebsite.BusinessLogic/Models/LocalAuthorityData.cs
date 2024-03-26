@@ -87,7 +87,7 @@ public class LocalAuthorityData
         { "6815", new LocalAuthorityDetails("City of Cardiff Council", Hug2Status.NotTakingPart, "https://www.cardiff.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "6825", new LocalAuthorityDetails("Carmarthenshire County Council", Hug2Status.NotTakingPart, "https://www.carmarthenshire.gov.wales/home/council-services/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1520", new LocalAuthorityDetails("Castle Point Borough Council", Hug2Status.Live, "https://www.castlepoint.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cambridgeshire & Peterborough Combined Authority") },
-        { "240", new LocalAuthorityDetails("Central Bedfordshire Council", Hug2Status.NotTakingPart, "http://www.centralbedfordshire.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Cambridgeshire & Peterborough Combined Authority") },
+        { "240", new LocalAuthorityDetails("Central Bedfordshire Council", Hug2Status.NotTakingPart, "http://www.centralbedfordshire.gov.uk", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "6820", new LocalAuthorityDetails("Ceredigion County Council", Hug2Status.NotTakingPart, "http://www.ceredigion.gov.uk", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "2410", new LocalAuthorityDetails("Charnwood Borough Council", Hug2Status.Pending, "http://www.charnwood.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "1525", new LocalAuthorityDetails("Chelmsford City Council", Hug2Status.Live, "https://www.chelmsford.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cambridgeshire & Peterborough Combined Authority") },
