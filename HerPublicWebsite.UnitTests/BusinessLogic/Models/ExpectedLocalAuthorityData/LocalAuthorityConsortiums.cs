@@ -60,7 +60,7 @@ internal static class LocalAuthorityConsortiums
             { "6815", null },
             { "6825", null },
             { "1520", "Cambridgeshire & Peterborough Combined Authority" },
-            { "240", "Cambridgeshire & Peterborough Combined Authority" },
+            { "240", null },
             { "6820", null },
             { "2410", "Midlands Net Zero Hub" },
             { "1525", "Cambridgeshire & Peterborough Combined Authority" },
