@@ -24,8 +24,8 @@ namespace HerPublicWebsite
             startup.ConfigureServices(builder.Services);
             
             const string culture = "en-GB";
-            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(culture);
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(culture);
+            CultureInfo.CurrentCulture = new CultureInfo(culture, false);
+            CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture = new CultureInfo(culture, false);
 
             var app = builder.Build();
 
