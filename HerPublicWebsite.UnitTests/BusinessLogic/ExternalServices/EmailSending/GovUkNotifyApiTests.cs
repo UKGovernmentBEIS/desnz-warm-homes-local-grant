@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using CsvHelper;
 using FluentAssertions;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 using HerPublicWebsite.BusinessLogic.Models;
@@ -159,7 +157,9 @@ public class GovUkNotifyApiTests
         ReferralRequestBuilder referralRequestBuilder = new ReferralRequestBuilder(1)
             .WithRequestDate(new DateTime(year, month, day))
             .WithCustodianCode(LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Live));
-        ReferralRequest  testReferralRequest = referralRequestBuilder.Build();
+        ReferralRequest testReferralRequest = referralRequestBuilder.Build();
+        KeyValuePair<string, object> expectedKeyValuePair =
+            new KeyValuePair<string, object>("TestReferralDate", expectedDateString);
         
         // Act
         govUkNotifyApi.SendFollowUpEmail(testReferralRequest, "example");
@@ -168,7 +168,7 @@ public class GovUkNotifyApiTests
         mockNotificationClient.Verify(nc => nc.SendEmail(
             It.IsAny<string>(),
             It.IsAny<string>(),
-            It.Is<Dictionary<string, dynamic>>(objects => objects.ContainsValue(expectedDateString)),
+            It.Is<Dictionary<string, dynamic>>(contents => contents.Contains(expectedKeyValuePair)),
             null, null), Times.Once);
     }
 }
