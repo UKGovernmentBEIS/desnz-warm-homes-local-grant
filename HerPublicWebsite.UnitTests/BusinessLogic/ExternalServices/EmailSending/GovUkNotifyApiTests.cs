@@ -155,7 +155,9 @@ public class GovUkNotifyApiTests
     public void SendFollowUpEmail_WhenCalled_SendsEmailWithUkDateFormat(int day, int month, int year, string expectedDateString)
     {
         // Arrange
-        ReferralRequestBuilder referralRequestBuilder = new ReferralRequestBuilder(1).WithRequestDate(new DateTime(year, month, day));
+        ReferralRequestBuilder referralRequestBuilder = new ReferralRequestBuilder(1)
+            .WithRequestDate(new DateTime(year, month, day))
+            .WithCustodianCode(LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Live));
         ReferralRequest  testReferralRequest = referralRequestBuilder.Build();
         
         // Act
