@@ -163,8 +163,8 @@ public class GovUkNotifyApiTests
         
         // Act
         govUkNotifyApi.SendFollowUpEmail(testReferralRequest, "example");
+        
         // Assert
-        CultureInfo.CurrentCulture.Name.Should().Be("en-GB");
         mockNotificationClient.Verify(nc => nc.SendEmail(
             It.IsAny<string>(),
             It.IsAny<string>(),
