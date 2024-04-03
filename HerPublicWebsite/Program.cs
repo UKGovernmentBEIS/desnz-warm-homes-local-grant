@@ -22,9 +22,7 @@ namespace HerPublicWebsite
             var startup = new Startup(builder.Configuration, builder.Environment);
             startup.ConfigureServices(builder.Services);
             
-            const string culture = "en-GB";
-            CultureInfo.CurrentCulture = new CultureInfo(culture, false);
-            CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture = new CultureInfo(culture, false);
+            CultureInfo.CurrentCulture = new CultureInfo("en-GB", false);
 
             var app = builder.Build();
 
