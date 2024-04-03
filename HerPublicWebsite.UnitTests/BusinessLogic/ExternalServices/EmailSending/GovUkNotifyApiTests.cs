@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -149,9 +150,9 @@ public class GovUkNotifyApiTests
             null, null), Times.Never);
     }
     
-    [TestCase(1, 10, 2022, "10/01/2022")]
-    [TestCase(11, 1, 2023, "01/11/2023")]
-    [TestCase(29, 2, 2024, "02/29/2024")]
+    [TestCase(1, 10, 2022, "01/10/2022")]
+    [TestCase(11, 1, 2023, "11/01/2023")]
+    [TestCase(29, 2, 2024, "29/02/2024")]
     public void SendFollowUpEmail_WhenCalled_SendsEmailWithUkDateFormat(int day, int month, int year, string expectedDateString)
     {
         // Arrange
@@ -162,7 +163,7 @@ public class GovUkNotifyApiTests
         
         // Act
         govUkNotifyApi.SendFollowUpEmail(testReferralRequest, "example");
-        
+        CultureInfo.CurrentCulture.Should().Be("en-GB");
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(
             It.IsAny<string>(),
