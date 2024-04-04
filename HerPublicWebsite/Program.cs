@@ -1,3 +1,4 @@
+using System.Globalization;
 using Hangfire;
 using HerPublicWebsite.BusinessLogic.Services.PolicyTeamUpdate;
 using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
@@ -20,6 +21,8 @@ namespace HerPublicWebsite
             
             var startup = new Startup(builder.Configuration, builder.Environment);
             startup.ConfigureServices(builder.Services);
+            
+            CultureInfo.CurrentCulture = new CultureInfo("en-GB", false);
 
             var app = builder.Build();
 

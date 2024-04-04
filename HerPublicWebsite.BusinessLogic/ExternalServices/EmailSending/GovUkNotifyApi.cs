@@ -87,7 +87,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                     { template.RecipientNamePlaceholder, referralRequest.FullName },
                     { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
                     { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
-                    { template.ReferralDatePlaceholder, referralRequest.RequestDate.ToShortDateString() },
+                    { template.ReferralDatePlaceholder, referralRequest.RequestDate.ToString("dd/MM/yyyy") },
                     { template.FollowUpLinkPlaceholder, followUpLink },
                 };
                 var emailModel = new GovUkNotifyEmailModel
