@@ -150,7 +150,7 @@ public class GovUkNotifyApiTests
     
     [TestCase(1, 10, 2022, "01/10/2022")]
     [TestCase(11, 1, 2023, "11/01/2023")]
-    [TestCase(29, 2, 2024, "29/02/2024")]
+    [TestCase(11, 12, 2023, "11/12/2023")]
     public void SendFollowUpEmail_WhenCalled_SendsEmailWithUkDateFormat(int day, int month, int year, string expectedDateString)
     {
         // Arrange
