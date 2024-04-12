@@ -40,6 +40,8 @@ public class ComplianceReportConfiguration
     public string File1Link { get; set; }
     public string File2Link { get; set; }
     public string File3Link { get; set; }
+    public string File4Link { get; set; }
+    public string File5Link { get; set; }
 }
 
 public class PendingReferralReportConfiguration
