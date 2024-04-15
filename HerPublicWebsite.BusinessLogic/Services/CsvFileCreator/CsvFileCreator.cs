@@ -57,7 +57,9 @@ public class CsvFileCreator : ICsvFileCreator
                 {
                     var consortiumReferrals = groupingByConsortium.SelectMany(g => g).ToList();
                     var consortiumStatistics = new ConsortiumStatistics(consortiumReferrals);
-                    return groupingByConsortium.Select(groupingByLa => new CsvRowConsortiumDownloadInformation(groupingByLa, consortiumStatistics));
+                    var consortiumStatisticsRows = groupingByConsortium.Select(groupingByLa => new CsvRowConsortiumDownloadInformation(groupingByLa, consortiumStatistics));
+                    return consortiumStatisticsRows.GroupBy(laRow => laRow.Consortium, (key,consortiumDownloadInformationRows) => 
+                        consortiumDownloadInformationRows.OrderBy(consortiumDownloadInformation => consortiumDownloadInformation.Consortium).First());
                 }
             );
         return GenerateCsvMemoryStreamFromFileRows(rows);
