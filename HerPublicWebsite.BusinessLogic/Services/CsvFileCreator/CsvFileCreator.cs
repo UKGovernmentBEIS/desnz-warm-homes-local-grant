@@ -38,20 +38,21 @@ public class CsvFileCreator : ICsvFileCreator
             .Select(groupingByLa => new CsvRowLaDownloadInformation(groupingByLa));
         return GenerateCsvMemoryStreamFromFileRows(rows);
     }
-    
+
     public MemoryStream CreateConsortiumReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests)
     {
         var rows = referralRequests
             .GroupBy(rr => rr.CustodianCode)
             .GroupBy(groupingByLa =>
                 LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[groupingByLa.Key].Consortium)
+            .Where(groupingByConsortium => groupingByConsortium.Key is not null)
             .Select(groupingByConsortium =>
                 {
                     var consortiumReferrals = groupingByConsortium.SelectMany(g => g).ToList();
                     var consortiumStatistics = new ConsortiumStatistics(consortiumReferrals);
                     return new CsvRowConsortiumDownloadInformationRow(groupingByConsortium.Key, consortiumStatistics);
                 }
-            ).Where(row => !string.IsNullOrEmpty(row.Consortium)); //Do not include LAs which are not part of a consortium
+            );
         return GenerateCsvMemoryStreamFromFileRows(rows);
     }
 
