@@ -190,7 +190,8 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
         var referralRequest8 = new ReferralRequestBuilder(8).WithWrittenToCsv(true).WithCustodianCode("9052").WithFollowUp(new ReferralRequestFollowUpBuilder(8).WithWasFollowedUp(false)).Build();
 
         var referralRequests = new List<ReferralRequest>() { referralRequest1, referralRequest2, referralRequest3, referralRequest4, referralRequest5, referralRequest6, referralRequest7, referralRequest8 };
-
+        var today = DateTime.Today.ToString("dd-MMM");
+        
         // Act
         var data = underTest.CreateLocalAuthorityReferralRequestFollowUpFileData(referralRequests);
         
@@ -199,9 +200,9 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
         reader.ReadToEnd().Should().Be(
             "SLA Report Date,LA,LA Number of Referrals Not Downloaded,LA Percentage of Referrals Not Downloaded,"+
             "LA Number of Referrals Not Contacted,LA Percentage of Referrals Not Contacted,LA Number of Referrals Responded to email,LA Percentage of Referrals Responded to email\r\n"+
-            "15-Apr,Bath and North East Somerset Council,2,100,1,50,1,50\r\n"+ // Custodian Code 114
-            "15-Apr,North Somerset Council,1,33.333333333333336,1,33.333333333333336,3,100\r\n"+ // Custodian Code 121
-            "15-Apr,Aberdeenshire Council,1,33.333333333333336,2,66.66666666666667,3,100\r\n" // Custodian Code 9052
+            $"{today},Bath and North East Somerset Council,2,100,1,50,1,50\r\n"+ // Custodian Code 114
+            $"{today},North Somerset Council,1,33.333333333333336,1,33.333333333333336,3,100\r\n"+ // Custodian Code 121
+            $"{today},Aberdeenshire Council,1,33.333333333333336,2,66.66666666666667,3,100\r\n" // Custodian Code 9052
             );
     }
     
@@ -219,9 +220,10 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
         var referralRequest7 = new ReferralRequestBuilder(7).WithWrittenToCsv(true).WithCustodianCode("9052").WithFollowUp(new ReferralRequestFollowUpBuilder(7).WithWasFollowedUp(true)).Build();
         var referralRequest8 = new ReferralRequestBuilder(8).WithWrittenToCsv(true).WithCustodianCode("9052").WithFollowUp(new ReferralRequestFollowUpBuilder(8).WithWasFollowedUp(false)).Build();
         var referralRequest9 = new ReferralRequestBuilder(9).WithWrittenToCsv(true).WithCustodianCode("1505").WithFollowUp(new ReferralRequestFollowUpBuilder(9).WithWasFollowedUp(false)).Build();
-
+        
         var referralRequests = new List<ReferralRequest>() { referralRequest1, referralRequest2, referralRequest3, referralRequest4, referralRequest5, referralRequest6, referralRequest7, referralRequest8, referralRequest9 };
 
+        var today = DateTime.Today.ToString("dd-MMM");
         // Act
         var data = underTest.CreateConsortiumReferralRequestFollowUpFileData(referralRequests);
         
@@ -231,8 +233,8 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
             "SLA Report Date,Consortium,Consortium All Referrals Downloaded,Consortium Number of Referrals Not Downloaded,"+
             "Consortium Percentage of Referrals Not Downloaded,Consortium All Referrals Contacted,"+
             "Consortium Number of Referrals Not Contacted,Consortium Percentage of Referrals Not Contacted\r\n"+
-            "15-Apr,Bristol,False,3,60,False,2,40\r\n"+
-            "15-Apr,,False,1,25,False,3,75\r\n"
+            $"{today},Bristol,False,3,60,False,2,40\r\n"+
+            $"{today},,False,1,25,False,3,75\r\n"
             );
         
     }
