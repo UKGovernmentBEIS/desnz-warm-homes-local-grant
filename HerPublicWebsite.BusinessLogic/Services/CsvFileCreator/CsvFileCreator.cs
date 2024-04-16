@@ -51,7 +51,7 @@ public class CsvFileCreator : ICsvFileCreator
                     var consortiumStatistics = new ConsortiumStatistics(consortiumReferrals);
                     return new CsvRowConsortiumDownloadInformationRow(groupingByConsortium.Key, consortiumStatistics);
                 }
-            );
+            ).Where(row => !string.IsNullOrEmpty(row.Consortium)); //Do not include LAs which are not part of a consortium
         return GenerateCsvMemoryStreamFromFileRows(rows);
     }
 

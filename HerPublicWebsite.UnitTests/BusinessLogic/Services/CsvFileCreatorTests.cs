@@ -233,9 +233,8 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
             "SLA Report Date,Consortium,Consortium All Referrals Downloaded,Consortium Number of Referrals Not Downloaded,"+
             "Consortium Percentage of Referrals Not Downloaded,Consortium All Referrals Contacted,"+
             "Consortium Number of Referrals Not Contacted,Consortium Percentage of Referrals Not Contacted\r\n"+
-            $"{today},Bristol,False,3,60,False,2,40\r\n"+
-            $"{today},,False,1,25,False,3,75\r\n"
-            );
+            $"{today},Bristol,False,3,60,False,2,40\r\n" // Custodian codes 114 and 121 
+            ); // Stats for 9052 and 1505 with no Consortium name should not appear as LAs with no Consortium should not be included
         
     }
 
