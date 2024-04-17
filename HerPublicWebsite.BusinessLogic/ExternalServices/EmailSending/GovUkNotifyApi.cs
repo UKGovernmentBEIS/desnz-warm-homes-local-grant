@@ -107,23 +107,25 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                     referralRequest.Id
                 );
             }
-            
-            
-
         }
+        
         
         public void SendComplianceEmail(
             MemoryStream recentReferralRequestOverviewFileData,
-            MemoryStream recentReferralRequestFollowUpFileData,
-            MemoryStream historicReferralRequestFollowUpFileData)
+            MemoryStream recentLocalAuthorityReferralRequestFollowUpFileData,
+            MemoryStream recentConsortiumReferralRequestFollowUpFileData,
+            MemoryStream historicLocalAuthorityReferralRequestFollowUpFileData,
+            MemoryStream historicConsortiumReferralRequestFollowUpFileData)
         {
             var recipientList = govUkNotifyConfig.ComplianceEmailRecipients;
             var template = govUkNotifyConfig.ComplianceReportTemplate;
             var personalisation = new Dictionary<string, dynamic>
             {
-                { "File1Link", PrepareCsvUpload(recentReferralRequestOverviewFileData) },
-                { "File2Link", PrepareCsvUpload(recentReferralRequestFollowUpFileData) },
-                { "File3Link", PrepareCsvUpload(historicReferralRequestFollowUpFileData) },
+                { "OverviewFileLink", PrepareCsvUpload(recentReferralRequestOverviewFileData) },
+                { "RecentLocalAuthorityFollowUpFileLink", PrepareCsvUpload(recentLocalAuthorityReferralRequestFollowUpFileData) },
+                { "RecentConsortiumFollowUpFileLink", PrepareCsvUpload(recentConsortiumReferralRequestFollowUpFileData) },
+                { "HistoricLocalAuthorityFollowUpFileLink", PrepareCsvUpload(historicLocalAuthorityReferralRequestFollowUpFileData) },
+                { "HistoricConsortiumFollowUpFileLink", PrepareCsvUpload(historicConsortiumReferralRequestFollowUpFileData) } 
             };
             SendEmailToRecipients(recipientList, template.Id, personalisation);
         }
