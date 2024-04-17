@@ -117,7 +117,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             MemoryStream historicLocalAuthorityReferralRequestFollowUpFileData,
             MemoryStream historicConsortiumReferralRequestFollowUpFileData)
         {
-            const string recipientList = "samuel.young@softwire.com"; // TODO PC-967 revert back to loading config
+            var recipientList = govUkNotifyConfig.ComplianceEmailRecipients;
             var template = govUkNotifyConfig.ComplianceReportTemplate;
             var personalisation = new Dictionary<string, dynamic>
             {

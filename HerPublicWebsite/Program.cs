@@ -51,7 +51,7 @@ namespace HerPublicWebsite
             recurringJobManager.AddOrUpdate<PolicyTeamUpdateService>(
                 "Send policy team update email",
                 service => service.SendPolicyTeamUpdate(),
-                "0 * * * *"); // every hour
+                "0 7 * * 1"); // at 07:00 on Monday
                 
             recurringJobManager.AddOrUpdate<PendingReferralNotificationService>(
                 "Send monthly pending referral report",
