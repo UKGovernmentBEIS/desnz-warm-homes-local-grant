@@ -12,7 +12,8 @@ public interface ICsvFileCreator
 {
     public MemoryStream CreateReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests);
     public MemoryStream CreateReferralRequestOverviewFileData(IEnumerable<ReferralRequest> referralRequests);
-    public MemoryStream CreateReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests);
+    public MemoryStream CreateLocalAuthorityReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests);
+    public MemoryStream CreateConsortiumReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests);
     public MemoryStream CreatePendingReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests);
 }
 
@@ -30,17 +31,26 @@ public class CsvFileCreator : ICsvFileCreator
         return GenerateCsvMemoryStreamFromFileRows(rows);
     }
 
-    public MemoryStream CreateReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests)
+    public MemoryStream CreateLocalAuthorityReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests)
+    {
+        var rows = referralRequests
+            .GroupBy(rr => rr.CustodianCode)
+            .Select(groupingByLa => new CsvRowLaDownloadInformation(groupingByLa));
+        return GenerateCsvMemoryStreamFromFileRows(rows);
+    }
+
+    public MemoryStream CreateConsortiumReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests)
     {
         var rows = referralRequests
             .GroupBy(rr => rr.CustodianCode)
             .GroupBy(groupingByLa =>
                 LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[groupingByLa.Key].Consortium)
-            .SelectMany(groupingByConsortium =>
+            .Where(groupingByConsortium => groupingByConsortium.Key is not null)
+            .Select(groupingByConsortium =>
                 {
                     var consortiumReferrals = groupingByConsortium.SelectMany(g => g).ToList();
                     var consortiumStatistics = new ConsortiumStatistics(consortiumReferrals);
-                    return groupingByConsortium.Select(groupingByLa => new CsvRowLaDownloadInformation(groupingByLa, consortiumStatistics));
+                    return new CsvRowConsortiumDownloadInformationRow(groupingByConsortium.Key, consortiumStatistics);
                 }
             );
         return GenerateCsvMemoryStreamFromFileRows(rows);
@@ -95,70 +105,41 @@ public class CsvFileCreator : ICsvFileCreator
     private class CsvRowLaDownloadInformation
     {
         [Index(0)]
-        [Name("Consortium")]
-        public string Consortium { get; set; }
-
+        [Name("SLA Report Date")]
+        public string ReportDate { get; set; }
+        
         [Index(1)]
-        [Name("Consortium All Referrals Downloaded")]
-        public bool AllConsortiumReferralsDownloaded { get; set; }
-        
-        [Index(2)]
-        [Name("Consortium Number of Referrals Not Downloaded")]
-        public int NumberUndownloadedConsortiumReferrals { get; set; }
-
-        [Index(3)]
-        [Name("Consortium Percentage of Referrals Not Downloaded")]
-        public double PercentageUndownloadedConsortiumReferrals { get; set; }
-
-        [Index(4)]
-        [Name("Consortium All Referrals Contacted")]
-        public bool AllConsortiumReferralsContacted { get; set; }
-        
-        [Index(5)]
-        [Name("Consortium Number of Referrals Not Contacted")]
-        public int NumberUncontactedConsortiumReferrals { get; set; }
-
-        [Index(6)]
-        [Name("Consortium Percentage of Referrals Not Contacted")]
-        public double PercentageUncontactedConsortiumReferrals { get; set; }
-        
-        [Index(7)]
         [Name("LA")]
         public string LocalAuthority { get; set; }
         
-        [Index(8)]
+        [Index(2)]
         [Name("LA Number of Referrals Not Downloaded")]
         public int NumberUndownloadedLaReferrals { get; set; }
 
-        [Index(9)]
+        [Index(3)]
         [Name("LA Percentage of Referrals Not Downloaded")]
         public double PercentageUndownloadedLaReferrals { get; set; }
 
-        [Index(10)]
+        [Index(4)]
         [Name("LA Number of Referrals Not Contacted")]
         public int NumberUncontactedLaReferrals { get; set; }
 
-        [Index(11)]
+        [Index(5)]
         [Name("LA Percentage of Referrals Not Contacted")]
         public double PercentageUncontactedLaReferrals { get; set; }
         
-        [Index(12)]
+        [Index(6)]
         [Name("LA Number of Referrals Responded to email")]
         public int LaNumberOfFollowUpResponses { get; set; }
         
-        [Index(13)]
+        [Index(7)]
         [Name("LA Percentage of Referrals Responded to email")]
         public double LaPercentageOfFollowUpResponses { get; set; }
 
-        public CsvRowLaDownloadInformation(IGrouping<string,ReferralRequest> requestGroupingByCustodianCode, ConsortiumStatistics consortiumData){
-            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGroupingByCustodianCode.Key].Consortium;
+        public CsvRowLaDownloadInformation(IGrouping<string,ReferralRequest> requestGroupingByCustodianCode)
+        {
+            ReportDate = DateTime.Today.ToString("dd-MMM");
             LocalAuthority =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGroupingByCustodianCode.Key].Name;
-            AllConsortiumReferralsDownloaded = consortiumData.AllConsortiumReferralsDownloaded;
-            NumberUndownloadedConsortiumReferrals = consortiumData.NumberUndownloadedConsortiumReferrals;
-            PercentageUndownloadedConsortiumReferrals = consortiumData.PercentageUndownloadedConsortiumReferrals;
-            AllConsortiumReferralsContacted = consortiumData.AllConsortiumReferralsContacted;
-            NumberUncontactedConsortiumReferrals = consortiumData.NumberUncontactedConsortiumReferrals;
-            PercentageUncontactedConsortiumReferrals = consortiumData.PercentageUncontactedConsortiumReferrals;
             NumberUndownloadedLaReferrals = requestGroupingByCustodianCode.Count(rr => !rr.ReferralWrittenToCsv);
             PercentageUndownloadedLaReferrals = 100 * (double)NumberUndownloadedLaReferrals/requestGroupingByCustodianCode.Count();
             NumberUncontactedLaReferrals = requestGroupingByCustodianCode.Count(rr => rr.FollowUp?.WasFollowedUp == false);
@@ -166,6 +147,53 @@ public class CsvFileCreator : ICsvFileCreator
             LaNumberOfFollowUpResponses = requestGroupingByCustodianCode.Count(rr => rr.FollowUp?.WasFollowedUp != null);
             LaPercentageOfFollowUpResponses = 100 * (double)LaNumberOfFollowUpResponses / requestGroupingByCustodianCode.Sum(rr => rr.FollowUp != null ? 1 : 0 );
         }
+    }
+
+    private class CsvRowConsortiumDownloadInformationRow
+    {
+        [Index(0)]
+        [Name("SLA Report Date")]
+        public string ReportDate { get; set; }
+        
+        [Index(1)]
+        [Name("Consortium")]
+        public string Consortium { get; set; }
+
+        [Index(2)]
+        [Name("Consortium All Referrals Downloaded")]
+        public bool AllConsortiumReferralsDownloaded { get; set; }
+        
+        [Index(3)]
+        [Name("Consortium Number of Referrals Not Downloaded")]
+        public int NumberUndownloadedConsortiumReferrals { get; set; }
+
+        [Index(4)]
+        [Name("Consortium Percentage of Referrals Not Downloaded")]
+        public double PercentageUndownloadedConsortiumReferrals { get; set; }
+
+        [Index(5)]
+        [Name("Consortium All Referrals Contacted")]
+        public bool AllConsortiumReferralsContacted { get; set; }
+        
+        [Index(6)]
+        [Name("Consortium Number of Referrals Not Contacted")]
+        public int NumberUncontactedConsortiumReferrals { get; set; }
+
+        [Index(7)]
+        [Name("Consortium Percentage of Referrals Not Contacted")]
+        public double PercentageUncontactedConsortiumReferrals { get; set; }
+
+        public CsvRowConsortiumDownloadInformationRow(string consortiumName, ConsortiumStatistics consortiumData)
+        {
+            ReportDate = DateTime.Today.ToString("dd-MMM");
+            Consortium =  consortiumName;
+            AllConsortiumReferralsDownloaded = consortiumData.AllConsortiumReferralsDownloaded;
+            NumberUndownloadedConsortiumReferrals = consortiumData.NumberUndownloadedConsortiumReferrals;
+            PercentageUndownloadedConsortiumReferrals = consortiumData.PercentageUndownloadedConsortiumReferrals;
+            AllConsortiumReferralsContacted = consortiumData.AllConsortiumReferralsContacted;
+            NumberUncontactedConsortiumReferrals = consortiumData.NumberUncontactedConsortiumReferrals;
+            PercentageUncontactedConsortiumReferrals = consortiumData.PercentageUncontactedConsortiumReferrals; 
+        }    
     }
 
     private class CsvRowReferralRequest
