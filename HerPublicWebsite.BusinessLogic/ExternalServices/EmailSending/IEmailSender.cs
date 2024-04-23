@@ -23,8 +23,10 @@ public interface IEmailSender
     public void SendComplianceEmail
     (
         MemoryStream recentReferralRequestOverviewFileData,
-        MemoryStream recentReferralRequestFollowUpFileData,
-        MemoryStream historicReferralRequestFollowUpFileData
+        MemoryStream recentLocalAuthorityReferralRequestFollowUpFileData,
+        MemoryStream recentConsortiumReferralRequestFollowUpFileData,
+        MemoryStream historicLocalAuthorityReferralRequestFollowUpFileData,
+        MemoryStream historicConsortiumReferralRequestFollowUpFileData
     );
     
     public void SendPendingReferralReportEmail(MemoryStream pendingReferralRequestsFileData);

@@ -37,9 +37,11 @@ public class ComplianceReportConfiguration
 {
     public string Id { get; set; }
     public string RecipientNamePlaceholder { get; set; }
-    public string File1Link { get; set; }
-    public string File2Link { get; set; }
-    public string File3Link { get; set; }
+    public string OverviewFileLink { get; set; }
+    public string RecentLocalAuthorityFollowUpFileLink { get; set; }
+    public string RecentConsortiumFollowUpFileLink { get; set; }
+    public string HistoricLocalAuthorityFollowUpFileLink { get; set; }
+    public string HistoricConsortiumFollowUpFileLink { get; set; }
 }
 
 public class PendingReferralReportConfiguration

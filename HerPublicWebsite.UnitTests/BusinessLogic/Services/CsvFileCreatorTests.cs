@@ -176,7 +176,7 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
     }
     
     [Test]
-    public void CreateReferralRequestFollowUpData_CalledWithReferralRequest_GeneratesExpectedFileData()
+    public void CreateLocalAuthorityReferralRequestFollowUpData_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
         // Arrange
         var underTest = new CsvFileCreator();
@@ -190,22 +190,52 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
         var referralRequest8 = new ReferralRequestBuilder(8).WithWrittenToCsv(true).WithCustodianCode("9052").WithFollowUp(new ReferralRequestFollowUpBuilder(8).WithWasFollowedUp(false)).Build();
 
         var referralRequests = new List<ReferralRequest>() { referralRequest1, referralRequest2, referralRequest3, referralRequest4, referralRequest5, referralRequest6, referralRequest7, referralRequest8 };
-
+        var today = DateTime.Today.ToString("dd-MMM");
+        
         // Act
-        var data = underTest.CreateReferralRequestFollowUpFileData(referralRequests);
+        var data = underTest.CreateLocalAuthorityReferralRequestFollowUpFileData(referralRequests);
         
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
-            "Consortium,Consortium All Referrals Downloaded,Consortium Number of Referrals Not Downloaded,"+
-            "Consortium Percentage of Referrals Not Downloaded,Consortium All Referrals Contacted,"+
-            "Consortium Number of Referrals Not Contacted,Consortium Percentage of Referrals Not Contacted,"+
-            "LA,LA Number of Referrals Not Downloaded,LA Percentage of Referrals Not Downloaded,"+
+            "SLA Report Date,LA,LA Number of Referrals Not Downloaded,LA Percentage of Referrals Not Downloaded,"+
             "LA Number of Referrals Not Contacted,LA Percentage of Referrals Not Contacted,LA Number of Referrals Responded to email,LA Percentage of Referrals Responded to email\r\n"+
-            "Bristol,False,3,60,False,2,40,Bath and North East Somerset Council,2,100,1,50,1,50\r\n"+ // Custodian Code 114
-            "Bristol,False,3,60,False,2,40,North Somerset Council,1,33.333333333333336,1,33.333333333333336,3,100\r\n"+ // Custodian Code 121
-            ",False,1,33.333333333333336,False,2,66.66666666666667,Aberdeenshire Council,1,33.333333333333336,2,66.66666666666667,3,100\r\n" // Custodian Code 9052
+            $"{today},Bath and North East Somerset Council,2,100,1,50,1,50\r\n"+ // Custodian Code 114
+            $"{today},North Somerset Council,1,33.333333333333336,1,33.333333333333336,3,100\r\n"+ // Custodian Code 121
+            $"{today},Aberdeenshire Council,1,33.333333333333336,2,66.66666666666667,3,100\r\n" // Custodian Code 9052
             );
+    }
+    
+    [Test]
+    public void CreateConsortiumReferralRequestFollowUpData_CalledWithReferralRequest_GeneratesExpectedFileData()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest1 = new ReferralRequestBuilder(1).WithWrittenToCsv(false).WithCustodianCode("114").WithFollowUp(new ReferralRequestFollowUpBuilder(1).WithWasFollowedUp(null)).Build();
+        var referralRequest2 = new ReferralRequestBuilder(2).WithWrittenToCsv(false).WithCustodianCode("114").WithFollowUp(new ReferralRequestFollowUpBuilder(2).WithWasFollowedUp(false)).Build();
+        var referralRequest3 = new ReferralRequestBuilder(3).WithWrittenToCsv(true).WithCustodianCode("121").WithFollowUp(new ReferralRequestFollowUpBuilder(3).WithWasFollowedUp(true)).Build();
+        var referralRequest4 = new ReferralRequestBuilder(4).WithWrittenToCsv(true).WithCustodianCode("121").WithFollowUp(new ReferralRequestFollowUpBuilder(4).WithWasFollowedUp(false)).Build();
+        var referralRequest5 = new ReferralRequestBuilder(5).WithWrittenToCsv(false).WithCustodianCode("121").WithFollowUp(new ReferralRequestFollowUpBuilder(5).WithWasFollowedUp(true)).Build();
+        var referralRequest6 = new ReferralRequestBuilder(6).WithWrittenToCsv(false).WithCustodianCode("9052").WithFollowUp(new ReferralRequestFollowUpBuilder(6).WithWasFollowedUp(false)).Build();
+        var referralRequest7 = new ReferralRequestBuilder(7).WithWrittenToCsv(true).WithCustodianCode("9052").WithFollowUp(new ReferralRequestFollowUpBuilder(7).WithWasFollowedUp(true)).Build();
+        var referralRequest8 = new ReferralRequestBuilder(8).WithWrittenToCsv(true).WithCustodianCode("9052").WithFollowUp(new ReferralRequestFollowUpBuilder(8).WithWasFollowedUp(false)).Build();
+        var referralRequest9 = new ReferralRequestBuilder(9).WithWrittenToCsv(true).WithCustodianCode("1505").WithFollowUp(new ReferralRequestFollowUpBuilder(9).WithWasFollowedUp(false)).Build();
+        
+        var referralRequests = new List<ReferralRequest>() { referralRequest1, referralRequest2, referralRequest3, referralRequest4, referralRequest5, referralRequest6, referralRequest7, referralRequest8, referralRequest9 };
+
+        var today = DateTime.Today.ToString("dd-MMM");
+        // Act
+        var data = underTest.CreateConsortiumReferralRequestFollowUpFileData(referralRequests);
+        
+        // Assert
+        var reader = new StreamReader(data, Encoding.UTF8);
+        reader.ReadToEnd().Should().Be(
+            "SLA Report Date,Consortium,Consortium All Referrals Downloaded,Consortium Number of Referrals Not Downloaded,"+
+            "Consortium Percentage of Referrals Not Downloaded,Consortium All Referrals Contacted,"+
+            "Consortium Number of Referrals Not Contacted,Consortium Percentage of Referrals Not Contacted\r\n"+
+            $"{today},Bristol,False,3,60,False,2,40\r\n" // Custodian codes 114 and 121 
+            ); // Stats for 9052 and 1505 with no Consortium name should not appear as LAs with no Consortium should not be included
+        
     }
 
     [Test]
