@@ -43,7 +43,7 @@ public class ReferralFollowUpNotificationService : IReferralFollowUpNotification
     {
         var endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Today, -10);
         var startDate = referralRequestNotificationConfig.CutoffEpoch;
-        var newReferrals = await dataProvider.GetReferralRequestsWithNoFollowUpBetweenDates(startDate, endDate);
+        var newReferrals = await dataProvider.GetReferralRequestsWithNoFollowUpToNonPendingLasBetweenDates(startDate, endDate);
         var uriBuilder = new UriBuilder(globalConfig.AppBaseUrl);
         uriBuilder.Path = "referral-follow-up";
         foreach (var newReferral in newReferrals) {
