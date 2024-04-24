@@ -18,7 +18,7 @@ public class PolicyTeamUpdateService : IPolicyTeamUpdate
     
     public PolicyTeamUpdateService(
         IDataAccessProvider dataProvider,
-        ICsvFileCreator csvFileCreator, 
+        ICsvFileCreator csvFileCreator,
         IWorkingDayHelperService workingDayHelperService,
         IEmailSender emailSender
     )
@@ -29,7 +29,8 @@ public class PolicyTeamUpdateService : IPolicyTeamUpdate
         this.emailSender = emailSender;
     }
 
-    public async Task SendPolicyTeamUpdate(){
+    public async Task SendPolicyTeamUpdate()
+    {
         var recentReferralRequestOverviewFileData = await CreateReferralRequestOverviewFileData();
         var (recentLocalAuthorityReferralRequestFollowUpFileData,
             recentConsortiumReferralRequestFollowUpFileData) =
@@ -44,33 +45,35 @@ public class PolicyTeamUpdateService : IPolicyTeamUpdate
             historicLocalAuthorityReferralRequestFollowUpFileData,
             historicConsortiumReferralRequestFollowUpFileData
         );
-
     }
 
-    private async Task<MemoryStream> CreateReferralRequestOverviewFileData (){
-        DateTime endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now, -10); 
-        DateTime startDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now.AddDays(-7), -10); 
+    private async Task<MemoryStream> CreateReferralRequestOverviewFileData()
+    {
+        var endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now, -10);
+        var startDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now.AddDays(-7), -10);
         var newReferrals = await dataProvider.GetReferralRequestsToNonPendingBetweenDates(startDate, endDate);
         return csvFileCreator.CreateReferralRequestOverviewFileData(newReferrals);
     }
 
     private async Task<(DateTime, DateTime)> RecentReferralRequestTimePeriod()
     {
-        DateTime endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now, -10); 
-        DateTime startDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now.AddDays(-7), -10);
+        var endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now, -10);
+        var startDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now.AddDays(-7), -10);
         return (endDate, startDate);
     }
 
-    private async Task<(MemoryStream, MemoryStream)> BuildRecentReferralRequestFollowUpFileData (){
-        (DateTime endDate, DateTime startDate) = await RecentReferralRequestTimePeriod();
+    private async Task<(MemoryStream, MemoryStream)> BuildRecentReferralRequestFollowUpFileData()
+    {
+        var (endDate, startDate) = await RecentReferralRequestTimePeriod();
         var newReferrals = await dataProvider.GetReferralRequestsToNonPendingBetweenDates(startDate, endDate);
         return (csvFileCreator.CreateLocalAuthorityReferralRequestFollowUpFileData(newReferrals),
             csvFileCreator.CreateConsortiumReferralRequestFollowUpFileData(newReferrals));
     }
 
-    private async Task<(MemoryStream,MemoryStream)> BuildHistoricReferralRequestFollowUpFileData (){
+    private async Task<(MemoryStream, MemoryStream)> BuildHistoricReferralRequestFollowUpFileData()
+    {
         var newReferrals = await dataProvider.GetAllReferralRequestsToNonPending();
-        return (csvFileCreator.CreateLocalAuthorityReferralRequestFollowUpFileData(newReferrals), 
+        return (csvFileCreator.CreateLocalAuthorityReferralRequestFollowUpFileData(newReferrals),
             csvFileCreator.CreateConsortiumReferralRequestFollowUpFileData(newReferrals));
     }
 }
