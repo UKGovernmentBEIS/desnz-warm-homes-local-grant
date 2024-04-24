@@ -78,10 +78,21 @@ public class DataAccessProvider : IDataAccessProvider
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetReferralRequestsBetweenDates(DateTime startDate, DateTime endDate)
+    public async Task<IList<ReferralRequest>> GetAllReferralRequestsToNonPending()
     {
         return await context.ReferralRequests
-            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate)
+            .Where(rr => !rr.WasSubmittedToPendingLocalAuthority)
+            .Include(rr => rr.FollowUp)
+            .ToListAsync();
+    }
+
+    public async Task<IList<ReferralRequest>> GetReferralRequestsToNonPendingBetweenDates(DateTime startDate, DateTime endDate)
+    {
+        return await context.ReferralRequests
+            .Where(rr =>
+                rr.RequestDate >= startDate
+                && rr.RequestDate <= endDate
+                && !rr.WasSubmittedToPendingLocalAuthority)
             .Include(rr => rr.FollowUp)
             .ToListAsync();
     }
