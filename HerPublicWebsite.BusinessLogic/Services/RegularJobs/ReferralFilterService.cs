@@ -6,6 +6,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 public interface IReferralFilterService
 {
     public IEnumerable<ReferralRequest> FilterForPendingReferralReport(IEnumerable<ReferralRequest> referralRequests);
+    public IEnumerable<ReferralRequest> FilterForSentToNonPending(IEnumerable<ReferralRequest> referralRequests);
 }
 
 public class ReferralFilterService : IReferralFilterService
@@ -22,6 +23,11 @@ public class ReferralFilterService : IReferralFilterService
         var startDate = dateHelper.GetStartOfPreviousMonth();
 
         return referralRequests.Where(rr => ShouldIncludeInReport(rr, startDate));
+    }
+    
+    public IEnumerable<ReferralRequest> FilterForSentToNonPending(IEnumerable<ReferralRequest> referralRequests)
+    {
+        return referralRequests.Where(rr => !rr.WasSubmittedToPendingLocalAuthority);
     }
     
     private static bool ShouldIncludeInReport(ReferralRequest referral, DateTime startDate)
