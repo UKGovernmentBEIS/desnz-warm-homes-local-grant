@@ -8,18 +8,18 @@ public class PendingReferralNotificationService
     private readonly IDataAccessProvider dataProvider;
     private readonly ICsvFileCreator csvFileCreator;
     private readonly IEmailSender emailSender;
-    private readonly IPendingReferralFilterService pendingReferralFilterService;
+    private readonly IReferralFilterService referralFilterService;
     
     public PendingReferralNotificationService(
         IDataAccessProvider dataProvider,
         ICsvFileCreator csvFileCreator,
         IEmailSender emailSender,
-        IPendingReferralFilterService pendingReferralFilterService)
+        IReferralFilterService referralFilterService)
     {
         this.dataProvider = dataProvider;
         this.csvFileCreator = csvFileCreator;
         this.emailSender = emailSender;
-        this.pendingReferralFilterService = pendingReferralFilterService;
+        this.referralFilterService = referralFilterService;
     }
     
     public async Task SendPendingReferralNotifications()
@@ -31,7 +31,7 @@ public class PendingReferralNotificationService
     private async Task<MemoryStream> BuildPendingReferralRequestsFileData()
     {
         var referralRequests = await dataProvider.GetAllReferralRequests();
-        var pendingReferralRequests = pendingReferralFilterService.FilterForPendingReferralReport(referralRequests);
+        var pendingReferralRequests = referralFilterService.FilterForPendingReferralReport(referralRequests);
         return csvFileCreator.CreatePendingReferralRequestFileData(pendingReferralRequests);
     }
 }

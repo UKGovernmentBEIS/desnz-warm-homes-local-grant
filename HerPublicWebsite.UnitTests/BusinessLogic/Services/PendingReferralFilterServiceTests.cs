@@ -12,10 +12,10 @@ using static HerPublicWebsite.BusinessLogic.Models.LocalAuthorityData;
 
 namespace Tests.BusinessLogic.Services;
 
-public class PendingReferralFilterServiceTests
+public class ReferralFilterServiceTests
 {
     private Mock<IDateHelper> mockDateHelper;
-    private PendingReferralFilterService pendingReferralFilterService;
+    private ReferralFilterService referralFilterService;
     private DateTime startOfPreviousMonth;
 
     [SetUp]
@@ -25,7 +25,7 @@ public class PendingReferralFilterServiceTests
         mockDateHelper = new Mock<IDateHelper>();
         mockDateHelper.Setup(mdh => mdh.GetStartOfPreviousMonth()).Returns(startOfPreviousMonth);
         
-        pendingReferralFilterService = new PendingReferralFilterService(mockDateHelper.Object);
+        referralFilterService = new ReferralFilterService(mockDateHelper.Object);
     }
 
     // If LA is now pending, include.
@@ -45,7 +45,7 @@ public class PendingReferralFilterServiceTests
         var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
         
         // Act
-        var outputReferralRequests = pendingReferralFilterService
+        var outputReferralRequests = referralFilterService
             .FilterForPendingReferralReport(inputReferralRequests);
         
         // Assert
@@ -65,7 +65,7 @@ public class PendingReferralFilterServiceTests
         var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
         
         // Act
-        var outputReferralRequests = pendingReferralFilterService
+        var outputReferralRequests = referralFilterService
             .FilterForPendingReferralReport(inputReferralRequests);
         
         // Assert

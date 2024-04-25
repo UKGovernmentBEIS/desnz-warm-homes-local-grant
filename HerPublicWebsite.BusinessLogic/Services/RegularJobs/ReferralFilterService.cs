@@ -3,16 +3,16 @@ using HerPublicWebsite.BusinessLogic.Models;
 
 namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
-public interface IPendingReferralFilterService
+public interface IReferralFilterService
 {
     public IEnumerable<ReferralRequest> FilterForPendingReferralReport(IEnumerable<ReferralRequest> referralRequests);
 }
 
-public class PendingReferralFilterService : IPendingReferralFilterService
+public class ReferralFilterService : IReferralFilterService
 {
     private readonly IDateHelper dateHelper;
 
-    public PendingReferralFilterService(IDateHelper dateHelper)
+    public ReferralFilterService(IDateHelper dateHelper)
     {
         this.dateHelper = dateHelper;
     }
