@@ -71,6 +71,40 @@ public class ReferralFilterServiceTests
         // Assert
         outputReferralRequests.Should().NotContain(inputReferralRequest);
     }
+    
+    [Test]
+    public void FilterForSentToNonPending_WhenCalledWithReferralSendToNonPendingLa_DoesIncludeInFilter()
+    {
+        // Arrange
+        var inputReferralRequest = new ReferralRequestBuilder(10)
+            .WithWasSubmittedToPendingLocalAuthority(false)
+            .Build();
+        var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
+        
+        // Act
+        var outputReferralRequests = referralFilterService
+            .FilterForSentToNonPending(inputReferralRequests);
+        
+        // Assert
+        outputReferralRequests.Should().Contain(inputReferralRequest);
+    }
+    
+    [Test]
+    public void FilterForSentToNonPending_WhenCalledWithReferralSendToPendingLa_DoesNotIncludeInFilter()
+    {
+        // Arrange
+        var inputReferralRequest = new ReferralRequestBuilder(10)
+            .WithWasSubmittedToPendingLocalAuthority(true)
+            .Build();
+        var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
+        
+        // Act
+        var outputReferralRequests = referralFilterService
+            .FilterForSentToNonPending(inputReferralRequests);
+        
+        // Assert
+        outputReferralRequests.Should().NotContain(inputReferralRequest);
+    }
 
     private ReferralRequest BuildReferralRequest(
         bool localAuthorityIsNowPending,
