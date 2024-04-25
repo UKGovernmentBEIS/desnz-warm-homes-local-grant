@@ -78,33 +78,18 @@ public class DataAccessProvider : IDataAccessProvider
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetAllReferralRequestsToNonPending()
+    public async Task<IList<ReferralRequest>> GetReferralRequestsBetweenDates(DateTime startDate, DateTime endDate)
     {
         return await context.ReferralRequests
-            .Where(rr => !rr.WasSubmittedToPendingLocalAuthority)
+            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate)
             .Include(rr => rr.FollowUp)
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetReferralRequestsToNonPendingBetweenDates(DateTime startDate, DateTime endDate)
+    public async Task<IList<ReferralRequest>> GetReferralRequestsWithNoFollowUpBetweenDates(DateTime startDate, DateTime endDate)
     {
         return await context.ReferralRequests
-            .Where(rr =>
-                rr.RequestDate >= startDate
-                && rr.RequestDate <= endDate
-                && !rr.WasSubmittedToPendingLocalAuthority)
-            .Include(rr => rr.FollowUp)
-            .ToListAsync();
-    }
-
-    public async Task<IList<ReferralRequest>> GetReferralRequestsWithNoFollowUpToNonPendingLasBetweenDates(DateTime startDate, DateTime endDate)
-    {
-        return await context.ReferralRequests
-            .Where(rr => 
-                rr.RequestDate >= startDate
-                && rr.RequestDate <= endDate
-                && !rr.FollowUpEmailSent
-                && !rr.WasSubmittedToPendingLocalAuthority)
+            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.FollowUpEmailSent)
             .ToListAsync();
     }
 
