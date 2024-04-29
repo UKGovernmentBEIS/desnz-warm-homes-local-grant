@@ -40,7 +40,6 @@ public class PolicyTeamUpdateServiceTests
             mockReferralFilterService.Object);
     }
 
-    // If LA is not now pending but referral was submitted in the last month to a then pending LA, include.
     [Test]
     public async Task SendPolicyUpdate_WhenCalled_CallsCsvFileCreatorWithReferralsIncludedInFilter()
     {
