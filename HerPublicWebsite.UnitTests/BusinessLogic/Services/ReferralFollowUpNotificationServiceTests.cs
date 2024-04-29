@@ -97,5 +97,6 @@ public class ReferralFollowUpNotificationServiceTests
         // Assert
         mockReferralFollowUpService.Verify(rfus => rfus.CreateReferralRequestFollowUp(
             validReferral), Times.Once);
+        mockReferralFollowUpService.VerifyNoOtherCalls();
     }
 }

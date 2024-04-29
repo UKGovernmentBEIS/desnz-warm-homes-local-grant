@@ -64,6 +64,11 @@ public class PolicyTeamUpdateServiceTests
                 dp.GetReferralRequestsBetweenDates(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
             .ReturnsAsync(allReferrals);
 
+        mockDataProvider
+            .Setup(dp =>
+                dp.GetAllReferralRequests())
+            .ReturnsAsync(allReferrals);
+
         mockReferralFilterService
             .Setup(rfs =>
                 rfs.FilterForSentToNonPending(allReferrals))
@@ -75,9 +80,10 @@ public class PolicyTeamUpdateServiceTests
         // Assert
         mockCsvFileCreator.Verify(cfc => cfc.CreateReferralRequestOverviewFileData(
             filteredReferrals), Times.Once);
+        mockCsvFileCreator.Verify(cfc => cfc.CreateLocalAuthorityReferralRequestFollowUpFileData(
+            filteredReferrals), Times.Exactly(2));
         mockCsvFileCreator.Verify(cfc => cfc.CreateConsortiumReferralRequestFollowUpFileData(
-            filteredReferrals), Times.Once);
-        mockCsvFileCreator.Verify(cfc => cfc.CreateConsortiumReferralRequestFollowUpFileData(
-            filteredReferrals), Times.Once);
+            filteredReferrals), Times.Exactly(2));
+        mockCsvFileCreator.VerifyNoOtherCalls();
     }
 }
