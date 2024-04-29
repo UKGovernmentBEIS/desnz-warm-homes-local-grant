@@ -21,7 +21,8 @@ public class PolicyTeamUpdateServiceTests
     private Mock<ICsvFileCreator> mockCsvFileCreator;
     private Mock<IWorkingDayHelperService> mockWorkingDayHelperService;
     private Mock<IEmailSender> mockEmailSender;
-    private Mock<IReferralFilterService> mockReferralFilterService;
+    private Mock<IDateHelper> mockDateHelper;
+    private IReferralFilterService referralFilterService;
     private PolicyTeamUpdateService policyTeamUpdateService;
 
     [SetUp]
@@ -31,13 +32,14 @@ public class PolicyTeamUpdateServiceTests
         mockCsvFileCreator = new Mock<ICsvFileCreator>();
         mockWorkingDayHelperService = new Mock<IWorkingDayHelperService>();
         mockEmailSender = new Mock<IEmailSender>();
-        mockReferralFilterService = new Mock<IReferralFilterService>();
+        mockDateHelper = new Mock<IDateHelper>();
+        referralFilterService = new ReferralFilterService(mockDateHelper.Object);
         policyTeamUpdateService = new PolicyTeamUpdateService(
             mockDataProvider.Object,
             mockCsvFileCreator.Object,
             mockWorkingDayHelperService.Object,
             mockEmailSender.Object,
-            mockReferralFilterService.Object);
+            referralFilterService);
     }
 
     [Test]
@@ -45,8 +47,10 @@ public class PolicyTeamUpdateServiceTests
     {
         // Arrange
         var validReferral = new ReferralRequestBuilder(1)
+            .WithWasSubmittedToPendingLocalAuthority(false)
             .Build();
         var invalidReferral = new ReferralRequestBuilder(2)
+            .WithWasSubmittedToPendingLocalAuthority(true)
             .Build();
         
         var allReferrals = new List<ReferralRequest>()
@@ -67,11 +71,6 @@ public class PolicyTeamUpdateServiceTests
             .Setup(dp =>
                 dp.GetAllReferralRequests())
             .ReturnsAsync(allReferrals);
-
-        mockReferralFilterService
-            .Setup(rfs =>
-                rfs.FilterForSentToNonPending(allReferrals))
-            .Returns(filteredReferrals);
         
         // Act
         await policyTeamUpdateService.SendPolicyTeamUpdate();

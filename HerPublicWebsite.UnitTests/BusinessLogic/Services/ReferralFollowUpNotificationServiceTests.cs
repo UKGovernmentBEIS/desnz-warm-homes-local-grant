@@ -24,7 +24,8 @@ public class ReferralFollowUpNotificationServiceTests
     private Mock<IWorkingDayHelperService> mockWorkingDayHelperService;
     private Mock<IReferralFollowUpService> mockReferralFollowUpService;
     private Mock<IEmailSender> mockEmailSender;
-    private Mock<IReferralFilterService> mockReferralFilterService;
+    private Mock<IDateHelper> mockDateHelper;
+    private IReferralFilterService referralFilterService;
     private ReferralFollowUpNotificationService referralFollowUpNotificationService;
 
     [SetUp]
@@ -43,7 +44,8 @@ public class ReferralFollowUpNotificationServiceTests
         mockWorkingDayHelperService = new Mock<IWorkingDayHelperService>();
         mockReferralFollowUpService = new Mock<IReferralFollowUpService>();
         mockEmailSender = new Mock<IEmailSender>();
-        mockReferralFilterService = new Mock<IReferralFilterService>();
+        mockDateHelper = new Mock<IDateHelper>();
+        referralFilterService = new ReferralFilterService(mockDateHelper.Object);
 
         referralFollowUpNotificationService = new ReferralFollowUpNotificationService(
             globalConfig.AsOptions(),
@@ -53,7 +55,7 @@ public class ReferralFollowUpNotificationServiceTests
             mockCsvFileCreator.Object,
             mockWorkingDayHelperService.Object,
             mockReferralFollowUpService.Object,
-            mockReferralFilterService.Object);
+            referralFilterService);
     }
 
     [Test]
@@ -61,28 +63,21 @@ public class ReferralFollowUpNotificationServiceTests
     {
         // Arrange
         var validReferral = new ReferralRequestBuilder(1)
+            .WithWasSubmittedToPendingLocalAuthority(false)
             .Build();
         var invalidReferral = new ReferralRequestBuilder(2)
+            .WithWasSubmittedToPendingLocalAuthority(true)
             .Build();
         
         var allReferrals = new List<ReferralRequest>()
         {
             validReferral, invalidReferral
         };
-        var filteredReferrals = new List<ReferralRequest>()
-        {
-            validReferral
-        };
 
         mockDataProvider
             .Setup(dp =>
                 dp.GetReferralRequestsWithNoFollowUpBetweenDates(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
             .ReturnsAsync(allReferrals);
-
-        mockReferralFilterService
-            .Setup(rfs =>
-                rfs.FilterForSentToNonPending(allReferrals))
-            .Returns(filteredReferrals);
         
         var referralFollowUp = new ReferralRequestFollowUpBuilder(1)
             .WithToken("token1")
