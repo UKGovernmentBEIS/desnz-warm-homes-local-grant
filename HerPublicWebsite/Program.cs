@@ -46,7 +46,7 @@ namespace HerPublicWebsite
             recurringJobManager.AddOrUpdate<UnsubmittedReferralRequestsService>(
                 "Write unsubmitted referral requests to csv",
                 service => service.WriteUnsubmittedReferralRequestsToCsv(),
-                "00 15 * * *"); // at 00:45 every day
+                "45 00 * * *"); // at 00:45 every day
             
             recurringJobManager.AddOrUpdate<PolicyTeamUpdateService>(
                 "Send policy team update email",
