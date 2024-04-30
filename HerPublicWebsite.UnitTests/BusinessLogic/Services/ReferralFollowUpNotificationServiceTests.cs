@@ -69,7 +69,7 @@ public class ReferralFollowUpNotificationServiceTests
             .WithWasSubmittedToPendingLocalAuthority(true)
             .Build();
         
-        var allReferrals = new List<ReferralRequest>()
+        var allReferrals = new List<ReferralRequest>
         {
             validReferral, invalidReferral
         };

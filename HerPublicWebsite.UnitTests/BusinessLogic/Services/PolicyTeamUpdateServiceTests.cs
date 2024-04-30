@@ -53,11 +53,11 @@ public class PolicyTeamUpdateServiceTests
             .WithWasSubmittedToPendingLocalAuthority(true)
             .Build();
         
-        var allReferrals = new List<ReferralRequest>()
+        var allReferrals = new List<ReferralRequest>
         {
             validReferral, invalidReferral
         };
-        var filteredReferrals = new List<ReferralRequest>()
+        var filteredReferrals = new List<ReferralRequest>
         {
             validReferral
         };
