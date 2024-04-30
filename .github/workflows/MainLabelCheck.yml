@@ -15,5 +15,5 @@ jobs:
         uses: actions/github-script@v3
         with:
           script: |
-            core.setFailed('label is missing')
+            core.setFailed("Label is missing: add a 'production release' label in order to merge to main")
         
