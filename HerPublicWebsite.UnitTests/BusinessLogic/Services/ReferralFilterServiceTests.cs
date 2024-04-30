@@ -12,10 +12,10 @@ using static HerPublicWebsite.BusinessLogic.Models.LocalAuthorityData;
 
 namespace Tests.BusinessLogic.Services;
 
-public class PendingReferralFilterServiceTests
+public class ReferralFilterServiceTests
 {
     private Mock<IDateHelper> mockDateHelper;
-    private PendingReferralFilterService pendingReferralFilterService;
+    private ReferralFilterService referralFilterService;
     private DateTime startOfPreviousMonth;
 
     [SetUp]
@@ -25,7 +25,7 @@ public class PendingReferralFilterServiceTests
         mockDateHelper = new Mock<IDateHelper>();
         mockDateHelper.Setup(mdh => mdh.GetStartOfPreviousMonth()).Returns(startOfPreviousMonth);
         
-        pendingReferralFilterService = new PendingReferralFilterService(mockDateHelper.Object);
+        referralFilterService = new ReferralFilterService(mockDateHelper.Object);
     }
 
     // If LA is now pending, include.
@@ -45,7 +45,7 @@ public class PendingReferralFilterServiceTests
         var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
         
         // Act
-        var outputReferralRequests = pendingReferralFilterService
+        var outputReferralRequests = referralFilterService
             .FilterForPendingReferralReport(inputReferralRequests);
         
         // Assert
@@ -65,8 +65,42 @@ public class PendingReferralFilterServiceTests
         var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
         
         // Act
-        var outputReferralRequests = pendingReferralFilterService
+        var outputReferralRequests = referralFilterService
             .FilterForPendingReferralReport(inputReferralRequests);
+        
+        // Assert
+        outputReferralRequests.Should().NotContain(inputReferralRequest);
+    }
+    
+    [Test]
+    public void FilterForSentToNonPending_WhenCalledWithReferralSendToNonPendingLa_DoesIncludeInFilter()
+    {
+        // Arrange
+        var inputReferralRequest = new ReferralRequestBuilder(10)
+            .WithWasSubmittedToPendingLocalAuthority(false)
+            .Build();
+        var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
+        
+        // Act
+        var outputReferralRequests = referralFilterService
+            .FilterForSentToNonPending(inputReferralRequests);
+        
+        // Assert
+        outputReferralRequests.Should().Contain(inputReferralRequest);
+    }
+    
+    [Test]
+    public void FilterForSentToNonPending_WhenCalledWithReferralSendToPendingLa_DoesNotIncludeInFilter()
+    {
+        // Arrange
+        var inputReferralRequest = new ReferralRequestBuilder(10)
+            .WithWasSubmittedToPendingLocalAuthority(true)
+            .Build();
+        var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
+        
+        // Act
+        var outputReferralRequests = referralFilterService
+            .FilterForSentToNonPending(inputReferralRequests);
         
         // Assert
         outputReferralRequests.Should().NotContain(inputReferralRequest);
