@@ -41,7 +41,7 @@ namespace HerPublicWebsite
             recurringJobManager.AddOrUpdate<ReferralFollowUpNotificationService>(
                 "Get referrals passed ten day working threshold with no follow up",
                 service => service.SendReferralFollowUpNotifications(),
-                "30 0 * * *"); // at 00:30 every day
+                "* * * * *"); // every minute
             
             recurringJobManager.AddOrUpdate<UnsubmittedReferralRequestsService>(
                 "Write unsubmitted referral requests to csv",
@@ -51,7 +51,7 @@ namespace HerPublicWebsite
             recurringJobManager.AddOrUpdate<PolicyTeamUpdateService>(
                 "Send policy team update email",
                 service => service.SendPolicyTeamUpdate(),
-                "0 7 * * 1"); // at 07:00 on Monday
+                "*/5 * * * *"); // every 5 minutes
                 
             recurringJobManager.AddOrUpdate<PendingReferralNotificationService>(
                 "Send monthly pending referral report",
