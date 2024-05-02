@@ -385,7 +385,7 @@ public class LocalAuthorityData
         { "1840", new LocalAuthorityDetails("Wychavon District Council", Hug2Status.Pending, "http://www.wychavon.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "2370", new LocalAuthorityDetails("Wyre Council", Hug2Status.Live, "http://www.wyre.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Blackpool") },
         { "1845", new LocalAuthorityDetails("Wyre Forest District Council", Hug2Status.Live, "https://www.wyreforestdc.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
-        { "2741", new LocalAuthorityDetails("City of York Council", Hug2Status.Pending, "https://www.york.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "2741", new LocalAuthorityDetails("City of York Council", Hug2Status.Live, "https://www.york.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
     };
 }
 
