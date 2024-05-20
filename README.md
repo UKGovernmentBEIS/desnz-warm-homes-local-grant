@@ -38,6 +38,7 @@ Doing a release to staging:
 Doing a release to production:
 - Ensure all sign-offs are in place
 - Merge `staging` into `main`
+   - To merge to main, the `production release` label must be applied to your pull request
 - Deploy this branch into the production environment
 - Perform any post go-live checks
 
@@ -45,6 +46,7 @@ For critical bug fixes on production
 - Create a hotfix branch from `main`, e.g. `hotfix/update-service-name`
 - Make changes on the branch
 - Raise a PR back to `main` once the bug is fixed
+   - To merge to main, the `production release` label must be applied to your pull request
 - If the PR is accepted, merge the branch into `main`
 - Then also merge the branch into `develop`
 
