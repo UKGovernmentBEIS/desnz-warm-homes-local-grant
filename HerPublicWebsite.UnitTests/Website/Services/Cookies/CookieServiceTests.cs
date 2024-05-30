@@ -154,7 +154,7 @@ public class CookieServiceTests
         // Assert
         bannerState.Should().Be(BannerState.Hide);
     }
-    
+
     [TestCaseSource(nameof(CookieServiceTestCases))]
     public void ShowsBannerIfSettingsAreOutdatedOrMissing(CookieServiceTestCase testCase)
     {
@@ -164,17 +164,17 @@ public class CookieServiceTests
         var request = context.Request;
         var response = context.Response;
         request.Headers.Cookie = $"{Key}={ConvertObjectToHttpHeaderSrting(value)}";
-        
-        // Precondition
+
+        // Precondition: the only cases we are testing are 'Missing cookie' and 'Outdated version'
         Assume.That(!CookieService.CookieSettingsAreUpToDate(request));
 
         // Act
         var bannerState = CookieService.GetAndUpdateBannerState(request, response);
-        
+
         // Assert
         bannerState.Should().Be(BannerState.ShowBanner);
     }
-    
+
     [TestCaseSource(nameof(CookieServiceTestCases))]
     public void HidesBannerIfCookiesWereSetAndConfirmationWasShown(CookieServiceTestCase testCase)
     {
@@ -184,18 +184,19 @@ public class CookieServiceTests
         var request = context.Request;
         var response = context.Response;
         request.Headers.Cookie = $"{Key}={ConvertObjectToHttpHeaderSrting(value)}";
-        
-        // Precondition
+
+        // Precondition: the only cases we are testing are 'Accepted latest cookies' and 'Rejected analytics and
+        // confirmation shown'
         Assume.That(CookieService.CookieSettingsAreUpToDate(request));
         Assume.That(value.ConfirmationShown);
 
         // Act
         var bannerState = CookieService.GetAndUpdateBannerState(request, response);
-        
+
         // Assert
         bannerState.Should().Be(BannerState.Hide);
     }
-    
+
     [TestCaseSource(nameof(CookieServiceTestCases))]
     public void ShowsConfirmationBannerAndUpdatesRequestCookieIfItWasNotShownAlready(CookieServiceTestCase testCase)
     {
@@ -205,14 +206,14 @@ public class CookieServiceTests
         var request = context.Request;
         var response = context.Response;
         request.Headers.Cookie = $"{Key}={ConvertObjectToHttpHeaderSrting(value)}";
-        
-        // Precondition
+
+        // Precondition: the only case we are testing is 'Rejected analytics and confirmation not shown'
         Assume.That(CookieService.CookieSettingsAreUpToDate(request));
         Assume.That(!value.ConfirmationShown);
 
         // Act
         var bannerState = CookieService.GetAndUpdateBannerState(request, response);
-        
+
         // Assert
         var expectedBannerState = value.GoogleAnalytics ? BannerState.ShowAccepted : BannerState.ShowRejected;
         bannerState.Should().Be(expectedBannerState);
