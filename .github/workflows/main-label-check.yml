@@ -2,7 +2,13 @@ name: main_label_check
 
 on:
   pull_request:
-    types: [opened, edited, labeled, unlabeled]
+    types:
+      - opened
+      - edited
+      - labeled
+      - reopened
+      - synchronize
+      - unlabeled
 
 jobs:
   label_check:
