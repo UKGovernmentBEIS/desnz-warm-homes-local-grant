@@ -3,9 +3,7 @@ name: Run automated tests
 on:
   pull_request:
     branches:
-      - develop
-      - staging
-      - main
+      - '**'
   push:
     branches:
       - develop
