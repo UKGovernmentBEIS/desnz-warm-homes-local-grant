@@ -166,7 +166,7 @@ public class LocalAuthorityData
         { "6810", new LocalAuthorityDetails("Gwynedd Council", Hug2Status.NotTakingPart, "https://www.gwynedd.llyw.cymru/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "5360", new LocalAuthorityDetails("Hackney Council", Hug2Status.NotParticipating, "http://www.hackney.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
         { "650", new LocalAuthorityDetails("Halton Borough Council", Hug2Status.Live, "http://www.halton.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Liverpool City Region Combined Authority") },
-        { "5390", new LocalAuthorityDetails("London Borough of Hammersmith & Fulham", Hug2Status.NotParticipating, "http://www.lbhf.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
+        { "5390", new LocalAuthorityDetails("London Borough of Hammersmith and Fulham", Hug2Status.NotParticipating, "http://www.lbhf.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
         { "2415", new LocalAuthorityDetails("Harborough District Council", Hug2Status.Pending, "http://www.harborough.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "1540", new LocalAuthorityDetails("Harlow District Council", Hug2Status.Live, "http://www.harlow.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cambridgeshire and Peterborough Combined Authority") },
         { "5450", new LocalAuthorityDetails("London Borough of Harrow", Hug2Status.NotParticipating, "https://www.harrow.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
