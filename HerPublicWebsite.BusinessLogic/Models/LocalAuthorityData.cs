@@ -31,6 +31,8 @@ public class LocalAuthorityData
 
     // The list of custodian codes comes from the publicly available "Local custodian codes" download link
     // on https://www.ordnancesurvey.co.uk/business-government/tools-support/addressbase-support
+    // the download link itself can be found within the technical specification for the OS Places API
+    // here: https://osdatahub.os.uk/docs/places/technicalSpecification
     // The local authority names and websites mainly come from the local-links-manager Gov.UK service
     // https://docs.publishing.service.gov.uk/repos/local-links-manager/checking-links.html
     public static readonly Dictionary<string, LocalAuthorityDetails> LocalAuthorityDetailsByCustodianCode = new()
@@ -79,7 +81,7 @@ public class LocalAuthorityData
         { "2315", new LocalAuthorityDetails("Burnley Borough Council", Hug2Status.Live, "http://www.burnley.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Blackpool Council") },
         { "4210", new LocalAuthorityDetails("Bury Metropolitan Borough Council", Hug2Status.NotTakingPart, "https://www.bury.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "6920", new LocalAuthorityDetails("Caerphilly County Borough Council", Hug2Status.NotTakingPart, "http://www.caerphilly.gov.uk", IncomeBandOptions[IncomeThreshold._36000], null) },
-        { "4710", new LocalAuthorityDetails("Calderdale Metropolitan Borough Council", Hug2Status.Pending, "http://www.calderdale.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "4710", new LocalAuthorityDetails("Calderdale Council", Hug2Status.Pending, "http://www.calderdale.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "505", new LocalAuthorityDetails("Cambridge City Council", Hug2Status.Live, "https://www.cambridge.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cambridge City Council") },
         { "5210", new LocalAuthorityDetails("Camden Council", Hug2Status.NotParticipating, "https://www.camden.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
         { "3405", new LocalAuthorityDetails("Cannock Chase District Council", Hug2Status.Pending, "http://www.cannockchasedc.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
@@ -112,7 +114,7 @@ public class LocalAuthorityData
         { "1610", new LocalAuthorityDetails("Cotswold District Council", Hug2Status.Live, "https://www.cotswold.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Stroud District Council") },
         { "4610", new LocalAuthorityDetails("Coventry City Council", Hug2Status.Pending, "https://www.coventry.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "3820", new LocalAuthorityDetails("Crawley Borough Council", Hug2Status.Live, "https://crawley.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
-        { "5240", new LocalAuthorityDetails("London Borough of Croydon", Hug2Status.Live, "http://www.croydon.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
+        { "5240", new LocalAuthorityDetails("Croydon Council", Hug2Status.Live, "http://www.croydon.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
         { "940", new LocalAuthorityDetails("Cumberland Council", Hug2Status.NotTakingPart, "https://www.cumberland.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cumberland Council and Westmoreland and Furness") },
         { "1910", new LocalAuthorityDetails("Dacorum Borough Council", Hug2Status.Live, "http://www.dacorum.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cambridgeshire and Peterborough Combined Authority") },
         { "1350", new LocalAuthorityDetails("Darlington Borough Council", Hug2Status.Pending, "https://www.darlington.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Darlington Borough Council") },
@@ -292,7 +294,7 @@ public class LocalAuthorityData
         { "2245", new LocalAuthorityDetails("Sevenoaks District Council", Hug2Status.Live, "http://www.sevenoaks.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "4420", new LocalAuthorityDetails("Sheffield City Council", Hug2Status.Live, "https://www.sheffield.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "9010", new LocalAuthorityDetails("Shetland Islands Council", Hug2Status.NotTakingPart, "https://www.shetland.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
-        { "3245", new LocalAuthorityDetails("Shropshire Council", Hug2Status.Live, "http://www.shropshire.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
+        { "3245", new LocalAuthorityDetails("Shropshire County Council", Hug2Status.Live, "http://www.shropshire.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "350", new LocalAuthorityDetails("Slough Borough Council", Hug2Status.Live, "https://www.slough.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cambridgeshire and Peterborough Combined Authority") },
         { "4625", new LocalAuthorityDetails("Solihull Borough Council", Hug2Status.Pending, "https://www.solihull.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "3300", new LocalAuthorityDetails("Somerset Council", Hug2Status.Live, "https://www.somerset.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
@@ -350,7 +352,7 @@ public class LocalAuthorityData
         { "1570", new LocalAuthorityDetails("Uttlesford District Council", Hug2Status.Live, "https://www.uttlesford.gov.uk/home", IncomeBandOptions[IncomeThreshold._36000], "Cambridgeshire and Peterborough Combined Authority") },
         { "6950", new LocalAuthorityDetails("Vale of Glamorgan Council", Hug2Status.NotTakingPart, "https://valeofglamorgan.gov.uk/en/index.aspx", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "3120", new LocalAuthorityDetails("Vale of White Horse District Council", Hug2Status.Live, "http://www.whitehorsedc.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Oxfordshire County Council") },
-        { "4725", new LocalAuthorityDetails("Wakefield Metropolitan District Council", Hug2Status.Live, "https://www.wakefield.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "4725", new LocalAuthorityDetails("Wakefield Council", Hug2Status.Live, "https://www.wakefield.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "4630", new LocalAuthorityDetails("Walsall Metropolitan Borough Council", Hug2Status.Live, "https://go.walsall.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "5930", new LocalAuthorityDetails("London Borough of Waltham Forest", Hug2Status.NotParticipating, "https://www.walthamforest.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
         { "5960", new LocalAuthorityDetails("Wandsworth London Borough Council", Hug2Status.NotParticipating, "https://www.wandsworth.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
@@ -375,11 +377,12 @@ public class LocalAuthorityData
         { "3940", new LocalAuthorityDetails("Wiltshire Council", Hug2Status.Live, "https://www.wiltshire.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1765", new LocalAuthorityDetails("Winchester City Council", Hug2Status.Live, "https://www.winchester.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
         { "355", new LocalAuthorityDetails("Windsor and Maidenhead Borough Council", Hug2Status.Live, "http://www.rbwm.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cambridgeshire and Peterborough Combined Authority") },
-        { "4325", new LocalAuthorityDetails("Wirral Council", Hug2Status.Live, "http://www.wirral.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "4325", new LocalAuthorityDetails("Wirral Council", Hug2Status.Live, "http://www.wirral.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Liverpool City Region Combined Authority") },
         { "3655", new LocalAuthorityDetails("Woking Borough Council", Hug2Status.Live, "https://www.woking.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Surrey County Council") },
         { "360", new LocalAuthorityDetails("Wokingham Borough Council", Hug2Status.Live, "https://www.wokingham.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cambridgeshire and Peterborough Combined Authority") },
         { "4635", new LocalAuthorityDetails("Wolverhampton City Council", Hug2Status.Pending, "http://www.wolverhampton.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "1835", new LocalAuthorityDetails("Worcester City Council", Hug2Status.Pending, "http://www.worcester.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
+        { "1855", new LocalAuthorityDetails("Worcestershire County Council", Hug2Status.Pending, "http://www.worcestershire.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "3835", new LocalAuthorityDetails("Worthing Borough Council", Hug2Status.Live, "https://www.adur-worthing.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
         { "6955", new LocalAuthorityDetails("Wrexham County Borough Council", Hug2Status.NotTakingPart, "http://www.wrexham.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1840", new LocalAuthorityDetails("Wychavon District Council", Hug2Status.Pending, "http://www.wychavon.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },

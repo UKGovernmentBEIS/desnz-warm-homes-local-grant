@@ -154,7 +154,7 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
 "Consortium,Local Authority,Referral Code\r\n" +
-"Bristol,Bath and North East Somerset Council,DummyCode00001\r\n");
+"Bristol City Council,Bath and North East Somerset Council,DummyCode00001\r\n");
     }
     
     [Test]
@@ -233,7 +233,7 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
             "SLA Report Date,Consortium,Consortium All Referrals Downloaded,Consortium Number of Referrals Not Downloaded,"+
             "Consortium Percentage of Referrals Not Downloaded,Consortium All Referrals Contacted,"+
             "Consortium Number of Referrals Not Contacted,Consortium Percentage of Referrals Not Contacted\r\n"+
-            $"{today},Bristol,False,3,60,False,2,40\r\n" // Custodian codes 114 and 121 
+            $"{today},Bristol City Council,False,3,60,False,2,40\r\n" // Custodian codes 114 and 121 
             ); // Stats for 9052 and 1505 with no Consortium name should not appear as LAs with no Consortium should not be included
         
     }
@@ -277,8 +277,8 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
             "Consortium,Local Authority,Referral Date,Referral Code,Name,Email,Telephone,Local Authority Status\r\n" + 
-            "Bristol,Bath and North East Somerset Council,2024-03-05 01:00:00,TEST0001,Test User 1,test1@example.com,111,Live\r\n" +
-            "Cambridgeshire & Peterborough Combined Authority,Bedford Borough Council,2024-02-05 01:00:00,TEST0002,Test User 2,test2@example.com,,Live\r\n" +
-            "Bristol,North Somerset Council,2024-01-05 01:00:00,TEST0003,Test User 3,,333,Live\r\n");
+            "Bristol City Council,Bath and North East Somerset Council,2024-03-05 01:00:00,TEST0001,Test User 1,test1@example.com,111,Live\r\n" +
+            "Cambridgeshire and Peterborough Combined Authority,Bedford Borough Council,2024-02-05 01:00:00,TEST0002,Test User 2,test2@example.com,,Live\r\n" +
+            "Bristol City Council,North Somerset Council,2024-01-05 01:00:00,TEST0003,Test User 3,,333,Live\r\n");
     }
 }
