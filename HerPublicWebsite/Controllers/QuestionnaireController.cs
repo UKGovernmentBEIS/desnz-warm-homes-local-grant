@@ -849,7 +849,7 @@ public class QuestionnaireController : Controller
     {
         var partialViewName = questionnaire.CustodianCode switch
         {
-            "2605" or "2610" or "2620" or "2625" or "2630" or "2635" => "Broadland",
+            "2605" or "2610" or "2620" or "2625" or "2630" or "2635" => "BroadlandDistrictCouncil",
             _ => "Default"
         };
         return $"~/Views/Partials/LocalAuthorityMessages/NotParticipating/{partialViewName}.cshtml";
