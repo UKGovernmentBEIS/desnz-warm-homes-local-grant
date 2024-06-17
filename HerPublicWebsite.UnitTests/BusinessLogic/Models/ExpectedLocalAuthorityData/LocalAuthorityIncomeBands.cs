@@ -357,6 +357,7 @@ internal static class LocalAuthorityIncomeBands
             { "360", ThresholdAt36000 },
             { "4635", ThresholdAt36000 },
             { "1835", ThresholdAt36000 },
+            { "1855", ThresholdAt36000 },
             { "3835", ThresholdAt36000 },
             { "6955", ThresholdAt36000 },
             { "1840", ThresholdAt36000 },

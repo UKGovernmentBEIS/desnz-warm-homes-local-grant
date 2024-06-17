@@ -353,6 +353,7 @@ internal static class LocalAuthorityWebsiteUrls
             { "360", "https://www.wokingham.gov.uk/" },
             { "4635", "http://www.wolverhampton.gov.uk" },
             { "1835", "http://www.worcester.gov.uk" },
+            { "1855", "http://www.worcestershire.gov.uk" },
             { "3835", "https://www.adur-worthing.gov.uk/" },
             { "6955", "http://www.wrexham.gov.uk/" },
             { "1840", "http://www.wychavon.gov.uk/" },

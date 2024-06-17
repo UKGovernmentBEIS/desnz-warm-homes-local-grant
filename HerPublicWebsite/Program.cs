@@ -28,7 +28,12 @@ namespace HerPublicWebsite
 
             startup.Configure(app, app.Environment);
 
-            // Migrate the database if it's out of date
+            // Migrate the database if it's out of date. Ideally we wouldn't do this on app startup for our deployed
+            // environments, because we're risking multiple containers attempting to run the migrations concurrently and
+            // getting into a mess. However, we very rarely add migrations at this point, so in practice it's easier to
+            // risk it and keep an eye on the deployment: we should be doing rolling deployments anyway which makes it
+            // very unlikely we run into concurrency issues. If that changes though we should look at moving migrations
+            // to a deployment pipeline step, and only doing the following locally (PC-1151).
             using var scope = app.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<HerDbContext>();
             dbContext.Database.Migrate();
