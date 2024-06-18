@@ -3,9 +3,7 @@ name: Run automated tests
 on:
   pull_request:
     branches:
-      - develop
-      - staging
-      - main
+      - '**'
   push:
     branches:
       - develop
@@ -16,51 +14,51 @@ jobs:
   build-and-run-tests:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code onto job runner
-      uses: actions/checkout@v2
+      - name: Checkout code onto job runner
+        uses: actions/checkout@v2
 
-    - name: Install .Net (6.0)
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
+      - name: Install .Net (6.0)
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
 
-    - name: Restore .Net dependencies
-      run: dotnet restore --configfile nuget.config
+      - name: Restore .Net dependencies
+        run: dotnet restore --configfile nuget.config
 
-    - name: Build .Net code
-      run: dotnet build --no-restore
+      - name: Build .Net code
+        run: dotnet build --no-restore
 
-    - name: Run tests
-      run: dotnet test --no-restore --logger trx --results-directory "TestResults" --collect:"XPlat Code Coverage" --settings HerPublicWebsite.UnitTests/coverlet.runsettings
+      - name: Run tests
+        run: dotnet test --no-restore --logger trx --results-directory "TestResults" --collect:"XPlat Code Coverage" --settings HerPublicWebsite.UnitTests/coverlet.runsettings
 
-    - name: Inline code coverage report and minimum coverage check
-      uses: irongut/CodeCoverageSummary@v1.3.0
-      with:
-        filename: TestResults/*/coverage.cobertura.xml
-        badge: false
-        fail_below_min: true
-        format: text
-        hide_branch_rate: false
-        hide_complexity: false
-        indicators: true
-        output: console
-        # Threshold is currently very low as we don't test the website very much
-        thresholds: '40 80'
-      # Use always() to always run this step to publish coverage results when there are test failures
-      if: ${{ always() }}
-        
-    - name: Generate detailed code coverage report
-      uses: danielpalme/ReportGenerator-GitHub-Action@5.1.23
-      with:
-        reports: TestResults/*/coverage.cobertura.xml
-        targetdir: TestResults/CoverageReport
-      # Use always() to always run this step to publish coverage report when there are test failures
-      if: ${{ always() }}
-        
-    - name: Upload dotnet test results
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-results
-        path: TestResults
-      # Use always() to always run this step to publish test results when there are test failures
-      if: ${{ always() }}
+      - name: Inline code coverage report and minimum coverage check
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: TestResults/*/coverage.cobertura.xml
+          badge: false
+          fail_below_min: true
+          format: text
+          hide_branch_rate: false
+          hide_complexity: false
+          indicators: true
+          output: console
+          # Threshold is currently very low as we don't test the website very much
+          thresholds: '40 80'
+        # Use always() to always run this step to publish coverage results when there are test failures
+        if: ${{ always() }}
+
+      - name: Generate detailed code coverage report
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.23
+        with:
+          reports: TestResults/*/coverage.cobertura.xml
+          targetdir: TestResults/CoverageReport
+        # Use always() to always run this step to publish coverage report when there are test failures
+        if: ${{ always() }}
+
+      - name: Upload dotnet test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: TestResults
+        # Use always() to always run this step to publish test results when there are test failures
+        if: ${{ always() }}
