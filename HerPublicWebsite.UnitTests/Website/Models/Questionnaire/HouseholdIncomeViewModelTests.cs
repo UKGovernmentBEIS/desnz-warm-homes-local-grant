@@ -12,31 +12,31 @@ public class HouseholdIncomeViewModelTests
     public void IncomeBandOptions_ForMissingCustoidanCode_ReturnsNull()
     {
         // Arrange
-        var underTest = new HouseholdIncomeViewModel()
+        var underTest = new HouseholdIncomeViewModel
         {
             CustodianCode = null
         };
-        
+
         // Act
         var result = underTest.IncomeBandOptions;
-        
+
         // Assert
         result.Should().BeNull();
     }
-    
+
     [Test]
     public void IncomeBandOptions_ForCustoidanCode_ReturnsCorrectBands()
     {
         // Arrange
-        var underTest = new HouseholdIncomeViewModel()
+        var underTest = new HouseholdIncomeViewModel
         {
-            CustodianCode = "9052" // Aberdeenshire is configure with a £31,000 threshold and shouldn't change as it isn't taking part in HUG2
+            CustodianCode = "9052" // Aberdeenshire is configure with a £36,000 threshold
         };
-        
+
         // Act
         var result = underTest.IncomeBandOptions;
-        
+
         // Assert
-        result.Should().BeEquivalentTo(new [] { IncomeBand.UnderOrEqualTo36000, IncomeBand.GreaterThan36000 });
+        result.Should().BeEquivalentTo(new[] { IncomeBand.UnderOrEqualTo36000, IncomeBand.GreaterThan36000 });
     }
 }
