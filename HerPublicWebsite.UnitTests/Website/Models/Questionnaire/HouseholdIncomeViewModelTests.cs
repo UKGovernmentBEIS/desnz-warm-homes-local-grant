@@ -30,7 +30,7 @@ public class HouseholdIncomeViewModelTests
         // Arrange
         var underTest = new HouseholdIncomeViewModel
         {
-            CustodianCode = "9052" // Aberdeenshire is configure with a £36,000 threshold
+            CustodianCode = "9052" // Aberdeenshire is configured with a £36,000 threshold
         };
 
         // Act

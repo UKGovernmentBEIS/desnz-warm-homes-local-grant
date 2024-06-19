@@ -469,7 +469,7 @@ public class QuestionnaireTests
         // Arrange
         var questionnaire = new Questionnaire()
         {
-            CustodianCode = "9052", // Aberdeenshire is configure with a £36,000 threshold
+            CustodianCode = "9052", // Aberdeenshire is configured with a £36,000 threshold
             IncomeBand = incomeBand
         };
         
@@ -487,7 +487,7 @@ public class QuestionnaireTests
         // Arrange
         var questionnaire = new Questionnaire()
         {
-            CustodianCode = "9052", // Aberdeenshire is configure with a £36,000 threshold
+            CustodianCode = "9052", // Aberdeenshire is configured with a £36,000 threshold
             IncomeBand = incomeBand
         };
         
