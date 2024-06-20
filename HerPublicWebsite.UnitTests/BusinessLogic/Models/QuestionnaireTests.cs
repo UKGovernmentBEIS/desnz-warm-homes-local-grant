@@ -449,7 +449,7 @@ public class QuestionnaireTests
         // Arrange
         var questionnaire = new Questionnaire()
         {
-            CustodianCode = "9052", // Aberdeenshire is configure with a £31,000 threshold and shouldn't change as it isn't taking part in HUG2
+            CustodianCode = "9052",
             IncomeBand = null
         };
         
@@ -469,7 +469,7 @@ public class QuestionnaireTests
         // Arrange
         var questionnaire = new Questionnaire()
         {
-            CustodianCode = "9052", // Aberdeenshire is configure with a £31,000 threshold and shouldn't change as it isn't taking part in HUG2
+            CustodianCode = "9052", // Aberdeenshire is configured with a £36,000 threshold
             IncomeBand = incomeBand
         };
         
@@ -487,7 +487,7 @@ public class QuestionnaireTests
         // Arrange
         var questionnaire = new Questionnaire()
         {
-            CustodianCode = "9052", // Aberdeenshire is configure with a £31,000 threshold and shouldn't change as it isn't taking part in HUG2
+            CustodianCode = "9052", // Aberdeenshire is configured with a £36,000 threshold
             IncomeBand = incomeBand
         };
         

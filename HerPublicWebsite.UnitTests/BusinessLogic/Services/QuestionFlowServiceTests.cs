@@ -163,7 +163,8 @@ public class QuestionFlowServiceTests
         new(
             "Household income goes back to address if EPC is too high, but expired",
             new Input(
-                QuestionFlowStep.HouseholdIncome, uprn: "100023336956", epcRating: EpcRating.B, epcExpiry: DateTime.MinValue
+                QuestionFlowStep.HouseholdIncome, uprn: "100023336956", epcRating: EpcRating.B,
+                epcExpiry: DateTime.MinValue
             ),
             QuestionFlowStep.Address),
         new(
@@ -314,7 +315,7 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.HouseholdIncome,
                 entryPoint: QuestionFlowStep.HouseholdIncome
             ),
-            QuestionFlowStep.CheckAnswers),
+            QuestionFlowStep.CheckAnswers)
     };
 
     private static QuestionFlowServiceTestCase[] ForwardTestCases =
@@ -323,14 +324,14 @@ public class QuestionFlowServiceTests
             "Gas boiler continues to direct to ECO if the user has a boiler",
             new Input(
                 QuestionFlowStep.GasBoiler,
-                hasGasBoiler: HasGasBoiler.Yes
+                HasGasBoiler.Yes
             ),
             QuestionFlowStep.DirectToEco),
         new(
             "Gas boiler continues to country if the user doesn't have a boiler",
             new Input(
                 QuestionFlowStep.GasBoiler,
-                hasGasBoiler: HasGasBoiler.No
+                HasGasBoiler.No
             ),
             QuestionFlowStep.Country),
         new(
@@ -519,7 +520,7 @@ public class QuestionFlowServiceTests
             "Gas boiler continues to direct to ECO if the user has a boiler and was changing answer",
             new Input(
                 QuestionFlowStep.GasBoiler,
-                hasGasBoiler: HasGasBoiler.Yes,
+                HasGasBoiler.Yes,
                 entryPoint: QuestionFlowStep.GasBoiler
             ),
             QuestionFlowStep.DirectToEco),
@@ -527,7 +528,7 @@ public class QuestionFlowServiceTests
             "Gas boiler returns to check answers if user doesn't have a boiler, and was changing answer",
             new Input(
                 QuestionFlowStep.GasBoiler,
-                hasGasBoiler: HasGasBoiler.No,
+                HasGasBoiler.No,
                 entryPoint: QuestionFlowStep.GasBoiler
             ),
             QuestionFlowStep.CheckAnswers),
@@ -721,7 +722,7 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.HouseholdIncome,
                 entryPoint: QuestionFlowStep.HouseholdIncome
             ),
-            QuestionFlowStep.CheckAnswers),
+            QuestionFlowStep.CheckAnswers)
     };
 
     public class QuestionFlowServiceTestCase
@@ -764,7 +765,7 @@ public class QuestionFlowServiceTests
             DateTime? epcExpiry = null,
             IncomeBand? incomeBand = IncomeBand.UnderOrEqualTo36000,
             bool localAuthorityIsCorrect = false,
-            string custodianCode = "3505", // Babergh has income threshold of £31,000 and is live
+            string custodianCode = "3505", // Babergh has income threshold of £36,000 and is live
             QuestionFlowStep? entryPoint = null)
         {
             Page = page;
@@ -775,10 +776,11 @@ public class QuestionFlowServiceTests
                 OwnershipStatus = ownershipStatus,
                 Country = country,
                 EpcDetailsAreCorrect = epcDetailsAreCorrect,
-                EpcDetails = epcRating == null ? null : new EpcDetails { EpcRating = epcRating, ExpiryDate = epcExpiry },
+                EpcDetails =
+                    epcRating == null ? null : new EpcDetails { EpcRating = epcRating, ExpiryDate = epcExpiry },
                 IncomeBand = incomeBand,
                 LocalAuthorityConfirmed = localAuthorityIsCorrect,
-                CustodianCode = custodianCode,
+                CustodianCode = custodianCode
             };
             EntryPoint = entryPoint;
         }
