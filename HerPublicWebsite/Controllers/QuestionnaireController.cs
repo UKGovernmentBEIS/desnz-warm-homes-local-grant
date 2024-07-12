@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Extensions;
+using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
+using HerPublicWebsite.BusinessLogic.Services.SessionRecorder;
 using HerPublicWebsite.Extensions;
 using HerPublicWebsite.ExternalServices.GoogleAnalytics;
 using HerPublicWebsite.Filters;
@@ -23,16 +24,18 @@ namespace HerPublicWebsite.Controllers;
 [SessionExpiry]
 public class QuestionnaireController : Controller
 {
-    private readonly IQuestionFlowService questionFlowService;
     private readonly GoogleAnalyticsService googleAnalyticsService;
-    private readonly QuestionnaireService questionnaireService;
-    private readonly IOsPlacesApi osPlaces;
     private readonly ILogger logger;
+    private readonly IOsPlacesApi osPlaces;
+    private readonly IQuestionFlowService questionFlowService;
+    private readonly QuestionnaireService questionnaireService;
+    private readonly ISessionRecorderService sessionRecorderService;
 
     public QuestionnaireController(
         IQuestionFlowService questionFlowService,
         GoogleAnalyticsService googleAnalyticsService,
         QuestionnaireService questionnaireService,
+        ISessionRecorderService sessionRecorderService,
         IOsPlacesApi osPlaces,
         ILogger<QuestionnaireController> logger
     )
@@ -40,6 +43,7 @@ public class QuestionnaireController : Controller
         this.questionFlowService = questionFlowService;
         this.googleAnalyticsService = googleAnalyticsService;
         this.questionnaireService = questionnaireService;
+        this.sessionRecorderService = sessionRecorderService;
         this.osPlaces = osPlaces;
         this.logger = logger;
     }
@@ -60,10 +64,8 @@ public class QuestionnaireController : Controller
         // This metric isn't very reliable, but we can cut out false triggers from editing answers and from validation
         // failures.
         if (questionnaire.HasGasBoiler is null && triggerEvent)
-        {
             await googleAnalyticsService.SendBoilerQuestionViewedEventAsync(Request);
-        }
-        
+
         var viewModel = new GasBoilerViewModel
         {
             HasGasBoiler = questionnaire.HasGasBoiler,
@@ -77,10 +79,9 @@ public class QuestionnaireController : Controller
     [ExcludeFromSessionExpiry]
     public async Task<IActionResult> GasBoiler_Post(GasBoilerViewModel viewModel)
     {
-        if (!ModelState.IsValid)
-        {
-            return await GasBoiler_Get(viewModel.EntryPoint, false);
-        }
+        if (!ModelState.IsValid) return await GasBoiler_Get(viewModel.EntryPoint, false);
+
+        await sessionRecorderService.RecordNewSessionStarted();
 
         var questionnaire = questionnaireService.UpdateGasBoiler(viewModel.HasGasBoiler!.Value, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.GasBoiler, questionnaire, viewModel.EntryPoint);
@@ -115,10 +116,7 @@ public class QuestionnaireController : Controller
     [HttpPost("country/")]
     public IActionResult Country_Post(CountryViewModel viewModel)
     {
-        if (!ModelState.IsValid)
-        {
-            return Country_Get(viewModel.EntryPoint);
-        }
+        if (!ModelState.IsValid) return Country_Get(viewModel.EntryPoint);
 
         var questionnaire = questionnaireService.UpdateCountry(viewModel.Country!.Value, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Country, questionnaire, viewModel.EntryPoint);
@@ -131,7 +129,7 @@ public class QuestionnaireController : Controller
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
 
-        var viewModel = new IneligibleWalesViewModel()
+        var viewModel = new IneligibleWalesViewModel
         {
             BackLink = GetBackUrl(QuestionFlowStep.IneligibleWales, questionnaire, entryPoint)
         };
@@ -144,7 +142,7 @@ public class QuestionnaireController : Controller
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
 
-        var viewModel = new IneligibleScotlandViewModel()
+        var viewModel = new IneligibleScotlandViewModel
         {
             BackLink = GetBackUrl(QuestionFlowStep.IneligibleScotland, questionnaire, entryPoint)
         };
@@ -157,7 +155,7 @@ public class QuestionnaireController : Controller
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
 
-        var viewModel = new IneligibleNorthernIrelandViewModel()
+        var viewModel = new IneligibleNorthernIrelandViewModel
         {
             BackLink = GetBackUrl(QuestionFlowStep.IneligibleNorthernIreland, questionnaire, entryPoint)
         };
@@ -170,7 +168,7 @@ public class QuestionnaireController : Controller
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
 
-        var viewModel = new OwnershipStatusViewModel()
+        var viewModel = new OwnershipStatusViewModel
         {
             OwnershipStatus = questionnaire.OwnershipStatus,
             BackLink = GetBackUrl(QuestionFlowStep.OwnershipStatus, questionnaire, entryPoint)
@@ -182,13 +180,12 @@ public class QuestionnaireController : Controller
     [HttpPost("ownership-status/")]
     public IActionResult OwnershipStatus_Post(OwnershipStatusViewModel viewModel)
     {
-        if (!ModelState.IsValid)
-        {
-            return OwnershipStatus_Get(viewModel.EntryPoint);
-        }
+        if (!ModelState.IsValid) return OwnershipStatus_Get(viewModel.EntryPoint);
 
-        var questionnaire = questionnaireService.UpdateOwnershipStatus(viewModel.OwnershipStatus!.Value, viewModel.EntryPoint);
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.OwnershipStatus, questionnaire, viewModel.EntryPoint);
+        var questionnaire =
+            questionnaireService.UpdateOwnershipStatus(viewModel.OwnershipStatus!.Value, viewModel.EntryPoint);
+        var nextStep =
+            questionFlowService.NextStep(QuestionFlowStep.OwnershipStatus, questionnaire, viewModel.EntryPoint);
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
@@ -211,7 +208,7 @@ public class QuestionnaireController : Controller
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
 
-        var viewModel = new AddressViewModel()
+        var viewModel = new AddressViewModel
         {
             BackLink = GetBackUrl(QuestionFlowStep.Address, questionnaire, entryPoint)
         };
@@ -223,20 +220,15 @@ public class QuestionnaireController : Controller
     public IActionResult Address_Post(AddressViewModel viewModel)
     {
         if (viewModel.Postcode is not null && !viewModel.Postcode.IsValidUkPostcodeFormat())
-        {
             ModelState.AddModelError(nameof(AddressViewModel.Postcode), "Enter a valid UK postcode");
-        }
 
-        if (!ModelState.IsValid)
-        {
-            return Address_Get(viewModel.EntryPoint);
-        }
+        if (!ModelState.IsValid) return Address_Get(viewModel.EntryPoint);
         var questionnaire = questionnaireService.GetQuestionnaire();
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Address, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
             viewModel.EntryPoint,
-            extraRouteValues: new Dictionary<string, object>
+            new Dictionary<string, object>
             {
                 { "postcode", viewModel.Postcode.NormaliseToUkPostcodeFormat() },
                 { "buildingNameOrNumber", viewModel.BuildingNameOrNumber }
@@ -247,12 +239,13 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("address/{postcode}/{buildingNameOrNumber?}")]
-    public async Task<IActionResult> SelectAddress_Get(string postcode, string buildingNameOrNumber, QuestionFlowStep? entryPoint)
+    public async Task<IActionResult> SelectAddress_Get(string postcode, string buildingNameOrNumber,
+        QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
 
         var addresses = await osPlaces.GetAddressesAsync(postcode, buildingNameOrNumber);
-        var viewModel = new SelectAddressViewModel()
+        var viewModel = new SelectAddressViewModel
         {
             Addresses = addresses,
             BackLink = GetBackUrl(QuestionFlowStep.SelectAddress, questionnaire, entryPoint),
@@ -267,25 +260,32 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("address/{postcode}/{buildingNameOrNumber?}")]
-    public async Task<IActionResult> SelectAddress_Post(SelectAddressViewModel viewModel, string postcode, string buildingNameOrNumber)
+    public async Task<IActionResult> SelectAddress_Post(SelectAddressViewModel viewModel, string postcode,
+        string buildingNameOrNumber)
     {
-        if (!ModelState.IsValid)
-        {
-            return await SelectAddress_Get(postcode, buildingNameOrNumber, viewModel.EntryPoint);
-        }
+        if (!ModelState.IsValid) return await SelectAddress_Get(postcode, buildingNameOrNumber, viewModel.EntryPoint);
 
-        if (viewModel.IsSingleAddress && viewModel.IsAddressCorrect is YesOrNo.No) {
+        if (viewModel.IsSingleAddress && viewModel.IsAddressCorrect is YesOrNo.No)
+        {
             var forwardArgs = GetActionArgumentsForQuestion(QuestionFlowStep.ManualAddress, viewModel.EntryPoint);
             return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
         }
 
         try
         {
-            var addressResults = JsonSerializer.Deserialize<List<Address>>(TempData["Addresses"] as string ?? throw new InvalidOperationException());
-            var selectedAddress = addressResults[viewModel.IsSingleAddress ? 0 : Convert.ToInt32(viewModel.SelectedAddressIndex)]; // If there's only one address, just use the first item
+            var addressResults =
+                JsonSerializer.Deserialize<List<Address>>(TempData["Addresses"] as string ??
+                                                          throw new InvalidOperationException());
+            var selectedAddress =
+                addressResults[
+                    viewModel.IsSingleAddress
+                        ? 0
+                        : Convert.ToInt32(viewModel
+                            .SelectedAddressIndex)]; // If there's only one address, just use the first item
             var questionnaire = await questionnaireService.UpdateAddressAsync(selectedAddress, viewModel.EntryPoint);
 
-            var nextStep = questionFlowService.NextStep(QuestionFlowStep.SelectAddress, questionnaire, viewModel.EntryPoint);
+            var nextStep =
+                questionFlowService.NextStep(QuestionFlowStep.SelectAddress, questionnaire, viewModel.EntryPoint);
             return RedirectToNextStep(nextStep, viewModel.EntryPoint);
         }
         catch (Exception e)
@@ -312,10 +312,7 @@ public class QuestionnaireController : Controller
     [HttpPost("review-epc")]
     public IActionResult ReviewEpc_Post(ReviewEpcViewModel viewModel)
     {
-        if (!ModelState.IsValid)
-        {
-            return ReviewEpc_Get(viewModel.EntryPoint);
-        }
+        if (!ModelState.IsValid) return ReviewEpc_Get(viewModel.EntryPoint);
 
         var questionnaire = questionnaireService.UpdateEpcIsCorrect(viewModel.EpcIsCorrect, viewModel.EntryPoint);
 
@@ -327,7 +324,7 @@ public class QuestionnaireController : Controller
     public IActionResult ManualAddress_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var viewModel = new ManualAddressViewModel()
+        var viewModel = new ManualAddressViewModel
         {
             AddressLine1 = questionnaire.AddressLine1,
             AddressLine2 = questionnaire.AddressLine2,
@@ -344,14 +341,9 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> ManualAddress_Post(ManualAddressViewModel viewModel)
     {
         if (viewModel.Postcode is not null && !viewModel.Postcode.IsValidUkPostcodeFormat())
-        {
             ModelState.AddModelError(nameof(ManualAddressViewModel.Postcode), "Enter a valid UK postcode");
-        }
 
-        if (!ModelState.IsValid)
-        {
-            return ManualAddress_Get(viewModel.EntryPoint);
-        }
+        if (!ModelState.IsValid) return ManualAddress_Get(viewModel.EntryPoint);
 
         var address = new Address
         {
@@ -363,7 +355,8 @@ public class QuestionnaireController : Controller
         };
 
         var questionnaire = await questionnaireService.UpdateAddressAsync(address, viewModel.EntryPoint);
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ManualAddress, questionnaire, viewModel.EntryPoint);
+        var nextStep =
+            questionFlowService.NextStep(QuestionFlowStep.ManualAddress, questionnaire, viewModel.EntryPoint);
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
 
@@ -371,7 +364,8 @@ public class QuestionnaireController : Controller
     public IActionResult SelectLocalAuthority_Get
     (
         [FromQuery] SelectLocalAuthorityViewModel viewModel
-    ) {
+    )
+    {
         var questionnaire = questionnaireService.GetQuestionnaire();
 
         viewModel.BackLink = GetBackUrl(QuestionFlowStep.SelectLocalAuthority, questionnaire, viewModel.EntryPoint);
@@ -399,9 +393,10 @@ public class QuestionnaireController : Controller
     public IActionResult ConfirmLocalAuthority_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var viewModel = new ConfirmLocalAuthorityViewModel()
+        var viewModel = new ConfirmLocalAuthorityViewModel
         {
-            LocalAuthorityName = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[questionnaire.CustodianCode].Name,
+            LocalAuthorityName = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[questionnaire.CustodianCode]
+                .Name,
             LaIsCorrect = questionnaire.LocalAuthorityConfirmed.ToNullableYesOrNo(),
             EntryPoint = entryPoint,
             BackLink = GetBackUrl(QuestionFlowStep.ConfirmLocalAuthority, questionnaire, entryPoint)
@@ -413,14 +408,14 @@ public class QuestionnaireController : Controller
     [HttpPost("confirm-local-authority")]
     public IActionResult ConfirmLocalAuthority_Post(ConfirmLocalAuthorityViewModel viewModel)
     {
-        if (!ModelState.IsValid)
-        {
-            return ConfirmLocalAuthority_Get(viewModel.EntryPoint);
-        }
+        if (!ModelState.IsValid) return ConfirmLocalAuthority_Get(viewModel.EntryPoint);
 
-        var questionnaire = questionnaireService.UpdateLocalAuthorityIsCorrect(viewModel.LaIsCorrect == YesOrNo.Yes, viewModel.EntryPoint);
+        var questionnaire =
+            questionnaireService.UpdateLocalAuthorityIsCorrect(viewModel.LaIsCorrect == YesOrNo.Yes,
+                viewModel.EntryPoint);
 
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ConfirmLocalAuthority, questionnaire, viewModel.EntryPoint);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.ConfirmLocalAuthority, questionnaire,
+            viewModel.EntryPoint);
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
 
@@ -428,7 +423,7 @@ public class QuestionnaireController : Controller
     public IActionResult NotTakingPart_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var viewModel = new NotTakingPartViewModel()
+        var viewModel = new NotTakingPartViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             Submitted = emailPreferenceSubmitted,
@@ -444,28 +439,26 @@ public class QuestionnaireController : Controller
     [HttpPost("not-taking-part")]
     public async Task<IActionResult> NotTakingPart_Post(IneligibleViewModel viewModel)
     {
-        if (!ModelState.IsValid)
-        {
-            return NotTakingPart_Get(viewModel.EntryPoint, false);
-        }
+        if (!ModelState.IsValid) return NotTakingPart_Get(viewModel.EntryPoint);
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
-                viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
-                viewModel.EmailAddress
-                );
+            viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
+            viewModel.EmailAddress
+        );
 
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.NotTakingPart, questionnaire, viewModel.EntryPoint);
+        var nextStep =
+            questionFlowService.NextStep(QuestionFlowStep.NotTakingPart, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
-                            nextStep,
-                            viewModel.EntryPoint,
-                            extraRouteValues: new Dictionary<string, object>
-                            {
-                                { "emailPreferenceSubmitted", true }
-                            }
-                        );
+            nextStep,
+            viewModel.EntryPoint,
+            new Dictionary<string, object>
+            {
+                { "emailPreferenceSubmitted", true }
+            }
+        );
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
-    
+
     [HttpGet("not-participating")]
     public IActionResult NotParticipating_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
     {
@@ -475,7 +468,8 @@ public class QuestionnaireController : Controller
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             Submitted = emailPreferenceSubmitted,
             EmailAddress = questionnaire.NotificationEmailAddress,
-            LocalAuthorityMessagePartialViewPath = GetLocalAuthorityNotParticipatingMessagePartialViewPath(questionnaire),
+            LocalAuthorityMessagePartialViewPath =
+                GetLocalAuthorityNotParticipatingMessagePartialViewPath(questionnaire),
             CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
             EntryPoint = entryPoint,
             BackLink = GetBackUrl(QuestionFlowStep.NotTakingPart, questionnaire, entryPoint)
@@ -483,37 +477,35 @@ public class QuestionnaireController : Controller
 
         return View("NotParticipating", viewModel);
     }
-    
+
     [HttpPost("not-participating")]
     public async Task<IActionResult> NotParticipating_Post(IneligibleViewModel viewModel)
     {
-        if (!ModelState.IsValid)
-        {
-            return NotParticipating_Get(viewModel.EntryPoint);
-        }
+        if (!ModelState.IsValid) return NotParticipating_Get(viewModel.EntryPoint);
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
             viewModel.EmailAddress
         );
 
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.NotParticipating, questionnaire, viewModel.EntryPoint);
+        var nextStep =
+            questionFlowService.NextStep(QuestionFlowStep.NotParticipating, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
             viewModel.EntryPoint,
-            extraRouteValues: new Dictionary<string, object>
+            new Dictionary<string, object>
             {
                 { "emailPreferenceSubmitted", true }
             }
         );
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
-    
+
     [HttpGet("pending")]
     public IActionResult Pending_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var viewModel = new PendingViewModel()
+        var viewModel = new PendingViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             UserAcknowledgedPending = questionnaire.AcknowledgedPending ?? false,
@@ -527,11 +519,9 @@ public class QuestionnaireController : Controller
     [HttpPost("pending")]
     public async Task<IActionResult> Pending_Post(PendingViewModel viewModel)
     {
-        if (!ModelState.IsValid)
-        {
-            return Pending_Get(viewModel.EntryPoint);
-        }
-        var questionnaire = questionnaireService.UpdateAcknowledgedPending(viewModel.UserAcknowledgedPending, viewModel.EntryPoint);
+        if (!ModelState.IsValid) return Pending_Get(viewModel.EntryPoint);
+        var questionnaire =
+            questionnaireService.UpdateAcknowledgedPending(viewModel.UserAcknowledgedPending, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Pending, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
@@ -557,16 +547,14 @@ public class QuestionnaireController : Controller
     [HttpPost("income")]
     public IActionResult HouseholdIncome_Post(HouseholdIncomeViewModel viewModel)
     {
-        if (!ModelState.IsValid)
-        {
-            return HouseholdIncome_Get(viewModel.EntryPoint);
-        }
+        if (!ModelState.IsValid) return HouseholdIncome_Get(viewModel.EntryPoint);
 
-        var questionnaire = questionnaireService.UpdateHouseholdIncome(viewModel.IncomeBand!.Value, viewModel.EntryPoint);
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.HouseholdIncome, questionnaire, viewModel.EntryPoint);
+        var questionnaire =
+            questionnaireService.UpdateHouseholdIncome(viewModel.IncomeBand!.Value, viewModel.EntryPoint);
+        var nextStep =
+            questionFlowService.NextStep(QuestionFlowStep.HouseholdIncome, questionnaire, viewModel.EntryPoint);
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
-
     }
 
     [HttpGet("check")]
@@ -581,8 +569,8 @@ public class QuestionnaireController : Controller
             questionnaire.RevertToUneditedData();
             questionnaireService.SaveQuestionnaireToSession(questionnaire);
         }
-        
-        var viewModel = new CheckAnswersViewModel()
+
+        var viewModel = new CheckAnswersViewModel
         {
             Questionnaire = questionnaire,
             BackLink = GetBackUrl(QuestionFlowStep.CheckAnswers, questionnaire)
@@ -605,7 +593,7 @@ public class QuestionnaireController : Controller
     public IActionResult Eligible_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var viewModel = new EligibleViewModel()
+        var viewModel = new EligibleViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityIsLiveWithHug2 = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Live,
@@ -624,14 +612,9 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> Eligible_Post(EligibleViewModel viewModel)
     {
         if (viewModel.CanContactByEmail is YesOrNo.No && viewModel.CanContactByPhone is YesOrNo.No)
-        {
             ModelState.AddModelError(string.Empty, "Select at least one method to be contacted by");
-        }
 
-        if (!ModelState.IsValid)
-        {
-            return Eligible_Get();
-        }
+        if (!ModelState.IsValid) return Eligible_Get();
 
         var questionnaire = await questionnaireService.GenerateReferralAsync(
             viewModel.Name,
@@ -649,14 +632,15 @@ public class QuestionnaireController : Controller
     public IActionResult Confirmation_Get(bool emailPreferenceSubmitted)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var viewModel = new ConfirmationViewModel()
+        var viewModel = new ConfirmationViewModel
         {
             ReferenceCode = questionnaire.ReferralCode,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityMessagePartialViewPath = GetLocalAuthorityConfirmationMessagePartialViewPath(questionnaire),
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
             LocalAuthorityIsLiveWithHug2 = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Live,
-            ConfirmationSentToEmailAddress = questionnaire.LaContactEmailAddress ?? questionnaire.ConfirmationEmailAddress,
+            ConfirmationSentToEmailAddress =
+                questionnaire.LaContactEmailAddress ?? questionnaire.ConfirmationEmailAddress,
             RequestEmailAddress = questionnaire.LaCanContactByEmail is not true,
             CanNotifyAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
             SendConfirmationDetails = questionnaire.ConfirmationConsent.ToNullableYesOrNo(),
@@ -672,32 +656,25 @@ public class QuestionnaireController : Controller
     [HttpPost("confirmation")]
     public async Task<IActionResult> Confirmation_Post(ConfirmationViewModel viewModel)
     {
-        if (!ModelState.IsValid)
-        {
-            return Confirmation_Get(viewModel.EmailPreferenceSubmitted);
-        }
+        if (!ModelState.IsValid) return Confirmation_Get(viewModel.EmailPreferenceSubmitted);
 
         var questionnaire = questionnaireService.GetQuestionnaire();
 
         if (questionnaire.LaCanContactByEmail is true)
-        {
             questionnaire = await questionnaireService.RecordNotificationConsentAsync(
                 viewModel.CanNotifyAboutFutureSchemes is YesOrNo.Yes);
-        }
         else
-        {
             questionnaire = await questionnaireService.RecordConfirmationAndNotificationConsentAsync(
                 viewModel.CanNotifyAboutFutureSchemes is YesOrNo.Yes,
                 viewModel.NotificationEmailAddress,
                 viewModel.SendConfirmationDetails is YesOrNo.Yes,
                 viewModel.ConfirmationEmailAddress);
-        }
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Confirmation, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
             viewModel.EntryPoint,
-            extraRouteValues: new Dictionary<string, object>
+            new Dictionary<string, object>
             {
                 { "emailPreferenceSubmitted", true }
             }
@@ -728,25 +705,22 @@ public class QuestionnaireController : Controller
     [HttpPost("ineligible")]
     public async Task<IActionResult> Ineligible_Post(IneligibleViewModel viewModel)
     {
-        if (!ModelState.IsValid)
-        {
-            return Ineligible_Get(false);
-        }
+        if (!ModelState.IsValid) return Ineligible_Get();
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
-                viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
-                viewModel.EmailAddress
-                );
+            viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
+            viewModel.EmailAddress
+        );
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Ineligible, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
-                            nextStep,
-                            viewModel.EntryPoint,
-                            extraRouteValues: new Dictionary<string, object>
-                            {
-                                { "emailPreferenceSubmitted", true }
-                            }
-                        );
+            nextStep,
+            viewModel.EntryPoint,
+            new Dictionary<string, object>
+            {
+                { "emailPreferenceSubmitted", true }
+            }
+        );
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
 
@@ -754,7 +728,7 @@ public class QuestionnaireController : Controller
     public IActionResult NoConsent_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var viewModel = new NoConsentViewModel()
+        var viewModel = new NoConsentViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
@@ -787,28 +761,50 @@ public class QuestionnaireController : Controller
         return question switch
         {
             QuestionFlowStep.Start => new PathByActionArguments(nameof(Index), "Questionnaire"),
-            QuestionFlowStep.GasBoiler => new PathByActionArguments(nameof(GasBoiler_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.DirectToEco => new PathByActionArguments(nameof(DirectToEco_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.Country => new PathByActionArguments(nameof(Country_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.IneligibleWales => new PathByActionArguments(nameof(IneligibleWales_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.IneligibleScotland => new PathByActionArguments(nameof(IneligibleScotland_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.IneligibleNorthernIreland => new PathByActionArguments(nameof(IneligibleNorthernIreland_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.OwnershipStatus => new PathByActionArguments(nameof(OwnershipStatus_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.IneligibleTenure => new PathByActionArguments(nameof(IneligibleTenure_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.Address => new PathByActionArguments(nameof(Address_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.SelectAddress => new PathByActionArguments(nameof(SelectAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.ReviewEpc => new PathByActionArguments(nameof(ReviewEpc_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.ManualAddress => new PathByActionArguments(nameof(ManualAddress_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.SelectLocalAuthority => new PathByActionArguments(nameof(SelectLocalAuthority_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.ConfirmLocalAuthority => new PathByActionArguments(nameof(ConfirmLocalAuthority_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.NotParticipating => new PathByActionArguments(nameof(NotParticipating_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.NotTakingPart => new PathByActionArguments(nameof(NotTakingPart_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.Pending => new PathByActionArguments(nameof(Pending_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.HouseholdIncome => new PathByActionArguments(nameof(HouseholdIncome_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.CheckAnswers => new PathByActionArguments(nameof(CheckAnswers_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
-            QuestionFlowStep.Ineligible => new PathByActionArguments(nameof(Ineligible_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
-            QuestionFlowStep.Eligible => new PathByActionArguments(nameof(Eligible_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
-            QuestionFlowStep.Confirmation => new PathByActionArguments(nameof(Confirmation_Get), "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.GasBoiler => new PathByActionArguments(nameof(GasBoiler_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.DirectToEco => new PathByActionArguments(nameof(DirectToEco_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.Country => new PathByActionArguments(nameof(Country_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.IneligibleWales => new PathByActionArguments(nameof(IneligibleWales_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.IneligibleScotland => new PathByActionArguments(nameof(IneligibleScotland_Get),
+                "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.IneligibleNorthernIreland => new PathByActionArguments(
+                nameof(IneligibleNorthernIreland_Get), "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.OwnershipStatus => new PathByActionArguments(nameof(OwnershipStatus_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.IneligibleTenure => new PathByActionArguments(nameof(IneligibleTenure_Get),
+                "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.Address => new PathByActionArguments(nameof(Address_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.SelectAddress => new PathByActionArguments(nameof(SelectAddress_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.ReviewEpc => new PathByActionArguments(nameof(ReviewEpc_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.ManualAddress => new PathByActionArguments(nameof(ManualAddress_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.SelectLocalAuthority => new PathByActionArguments(nameof(SelectLocalAuthority_Get),
+                "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.ConfirmLocalAuthority => new PathByActionArguments(nameof(ConfirmLocalAuthority_Get),
+                "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.NotParticipating => new PathByActionArguments(nameof(NotParticipating_Get),
+                "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.NotTakingPart => new PathByActionArguments(nameof(NotTakingPart_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.Pending => new PathByActionArguments(nameof(Pending_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.HouseholdIncome => new PathByActionArguments(nameof(HouseholdIncome_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.CheckAnswers => new PathByActionArguments(nameof(CheckAnswers_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.Ineligible => new PathByActionArguments(nameof(Ineligible_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.Eligible => new PathByActionArguments(nameof(Eligible_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.Confirmation => new PathByActionArguments(nameof(Confirmation_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues)),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -821,14 +817,30 @@ public class QuestionnaireController : Controller
         var ret = new RouteValueDictionary { { "entryPoint", entryPoint } };
 
         if (extraRouteValues != null)
-        {
             foreach (var extraRouteValue in extraRouteValues)
-            {
                 ret[extraRouteValue.Key] = extraRouteValue.Value;
-            }
-        }
 
         return ret;
+    }
+
+    private static string GetLocalAuthorityNotParticipatingMessagePartialViewPath(Questionnaire questionnaire)
+    {
+        var partialViewName = questionnaire.CustodianCode switch
+        {
+            "2605" or "2610" or "2620" or "2625" or "2630" or "2635" => "BroadlandDistrictCouncil",
+            _ => "Default"
+        };
+        return $"~/Views/Partials/LocalAuthorityMessages/NotParticipating/{partialViewName}.cshtml";
+    }
+
+    private static string GetLocalAuthorityConfirmationMessagePartialViewPath(Questionnaire questionnaire)
+    {
+        var partialViewName = (questionnaire.LocalAuthorityHug2Status, questionnaire.CustodianCode) switch
+        {
+            (LocalAuthorityData.Hug2Status.Pending, _) => "Pending",
+            _ => "Default"
+        };
+        return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";
     }
 
     private class PathByActionArguments
@@ -843,25 +855,5 @@ public class QuestionnaireController : Controller
             Controller = controller;
             Values = values;
         }
-    }
-    
-    private static string GetLocalAuthorityNotParticipatingMessagePartialViewPath(Questionnaire questionnaire)
-    {
-        var partialViewName = questionnaire.CustodianCode switch
-        {
-            "2605" or "2610" or "2620" or "2625" or "2630" or "2635" => "BroadlandDistrictCouncil",
-            _ => "Default"
-        };
-        return $"~/Views/Partials/LocalAuthorityMessages/NotParticipating/{partialViewName}.cshtml";
-    }
-    
-    private static string GetLocalAuthorityConfirmationMessagePartialViewPath(Questionnaire questionnaire)
-    {
-        var partialViewName = (questionnaire.LocalAuthorityHug2Status, questionnaire.CustodianCode) switch
-        {
-            (LocalAuthorityData.Hug2Status.Pending, _) => "Pending",
-            _ => "Default"
-        };
-        return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";
     }
 }
