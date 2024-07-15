@@ -10,17 +10,19 @@ public interface ISessionRecorderService
 public class SessionRecorderService : ISessionRecorderService
 {
     private readonly IDataAccessProvider dataAccessProvider;
+    private readonly IDateTimeProvider dateTimeProvider;
 
-    public SessionRecorderService(IDataAccessProvider dataAccessProvider)
+    public SessionRecorderService(IDataAccessProvider dataAccessProvider, IDateTimeProvider dateTimeProvider)
     {
         this.dataAccessProvider = dataAccessProvider;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     public async Task RecordNewSessionStarted()
     {
         var session = new Session
         {
-            Timestamp = DateTime.Now
+            Timestamp = dateTimeProvider.Now()
         };
         await dataAccessProvider.PersistSession(session);
     }
