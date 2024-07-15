@@ -175,8 +175,9 @@ public class QuestionnaireService
 
     public void SaveQuestionnaireToSession(Questionnaire questionnaire)
     {
-        var oldQuestionnaireString = httpContextAccessor.HttpContext!.Session.GetString(SessionKeyQuestionnaire);
-        if (oldQuestionnaireString == null) sessionRecorderService.RecordNewSessionStarted();
+        var hasNotSavedQuestionnaireBefore =
+            httpContextAccessor.HttpContext!.Session.GetString(SessionKeyQuestionnaire) == null;
+        if (hasNotSavedQuestionnaireBefore) sessionRecorderService.RecordNewSessionStarted();
 
         var questionnaireString = JsonSerializer.Serialize(questionnaire, JsonSerializerOptions);
         httpContextAccessor.HttpContext!.Session.SetString(SessionKeyQuestionnaire, questionnaireString);
