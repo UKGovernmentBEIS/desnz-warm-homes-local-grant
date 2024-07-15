@@ -7,7 +7,6 @@ using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
-using HerPublicWebsite.BusinessLogic.Services.SessionRecorder;
 using HerPublicWebsite.Extensions;
 using HerPublicWebsite.ExternalServices.GoogleAnalytics;
 using HerPublicWebsite.Filters;
@@ -29,13 +28,11 @@ public class QuestionnaireController : Controller
     private readonly IOsPlacesApi osPlaces;
     private readonly IQuestionFlowService questionFlowService;
     private readonly QuestionnaireService questionnaireService;
-    private readonly ISessionRecorderService sessionRecorderService;
 
     public QuestionnaireController(
         IQuestionFlowService questionFlowService,
         GoogleAnalyticsService googleAnalyticsService,
         QuestionnaireService questionnaireService,
-        ISessionRecorderService sessionRecorderService,
         IOsPlacesApi osPlaces,
         ILogger<QuestionnaireController> logger
     )
@@ -43,7 +40,6 @@ public class QuestionnaireController : Controller
         this.questionFlowService = questionFlowService;
         this.googleAnalyticsService = googleAnalyticsService;
         this.questionnaireService = questionnaireService;
-        this.sessionRecorderService = sessionRecorderService;
         this.osPlaces = osPlaces;
         this.logger = logger;
     }
@@ -80,8 +76,6 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> GasBoiler_Post(GasBoilerViewModel viewModel)
     {
         if (!ModelState.IsValid) return await GasBoiler_Get(viewModel.EntryPoint, false);
-
-        await sessionRecorderService.RecordNewSessionStarted();
 
         var questionnaire = questionnaireService.UpdateGasBoiler(viewModel.HasGasBoiler!.Value, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.GasBoiler, questionnaire, viewModel.EntryPoint);
