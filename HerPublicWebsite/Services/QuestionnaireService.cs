@@ -4,28 +4,31 @@ using System.Threading.Tasks;
 using HerPublicWebsite.BusinessLogic;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
+using HerPublicWebsite.BusinessLogic.Services.SessionRecorder;
 using Microsoft.AspNetCore.Http;
 
 namespace HerPublicWebsite.Services;
 
 public class QuestionnaireService
 {
-    private readonly QuestionnaireUpdater questionnaireUpdater;
-    private readonly IHttpContextAccessor httpContextAccessor;
-
-    private static readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions()
+    private static readonly JsonSerializerOptions JsonSerializerOptions = new()
     {
         Converters = { new JsonStringEnumConverter() }
     };
 
-    private static string SessionKeyQuestionnaire = "_Questionnaire";
+    private static readonly string SessionKeyQuestionnaire = "_Questionnaire";
+    private readonly IHttpContextAccessor httpContextAccessor;
+    private readonly QuestionnaireUpdater questionnaireUpdater;
+    private readonly ISessionRecorderService sessionRecorderService;
 
     public QuestionnaireService(
         QuestionnaireUpdater questionnaireUpdater,
-        IHttpContextAccessor httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor,
+        ISessionRecorderService sessionRecorderService)
     {
         this.questionnaireUpdater = questionnaireUpdater;
         this.httpContextAccessor = httpContextAccessor;
+        this.sessionRecorderService = sessionRecorderService;
     }
 
     public Questionnaire GetQuestionnaire()
@@ -67,14 +70,12 @@ public class QuestionnaireService
 
     {
         var questionnaire = GetQuestionnaire();
-        if (questionnaire.AddressLine1 != address.AddressLine1 || 
+        if (questionnaire.AddressLine1 != address.AddressLine1 ||
             questionnaire.AddressLine2 != address.AddressLine2 ||
-            questionnaire.AddressCounty != address.County || 
+            questionnaire.AddressCounty != address.County ||
             questionnaire.AddressTown != address.Town ||
             questionnaire.AddressPostcode != address.Postcode)
-        {
             questionnaire = questionnaireUpdater.UpdateAcknowledgedPending(questionnaire, false, entryPoint);
-        }
         questionnaire = await questionnaireUpdater.UpdateAddressAsync(questionnaire, address, entryPoint);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
@@ -92,9 +93,7 @@ public class QuestionnaireService
     {
         var questionnaire = GetQuestionnaire();
         if (questionnaire.CustodianCode != custodianCode)
-        {
             questionnaire = questionnaireUpdater.UpdateAcknowledgedPending(questionnaire, false, entryPoint);
-        }
         questionnaire = questionnaireUpdater.UpdateLocalAuthority(questionnaire, custodianCode, entryPoint);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
@@ -107,7 +106,7 @@ public class QuestionnaireService
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
-    
+
     public Questionnaire UpdateAcknowledgedPending(bool acknowledgedPending, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
@@ -151,7 +150,8 @@ public class QuestionnaireService
     public async Task<Questionnaire> RecordNotificationConsentAsync(bool consentGranted, string emailAddress)
     {
         var questionnaire = GetQuestionnaire();
-        questionnaire = await questionnaireUpdater.RecordNotificationConsentAsync(questionnaire, consentGranted, emailAddress);
+        questionnaire =
+            await questionnaireUpdater.RecordNotificationConsentAsync(questionnaire, consentGranted, emailAddress);
         SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
@@ -175,6 +175,10 @@ public class QuestionnaireService
 
     public void SaveQuestionnaireToSession(Questionnaire questionnaire)
     {
+        var hasNotSavedQuestionnaireBefore =
+            httpContextAccessor.HttpContext!.Session.GetString(SessionKeyQuestionnaire) == null;
+        if (hasNotSavedQuestionnaireBefore) sessionRecorderService.RecordNewSessionStarted();
+
         var questionnaireString = JsonSerializer.Serialize(questionnaire, JsonSerializerOptions);
         httpContextAccessor.HttpContext!.Session.SetString(SessionKeyQuestionnaire, questionnaireString);
     }
