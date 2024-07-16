@@ -78,6 +78,7 @@ namespace HerPublicWebsite
             services.AddScoped<IDateHelper, DateHelper>();
             services.AddScoped<IReferralFilterService, ReferralFilterService>();
             services.AddScoped<ISessionRecorderService, SessionRecorderService>();
+            services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();

@@ -130,7 +130,7 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
             .HasKey("Id");
         modelBuilder.Entity<Session>()
             .Property(s => s.Timestamp)
-            .HasColumnType("timestamp without time zone");
+            .HasColumnType("timestamp with time zone");
         
         // Session row versioning
         AddRowVersionColumn(modelBuilder.Entity<Session>());
