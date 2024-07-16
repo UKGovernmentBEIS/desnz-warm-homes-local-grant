@@ -13,6 +13,7 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<PerReferralReport> PerReferralReports { get; set; }
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     public DbSet<ReferralRequestFollowUp> ReferralRequestFollowUps { get; set; }
+    public DbSet<Session> Sessions { get; set; }
 
     public HerDbContext(DbContextOptions<HerDbContext> options) : base(options)
     {
@@ -25,6 +26,7 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
         SetupAnonymisedReports(modelBuilder);
         SetupPerReferralReports(modelBuilder);
         SetupReferralRequestFollowUps(modelBuilder);
+        SetupSession(modelBuilder);
     }
 
     private void SetupReferralRequests(ModelBuilder modelBuilder)
@@ -115,6 +117,23 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
 
         // Referral request follow up row versioning
         AddRowVersionColumn(modelBuilder.Entity<ReferralRequestFollowUp>());
+    }
+
+    private void SetupSession(ModelBuilder modelBuilder)
+    {
+        
+        modelBuilder.Entity<Session>()
+            .Property(s => s.Id)
+            .HasColumnType("integer")
+            .ValueGeneratedOnAdd();
+        modelBuilder.Entity<Session>()
+            .HasKey("Id");
+        modelBuilder.Entity<Session>()
+            .Property(s => s.Timestamp)
+            .HasColumnType("timestamp with time zone");
+        
+        // Session row versioning
+        AddRowVersionColumn(modelBuilder.Entity<Session>());
     }
 
     private void AddRowVersionColumn<T>(EntityTypeBuilder<T> builder) where T : class
