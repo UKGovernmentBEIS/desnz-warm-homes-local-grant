@@ -33,6 +33,7 @@ using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using Microsoft.AspNetCore.Http;
 using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
+using HerPublicWebsite.BusinessLogic.Services.SessionRecorder;
 using Microsoft.Extensions.Options;
 using Notify.Client;
 using Notify.Interfaces;
@@ -76,6 +77,7 @@ namespace HerPublicWebsite
             services.AddScoped<IWorkingDayHelperService, WorkingDayHelperService>();
             services.AddScoped<IDateHelper, DateHelper>();
             services.AddScoped<IReferralFilterService, ReferralFilterService>();
+            services.AddScoped<ISessionRecorderService, SessionRecorderService>();
 
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();

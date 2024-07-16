@@ -1,6 +1,6 @@
 ﻿using HerPublicWebsite.BusinessLogic;
-using Microsoft.EntityFrameworkCore;
 using HerPublicWebsite.BusinessLogic.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HerPublicWebsite.Data;
 
@@ -23,7 +23,7 @@ public class DataAccessProvider : IDataAccessProvider
     }
 
     public async Task<ReferralRequest> UpdateReferralRequestByIdWithFollowUpSentAsync(int id)
-    {   
+    {
         var referralRequest = await context.ReferralRequests.SingleAsync(rr => rr.Id == id);
         referralRequest.FollowUpEmailSent = true;
         await context.SaveChangesAsync();
@@ -38,7 +38,7 @@ public class DataAccessProvider : IDataAccessProvider
             {
                 var referralRequest =
                     await context.ReferralRequests
-                    .SingleAsync(rr => rr.ReferralCode == referralCode);
+                        .SingleAsync(rr => rr.ReferralCode == referralCode);
 
                 details.ReferralRequest = referralRequest;
             }
@@ -86,21 +86,25 @@ public class DataAccessProvider : IDataAccessProvider
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetReferralRequestsWithNoFollowUpBetweenDates(DateTime startDate, DateTime endDate)
+    public async Task<IList<ReferralRequest>> GetReferralRequestsWithNoFollowUpBetweenDates(DateTime startDate,
+        DateTime endDate)
     {
         return await context.ReferralRequests
             .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.FollowUpEmailSent)
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetReferralRequestsByCustodianAndRequestDateAsync(string custodianCode, int month, int year)
+    public async Task<IList<ReferralRequest>> GetReferralRequestsByCustodianAndRequestDateAsync(string custodianCode,
+        int month, int year)
     {
         return await context.ReferralRequests
-            .Where(rr => rr.CustodianCode == custodianCode && rr.RequestDate.Month == month && rr.RequestDate.Year == year)
+            .Where(rr => rr.CustodianCode == custodianCode && rr.RequestDate.Month == month &&
+                         rr.RequestDate.Year == year)
             .ToListAsync();
     }
 
-    public async Task<ReferralRequestFollowUp> PersistReferralFollowUpToken(ReferralRequestFollowUp referralRequestFollowUp)
+    public async Task<ReferralRequestFollowUp> PersistReferralFollowUpToken(
+        ReferralRequestFollowUp referralRequestFollowUp)
     {
         context.ReferralRequestFollowUps
             .Add(referralRequestFollowUp);
@@ -110,11 +114,13 @@ public class DataAccessProvider : IDataAccessProvider
 
     public async Task<ReferralRequestFollowUp> GetReferralFollowUpByToken(string token)
     {
-        return await context.ReferralRequestFollowUps.Include(rrfu => rrfu.ReferralRequest).SingleAsync(rrfu => rrfu.Token == token);
+        return await context.ReferralRequestFollowUps.Include(rrfu => rrfu.ReferralRequest)
+            .SingleAsync(rrfu => rrfu.Token == token);
     }
-    
-    public async Task<ReferralRequestFollowUp> UpdateReferralFollowUpByTokenWithWasFollowedUp(string token, bool wasFollowedUp)
-    {   
+
+    public async Task<ReferralRequestFollowUp> UpdateReferralFollowUpByTokenWithWasFollowedUp(string token,
+        bool wasFollowedUp)
+    {
         var referralRequestFollowUp = await context.ReferralRequestFollowUps.SingleAsync(rrfu => rrfu.Token == token);
         referralRequestFollowUp.WasFollowedUp = wasFollowedUp;
         referralRequestFollowUp.DateOfFollowUpResponse = DateTime.Now;
@@ -125,5 +131,13 @@ public class DataAccessProvider : IDataAccessProvider
     public async Task PersistAllChangesAsync()
     {
         await context.SaveChangesAsync();
+    }
+
+    public async Task<Session> PersistSession(Session session)
+    {
+        context.Sessions
+            .Add(session);
+        await context.SaveChangesAsync();
+        return session;
     }
 }
