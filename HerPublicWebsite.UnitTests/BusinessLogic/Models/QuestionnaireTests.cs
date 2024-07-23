@@ -23,7 +23,7 @@ public class QuestionnaireTests
         foreach (var propertyInfo in questionnaire.GetType().GetProperties())
         {
             if (
-                propertyInfo.Name.Equals(nameof(questionnaire.UneditedData))
+                propertyInfo.Name.Equals(nameof(questionnaire.UneditedData)) || propertyInfo.Name.Equals(nameof(questionnaire.SessionId))
             )
             {
                 continue;
