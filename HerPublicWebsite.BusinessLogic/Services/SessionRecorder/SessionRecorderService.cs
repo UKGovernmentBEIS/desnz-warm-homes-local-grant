@@ -5,6 +5,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.SessionRecorder;
 public interface ISessionRecorderService
 {
     public Task RecordNewSessionStarted();
+    public Task<Session> RecordNewSessionStarted();
 }
 
 public class SessionRecorderService : ISessionRecorderService
@@ -18,12 +19,12 @@ public class SessionRecorderService : ISessionRecorderService
         this.dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task RecordNewSessionStarted()
+    public async Task<Session> RecordNewSessionStarted()
     {
         var session = new Session
         {
             Timestamp = dateTimeProvider.Now()
         };
-        await dataAccessProvider.PersistSession(session);
+        return await dataAccessProvider.PersistSession(session);
     }
 }

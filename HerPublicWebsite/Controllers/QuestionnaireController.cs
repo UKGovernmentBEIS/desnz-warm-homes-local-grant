@@ -108,11 +108,11 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("country/")]
-    public IActionResult Country_Post(CountryViewModel viewModel)
+    public async Task<IActionResult> Country_Post(CountryViewModel viewModel)
     {
         if (!ModelState.IsValid) return Country_Get(viewModel.EntryPoint);
 
-        var questionnaire = questionnaireService.UpdateCountry(viewModel.Country!.Value, viewModel.EntryPoint);
+        var questionnaire = await questionnaireService.UpdateCountry(viewModel.Country!.Value, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Country, questionnaire, viewModel.EntryPoint);
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
@@ -172,12 +172,12 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("ownership-status/")]
-    public IActionResult OwnershipStatus_Post(OwnershipStatusViewModel viewModel)
+    public async Task<IActionResult> OwnershipStatus_Post(OwnershipStatusViewModel viewModel)
     {
         if (!ModelState.IsValid) return OwnershipStatus_Get(viewModel.EntryPoint);
 
         var questionnaire =
-            questionnaireService.UpdateOwnershipStatus(viewModel.OwnershipStatus!.Value, viewModel.EntryPoint);
+            await questionnaireService.UpdateOwnershipStatus(viewModel.OwnershipStatus!.Value, viewModel.EntryPoint);
         var nextStep =
             questionFlowService.NextStep(QuestionFlowStep.OwnershipStatus, questionnaire, viewModel.EntryPoint);
 
@@ -304,11 +304,11 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("review-epc")]
-    public IActionResult ReviewEpc_Post(ReviewEpcViewModel viewModel)
+    public async Task<IActionResult> ReviewEpc_Post(ReviewEpcViewModel viewModel)
     {
         if (!ModelState.IsValid) return ReviewEpc_Get(viewModel.EntryPoint);
 
-        var questionnaire = questionnaireService.UpdateEpcIsCorrect(viewModel.EpcIsCorrect, viewModel.EntryPoint);
+        var questionnaire = await questionnaireService.UpdateEpcIsCorrect(viewModel.EpcIsCorrect, viewModel.EntryPoint);
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.ReviewEpc, questionnaire, viewModel.EntryPoint);
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
@@ -368,7 +368,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("select-local-authority/{custodianCode}")]
-    public IActionResult LocalAuthoritySelected_Get(string custodianCode, QuestionFlowStep? entryPoint)
+    public async Task<IActionResult> LocalAuthoritySelected_Get(string custodianCode, QuestionFlowStep? entryPoint)
     {
         if (!LocalAuthorityData.LocalAuthorityDetailsByCustodianCode.ContainsKey(custodianCode))
         {
@@ -377,7 +377,7 @@ public class QuestionnaireController : Controller
             return SelectLocalAuthority_Get(new SelectLocalAuthorityViewModel { EntryPoint = entryPoint });
         }
 
-        var questionnaire = questionnaireService.UpdateLocalAuthority(custodianCode, entryPoint);
+        var questionnaire = await questionnaireService.UpdateLocalAuthority(custodianCode, entryPoint);
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.SelectLocalAuthority, questionnaire, entryPoint);
         return RedirectToNextStep(nextStep, entryPoint);
@@ -400,12 +400,12 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("confirm-local-authority")]
-    public IActionResult ConfirmLocalAuthority_Post(ConfirmLocalAuthorityViewModel viewModel)
+    public async Task<IActionResult> ConfirmLocalAuthority_Post(ConfirmLocalAuthorityViewModel viewModel)
     {
         if (!ModelState.IsValid) return ConfirmLocalAuthority_Get(viewModel.EntryPoint);
 
         var questionnaire =
-            questionnaireService.UpdateLocalAuthorityIsCorrect(viewModel.LaIsCorrect == YesOrNo.Yes,
+            await questionnaireService.UpdateLocalAuthorityIsCorrect(viewModel.LaIsCorrect == YesOrNo.Yes,
                 viewModel.EntryPoint);
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.ConfirmLocalAuthority, questionnaire,
@@ -515,7 +515,7 @@ public class QuestionnaireController : Controller
     {
         if (!ModelState.IsValid) return Pending_Get(viewModel.EntryPoint);
         var questionnaire =
-            questionnaireService.UpdateAcknowledgedPending(viewModel.UserAcknowledgedPending, viewModel.EntryPoint);
+            await questionnaireService.UpdateAcknowledgedPending(viewModel.UserAcknowledgedPending, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Pending, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
@@ -539,12 +539,12 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("income")]
-    public IActionResult HouseholdIncome_Post(HouseholdIncomeViewModel viewModel)
+    public async Task<IActionResult> HouseholdIncome_Post(HouseholdIncomeViewModel viewModel)
     {
         if (!ModelState.IsValid) return HouseholdIncome_Get(viewModel.EntryPoint);
 
         var questionnaire =
-            questionnaireService.UpdateHouseholdIncome(viewModel.IncomeBand!.Value, viewModel.EntryPoint);
+            await questionnaireService.UpdateHouseholdIncome(viewModel.IncomeBand!.Value, viewModel.EntryPoint);
         var nextStep =
             questionFlowService.NextStep(QuestionFlowStep.HouseholdIncome, questionnaire, viewModel.EntryPoint);
 
@@ -552,7 +552,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("check")]
-    public IActionResult CheckAnswers_Get()
+    public async Task<IActionResult> CheckAnswers_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
 
@@ -561,7 +561,7 @@ public class QuestionnaireController : Controller
         if (questionnaire.UneditedData is not null)
         {
             questionnaire.RevertToUneditedData();
-            questionnaireService.SaveQuestionnaireToSession(questionnaire);
+            await questionnaireService.SaveQuestionnaireToSession(questionnaire);
         }
 
         var viewModel = new CheckAnswersViewModel
