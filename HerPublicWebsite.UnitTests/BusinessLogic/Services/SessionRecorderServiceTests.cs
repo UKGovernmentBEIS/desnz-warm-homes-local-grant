@@ -6,6 +6,7 @@ using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Services.SessionRecorder;
 using Moq;
 using NUnit.Framework;
+using Tests.Helpers;
 
 namespace Tests.BusinessLogic.Services;
 
@@ -38,6 +39,37 @@ public class SessionRecorderServiceTests
 
         // Assert
         mockDataAccessProvider.Verify(dap => dap.PersistSession(It.Is<Session>(s => s.Timestamp == now)), Times.Once);
+        mockDataAccessProvider.VerifyNoOtherCalls();
+    }
+
+    [Test]
+    public async Task SetIsJourneyCompleteToTrue_WhenCalledWithAQuestionnaireWithASessionId_CallsDataAccessProvidersSetIsJourneyCompleteToTrue()
+    {
+        // Arrange
+        const int sessionId = 2;
+        var questionnaire = QuestionnaireHelper.InitializeQuestionnaire();
+        questionnaire.SessionId = 2;
+
+        // Act
+        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+
+        // Assert
+        mockDataAccessProvider.Verify(dap => dap.SetIsJourneyCompleteToTrue(sessionId), Times.Once);
+        mockDataAccessProvider.VerifyNoOtherCalls();
+    }
+    
+    [Test]
+    public async Task SetIsJourneyCompleteToTrue_WhenCalledWithAQuestionnaireWithANullSessionId_DoesNotCallDataAccessProvidersSetIsJourneyCompleteToTrue()
+    {
+        // Arrange
+        var questionnaire = QuestionnaireHelper.InitializeQuestionnaire();
+        questionnaire.SessionId = null;
+
+        // Act
+        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+
+        // Assert
+        mockDataAccessProvider.Verify(dap => dap.SetIsJourneyCompleteToTrue(It.IsAny<int>()), Times.Never);
         mockDataAccessProvider.VerifyNoOtherCalls();
     }
 }
