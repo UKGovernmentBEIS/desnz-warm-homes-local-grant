@@ -43,7 +43,8 @@ public class SessionRecorderServiceTests
     }
 
     [Test]
-    public async Task SetIsJourneyCompleteToTrue_WhenCalledWithAQuestionnaireWithASessionId_CallsDataAccessProvidersSetIsJourneyCompleteToTrue()
+    public async Task
+        SetIsJourneyCompleteToTrue_WhenCalledWithAQuestionnaireWithASessionId_CallsDataAccessProvidersSetIsJourneyCompleteToTrue()
     {
         // Arrange
         const int sessionId = 2;
@@ -57,9 +58,10 @@ public class SessionRecorderServiceTests
         mockDataAccessProvider.Verify(dap => dap.SetIsJourneyCompleteToTrue(sessionId), Times.Once);
         mockDataAccessProvider.VerifyNoOtherCalls();
     }
-    
+
     [Test]
-    public async Task SetIsJourneyCompleteToTrue_WhenCalledWithAQuestionnaireWithANullSessionId_DoesNotCallDataAccessProvidersSetIsJourneyCompleteToTrue()
+    public async Task
+        SetIsJourneyCompleteToTrue_WhenCalledWithAQuestionnaireWithANullSessionId_DoesNotCallDataAccessProvidersSetIsJourneyCompleteToTrue()
     {
         // Arrange
         var questionnaire = QuestionnaireHelper.InitializeQuestionnaire();

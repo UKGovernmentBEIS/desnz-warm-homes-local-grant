@@ -81,7 +81,8 @@ public class QuestionnaireController : Controller
     {
         if (!ModelState.IsValid) return await GasBoiler_Get(viewModel.EntryPoint, false);
 
-        var questionnaire = await questionnaireService.UpdateGasBoiler(viewModel.HasGasBoiler!.Value, viewModel.EntryPoint);
+        var questionnaire =
+            await questionnaireService.UpdateGasBoiler(viewModel.HasGasBoiler!.Value, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.GasBoiler, questionnaire, viewModel.EntryPoint);
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
@@ -130,7 +131,7 @@ public class QuestionnaireController : Controller
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
-        
+
         var viewModel = new IneligibleWalesViewModel
         {
             BackLink = GetBackUrl(QuestionFlowStep.IneligibleWales, questionnaire, entryPoint)
@@ -425,11 +426,12 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("not-taking-part")]
-    public async Task<IActionResult> NotTakingPart_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
+    public async Task<IActionResult> NotTakingPart_Get(QuestionFlowStep? entryPoint,
+        bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
-        
+
         var viewModel = new NotTakingPartViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
@@ -467,11 +469,12 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("not-participating")]
-    public async Task<IActionResult> NotParticipating_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
+    public async Task<IActionResult> NotParticipating_Get(QuestionFlowStep? entryPoint,
+        bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
-        
+
         var viewModel = new NotParticipatingViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
@@ -530,7 +533,8 @@ public class QuestionnaireController : Controller
     {
         if (!ModelState.IsValid) return Pending_Get(viewModel.EntryPoint);
         var questionnaire =
-            await questionnaireService.UpdateAcknowledgedPending(viewModel.UserAcknowledgedPending, viewModel.EntryPoint);
+            await questionnaireService.UpdateAcknowledgedPending(viewModel.UserAcknowledgedPending,
+                viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Pending, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
@@ -603,7 +607,7 @@ public class QuestionnaireController : Controller
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
-        
+
         var viewModel = new EligibleViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
@@ -699,7 +703,7 @@ public class QuestionnaireController : Controller
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
-        
+
         var viewModel = new IneligibleViewModel
         {
             EpcIsTooHigh = questionnaire.EpcIsTooHigh,
