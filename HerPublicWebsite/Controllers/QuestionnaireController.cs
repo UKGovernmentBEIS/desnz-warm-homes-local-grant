@@ -7,6 +7,7 @@ using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
+using HerPublicWebsite.BusinessLogic.Services.SessionRecorder;
 using HerPublicWebsite.Extensions;
 using HerPublicWebsite.ExternalServices.GoogleAnalytics;
 using HerPublicWebsite.Filters;
@@ -28,13 +29,15 @@ public class QuestionnaireController : Controller
     private readonly IOsPlacesApi osPlaces;
     private readonly IQuestionFlowService questionFlowService;
     private readonly QuestionnaireService questionnaireService;
+    private readonly ISessionRecorderService sessionRecorderService;
 
     public QuestionnaireController(
         IQuestionFlowService questionFlowService,
         GoogleAnalyticsService googleAnalyticsService,
         QuestionnaireService questionnaireService,
         IOsPlacesApi osPlaces,
-        ILogger<QuestionnaireController> logger
+        ILogger<QuestionnaireController> logger,
+        ISessionRecorderService sessionRecorderService
     )
     {
         this.questionFlowService = questionFlowService;
@@ -42,6 +45,7 @@ public class QuestionnaireController : Controller
         this.questionnaireService = questionnaireService;
         this.osPlaces = osPlaces;
         this.logger = logger;
+        this.sessionRecorderService = sessionRecorderService;
     }
 
     [HttpGet("")]
@@ -77,15 +81,18 @@ public class QuestionnaireController : Controller
     {
         if (!ModelState.IsValid) return await GasBoiler_Get(viewModel.EntryPoint, false);
 
-        var questionnaire = questionnaireService.UpdateGasBoiler(viewModel.HasGasBoiler!.Value, viewModel.EntryPoint);
+        var questionnaire = await questionnaireService.UpdateGasBoiler(viewModel.HasGasBoiler!.Value, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.GasBoiler, questionnaire, viewModel.EntryPoint);
 
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
 
     [HttpGet("direct-to-eco/")]
-    public IActionResult DirectToEco_Get(QuestionFlowStep? entryPoint)
+    public async Task<IActionResult> DirectToEco_Get(QuestionFlowStep? entryPoint)
     {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+
         var viewModel = new DirectToEcoViewModel
         {
             BackLink = GetBackUrl(QuestionFlowStep.DirectToEco, entryPoint: entryPoint)
@@ -119,10 +126,11 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("ineligible-wales/")]
-    public IActionResult IneligibleWales_Get(QuestionFlowStep? entryPoint)
+    public async Task<IActionResult> IneligibleWales_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-
+        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        
         var viewModel = new IneligibleWalesViewModel
         {
             BackLink = GetBackUrl(QuestionFlowStep.IneligibleWales, questionnaire, entryPoint)
@@ -132,9 +140,10 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("ineligible-scotland/")]
-    public IActionResult IneligibleScotland_Get(QuestionFlowStep? entryPoint)
+    public async Task<IActionResult> IneligibleScotland_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
+        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
 
         var viewModel = new IneligibleScotlandViewModel
         {
@@ -145,9 +154,10 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("ineligible-northern-ireland/")]
-    public IActionResult IneligibleNorthernIreland_Get(QuestionFlowStep? entryPoint)
+    public async Task<IActionResult> IneligibleNorthernIreland_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
+        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
 
         var viewModel = new IneligibleNorthernIrelandViewModel
         {
@@ -185,9 +195,10 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("ineligible-tenure/")]
-    public IActionResult IneligibleTenure_Get(QuestionFlowStep? entryPoint)
+    public async Task<IActionResult> IneligibleTenure_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
+        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
 
         var viewModel = new OwnershipStatusViewModel
         {
@@ -414,9 +425,11 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("not-taking-part")]
-    public IActionResult NotTakingPart_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
+    public async Task<IActionResult> NotTakingPart_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
+        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        
         var viewModel = new NotTakingPartViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
@@ -433,7 +446,7 @@ public class QuestionnaireController : Controller
     [HttpPost("not-taking-part")]
     public async Task<IActionResult> NotTakingPart_Post(IneligibleViewModel viewModel)
     {
-        if (!ModelState.IsValid) return NotTakingPart_Get(viewModel.EntryPoint);
+        if (!ModelState.IsValid) return await NotTakingPart_Get(viewModel.EntryPoint);
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
@@ -454,9 +467,11 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("not-participating")]
-    public IActionResult NotParticipating_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
+    public async Task<IActionResult> NotParticipating_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
+        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        
         var viewModel = new NotParticipatingViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
@@ -475,7 +490,7 @@ public class QuestionnaireController : Controller
     [HttpPost("not-participating")]
     public async Task<IActionResult> NotParticipating_Post(IneligibleViewModel viewModel)
     {
-        if (!ModelState.IsValid) return NotParticipating_Get(viewModel.EntryPoint);
+        if (!ModelState.IsValid) return await NotParticipating_Get(viewModel.EntryPoint);
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
@@ -584,9 +599,11 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("eligible")]
-    public IActionResult Eligible_Get()
+    public async Task<IActionResult> Eligible_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
+        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        
         var viewModel = new EligibleViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
@@ -608,7 +625,7 @@ public class QuestionnaireController : Controller
         if (viewModel.CanContactByEmail is YesOrNo.No && viewModel.CanContactByPhone is YesOrNo.No)
             ModelState.AddModelError(string.Empty, "Select at least one method to be contacted by");
 
-        if (!ModelState.IsValid) return Eligible_Get();
+        if (!ModelState.IsValid) return await Eligible_Get();
 
         var questionnaire = await questionnaireService.GenerateReferralAsync(
             viewModel.Name,
@@ -678,9 +695,11 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("ineligible")]
-    public IActionResult Ineligible_Get(bool emailPreferenceSubmitted = false)
+    public async Task<IActionResult> Ineligible_Get(bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
+        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        
         var viewModel = new IneligibleViewModel
         {
             EpcIsTooHigh = questionnaire.EpcIsTooHigh,
@@ -699,7 +718,7 @@ public class QuestionnaireController : Controller
     [HttpPost("ineligible")]
     public async Task<IActionResult> Ineligible_Post(IneligibleViewModel viewModel)
     {
-        if (!ModelState.IsValid) return Ineligible_Get();
+        if (!ModelState.IsValid) return await Ineligible_Get();
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
