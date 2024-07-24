@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using CsvHelper;
 
 namespace HerPublicWebsite.BusinessLogic.Models;
 
