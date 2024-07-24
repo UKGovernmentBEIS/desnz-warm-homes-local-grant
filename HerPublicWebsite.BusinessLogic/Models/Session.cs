@@ -10,4 +10,6 @@ public class Session
     public DateTime Timestamp;
 
     public bool IsJourneyComplete { get; set; }
+    
+    public bool? IsEligible { get; set; }
 }
