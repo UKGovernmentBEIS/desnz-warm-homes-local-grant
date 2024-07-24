@@ -60,7 +60,7 @@ public class SessionRecorderServiceTests
     }
 
     [Test]
-    public async Task
+    public void
         SetJourneyComplete_WhenCalledWithAQuestionnaireWithANullSessionId_DoesNotCallDataAccessProvidersSetJourneyComplete()
     {
         // Arrange
@@ -68,10 +68,11 @@ public class SessionRecorderServiceTests
         questionnaire.SessionId = null;
 
         // Act
-        await sessionRecorderService.SetJourneyComplete(questionnaire);
+        var exception =
+            Assert.ThrowsAsync<Exception>(async () => await sessionRecorderService.SetJourneyComplete(questionnaire));
 
         // Assert
-        mockDataAccessProvider.Verify(dap => dap.SetJourneyComplete(It.IsAny<int>()), Times.Never);
-        mockDataAccessProvider.VerifyNoOtherCalls();
+        Assert.NotNull(exception);
+        Assert.That(exception.Message, Is.EqualTo("Session ID is null at journey completion"));
     }
 }
