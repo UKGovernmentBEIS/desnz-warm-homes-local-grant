@@ -52,10 +52,10 @@ public class SessionRecorderServiceTests
         questionnaire.SessionId = sessionId;
 
         // Act
-        await sessionRecorderService.SetJourneyComplete(questionnaire);
+        await sessionRecorderService.SetEligibilityAndJourneyComplete(questionnaire, true);
 
         // Assert
-        mockDataAccessProvider.Verify(dap => dap.SetJourneyComplete(sessionId), Times.Once);
+        mockDataAccessProvider.Verify(dap => dap.SetEligibilityAndJourneyComplete(sessionId, true), Times.Once);
         mockDataAccessProvider.VerifyNoOtherCalls();
     }
 
@@ -69,7 +69,8 @@ public class SessionRecorderServiceTests
 
         // Act
         var exception =
-            Assert.ThrowsAsync<Exception>(async () => await sessionRecorderService.SetJourneyComplete(questionnaire));
+            Assert.ThrowsAsync<Exception>(async () =>
+                await sessionRecorderService.SetEligibilityAndJourneyComplete(questionnaire, true));
 
         // Assert
         Assert.NotNull(exception);
