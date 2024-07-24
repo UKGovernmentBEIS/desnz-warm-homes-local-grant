@@ -179,7 +179,7 @@ public class QuestionnaireService
         if (hasNotSavedQuestionnaireBefore)
         {
             var newSessionStarted = await sessionRecorderService.RecordNewSessionStarted();
-            questionnaire.SessionId = newSessionStarted.Id;
+            questionnaire = questionnaireUpdater.RecordSessionId(questionnaire, newSessionStarted.Id);
         }
         
         var questionnaireString = JsonSerializer.Serialize(questionnaire, JsonSerializerOptions);
