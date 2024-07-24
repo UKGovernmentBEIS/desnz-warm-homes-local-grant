@@ -19,5 +19,5 @@ public interface IDataAccessProvider
     Task<ReferralRequestFollowUp> GetReferralFollowUpByToken(string token);
     Task<ReferralRequestFollowUp> UpdateReferralFollowUpByTokenWithWasFollowedUp(string token, bool wasFollowedUp);
     Task<Session> PersistSession(Session session);
-    Task SetIsJourneyCompleteToTrue(int sessionId);
+    Task SetJourneyComplete(int sessionId);
 }

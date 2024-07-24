@@ -44,34 +44,34 @@ public class SessionRecorderServiceTests
 
     [Test]
     public async Task
-        SetIsJourneyCompleteToTrue_WhenCalledWithAQuestionnaireWithASessionId_CallsDataAccessProvidersSetIsJourneyCompleteToTrue()
+        SetJourneyComplete_WhenCalledWithAQuestionnaireWithASessionId_CallsDataAccessProvidersSetJourneyComplete()
     {
         // Arrange
         const int sessionId = 2;
         var questionnaire = QuestionnaireHelper.InitializeQuestionnaire();
-        questionnaire.SessionId = 2;
+        questionnaire.SessionId = sessionId;
 
         // Act
-        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        await sessionRecorderService.SetJourneyComplete(questionnaire);
 
         // Assert
-        mockDataAccessProvider.Verify(dap => dap.SetIsJourneyCompleteToTrue(sessionId), Times.Once);
+        mockDataAccessProvider.Verify(dap => dap.SetJourneyComplete(sessionId), Times.Once);
         mockDataAccessProvider.VerifyNoOtherCalls();
     }
 
     [Test]
     public async Task
-        SetIsJourneyCompleteToTrue_WhenCalledWithAQuestionnaireWithANullSessionId_DoesNotCallDataAccessProvidersSetIsJourneyCompleteToTrue()
+        SetJourneyComplete_WhenCalledWithAQuestionnaireWithANullSessionId_DoesNotCallDataAccessProvidersSetJourneyComplete()
     {
         // Arrange
         var questionnaire = QuestionnaireHelper.InitializeQuestionnaire();
         questionnaire.SessionId = null;
 
         // Act
-        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        await sessionRecorderService.SetJourneyComplete(questionnaire);
 
         // Assert
-        mockDataAccessProvider.Verify(dap => dap.SetIsJourneyCompleteToTrue(It.IsAny<int>()), Times.Never);
+        mockDataAccessProvider.Verify(dap => dap.SetJourneyComplete(It.IsAny<int>()), Times.Never);
         mockDataAccessProvider.VerifyNoOtherCalls();
     }
 }

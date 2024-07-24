@@ -92,7 +92,7 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> DirectToEco_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        await sessionRecorderService.SetJourneyComplete(questionnaire);
 
         var viewModel = new DirectToEcoViewModel
         {
@@ -130,7 +130,7 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> IneligibleWales_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        await sessionRecorderService.SetJourneyComplete(questionnaire);
 
         var viewModel = new IneligibleWalesViewModel
         {
@@ -144,7 +144,7 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> IneligibleScotland_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        await sessionRecorderService.SetJourneyComplete(questionnaire);
 
         var viewModel = new IneligibleScotlandViewModel
         {
@@ -158,7 +158,7 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> IneligibleNorthernIreland_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        await sessionRecorderService.SetJourneyComplete(questionnaire);
 
         var viewModel = new IneligibleNorthernIrelandViewModel
         {
@@ -199,7 +199,7 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> IneligibleTenure_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        await sessionRecorderService.SetJourneyComplete(questionnaire);
 
         var viewModel = new OwnershipStatusViewModel
         {
@@ -430,7 +430,7 @@ public class QuestionnaireController : Controller
         bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        await sessionRecorderService.SetJourneyComplete(questionnaire);
 
         var viewModel = new NotTakingPartViewModel
         {
@@ -473,7 +473,7 @@ public class QuestionnaireController : Controller
         bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        await sessionRecorderService.SetJourneyComplete(questionnaire);
 
         var viewModel = new NotParticipatingViewModel
         {
@@ -606,7 +606,7 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> Eligible_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        await sessionRecorderService.SetJourneyComplete(questionnaire);
 
         var viewModel = new EligibleViewModel
         {
@@ -702,7 +702,7 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> Ineligible_Get(bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        await sessionRecorderService.SetIsJourneyCompleteToTrue(questionnaire);
+        await sessionRecorderService.SetJourneyComplete(questionnaire);
 
         var viewModel = new IneligibleViewModel
         {

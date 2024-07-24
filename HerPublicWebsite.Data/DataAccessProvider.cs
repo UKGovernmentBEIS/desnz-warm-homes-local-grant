@@ -141,7 +141,7 @@ public class DataAccessProvider : IDataAccessProvider
         return session;
     }
 
-    public async Task SetIsJourneyCompleteToTrue(int sessionId)
+    public async Task SetJourneyComplete(int sessionId)
     {
         var referralRequest = await context.Sessions.SingleAsync(session => session.Id == sessionId);
         referralRequest.IsJourneyComplete = true;
