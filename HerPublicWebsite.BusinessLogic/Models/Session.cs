@@ -8,4 +8,6 @@ public class Session
     public int Id { get; set; }
 
     public DateTime Timestamp;
+
+    public bool IsJourneyComplete { get; set; }
 }

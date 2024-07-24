@@ -140,4 +140,11 @@ public class DataAccessProvider : IDataAccessProvider
         await context.SaveChangesAsync();
         return session;
     }
+
+    public async Task SetJourneyComplete(int sessionId)
+    {
+        var referralRequest = await context.Sessions.SingleAsync(session => session.Id == sessionId);
+        referralRequest.IsJourneyComplete = true;
+        await context.SaveChangesAsync();
+    }
 }

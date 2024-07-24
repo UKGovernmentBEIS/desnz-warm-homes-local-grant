@@ -8,6 +8,7 @@ namespace HerPublicWebsite.BusinessLogic.Models;
 
 public record Questionnaire
 {
+    public int? SessionId { get; set; }
 
     public CountryEnum? Country { get; set; }
     public OwnershipStatusEnum? OwnershipStatus { get; set; }

@@ -233,6 +233,13 @@ public class QuestionnaireUpdater
 
         return questionnaire;
     }
+    
+    public Questionnaire RecordSessionId(Questionnaire questionnaire, int sessionId)
+    {
+        questionnaire.SessionId = sessionId;
+        
+        return questionnaire;
+    }
 
     public Questionnaire UpdateQuestionnaire(Action<Questionnaire> update, Questionnaire questionnaire,
         QuestionFlowStep currentPage, QuestionFlowStep? entryPoint = null)

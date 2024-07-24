@@ -4,7 +4,9 @@ namespace HerPublicWebsite.BusinessLogic.Services.SessionRecorder;
 
 public interface ISessionRecorderService
 {
-    public Task RecordNewSessionStarted();
+    public Task<Session> RecordNewSessionStarted();
+
+    public Task SetJourneyComplete(Questionnaire questionnaire);
 }
 
 public class SessionRecorderService : ISessionRecorderService
@@ -18,12 +20,24 @@ public class SessionRecorderService : ISessionRecorderService
         this.dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task RecordNewSessionStarted()
+    public async Task<Session> RecordNewSessionStarted()
     {
         var session = new Session
         {
             Timestamp = dateTimeProvider.Now()
         };
-        await dataAccessProvider.PersistSession(session);
+        return await dataAccessProvider.PersistSession(session);
+    }
+
+    public async Task SetJourneyComplete(Questionnaire questionnaire)
+    {
+        var sessionId = questionnaire.SessionId;
+
+        if (sessionId == null)
+        {
+            throw new Exception("Session ID is null at journey completion");
+        }
+
+        await dataAccessProvider.SetJourneyComplete((int)sessionId);
     }
 }
