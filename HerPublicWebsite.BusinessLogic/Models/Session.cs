@@ -11,5 +11,6 @@ public class Session
 
     public bool IsJourneyComplete { get; set; }
     
+    //IsEligible being Null means eligibility has not been determined
     public bool? IsEligible { get; set; }
 }
