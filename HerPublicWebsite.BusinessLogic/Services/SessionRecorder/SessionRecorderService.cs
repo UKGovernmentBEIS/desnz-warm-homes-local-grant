@@ -6,7 +6,7 @@ public interface ISessionRecorderService
 {
     public Task<Session> RecordNewSessionStarted();
 
-    public Task SetJourneyComplete(Questionnaire questionnaire);
+    public Task RecordEligibilityAndJourneyCompletion(Questionnaire questionnaire, bool? isEligible);
 }
 
 public class SessionRecorderService : ISessionRecorderService
@@ -29,7 +29,7 @@ public class SessionRecorderService : ISessionRecorderService
         return await dataAccessProvider.PersistSession(session);
     }
 
-    public async Task SetJourneyComplete(Questionnaire questionnaire)
+    public async Task RecordEligibilityAndJourneyCompletion(Questionnaire questionnaire, bool? isEligible)
     {
         var sessionId = questionnaire.SessionId;
 
@@ -38,6 +38,6 @@ public class SessionRecorderService : ISessionRecorderService
             throw new Exception("Session ID is null at journey completion");
         }
 
-        await dataAccessProvider.SetJourneyComplete((int)sessionId);
+        await dataAccessProvider.RecordEligiblityAndJourneyCompletion((int)sessionId, isEligible);
     }
 }

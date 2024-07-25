@@ -263,6 +263,9 @@ namespace HerPublicWebsite.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<bool?>("IsEligible")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsJourneyComplete")
                         .HasColumnType("boolean");
 
