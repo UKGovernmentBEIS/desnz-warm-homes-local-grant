@@ -141,11 +141,11 @@ public class DataAccessProvider : IDataAccessProvider
         return session;
     }
     
-    public async Task SetEligibilityAndJourneyComplete(int sessionId, bool? isEligibleValue)
+    public async Task RecordEligiblityAndJourneyCompletion(int sessionId, bool? isEligible)
     {
         var referralRequest = await context.Sessions.SingleAsync(session => session.Id == sessionId);
         referralRequest.IsJourneyComplete = true;
-        referralRequest.IsEligible = isEligibleValue;
+        referralRequest.IsEligible = isEligible;
         await context.SaveChangesAsync();
     }
 }

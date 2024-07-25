@@ -44,7 +44,7 @@ public class SessionRecorderServiceTests
 
     [Test]
     public async Task
-        SetJourneyComplete_WhenCalledWithAQuestionnaireWithASessionId_CallsDataAccessProvidersSetJourneyComplete()
+        RecordEligibilityAndJourneyCompletion_WhenCalledWithAQuestionnaireWithASessionId_CallsDataAccessProvidersSetJourneyComplete()
     {
         // Arrange
         const int sessionId = 2;
@@ -52,16 +52,16 @@ public class SessionRecorderServiceTests
         questionnaire.SessionId = sessionId;
 
         // Act
-        await sessionRecorderService.SetEligibilityAndJourneyComplete(questionnaire, true);
+        await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, true);
 
         // Assert
-        mockDataAccessProvider.Verify(dap => dap.SetEligibilityAndJourneyComplete(sessionId, true), Times.Once);
+        mockDataAccessProvider.Verify(dap => dap.RecordEligiblityAndJourneyCompletion(sessionId, true), Times.Once);
         mockDataAccessProvider.VerifyNoOtherCalls();
     }
 
     [Test]
     public void
-        SetJourneyComplete_WhenCalledWithAQuestionnaireWithANullSessionId_DoesNotCallDataAccessProvidersSetJourneyComplete()
+        RecordEligibilityAndJourneyCompletion_WhenCalledWithAQuestionnaireWithANullSessionId_DoesNotCallDataAccessProvidersRecordEligibilityAndJourneyCompletion()
     {
         // Arrange
         var questionnaire = QuestionnaireHelper.InitializeQuestionnaire();
@@ -70,7 +70,7 @@ public class SessionRecorderServiceTests
         // Act
         var exception =
             Assert.ThrowsAsync<Exception>(async () =>
-                await sessionRecorderService.SetEligibilityAndJourneyComplete(questionnaire, true));
+                await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, true));
 
         // Assert
         Assert.NotNull(exception);
