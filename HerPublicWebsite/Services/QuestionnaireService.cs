@@ -42,32 +42,31 @@ public class QuestionnaireService
         return questionnaire;
     }
 
-    public Questionnaire UpdateGasBoiler(HasGasBoiler hasGasBoiler, QuestionFlowStep? entryPoint)
+    public async Task<Questionnaire> UpdateGasBoiler(HasGasBoiler hasGasBoiler, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = questionnaireUpdater.UpdateGasBoiler(questionnaire, hasGasBoiler, entryPoint);
-        SaveQuestionnaireToSession(questionnaire);
+        await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
-    public Questionnaire UpdateCountry(Country country, QuestionFlowStep? entryPoint)
+    public async Task<Questionnaire> UpdateCountry(Country country, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = questionnaireUpdater.UpdateCountry(questionnaire, country, entryPoint);
-        SaveQuestionnaireToSession(questionnaire);
+        await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
-    public Questionnaire UpdateOwnershipStatus(OwnershipStatus ownershipStatus, QuestionFlowStep? entryPoint)
+    public async Task<Questionnaire> UpdateOwnershipStatus(OwnershipStatus ownershipStatus, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = questionnaireUpdater.UpdateOwnershipStatus(questionnaire, ownershipStatus, entryPoint);
-        SaveQuestionnaireToSession(questionnaire);
+        await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
     public async Task<Questionnaire> UpdateAddressAsync(Address address, QuestionFlowStep? entryPoint)
-
     {
         var questionnaire = GetQuestionnaire();
         if (questionnaire.AddressLine1 != address.AddressLine1 ||
@@ -77,49 +76,49 @@ public class QuestionnaireService
             questionnaire.AddressPostcode != address.Postcode)
             questionnaire = questionnaireUpdater.UpdateAcknowledgedPending(questionnaire, false, entryPoint);
         questionnaire = await questionnaireUpdater.UpdateAddressAsync(questionnaire, address, entryPoint);
-        SaveQuestionnaireToSession(questionnaire);
+        await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
-    public Questionnaire UpdateEpcIsCorrect(EpcConfirmation? epcIsCorrect, QuestionFlowStep? entryPoint)
+    public async Task<Questionnaire> UpdateEpcIsCorrect(EpcConfirmation? epcIsCorrect, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = questionnaireUpdater.UpdateEpcIsCorrect(questionnaire, epcIsCorrect, entryPoint);
-        SaveQuestionnaireToSession(questionnaire);
+        await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
-    public Questionnaire UpdateLocalAuthority(string custodianCode, QuestionFlowStep? entryPoint)
+    public async Task<Questionnaire> UpdateLocalAuthority(string custodianCode, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
         if (questionnaire.CustodianCode != custodianCode)
             questionnaire = questionnaireUpdater.UpdateAcknowledgedPending(questionnaire, false, entryPoint);
         questionnaire = questionnaireUpdater.UpdateLocalAuthority(questionnaire, custodianCode, entryPoint);
-        SaveQuestionnaireToSession(questionnaire);
+        await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
-    public Questionnaire UpdateLocalAuthorityIsCorrect(bool laIsCorrect, QuestionFlowStep? entryPoint)
+    public async Task<Questionnaire> UpdateLocalAuthorityIsCorrect(bool laIsCorrect, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = questionnaireUpdater.UpdateLocalAuthorityIsCorrect(questionnaire, laIsCorrect, entryPoint);
-        SaveQuestionnaireToSession(questionnaire);
+        await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
-    public Questionnaire UpdateAcknowledgedPending(bool acknowledgedPending, QuestionFlowStep? entryPoint)
+    public async Task<Questionnaire> UpdateAcknowledgedPending(bool acknowledgedPending, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = questionnaireUpdater.UpdateAcknowledgedPending(questionnaire, acknowledgedPending, entryPoint);
-        SaveQuestionnaireToSession(questionnaire);
+        await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
-    public Questionnaire UpdateHouseholdIncome(IncomeBand incomeBand, QuestionFlowStep? entryPoint)
+    public async Task<Questionnaire> UpdateHouseholdIncome(IncomeBand incomeBand, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = questionnaireUpdater.UpdateHouseholdIncome(questionnaire, incomeBand, entryPoint);
-        SaveQuestionnaireToSession(questionnaire);
+        await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
@@ -127,7 +126,7 @@ public class QuestionnaireService
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = await questionnaireUpdater.GenerateReferralAsync(questionnaire, name, emailAddress, telephone);
-        SaveQuestionnaireToSession(questionnaire);
+        await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
@@ -135,7 +134,7 @@ public class QuestionnaireService
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = await questionnaireUpdater.GenerateAnonymisedReportAsync(questionnaire);
-        SaveQuestionnaireToSession(questionnaire);
+        await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
@@ -143,7 +142,7 @@ public class QuestionnaireService
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = await questionnaireUpdater.RecordNotificationConsentAsync(questionnaire, consentGranted);
-        SaveQuestionnaireToSession(questionnaire);
+        await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
@@ -152,7 +151,7 @@ public class QuestionnaireService
         var questionnaire = GetQuestionnaire();
         questionnaire =
             await questionnaireUpdater.RecordNotificationConsentAsync(questionnaire, consentGranted, emailAddress);
-        SaveQuestionnaireToSession(questionnaire);
+        await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
@@ -169,16 +168,20 @@ public class QuestionnaireService
             notificationEmailAddress,
             confirmationConsentGranted,
             confirmationEmailAddress);
-        SaveQuestionnaireToSession(questionnaire);
+        await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
 
-    public void SaveQuestionnaireToSession(Questionnaire questionnaire)
+    public async Task SaveQuestionnaireToSession(Questionnaire questionnaire)
     {
         var hasNotSavedQuestionnaireBefore =
             httpContextAccessor.HttpContext!.Session.GetString(SessionKeyQuestionnaire) == null;
-        if (hasNotSavedQuestionnaireBefore) sessionRecorderService.RecordNewSessionStarted();
-
+        if (hasNotSavedQuestionnaireBefore)
+        {
+            var newSessionStarted = await sessionRecorderService.RecordNewSessionStarted();
+            questionnaire = questionnaireUpdater.RecordSessionId(questionnaire, newSessionStarted.Id);
+        }
+        
         var questionnaireString = JsonSerializer.Serialize(questionnaire, JsonSerializerOptions);
         httpContextAccessor.HttpContext!.Session.SetString(SessionKeyQuestionnaire, questionnaireString);
     }
