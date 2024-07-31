@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace HerPublicWebsite.Services
         private const string AppJsRegex = "app-.*.js";
         private const string Html5ShivJsRegex = "html5shiv-.*.js";
 
-        private Dictionary<string, string> cachedFilenames = new Dictionary<string, string>();
+        private ConcurrentDictionary<string, string> cachedFilenames = new();
 
         public string GetAppCssFilename() => GetStaticFile(CompiledDirectory, AppCssRegex);
         public string GetAppIe8CssFilename() => GetStaticFile(CompiledDirectory, AppIe8CssRegex);

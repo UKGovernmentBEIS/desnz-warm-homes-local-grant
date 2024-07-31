@@ -6,7 +6,7 @@ WORKDIR /HerPublicWebsite
 RUN npm ci
 RUN npm run build
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /source
 
 COPY --from=node_base . .
@@ -28,7 +28,7 @@ RUN dotnet build HerPublicWebsite.ManagementShell/ --use-current-runtime --self-
 
 
 # final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app .
 COPY --from=build /cli ./cli
