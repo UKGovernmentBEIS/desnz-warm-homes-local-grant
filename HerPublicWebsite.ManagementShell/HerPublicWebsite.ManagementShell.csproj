@@ -6,4 +6,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\HerPublicWebsite.Data\HerPublicWebsite.Data.csproj" />
+        <ProjectReference Include="..\HerPublicWebsite.BusinessLogic\HerPublicWebsite.BusinessLogic.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.16" />
+    </ItemGroup>
+
 </Project>
