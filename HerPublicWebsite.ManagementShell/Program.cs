@@ -21,7 +21,8 @@ public static class Program {
             .Options;
         using var context = new HerDbContext(contextOptions);
         var databaseOperation = new DatabaseOperation(context, outputProvider);
-        var commandHandler = new CommandHandler(databaseOperation, outputProvider);
+        var fakeReferralGenerator = new FakeReferralGenerator();
+        var commandHandler = new CommandHandler(databaseOperation, fakeReferralGenerator, outputProvider);
 
         Subcommand command;
         string[] subcommandArgs;

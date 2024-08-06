@@ -5,12 +5,14 @@ namespace HerPublicWebsite.ManagementShell;
 
 public class CommandHandler
 {
-    private IOutputProvider outputProvider;
     private IDatabaseOperation databaseOperation;
+    private IFakeReferralGenerator fakeReferralGenerator;
+    private IOutputProvider outputProvider;
     
-    public CommandHandler(IDatabaseOperation databaseOperation, IOutputProvider outputProvider)
+    public CommandHandler(IDatabaseOperation databaseOperation, IFakeReferralGenerator fakeReferralGenerator, IOutputProvider outputProvider)
     {
         this.databaseOperation = databaseOperation;
+        this.fakeReferralGenerator = fakeReferralGenerator;
         this.outputProvider = outputProvider;
     }
 
@@ -22,14 +24,12 @@ public class CommandHandler
             return;
         }
 
-        int referralCount;
-        if (!int.TryParse(args[0], out referralCount))
+        if (!int.TryParse(args[0], out var referralCount))
         {
             outputProvider.Output("thats a string");
         }
 
-        // TODO: generate them
-        var referralsToAdd = new List<ReferralRequest>();
+        var referralsToAdd = fakeReferralGenerator.GenerateFakeReferralRequests(referralCount);
 
         databaseOperation.AddReferralRequests(referralsToAdd);
     }
