@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CabinetOffice.GovUkDesignSystem" Version="1.0.0-456b8e9" />
+        <PackageReference Include="CabinetOffice.GovUkDesignSystem" Version="1.0.0-3f67920" />
         <PackageReference Include="Community.Microsoft.Extensions.Caching.PostgreSql" Version="3.1.2" />
         <PackageReference Include="libphonenumber-csharp" Version="8.13.11" />
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="6.0.16" />
