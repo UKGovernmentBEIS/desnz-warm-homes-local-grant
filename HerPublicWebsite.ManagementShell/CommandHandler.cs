@@ -29,7 +29,8 @@ public class CommandHandler
             outputProvider.Output("thats a string");
         }
 
-        var referralsToAdd = fakeReferralGenerator.GenerateFakeReferralRequests(referralCount);
+        var highestReferralId = databaseOperation.GetHighestReferralId();
+        var referralsToAdd = fakeReferralGenerator.GenerateFakeReferralRequests(referralCount, highestReferralId + 1);
 
         databaseOperation.AddReferralRequests(referralsToAdd);
     }

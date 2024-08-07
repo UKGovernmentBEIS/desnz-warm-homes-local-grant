@@ -6,19 +6,18 @@ namespace HerPublicWebsite.ManagementShell;
 
 public interface IFakeReferralGenerator
 {
-    IEnumerable<ReferralRequest> GenerateFakeReferralRequests(int count);
+    IEnumerable<ReferralRequest> GenerateFakeReferralRequests(int count, int startId);
 }
 
 public class FakeReferralGenerator : IFakeReferralGenerator
 {
-    public IEnumerable<ReferralRequest> GenerateFakeReferralRequests(int count)
+    public IEnumerable<ReferralRequest> GenerateFakeReferralRequests(int count, int startId)
     {
-        var id = 100;
-        // TODO: make sure this ID is unique
+        var id = startId;
         var custodianCodes = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode.Keys;
         
         var referralsSchema = new Faker<ReferralRequest>("en_GB")
-            .RuleFor(rr => rr.Id, f => id++)
+            .RuleFor(rr => rr.Id, _ => id++)
             // Number, Street name
             // Street name
             .RuleFor(rr => rr.AddressLine1, f => f.Address.StreetAddress())
