@@ -111,6 +111,14 @@ public class FakeReferralGenerator : IFakeReferralGenerator
                     rr.EpcLodgementDate = null;
                     rr.EpcConfirmation = null;
                 }
+                else
+                {
+                    // ensure the EPC date is before the request date
+                    if (rr.EpcLodgementDate >= rr.RequestDate)
+                    {
+                        rr.EpcLodgementDate = f.Date.Past(10, rr.RequestDate);
+                    }
+                }
                 
                 // decide what contact info the user gave (and redact if they did not)
                 var contactInfoGiven = f.Random.WeightedRandom(new [] { ContactInfoGiven.PhoneNumber, ContactInfoGiven.Email, ContactInfoGiven.PhoneNumberAndEmail }, 
