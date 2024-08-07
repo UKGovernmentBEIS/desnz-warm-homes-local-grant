@@ -16,16 +16,20 @@ COPY nuget.config .
 COPY HerPublicWebsite/*.csproj HerPublicWebsite/
 COPY HerPublicWebsite.BusinessLogic/*.csproj HerPublicWebsite.BusinessLogic/
 COPY HerPublicWebsite.Data/*.csproj HerPublicWebsite.Data/
+COPY HerPublicWebsite.ManagementShell/*.csproj HerPublicWebsite.ManagementShell/
 COPY Lib/ Lib/
 RUN dotnet restore HerPublicWebsite/ --use-current-runtime
+RUN dotnet restore HerPublicWebsite.ManagementShell/ --use-current-runtime
 
 # copy and publish app and libraries
 COPY . .
 RUN dotnet publish HerPublicWebsite/ --use-current-runtime --self-contained false --no-restore -o /app
+RUN dotnet build HerPublicWebsite.ManagementShell/ --use-current-runtime --self-contained false --no-restore -o /cli
 
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build /app .
-ENTRYPOINT ["dotnet", "HerPublicWebsite.dll"]
+COPY --from=build /cli ./cli
+ENTRYPOINT ["tail", "-f", "/dev/null"]
