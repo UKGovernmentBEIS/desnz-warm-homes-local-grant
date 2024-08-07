@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HerPublicWebsite.ManagementShell;
 
-public static class Program {
+public static class Program
+{
     public static void Main(string[] args)
     {
         var outputProvider = new OutputProvider();
@@ -15,9 +16,10 @@ public static class Program {
         //     outputProvider.Output("Please set 'ConnectionStrings__PostgreSQLConnection' env argument");
         //     return;
         // }
-        
+
         var contextOptions = new DbContextOptionsBuilder<HerDbContext>()
-            .UseNpgsql("UserId=postgres;Password=postgres;Server=localhost;Port=5433;Database=herdev;Integrated Security=true;Include Error Detail=true;Pooling=true")
+            .UseNpgsql(
+                "UserId=postgres;Password=postgres;Server=localhost;Port=5433;Database=herdev;Integrated Security=true;Include Error Detail=true;Pooling=true")
             .Options;
         using var context = new HerDbContext(contextOptions);
         var databaseOperation = new DatabaseOperation(context, outputProvider);
@@ -26,7 +28,7 @@ public static class Program {
 
         Subcommand command;
         string[] subcommandArgs;
-        
+
         try
         {
             command = Enum.Parse<Subcommand>(args[0], true);

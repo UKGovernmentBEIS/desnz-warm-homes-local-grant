@@ -15,7 +15,7 @@ public class FakeReferralGenerator : IFakeReferralGenerator
     {
         var id = startId;
         var custodianCodes = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode.Keys;
-        
+
         var referralsSchema = new Faker<ReferralRequest>("en_GB")
             .RuleFor(rr => rr.Id, _ => id++)
             // Number, Street name
@@ -41,18 +41,18 @@ public class FakeReferralGenerator : IFakeReferralGenerator
             //   G 7%
             //   Expired 25%
             .RuleFor(rr => rr.EpcRating, f => f.Random.WeightedRandom(
-                new []
+                new[]
                 {
-                    EpcRating.A, 
-                    EpcRating.B, 
-                    EpcRating.C, 
-                    EpcRating.D, 
-                    EpcRating.E, 
-                    EpcRating.F, 
-                    EpcRating.G, 
+                    EpcRating.A,
+                    EpcRating.B,
+                    EpcRating.C,
+                    EpcRating.D,
+                    EpcRating.E,
+                    EpcRating.F,
+                    EpcRating.G,
                     EpcRating.Expired
                 },
-                new []{ 0.01f, 0.01f, 0.01f, 0.25f, 0.25f, 0.15f, 0.07f, 0.25f }))
+                new[] { 0.01f, 0.01f, 0.01f, 0.25f, 0.25f, 0.15f, 0.07f, 0.25f }))
             // true 25%
             .RuleFor(rr => rr.IsLsoaProperty, f => f.Random.Bool(0.25f))
             // No 100%
@@ -65,7 +65,7 @@ public class FakeReferralGenerator : IFakeReferralGenerator
             // > 36000 5%
             .RuleFor(rr => rr.IncomeBand,
                 f => f.Random.WeightedRandom(
-                    new []
+                    new[]
                     {
                         IncomeBand.UnderOrEqualTo31000,
                         IncomeBand.GreaterThan31000,
@@ -74,8 +74,8 @@ public class FakeReferralGenerator : IFakeReferralGenerator
                         IncomeBand.UnderOrEqualTo36000,
                         IncomeBand.GreaterThan36000
                     },
-                    new []{ 0.4f, 0.03f, 0.01f, 0.01f, 0.5f, 0.05f }
-                    ))
+                    new[] { 0.4f, 0.03f, 0.01f, 0.01f, 0.5f, 0.05f }
+                ))
             .RuleFor(rr => rr.RequestDate, f => f.Date.Past())
             // false only for referrals that are today
             .RuleFor(rr => rr.ReferralWrittenToCsv, _ => true)
@@ -89,7 +89,8 @@ public class FakeReferralGenerator : IFakeReferralGenerator
             // not null 1%
             // yes and unknown 0% of this
             // null if EpcLodgementDate is
-            .RuleFor(rr => rr.EpcConfirmation, f => f.PickRandom(EpcConfirmation.Yes, EpcConfirmation.No, EpcConfirmation.Unknown).OrNull(f, 0.99f))
+            .RuleFor(rr => rr.EpcConfirmation,
+                f => f.PickRandom(EpcConfirmation.Yes, EpcConfirmation.No, EpcConfirmation.Unknown).OrNull(f, 0.99f))
             // true 75%
             .RuleFor(rr => rr.FollowUpEmailSent, f => f.Random.Bool(0.75f))
             // true 15%
@@ -98,10 +99,7 @@ public class FakeReferralGenerator : IFakeReferralGenerator
             {
                 rr.UpdateReferralCode();
                 // only referrals not written to csv are those made today
-                if (rr.RequestDate.Date == DateTime.Today)
-                {
-                    rr.ReferralWrittenToCsv = false;
-                }
+                if (rr.RequestDate.Date == DateTime.Today) rr.ReferralWrittenToCsv = false;
 
                 // 40% chance to redact all EPC info
                 var epcFound = f.Random.Bool(0.6f);
@@ -114,15 +112,16 @@ public class FakeReferralGenerator : IFakeReferralGenerator
                 else
                 {
                     // ensure the EPC date is before the request date
-                    if (rr.EpcLodgementDate >= rr.RequestDate)
-                    {
-                        rr.EpcLodgementDate = f.Date.Past(10, rr.RequestDate);
-                    }
+                    if (rr.EpcLodgementDate >= rr.RequestDate) rr.EpcLodgementDate = f.Date.Past(10, rr.RequestDate);
                 }
-                
+
                 // decide what contact info the user gave (and redact if they did not)
-                var contactInfoGiven = f.Random.WeightedRandom(new [] { ContactInfoGiven.PhoneNumber, ContactInfoGiven.Email, ContactInfoGiven.PhoneNumberAndEmail }, 
-                    new []{ 0.05f, 0.35f, 0.6f });
+                var contactInfoGiven = f.Random.WeightedRandom(
+                    new[]
+                    {
+                        ContactInfoGiven.PhoneNumber, ContactInfoGiven.Email, ContactInfoGiven.PhoneNumberAndEmail
+                    },
+                    new[] { 0.05f, 0.35f, 0.6f });
                 switch (contactInfoGiven)
                 {
                     case ContactInfoGiven.PhoneNumber:
@@ -131,14 +130,15 @@ public class FakeReferralGenerator : IFakeReferralGenerator
                     case ContactInfoGiven.Email:
                         rr.ContactTelephone = null;
                         break;
-                    case ContactInfoGiven.PhoneNumberAndEmail: default:
+                    case ContactInfoGiven.PhoneNumberAndEmail:
+                    default:
                         break;
                 }
             });
 
-            return referralsSchema.Generate(count);
+        return referralsSchema.Generate(count);
     }
-    
+
     private enum ContactInfoGiven
     {
         PhoneNumber,

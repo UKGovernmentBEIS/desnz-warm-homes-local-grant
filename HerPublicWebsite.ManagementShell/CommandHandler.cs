@@ -1,15 +1,13 @@
-﻿using HerPublicWebsite.BusinessLogic;
-using HerPublicWebsite.BusinessLogic.Models;
-
-namespace HerPublicWebsite.ManagementShell;
+﻿namespace HerPublicWebsite.ManagementShell;
 
 public class CommandHandler
 {
-    private IDatabaseOperation databaseOperation;
-    private IFakeReferralGenerator fakeReferralGenerator;
-    private IOutputProvider outputProvider;
-    
-    public CommandHandler(IDatabaseOperation databaseOperation, IFakeReferralGenerator fakeReferralGenerator, IOutputProvider outputProvider)
+    private readonly IDatabaseOperation databaseOperation;
+    private readonly IFakeReferralGenerator fakeReferralGenerator;
+    private readonly IOutputProvider outputProvider;
+
+    public CommandHandler(IDatabaseOperation databaseOperation, IFakeReferralGenerator fakeReferralGenerator,
+        IOutputProvider outputProvider)
     {
         this.databaseOperation = databaseOperation;
         this.fakeReferralGenerator = fakeReferralGenerator;
@@ -25,12 +23,11 @@ public class CommandHandler
         }
 
         if (!int.TryParse(args[0], out var referralCount))
-        {
             outputProvider.Output("Invalid number of referrals. Usage: 'GenerateReferrals <count>'.");
-        }
-        
+
         outputProvider.Output("!!!!!!!!!!!!!!!!!!!!!!");
-        outputProvider.Output($"You are about to generate {referralCount} fake referral requests and add them to the database.");
+        outputProvider.Output(
+            $"You are about to generate {referralCount} fake referral requests and add them to the database.");
         outputProvider.Output("This command should only be run on development and staging environments.");
         outputProvider.Output("Double check that you are NOT running this command on a production environment.");
         outputProvider.Output("!!!!!!!!!!!!!!!!!!!!!!");
@@ -40,7 +37,9 @@ public class CommandHandler
         {
             outputProvider.Output("No referrals generated");
             return;
-        };
+        }
+
+        ;
 
         var highestReferralId = databaseOperation.GetHighestReferralId();
         var referralsToAdd = fakeReferralGenerator.GenerateFakeReferralRequests(referralCount, highestReferralId + 1);
