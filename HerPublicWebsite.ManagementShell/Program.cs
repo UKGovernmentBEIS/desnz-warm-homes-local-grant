@@ -8,18 +8,10 @@ public static class Program
     public static void Main(string[] args)
     {
         var outputProvider = new OutputProvider();
-        // TODO: make this work
-        // var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__PostgreSQLConnection");
-        //
-        // if (connectionString == null)
-        // {
-        //     outputProvider.Output("Please set 'ConnectionStrings__PostgreSQLConnection' env argument");
-        //     return;
-        // }
-
         var contextOptions = new DbContextOptionsBuilder<HerDbContext>()
             .UseNpgsql(
-                "UserId=postgres;Password=postgres;Server=localhost;Port=5433;Database=herdev;Integrated Security=true;Include Error Detail=true;Pooling=true")
+                Environment.GetEnvironmentVariable("ConnectionStrings__PostgreSQLConnection") ??
+                @"UserId=postgres;Password=postgres;Server=localhost;Port=5432;Database=herdev;Integrated Security=true;Include Error Detail=true;Pooling=true")
             .Options;
         using var context = new HerDbContext(contextOptions);
         var databaseOperation = new DatabaseOperation(context, outputProvider);
