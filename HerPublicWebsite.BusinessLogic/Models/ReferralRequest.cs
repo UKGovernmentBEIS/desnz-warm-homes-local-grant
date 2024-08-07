@@ -53,7 +53,6 @@ public class ReferralRequest
         Uprn = questionnaire.Uprn;
         EpcRating = questionnaire.DisplayEpcRating;
         EpcConfirmation = questionnaire.EpcDetailsAreCorrect;
-        EpcConfirmation = questionnaire.EpcDetailsAreCorrect;
         EpcLodgementDate = questionnaire.EpcDetails?.LodgementDate;
         IsLsoaProperty = questionnaire.IsLsoaProperty!.Value;
         HasGasBoiler = questionnaire.HasGasBoiler!.Value;
