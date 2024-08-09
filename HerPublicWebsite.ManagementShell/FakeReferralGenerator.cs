@@ -65,6 +65,7 @@ public class FakeReferralGenerator : IFakeReferralGenerator
             // > 36000 5%
             .RuleFor(rr => rr.IncomeBand,
                 f => f.Random.WeightedRandom(
+                    #pragma warning disable CS0618 // Type or member is obsolete
                     new[]
                     {
                         IncomeBand.UnderOrEqualTo31000,
@@ -74,6 +75,7 @@ public class FakeReferralGenerator : IFakeReferralGenerator
                         IncomeBand.UnderOrEqualTo36000,
                         IncomeBand.GreaterThan36000
                     },
+                    #pragma warning restore CS0618 // Type or member is obsolete
                     new[] { 0.4f, 0.03f, 0.01f, 0.01f, 0.5f, 0.05f }
                 ))
             .RuleFor(rr => rr.RequestDate, f => f.Date.Past())
