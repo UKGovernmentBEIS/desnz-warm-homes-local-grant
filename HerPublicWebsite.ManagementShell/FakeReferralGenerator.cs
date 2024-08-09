@@ -86,7 +86,7 @@ public class FakeReferralGenerator : IFakeReferralGenerator
             // both 60%
             .RuleFor(rr => rr.ContactEmailAddress, f => f.Internet.Email())
             .RuleFor(rr => rr.ContactTelephone, f => f.Phone.PhoneNumber())
-            .RuleFor(rr => rr.FullName, f => f.Name.FullName())
+            .RuleFor(rr => rr.FullName, f => $"FAKE USER {f.Name.FullName()}")
             .RuleFor(rr => rr.EpcLodgementDate, f => f.Date.Past(10))
             // not null 1%
             // yes and unknown 0% of this
