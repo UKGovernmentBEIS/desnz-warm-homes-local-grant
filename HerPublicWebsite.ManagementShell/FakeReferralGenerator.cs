@@ -6,18 +6,16 @@ namespace HerPublicWebsite.ManagementShell;
 
 public interface IFakeReferralGenerator
 {
-    IEnumerable<ReferralRequest> GenerateFakeReferralRequests(int count, int startId);
+    IEnumerable<ReferralRequest> GenerateFakeReferralRequests(int count);
 }
 
 public class FakeReferralGenerator : IFakeReferralGenerator
 {
-    public IEnumerable<ReferralRequest> GenerateFakeReferralRequests(int count, int startId)
+    public IEnumerable<ReferralRequest> GenerateFakeReferralRequests(int count)
     {
-        var id = startId;
         var custodianCodes = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode.Keys;
 
         var referralsSchema = new Faker<ReferralRequest>("en_GB")
-            .RuleFor(rr => rr.Id, _ => id++)
             // Number, Street name
             // Street name
             .RuleFor(rr => rr.AddressLine1, f => f.Address.StreetAddress())
@@ -65,7 +63,7 @@ public class FakeReferralGenerator : IFakeReferralGenerator
             // > 36000 5%
             .RuleFor(rr => rr.IncomeBand,
                 f => f.Random.WeightedRandom(
-                    #pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
                     new[]
                     {
                         IncomeBand.UnderOrEqualTo31000,
@@ -75,7 +73,7 @@ public class FakeReferralGenerator : IFakeReferralGenerator
                         IncomeBand.UnderOrEqualTo36000,
                         IncomeBand.GreaterThan36000
                     },
-                    #pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning restore CS0618 // Type or member is obsolete
                     new[] { 0.4f, 0.03f, 0.01f, 0.01f, 0.5f, 0.05f }
                 ))
             .RuleFor(rr => rr.RequestDate, f => f.Date.Past())
@@ -99,7 +97,6 @@ public class FakeReferralGenerator : IFakeReferralGenerator
             .RuleFor(rr => rr.WasSubmittedToPendingLocalAuthority, f => f.Random.Bool(0.15f))
             .FinishWith((f, rr) =>
             {
-                rr.UpdateReferralCode();
                 // only referrals not written to csv are those made today
                 if (rr.RequestDate.Date == DateTime.Today) rr.ReferralWrittenToCsv = false;
 

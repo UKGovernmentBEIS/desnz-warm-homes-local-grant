@@ -39,10 +39,7 @@ public class CommandHandler
             return;
         }
 
-        ;
-
-        var highestReferralId = databaseOperation.GetHighestReferralId();
-        var referralsToAdd = fakeReferralGenerator.GenerateFakeReferralRequests(referralCount, highestReferralId + 1);
+        var referralsToAdd = fakeReferralGenerator.GenerateFakeReferralRequests(referralCount);
 
         databaseOperation.AddReferralRequests(referralsToAdd);
     }

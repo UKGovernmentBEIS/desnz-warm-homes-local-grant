@@ -6,7 +6,6 @@ namespace HerPublicWebsite.ManagementShell;
 public interface IDatabaseOperation
 {
     public void AddReferralRequests(IEnumerable<ReferralRequest> referralRequests);
-    public int GetHighestReferralId();
 }
 
 public class DatabaseOperation : IDatabaseOperation
@@ -22,15 +21,14 @@ public class DatabaseOperation : IDatabaseOperation
 
     public void AddReferralRequests(IEnumerable<ReferralRequest> referralRequests)
     {
+        outputProvider.Output("(1/2) Adding fake referrals");
+        PerformTransaction(() => { dbContext.ReferralRequests.AddRange(referralRequests); });
+
+        outputProvider.Output("(2/2) Adding HUG2 IDs for each referral");
         PerformTransaction(() =>
         {
-            dbContext.ReferralRequests.AddRange(referralRequests);
+            foreach (var referralRequest in referralRequests) referralRequest.UpdateReferralCode();
         });
-    }
-
-    public int GetHighestReferralId()
-    {
-        return dbContext.ReferralRequests.Max(rr => rr.Id);
     }
 
     private void PerformTransaction(Action transaction)
