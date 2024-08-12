@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HerPublicWebsite.Data", "He
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HerPublicWebsite.BusinessLogic", "HerPublicWebsite.BusinessLogic\HerPublicWebsite.BusinessLogic.csproj", "{52A59A93-AC33-48E1-927D-FFCBB37A330E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HerPublicWebsite.ManagementShell", "HerPublicWebsite.ManagementShell\HerPublicWebsite.ManagementShell.csproj", "{9CB8268E-F5D4-4678-8E28-58080B2CD971}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{52A59A93-AC33-48E1-927D-FFCBB37A330E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52A59A93-AC33-48E1-927D-FFCBB37A330E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52A59A93-AC33-48E1-927D-FFCBB37A330E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CB8268E-F5D4-4678-8E28-58080B2CD971}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CB8268E-F5D4-4678-8E28-58080B2CD971}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CB8268E-F5D4-4678-8E28-58080B2CD971}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CB8268E-F5D4-4678-8E28-58080B2CD971}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
