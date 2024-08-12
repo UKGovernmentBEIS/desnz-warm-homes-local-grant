@@ -31,6 +31,8 @@ public class CommandHandler
         outputProvider.Output("This command should only be run on development and staging environments.");
         outputProvider.Output("Double check that you are NOT running this command on a production environment.");
         outputProvider.Output("All users will have a FullName that begins \"FAKE USER\"");
+        outputProvider.Output("To revert, connect to the database and run the following:");
+        outputProvider.Output("DELETE FROM \"ReferralRequests\" WHERE \"FullName\" LIKE 'FAKE USER %';");
         outputProvider.Output("!!!!!!!!!!!!!!!!!!!!!!");
         var confirmation = outputProvider.Confirm("Would you like to continue? (Y/N)");
 
