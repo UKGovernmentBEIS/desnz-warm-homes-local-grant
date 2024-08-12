@@ -30,6 +30,7 @@ public class CommandHandler
             $"You are about to generate {referralCount} fake referral requests and add them to the database.");
         outputProvider.Output("This command should only be run on development and staging environments.");
         outputProvider.Output("Double check that you are NOT running this command on a production environment.");
+        outputProvider.Output("All users will have a FullName that begins \"FAKE USER\"");
         outputProvider.Output("!!!!!!!!!!!!!!!!!!!!!!");
         var confirmation = outputProvider.Confirm("Would you like to continue? (Y/N)");
 
