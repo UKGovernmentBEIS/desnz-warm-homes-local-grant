@@ -17,6 +17,7 @@ Add the ticket number below and uncomment
 - [ ] If I have made any changes to website flow, I have updated the [Flow Miro Board](https://miro.com/app/board/uXjVK6dT96k=/)
 - [ ] If I have made any changes to website flow, I have checked forward and back behaviour is still consistent
 - [ ] If I have made any changes to the Local Authority or Consortium data, I have made sure these changes have been reflected in [the HUG2 Portal repository](https://github.com/UKGovernmentBEIS/desnz-home-energy-retrofit-portal-beta)
+- [ ] If I have made any changes to the ReferralRequest model, I have made sure the data in FakeReferralGenerator.cs is still accurate
 
 # Screenshots
 
