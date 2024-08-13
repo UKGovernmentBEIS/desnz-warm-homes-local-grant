@@ -77,8 +77,8 @@ public class FakeReferralGenerator : IFakeReferralGenerator
                     new[] { 0.4f, 0.03f, 0.01f, 0.01f, 0.5f, 0.05f }
                 ))
             .RuleFor(rr => rr.RequestDate, f => f.Date.Past())
-            // false only for referrals that are today
-            .RuleFor(rr => rr.ReferralWrittenToCsv, _ => true)
+            // false always so it'll write these out to portal tomorrow
+            .RuleFor(rr => rr.ReferralWrittenToCsv, _ => false)
             // telephone only 5%
             // email only 35%
             // both 60%
@@ -97,9 +97,6 @@ public class FakeReferralGenerator : IFakeReferralGenerator
             .RuleFor(rr => rr.WasSubmittedToPendingLocalAuthority, f => f.Random.Bool(0.15f))
             .FinishWith((f, rr) =>
             {
-                // only referrals not written to csv are those made today
-                if (rr.RequestDate.Date == DateTime.Today) rr.ReferralWrittenToCsv = false;
-
                 // 40% chance to redact all EPC info
                 var epcFound = f.Random.Bool(0.6f);
                 if (!epcFound)
