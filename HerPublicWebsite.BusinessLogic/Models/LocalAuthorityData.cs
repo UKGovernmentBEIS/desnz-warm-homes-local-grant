@@ -296,7 +296,7 @@ public class LocalAuthorityData
         { "9010", new LocalAuthorityDetails("Shetland Islands Council", Hug2Status.NotTakingPart, "https://www.shetland.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "3245", new LocalAuthorityDetails("Shropshire County Council", Hug2Status.Live, "http://www.shropshire.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "350", new LocalAuthorityDetails("Slough Borough Council", Hug2Status.Live, "https://www.slough.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cambridgeshire and Peterborough Combined Authority") },
-        { "4625", new LocalAuthorityDetails("Solihull Borough Council", Hug2Status.Pending, "https://www.solihull.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
+        { "4625", new LocalAuthorityDetails("Solihull Borough Council", Hug2Status.Live, "https://www.solihull.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "3300", new LocalAuthorityDetails("Somerset Council", Hug2Status.Live, "https://www.somerset.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "9076", new LocalAuthorityDetails("South Ayrshire Council", Hug2Status.NotTakingPart, "https://www.south-ayrshire.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "530", new LocalAuthorityDetails("South Cambridgeshire District Council", Hug2Status.Live, "http://www.scambs.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cambridge City Council") },

@@ -269,7 +269,7 @@ internal static class LocalAuthorityStatuses
             { "9010", NotTakingPart },
             { "3245", Live },
             { "350", Live },
-            { "4625", Pending },
+            { "4625", Live },
             { "3300", Live },
             { "9076", NotTakingPart },
             { "530", Live },
