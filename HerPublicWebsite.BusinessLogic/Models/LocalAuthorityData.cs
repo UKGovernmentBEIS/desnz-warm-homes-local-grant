@@ -8,6 +8,7 @@ public class LocalAuthorityData
     {
         NotTakingPart,
         NotParticipating,
+        NoLongerParticipating,
         Pending,
         Live
     }
@@ -39,7 +40,7 @@ public class LocalAuthorityData
     {
         { "9052", new LocalAuthorityDetails("Aberdeenshire Council", Hug2Status.NotTakingPart, "https://www.aberdeenshire.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "3805", new LocalAuthorityDetails("Adur District Council", Hug2Status.Live, "https://www.adur-worthing.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
-        { "1005", new LocalAuthorityDetails("Amber Valley Borough Council", Hug2Status.NotParticipating, "http://www.ambervalley.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
+        { "1005", new LocalAuthorityDetails("Amber Valley Borough Council", Hug2Status.NoLongerParticipating, "http://www.ambervalley.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "9053", new LocalAuthorityDetails("Angus Council", Hug2Status.NotTakingPart, "https://www.angus.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "9054", new LocalAuthorityDetails("Argyll and Bute Council", Hug2Status.NotTakingPart, "https://www.argyll-bute.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "3810", new LocalAuthorityDetails("Arun District Council", Hug2Status.Live, "http://www.arun.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },

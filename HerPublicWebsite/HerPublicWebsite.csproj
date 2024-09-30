@@ -39,4 +39,9 @@
       <_ContentIncludedByDefault Remove="Views\Partials\LocalAuthorityMessages\Pending\Default.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <AdditionalFiles Include="Views\Partials\LocalAuthorityMessages\NoLongerParticipating\Default.cshtml" />
+      <AdditionalFiles Include="Views\Questionnaire\NoLongerParticipating.cshtml" />
+    </ItemGroup>
+
 </Project>
