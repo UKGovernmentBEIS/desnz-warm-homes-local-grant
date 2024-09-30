@@ -17,7 +17,6 @@
   <ItemGroup>
     <Content Include="Services\EligiblePostcode\EligiblePostcodeData.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
 </Project>
