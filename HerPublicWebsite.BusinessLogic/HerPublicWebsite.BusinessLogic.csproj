@@ -15,8 +15,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Services\EligiblePostcode\EligiblePostcodeData.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="Services\EligiblePostcode\EligiblePostcodeData.json"/>
   </ItemGroup>
 </Project>

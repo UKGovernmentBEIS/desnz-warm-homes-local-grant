@@ -1,4 +1,6 @@
-﻿using HerPublicWebsite.BusinessLogic.Extensions;
+﻿using System.Reflection;
+using System.Text;
+using HerPublicWebsite.BusinessLogic.Extensions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -11,30 +13,21 @@ public interface IEligiblePostcodeService
 
 public class EligiblePostcodeService : IEligiblePostcodeService
 {
-    // build structure means json file is in different location when running locally
-    private const string PostcodeJsonPath = "Services/EligiblePostcode/EligiblePostcodeData.json";
-
-    private const string LocalPostcodeJsonPath =
-        "../HerPublicWebsite.BusinessLogic/Services/EligiblePostcode/EligiblePostcodeData.json";
-
     private readonly List<string> eligiblePostcodes;
     private readonly ILogger<EligiblePostcodeService> logger;
 
     public EligiblePostcodeService(ILogger<EligiblePostcodeService> logger)
     {
         this.logger = logger;
-        string jsonContents;
 
-        if (File.Exists(LocalPostcodeJsonPath))
-        {
-            using var reader = new StreamReader(LocalPostcodeJsonPath);
-            jsonContents = reader.ReadToEnd();
-        }
-        else
-        {
-            using var reader = new StreamReader(PostcodeJsonPath);
-            jsonContents = reader.ReadToEnd();
-        }
+        var info = Assembly.GetExecutingAssembly().GetName();
+        var name = info.Name;
+        using var stream = Assembly
+            .GetExecutingAssembly()
+            .GetManifestResourceStream($"{name}.Services.EligiblePostcode.EligiblePostcodeData.json")!;
+
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+        var jsonContents = reader.ReadToEnd();
 
         eligiblePostcodes = JsonConvert.DeserializeObject<List<string>>(jsonContents);
     }
