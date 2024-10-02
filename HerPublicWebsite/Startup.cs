@@ -82,6 +82,7 @@ namespace HerPublicWebsite
 
             services.AddMemoryCache();
             services.AddSingleton<StaticAssetsVersioningService>();
+            services.AddSingleton<EligiblePostcodeListCache>();
             // This allows encrypted cookies to be understood across multiple web server instances
             services.AddDataProtection().PersistKeysToDbContext<HerDbContext>();
 

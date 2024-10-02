@@ -17,7 +17,8 @@ public class EligiblePostcodeServiceTests
     {
         logger = new NullLogger<EligiblePostcodeService>();
 
-        underTest = new EligiblePostcodeService(logger);
+        var eligiblePostcodeListCache = new EligiblePostcodeListCache();
+        underTest = new EligiblePostcodeService(eligiblePostcodeListCache, logger);
     }
     
     [TestCase("AL1 2AP")]

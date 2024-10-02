@@ -1,8 +1,5 @@
-﻿using System.Reflection;
-using System.Text;
-using HerPublicWebsite.BusinessLogic.Extensions;
+﻿using HerPublicWebsite.BusinessLogic.Extensions;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 
@@ -13,23 +10,14 @@ public interface IEligiblePostcodeService
 
 public class EligiblePostcodeService : IEligiblePostcodeService
 {
-    private readonly List<string> eligiblePostcodes;
+    private readonly EligiblePostcodeListCache eligiblePostcodeListCache;
     private readonly ILogger<EligiblePostcodeService> logger;
 
-    public EligiblePostcodeService(ILogger<EligiblePostcodeService> logger)
+    public EligiblePostcodeService(EligiblePostcodeListCache eligiblePostcodeListCache,
+        ILogger<EligiblePostcodeService> logger)
     {
+        this.eligiblePostcodeListCache = eligiblePostcodeListCache;
         this.logger = logger;
-
-        var info = Assembly.GetExecutingAssembly().GetName();
-        var name = info.Name;
-        using var stream = Assembly
-            .GetExecutingAssembly()
-            .GetManifestResourceStream($"{name}.Services.EligiblePostcode.EligiblePostcodeData.json")!;
-
-        using var reader = new StreamReader(stream, Encoding.UTF8);
-        var jsonContents = reader.ReadToEnd();
-
-        eligiblePostcodes = JsonConvert.DeserializeObject<List<string>>(jsonContents);
     }
 
     // Check whether a postcode is in the list of eligible postcodes found on this page
@@ -46,6 +34,6 @@ public class EligiblePostcodeService : IEligiblePostcodeService
             return false;
         }
 
-        return eligiblePostcodes.Contains(normalisedPostcode);
+        return eligiblePostcodeListCache.GetEligiblePostcodes().Contains(normalisedPostcode);
     }
 }
