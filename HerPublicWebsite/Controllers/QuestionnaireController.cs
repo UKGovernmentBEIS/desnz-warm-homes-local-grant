@@ -517,7 +517,7 @@ public class QuestionnaireController : Controller
     public IActionResult NoLongerParticipating_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var viewModel = new NotParticipatingViewModel
+        var viewModel = new NoLongerParticipatingViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             Submitted = emailPreferenceSubmitted,
@@ -528,7 +528,7 @@ public class QuestionnaireController : Controller
             BackLink = GetBackUrl(QuestionFlowStep.NotTakingPart, questionnaire, entryPoint)
         };
 
-        return View("NotParticipating", viewModel);
+        return View("NoLongerParticipating", viewModel);
     }
 
     [HttpPost("no-longer-participating")]
