@@ -17,10 +17,10 @@ jobs:
       - name: Checkout code onto job runner
         uses: actions/checkout@v2
 
-      - name: Install .Net (6.0)
+      - name: Install .Net (8.0)
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 8.0.x
 
       - name: Restore .Net dependencies
         run: dotnet restore --configfile nuget.config

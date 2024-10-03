@@ -25,12 +25,12 @@ public class SecurityHeadersMiddleware
     {
         if (!context.Response.Headers.ContainsKey(XContentTypeOptions))
         {
-            context.Response.Headers.Add(XContentTypeOptions, "nosniff");
+            context.Response.Headers.Append(XContentTypeOptions, "nosniff");
         }
 
         if (!context.Response.Headers.ContainsKey(XFrameOptions))
         {
-            context.Response.Headers.Add(XFrameOptions, "deny");
+            context.Response.Headers.Append(XFrameOptions, "deny");
         }
 
         var nonce = Guid.NewGuid().ToString("N");
@@ -39,7 +39,7 @@ public class SecurityHeadersMiddleware
         if (!context.Response.Headers.ContainsKey(ContentSecurityPolicy))
         {
             // Based on https://csp.withgoogle.com/docs/strict-csp.html
-            context.Response.Headers.Add(ContentSecurityPolicy,
+            context.Response.Headers.Append(ContentSecurityPolicy,
                 "object-src 'none'; " +
                 $"script-src 'nonce-{nonce}' 'unsafe-inline' 'strict-dynamic' https:; " +
                 "base-uri 'none';");
@@ -47,7 +47,7 @@ public class SecurityHeadersMiddleware
 
         if (!context.Response.Headers.ContainsKey(ReferrerPolicy))
         {
-            context.Response.Headers.Add(ReferrerPolicy, "no-referrer");
+            context.Response.Headers.Append(ReferrerPolicy, "no-referrer");
         }
 
         return next(context);
