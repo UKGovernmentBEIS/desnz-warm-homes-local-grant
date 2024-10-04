@@ -10,10 +10,13 @@ public interface IEligiblePostcodeService
 
 public class EligiblePostcodeService : IEligiblePostcodeService
 {
+    private readonly EligiblePostcodeListCache eligiblePostcodeListCache;
     private readonly ILogger<EligiblePostcodeService> logger;
-    
-    public EligiblePostcodeService(ILogger<EligiblePostcodeService> logger)
+
+    public EligiblePostcodeService(EligiblePostcodeListCache eligiblePostcodeListCache,
+        ILogger<EligiblePostcodeService> logger)
     {
+        this.eligiblePostcodeListCache = eligiblePostcodeListCache;
         this.logger = logger;
     }
 
@@ -30,7 +33,7 @@ public class EligiblePostcodeService : IEligiblePostcodeService
             logger.LogError("IsEligiblePostcode was called with a string that is not a valid postcode: {}", postcode);
             return false;
         }
-        
-        return EligiblePostcodeData.EligiblePostcodes.Contains(normalisedPostcode);
+
+        return eligiblePostcodeListCache.GetEligiblePostcodes().Contains(normalisedPostcode);
     }
 }
