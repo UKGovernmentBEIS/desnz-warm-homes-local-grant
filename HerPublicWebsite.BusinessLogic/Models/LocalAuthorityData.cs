@@ -324,7 +324,7 @@ public class LocalAuthorityData
         { "9078", new LocalAuthorityDetails("Stirling Council", Hug2Status.NotTakingPart, "https://stirling.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "4235", new LocalAuthorityDetails("Stockport Metropolitan Borough Council", Hug2Status.NotTakingPart, "https://www.stockport.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "738", new LocalAuthorityDetails("Stockton-on-Tees Borough Council", Hug2Status.Pending, "https://www.stockton.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Darlington Borough Council") },
-        { "3720", new LocalAuthorityDetails("Stratford-on-Avon District Council", Hug2Status.Live, "https://www.stratford.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
+        { "3720", new LocalAuthorityDetails("Stratford-on-Avon District Council", Hug2Status.NoLongerParticipating, "https://www.stratford.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "1625", new LocalAuthorityDetails("Stroud District Council", Hug2Status.Live, "http://www.stroud.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Stroud District Council") },
         { "4525", new LocalAuthorityDetails("Sunderland City Council", Hug2Status.NotTakingPart, "https://www.sunderland.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "3640", new LocalAuthorityDetails("Surrey Heath Borough Council", Hug2Status.Live, "https://www.surreyheath.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Surrey County Council") },
