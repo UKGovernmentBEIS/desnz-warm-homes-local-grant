@@ -32,6 +32,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.ReviewEpc => ReviewEpcBackDestination(),
                 QuestionFlowStep.NotParticipating => NotParticipatingBackDestination(questionnaire),
                 QuestionFlowStep.NotTakingPart => NotTakingPartBackDestination(questionnaire),
+                QuestionFlowStep.NoLongerParticipating => NoLongerParticipatingBackDestination(questionnaire),
                 QuestionFlowStep.Pending => PendingBackDestination(questionnaire),
                 QuestionFlowStep.ManualAddress => ManualAddressBackDestination(entryPoint),
                 QuestionFlowStep.SelectLocalAuthority => SelectLocalAuthorityBackDestination(),
@@ -61,6 +62,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
                 QuestionFlowStep.ConfirmLocalAuthority => ConfirmLocalAuthorityForwardDestination(questionnaire, entryPoint),
                 QuestionFlowStep.NotParticipating => NotParticipatingForwardDestination(questionnaire),
                 QuestionFlowStep.NotTakingPart => NotTakingPartForwardDestination(questionnaire),
+                QuestionFlowStep.NoLongerParticipating => NoLongerParticipatingForwardDestination(questionnaire),
                 QuestionFlowStep.Pending => PendingForwardDestination(questionnaire, entryPoint),
                 QuestionFlowStep.HouseholdIncome => HouseholdIncomeForwardDestination(questionnaire),
                 QuestionFlowStep.CheckAnswers => CheckAnswersForwardDestination(questionnaire),
@@ -168,6 +170,15 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         }
         
         private QuestionFlowStep NotParticipatingBackDestination(Questionnaire questionnaire)
+        {
+            return questionnaire.Uprn switch
+            {
+                null => QuestionFlowStep.ConfirmLocalAuthority,
+                _ => QuestionFlowStep.Address
+            };
+        }
+        
+        private QuestionFlowStep NoLongerParticipatingBackDestination(Questionnaire questionnaire)
         {
             return questionnaire.Uprn switch
             {
@@ -286,6 +297,10 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             {
                 return QuestionFlowStep.NotParticipating;
             }
+            else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NoLongerParticipating)
+            {
+                return QuestionFlowStep.NoLongerParticipating;
+            }
             else if (questionnaire.FoundEpcBandIsTooHigh)
             {
                 return QuestionFlowStep.ReviewEpc;
@@ -340,6 +355,10 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             {
                 return QuestionFlowStep.NotTakingPart;
             }
+            else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NoLongerParticipating)
+            {
+                return QuestionFlowStep.NoLongerParticipating;
+            }
             else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotParticipating)
             {
                 return QuestionFlowStep.NotParticipating;
@@ -366,6 +385,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
         private QuestionFlowStep NotParticipatingForwardDestination(Questionnaire questionnaire)
         {
             return QuestionFlowStep.NotParticipating;
+        }
+        
+        private QuestionFlowStep NoLongerParticipatingForwardDestination(Questionnaire questionnaire)
+        {
+            return QuestionFlowStep.NoLongerParticipating;
         }
         
         private QuestionFlowStep PendingForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
