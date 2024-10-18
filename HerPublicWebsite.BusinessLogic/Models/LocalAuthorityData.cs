@@ -383,7 +383,7 @@ public class LocalAuthorityData
         { "360", new LocalAuthorityDetails("Wokingham Borough Council", Hug2Status.Live, "https://www.wokingham.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cambridgeshire and Peterborough Combined Authority") },
         { "4635", new LocalAuthorityDetails("Wolverhampton City Council", Hug2Status.Pending, "http://www.wolverhampton.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "1835", new LocalAuthorityDetails("Worcester City Council", Hug2Status.NotParticipating, "http://www.worcester.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
-        { "1855", new LocalAuthorityDetails("Worcestershire County Council", Hug2Status.Pending, "http://www.worcestershire.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
+        { "1855", new LocalAuthorityDetails("Worcestershire County Council", Hug2Status.Live, "http://www.worcestershire.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "3835", new LocalAuthorityDetails("Worthing Borough Council", Hug2Status.Live, "https://www.adur-worthing.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
         { "6955", new LocalAuthorityDetails("Wrexham County Borough Council", Hug2Status.NotTakingPart, "http://www.wrexham.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1840", new LocalAuthorityDetails("Wychavon District Council", Hug2Status.Pending, "http://www.wychavon.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
