@@ -35,6 +35,7 @@ public class ReferralRequestBuilder
             ContactTelephone = $"{id:D5} 123456"
         };
     }
+
     public ReferralRequest Build()
     {
         return referralRequest;
@@ -88,17 +89,20 @@ public class ReferralRequestBuilder
         return this;
     }
 
-    public ReferralRequestBuilder WithEpcConfirmation(EpcConfirmation confirmation) {
+    public ReferralRequestBuilder WithEpcConfirmation(EpcConfirmation confirmation)
+    {
         referralRequest.EpcConfirmation = confirmation;
         return this;
     }
 
-    public ReferralRequestBuilder WithWrittenToCsv(bool writtenToCsv) {
+    public ReferralRequestBuilder WithWrittenToCsv(bool writtenToCsv)
+    {
         referralRequest.ReferralWrittenToCsv = writtenToCsv;
         return this;
     }
 
-    public ReferralRequestBuilder WithFollowUp(ReferralRequestFollowUpBuilder requestFollowUpBuilder) {
+    public ReferralRequestBuilder WithFollowUp(ReferralRequestFollowUpBuilder requestFollowUpBuilder)
+    {
         referralRequest.FollowUp = requestFollowUpBuilder.Build(referralRequest);
         return this;
     }
