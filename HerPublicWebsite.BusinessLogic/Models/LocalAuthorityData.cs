@@ -10,6 +10,7 @@ public class LocalAuthorityData
         NotParticipating,
         NoLongerParticipating,
         Pending,
+        TakingFutureReferrals,
         Live
     }
 
