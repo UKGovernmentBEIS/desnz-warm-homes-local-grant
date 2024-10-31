@@ -30,6 +30,8 @@ public class ReferralRequest
     public DateTime RequestDate { get; set; }
     public bool WasSubmittedToPendingLocalAuthority { get; set; }
     
+    public bool WasSubmittedForFutureGrants { get; set; }
+    
     public bool ReferralWrittenToCsv { get; set; }
     
     public bool FollowUpEmailSent { get; set; }
@@ -64,6 +66,8 @@ public class ReferralRequest
         RequestDate = DateTime.Now;
         WasSubmittedToPendingLocalAuthority =
             questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending;
+        WasSubmittedForFutureGrants =
+            questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.TakingFutureReferrals;
     }
 
     public void UpdateReferralCode()

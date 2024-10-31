@@ -95,6 +95,8 @@ public class FakeReferralGenerator : IFakeReferralGenerator
             .RuleFor(rr => rr.FollowUpEmailSent, f => f.Random.Bool(0.75f))
             // true 15%
             .RuleFor(rr => rr.WasSubmittedToPendingLocalAuthority, f => f.Random.Bool(0.15f))
+            // true 30%
+            .RuleFor(rr => rr.WasSubmittedForFutureGrants, f => f.Random.Bool(0.3f))
             .FinishWith((f, rr) =>
             {
                 // 40% chance to redact all EPC info

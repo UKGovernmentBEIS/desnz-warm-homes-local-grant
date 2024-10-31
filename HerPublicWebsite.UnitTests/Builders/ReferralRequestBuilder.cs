@@ -109,6 +109,12 @@ public class ReferralRequestBuilder
         return this;
     }
 
+    public ReferralRequestBuilder WithWasSubmittedForFutureGrants(bool wasSubmittedForFutureGrants)
+    {
+        referralRequest.WasSubmittedForFutureGrants = wasSubmittedForFutureGrants;
+        return this;
+    }
+
     public ReferralRequestBuilder WithReferralCode(string referralCode)
     {
         referralRequest.ReferralCode = referralCode;
