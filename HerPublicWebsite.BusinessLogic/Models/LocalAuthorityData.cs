@@ -255,7 +255,7 @@ public class LocalAuthorityData
         { "2935", new LocalAuthorityDetails("Northumberland County Council", Hug2Status.Live, "http://www.northumberland.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "2625", new LocalAuthorityDetails("Norwich City Council", Hug2Status.NotParticipating, "http://www.norwich.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Broadland District Council") },
         { "3060", new LocalAuthorityDetails("Nottingham City Council", Hug2Status.Pending, "https://www.nottinghamcity.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
-        { "3710", new LocalAuthorityDetails("Nuneaton and Bedworth Borough Council", Hug2Status.Pending, "https://www.nuneatonandbedworth.gov.uk/site/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
+        { "3710", new LocalAuthorityDetails("Nuneaton and Bedworth Borough Council", Hug2Status.Live, "https://www.nuneatonandbedworth.gov.uk/site/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "2440", new LocalAuthorityDetails("Oadby and Wigston District Council", Hug2Status.NotParticipating, "http://oadby-wigston.gov.uk/Home/Home.aspx", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "4220", new LocalAuthorityDetails("Oldham Metropolitan Borough Council", Hug2Status.NotTakingPart, "https://www.oldham.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "7655", new LocalAuthorityDetails("Ordnance Survey", Hug2Status.NotTakingPart, "", IncomeBandOptions[IncomeThreshold._36000], null) },
