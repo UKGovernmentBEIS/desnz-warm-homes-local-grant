@@ -178,7 +178,7 @@ public class LocalAuthorityData
         { "1415", new LocalAuthorityDetails("Hastings Borough Council", Hug2Status.NotParticipating, "https://www.hastings.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Lewes District Council") },
         { "1735", new LocalAuthorityDetails("Havant Borough Council", Hug2Status.Live, "http://www.havant.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
         { "5480", new LocalAuthorityDetails("London Borough of Havering", Hug2Status.Live, "https://www.havering.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cambridgeshire and Peterborough Combined Authority") },
-        { "1850", new LocalAuthorityDetails("Herefordshire County Council", Hug2Status.Live, "https://www.herefordshire.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
+        { "1850", new LocalAuthorityDetails("Herefordshire County Council", Hug2Status.NoLongerParticipating, "https://www.herefordshire.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "1920", new LocalAuthorityDetails("Hertsmere Borough Council", Hug2Status.Live, "https://www.hertsmere.gov.uk/home.aspx", IncomeBandOptions[IncomeThreshold._36000], "Cambridgeshire and Peterborough Combined Authority") },
         { "1030", new LocalAuthorityDetails("High Peak Borough Council", Hug2Status.Pending, "https://www.highpeak.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "9068", new LocalAuthorityDetails("The Highland Council", Hug2Status.NotTakingPart, "https://www.highland.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
