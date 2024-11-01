@@ -301,6 +301,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             {
                 return QuestionFlowStep.NoLongerParticipating;
             }
+            else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.TakingFutureReferrals)
+            {
+                // TODO PC-1385: implement the new journey for future referrals
+                return QuestionFlowStep.NoLongerParticipating;
+            }
             else if (questionnaire.FoundEpcBandIsTooHigh)
             {
                 return QuestionFlowStep.ReviewEpc;
@@ -357,6 +362,11 @@ namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow
             }
             else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NoLongerParticipating)
             {
+                return QuestionFlowStep.NoLongerParticipating;
+            }
+            else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.TakingFutureReferrals)
+            {
+                // TODO PC-1385: implement the new journey for future referrals
                 return QuestionFlowStep.NoLongerParticipating;
             }
             else if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotParticipating)
