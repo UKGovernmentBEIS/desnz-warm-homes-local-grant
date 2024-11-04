@@ -7,7 +7,9 @@ public class LocalAuthorityData
     public enum Hug2Status
     {
         NotTakingPart,
+        [Obsolete("Now handled by TakingFutureReferrals")]
         NotParticipating,
+        [Obsolete("Now handled by TakingFutureReferrals")]
         NoLongerParticipating,
         Pending,
         TakingFutureReferrals,
