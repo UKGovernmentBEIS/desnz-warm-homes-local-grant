@@ -13,6 +13,11 @@ public interface IEmailSender
         string emailAddress,
         string recipientName,
         ReferralRequest referralRequest);
+    
+    public void SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority(
+        string emailAddress,
+        string recipientName,
+        ReferralRequest referralRequest);
 
     public void SendFollowUpEmail
     (

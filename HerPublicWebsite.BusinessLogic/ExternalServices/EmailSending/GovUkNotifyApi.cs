@@ -62,6 +62,15 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             SendReferenceCodeEmail(emailAddress, recipientName, referralRequest, govUkNotifyConfig.ReferenceCodeForLiveLocalAuthorityTemplate);
         }
         
+        public void SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority
+        (
+            string emailAddress,
+            string recipientName,
+            ReferralRequest referralRequest)
+        {
+            SendReferenceCodeEmail(emailAddress, recipientName, referralRequest, govUkNotifyConfig.ReferenceCodeForTakingFutureReferralsLocalAuthorityTemplate);
+        }
+        
         public void SendReferenceCodeEmailForPendingLocalAuthority
         (
             string emailAddress,

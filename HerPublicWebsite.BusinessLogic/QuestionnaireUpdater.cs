@@ -148,6 +148,10 @@ public class QuestionnaireUpdater
             {
                 emailSender.SendReferenceCodeEmailForPendingLocalAuthority(emailAddress, name, referralRequest);
             }
+            else if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.TakingFutureReferrals)
+            {
+                emailSender.SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority(emailAddress, name, referralRequest);
+            }
             else
             {
                 emailSender.SendReferenceCodeEmailForLiveLocalAuthority(emailAddress, name, referralRequest);
