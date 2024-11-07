@@ -113,6 +113,13 @@ public class QuestionnaireUpdater
             QuestionFlowStep.Pending, entryPoint);
     }
 
+    public Questionnaire UpdateAcknowledgedFutureReferral(Questionnaire questionnaire, bool? acknowledgedFutureReferral,
+        QuestionFlowStep? entryPoint)
+    {
+        return UpdateQuestionnaire(q => q.AcknowledgedFutureReferral = acknowledgedFutureReferral, questionnaire,
+            QuestionFlowStep.TakingFutureReferrals, entryPoint);
+    }
+    
     public Questionnaire UpdateHouseholdIncome(Questionnaire questionnaire, IncomeBand incomeBand,
         QuestionFlowStep? entryPoint)
     {

@@ -92,7 +92,10 @@ public class QuestionnaireService
     {
         var questionnaire = GetQuestionnaire();
         if (questionnaire.CustodianCode != custodianCode)
+        {
             questionnaire = questionnaireUpdater.UpdateAcknowledgedPending(questionnaire, false, entryPoint);
+            questionnaire = questionnaireUpdater.UpdateAcknowledgedFutureReferral(questionnaire, false, entryPoint);
+        }
         questionnaire = questionnaireUpdater.UpdateLocalAuthority(questionnaire, custodianCode, entryPoint);
         await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
@@ -110,6 +113,14 @@ public class QuestionnaireService
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = questionnaireUpdater.UpdateAcknowledgedPending(questionnaire, acknowledgedPending, entryPoint);
+        await SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+    
+    public async Task<Questionnaire> UpdateAcknowledgedFutureReferral(bool acknowledgedFutureReferral, QuestionFlowStep? entryPoint)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdateAcknowledgedFutureReferral(questionnaire, acknowledgedFutureReferral, entryPoint);
         await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }

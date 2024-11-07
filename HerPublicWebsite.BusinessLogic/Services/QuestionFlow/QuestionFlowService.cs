@@ -35,6 +35,7 @@ public class QuestionFlowService : IQuestionFlowService
             QuestionFlowStep.NotParticipating => NotParticipatingBackDestination(questionnaire),
             QuestionFlowStep.NotTakingPart => NotTakingPartBackDestination(questionnaire),
             QuestionFlowStep.NoLongerParticipating => NoLongerParticipatingBackDestination(questionnaire),
+            QuestionFlowStep.TakingFutureReferrals => TakingFutureReferralsBackDestination(questionnaire),
             QuestionFlowStep.Pending => PendingBackDestination(questionnaire),
             QuestionFlowStep.ManualAddress => ManualAddressBackDestination(entryPoint),
             QuestionFlowStep.SelectLocalAuthority => SelectLocalAuthorityBackDestination(),
@@ -67,6 +68,7 @@ public class QuestionFlowService : IQuestionFlowService
             QuestionFlowStep.NotParticipating => NotParticipatingForwardDestination(questionnaire),
             QuestionFlowStep.NotTakingPart => NotTakingPartForwardDestination(questionnaire),
             QuestionFlowStep.NoLongerParticipating => NoLongerParticipatingForwardDestination(questionnaire),
+            QuestionFlowStep.TakingFutureReferrals => TakingFutureReferralsForwardDestination(questionnaire, entryPoint),
             QuestionFlowStep.Pending => PendingForwardDestination(questionnaire, entryPoint),
             QuestionFlowStep.HouseholdIncome => HouseholdIncomeForwardDestination(questionnaire),
             QuestionFlowStep.CheckAnswers => CheckAnswersForwardDestination(questionnaire),
@@ -189,6 +191,15 @@ public class QuestionFlowService : IQuestionFlowService
             _ => QuestionFlowStep.Address
         };
     }
+    
+    private QuestionFlowStep TakingFutureReferralsBackDestination(Questionnaire questionnaire)
+    {
+        if (questionnaire.FoundEpcBandIsTooHigh)
+            return QuestionFlowStep.ReviewEpc;
+        if (questionnaire.Uprn is null) return QuestionFlowStep.ConfirmLocalAuthority;
+
+        return QuestionFlowStep.Address;
+    }
 
     private QuestionFlowStep PendingBackDestination(Questionnaire questionnaire)
     {
@@ -205,6 +216,8 @@ public class QuestionFlowService : IQuestionFlowService
             return QuestionFlowStep.CheckAnswers;
         if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending)
             return QuestionFlowStep.Pending;
+        if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.TakingFutureReferrals)
+            return QuestionFlowStep.TakingFutureReferrals;
         if (questionnaire.FoundEpcBandIsTooHigh)
             return QuestionFlowStep.ReviewEpc;
         if (questionnaire.Uprn is null) return QuestionFlowStep.ConfirmLocalAuthority;
@@ -288,8 +301,7 @@ public class QuestionFlowService : IQuestionFlowService
 #pragma warning restore CS0618 // Type or member is obsolete
             return QuestionFlowStep.NoLongerParticipating;
         if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.TakingFutureReferrals)
-            // TODO PC-1385: implement the new journey for future referrals
-            return QuestionFlowStep.NoLongerParticipating;
+            return QuestionFlowStep.TakingFutureReferrals;
         if (questionnaire.FoundEpcBandIsTooHigh)
             return QuestionFlowStep.ReviewEpc;
         if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Pending)
@@ -336,8 +348,7 @@ public class QuestionFlowService : IQuestionFlowService
 #pragma warning restore CS0618 // Type or member is obsolete
             return QuestionFlowStep.NoLongerParticipating;
         if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.TakingFutureReferrals)
-            // TODO PC-1385: implement the new journey for future referrals
-            return QuestionFlowStep.NoLongerParticipating;
+            return QuestionFlowStep.TakingFutureReferrals;
 #pragma warning disable CS0618 // Type or member is obsolete
         if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotParticipating)
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -367,6 +378,15 @@ public class QuestionFlowService : IQuestionFlowService
         return QuestionFlowStep.NoLongerParticipating;
     }
 
+    private QuestionFlowStep TakingFutureReferralsForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
+    {
+        // If the LA has changed and the income band the user selected previously is no longer valid then we don't
+        // go back to the check your answers page as the user will need to select a new income band.
+        if (entryPoint is QuestionFlowStep.Address && questionnaire.IncomeBandIsValid)
+            return QuestionFlowStep.CheckAnswers;
+        return QuestionFlowStep.HouseholdIncome;
+    }
+    
     private QuestionFlowStep PendingForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
     {
         // If the LA has changed and the income band the user selected previously is no longer valid then we don't

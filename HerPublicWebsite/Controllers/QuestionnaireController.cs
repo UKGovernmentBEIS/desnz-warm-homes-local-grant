@@ -585,6 +585,36 @@ public class QuestionnaireController : Controller
         );
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
+    
+    [HttpGet("taking-future-referrals")]
+    public IActionResult TakingFutureReferrals_Get(QuestionFlowStep? entryPoint)
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var viewModel = new TakingFutureReferralsViewModel
+        {
+            LocalAuthorityName = questionnaire.LocalAuthorityName,
+            UserAcknowledgedFutureReferral = questionnaire.AcknowledgedFutureReferral ?? false,
+            EntryPoint = entryPoint,
+            BackLink = GetBackUrl(QuestionFlowStep.TakingFutureReferrals, questionnaire, entryPoint)
+        };
+
+        return View("TakingFutureReferrals", viewModel);
+    }
+    
+    [HttpPost("taking-future-referrals")]
+    public async Task<IActionResult> TakingFutureReferrals_Post(TakingFutureReferralsViewModel viewModel)
+    {
+        if (!ModelState.IsValid) return Pending_Get(viewModel.EntryPoint);
+        var questionnaire =
+            await questionnaireService.UpdateAcknowledgedFutureReferral(viewModel.UserAcknowledgedFutureReferral,
+                viewModel.EntryPoint);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.TakingFutureReferrals, questionnaire, viewModel.EntryPoint);
+        var forwardArgs = GetActionArgumentsForQuestion(
+            nextStep,
+            viewModel.EntryPoint
+        );
+        return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
+    }
 
     [HttpGet("income")]
     public IActionResult HouseholdIncome_Get(QuestionFlowStep? entryPoint)
@@ -654,6 +684,7 @@ public class QuestionnaireController : Controller
         var viewModel = new EligibleViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
+            LocalAuthorityIsTakingFutureReferrals = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.TakingFutureReferrals,
             LocalAuthorityIsLiveWithHug2 = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Live,
             CanContactByEmail = questionnaire.LaCanContactByEmail.ToNullableYesOrNo(),
             CanContactByPhone = questionnaire.LaCanContactByPhone.ToNullableYesOrNo(),
@@ -751,6 +782,7 @@ public class QuestionnaireController : Controller
         {
             EpcIsTooHigh = questionnaire.EpcIsTooHigh,
             IncomeIsTooHigh = questionnaire.IncomeIsTooHigh,
+            ShowWarmHomesText = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.TakingFutureReferrals,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
             EmailAddress = questionnaire.NotificationEmailAddress,
@@ -855,6 +887,8 @@ public class QuestionnaireController : Controller
                 GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.NoLongerParticipating => new PathByActionArguments(nameof(NoLongerParticipating_Get),
                 "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.TakingFutureReferrals => new PathByActionArguments(nameof(TakingFutureReferrals_Get),
+                "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.Pending => new PathByActionArguments(nameof(Pending_Get), "Questionnaire",
                 GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.HouseholdIncome => new PathByActionArguments(nameof(HouseholdIncome_Get), "Questionnaire",
@@ -910,6 +944,7 @@ public class QuestionnaireController : Controller
         var partialViewName = (questionnaire.LocalAuthorityHug2Status, questionnaire.CustodianCode) switch
         {
             (LocalAuthorityData.Hug2Status.Pending, _) => "Pending",
+            (LocalAuthorityData.Hug2Status.TakingFutureReferrals, _) => "TakingFutureReferrals",
             _ => "Default"
         };
         return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";
