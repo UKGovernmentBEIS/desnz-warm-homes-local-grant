@@ -29,12 +29,16 @@ public class QuestionnaireUpdaterTests
     private Mock<ILogger<QuestionnaireUpdater>> mockLogger;
     private string liveCustodianCode;
     private string pendingCustodianCode;
+    private string takingFutureReferralsCustodianCode;
     
     [SetUp]
     public void Setup()
     {
         liveCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Live);
         pendingCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Pending);
+        takingFutureReferralsCustodianCode =
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status
+                .TakingFutureReferrals);
         mockEpcApi = new Mock<IEpcApi>();
         mockPostCodeService = new Mock<IEligiblePostcodeService>();
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
@@ -313,6 +317,59 @@ public class QuestionnaireUpdaterTests
         
         // Assert
         mockEmailSender.Verify(es => es.SendReferenceCodeEmailForPendingLocalAuthority
+        (
+            testEmailAddress,
+            testName,
+            testReferralRequest
+        ), Times.Once);
+    }
+    
+    [Test]
+    public async Task GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsTakingFutureReferrals_SendOneEmailWithReferralCodeWithTakingFutureReferralTemplate()
+    {
+        // Arrange
+        string testCustodianCode = takingFutureReferralsCustodianCode;
+        const int testReferralId = 12;
+        const string testName = "Example Person";
+        const string testEmailAddress = "test@example.com";
+
+        var questionnaire = new Questionnaire
+        {
+            CustodianCode = testCustodianCode,
+            IsLsoaProperty = false,
+            IncomeBand = IncomeBand.UnderOrEqualTo36000,
+            HasGasBoiler = HasGasBoiler.No
+        };
+        var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
+        
+        var referral = new ReferralRequestBuilder(testReferralId);
+        referral.WithCustodianCode(testCustodianCode);
+        referral.WithRequestDate(creationDate);
+        var testReferralRequest = referral.Build();
+        
+        mockDataAccessProvider.Setup(dap =>
+            dap.PersistNewReferralRequestAsync
+            (
+                It.Is<ReferralRequest>(rr => rr.CustodianCode == testCustodianCode)
+            )).ReturnsAsync(testReferralRequest);
+        mockEmailSender.Setup(es =>
+            es.SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority(
+                testEmailAddress,
+                testName,
+                testReferralRequest)
+        );
+
+        // Act
+        var result = await underTest.GenerateReferralAsync
+        (
+            questionnaire,
+            testName,
+            testEmailAddress,
+            ""
+        );
+        
+        // Assert
+        mockEmailSender.Verify(es => es.SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority
         (
             testEmailAddress,
             testName,
