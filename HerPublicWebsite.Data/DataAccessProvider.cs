@@ -64,42 +64,43 @@ public class DataAccessProvider : IDataAccessProvider
         return report;
     }
 
-    public async Task<IList<ReferralRequest>> GetUnsubmittedReferralRequestsAsync()
+    public async Task<IList<ReferralRequest>> GetUnsubmittedReferralRequestsForCurrentGrantAsync()
     {
         return await context.ReferralRequests
-            .Where(rr => !rr.ReferralWrittenToCsv)
+            .Where(rr => !rr.ReferralWrittenToCsv && !rr.WasSubmittedForFutureGrants)
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetAllReferralRequests()
+    public async Task<IList<ReferralRequest>> GetAllCurrentGrantReferralRequests()
     {
         return await context.ReferralRequests
+            .Where(rr => !rr.WasSubmittedForFutureGrants)
             .Include(rr => rr.FollowUp)
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetReferralRequestsBetweenDates(DateTime startDate, DateTime endDate)
+    public async Task<IList<ReferralRequest>> GetCurrentGrantReferralRequestsBetweenDates(DateTime startDate, DateTime endDate)
     {
         return await context.ReferralRequests
-            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate)
+            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.WasSubmittedForFutureGrants)
             .Include(rr => rr.FollowUp)
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetReferralRequestsWithNoFollowUpBetweenDates(DateTime startDate,
+    public async Task<IList<ReferralRequest>> GetCurrentGrantReferralRequestsWithNoFollowUpBetweenDates(DateTime startDate,
         DateTime endDate)
     {
         return await context.ReferralRequests
-            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.FollowUpEmailSent)
+            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.FollowUpEmailSent && !rr.WasSubmittedForFutureGrants)
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetReferralRequestsByCustodianAndRequestDateAsync(string custodianCode,
+    public async Task<IList<ReferralRequest>> GetCurrentGrantReferralRequestsByCustodianAndRequestDateAsync(string custodianCode,
         int month, int year)
     {
         return await context.ReferralRequests
             .Where(rr => rr.CustodianCode == custodianCode && rr.RequestDate.Month == month &&
-                         rr.RequestDate.Year == year)
+                         rr.RequestDate.Year == year && !rr.WasSubmittedForFutureGrants)
             .ToListAsync();
     }
 

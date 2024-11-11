@@ -26,12 +26,12 @@ public class UnsubmittedReferralRequestsService : IUnsubmittedReferralRequestsSe
     
     public async Task WriteUnsubmittedReferralRequestsToCsv()
     {
-        var newReferrals = await dataProvider.GetUnsubmittedReferralRequestsAsync();
+        var newReferrals = await dataProvider.GetUnsubmittedReferralRequestsForCurrentGrantAsync();
 
         foreach (var referralsByCustodianMonthAndYear in newReferrals.GroupBy(nr => new { nr.CustodianCode, nr.RequestDate.Month, nr.RequestDate.Year }))
         {
             var grouping = referralsByCustodianMonthAndYear.Key;
-            var referralsForFile = await dataProvider.GetReferralRequestsByCustodianAndRequestDateAsync(grouping.CustodianCode, grouping.Month, grouping.Year);
+            var referralsForFile = await dataProvider.GetCurrentGrantReferralRequestsByCustodianAndRequestDateAsync(grouping.CustodianCode, grouping.Month, grouping.Year);
 
             using (var fileData = csvFileCreator.CreateReferralRequestFileData(referralsForFile))
             {

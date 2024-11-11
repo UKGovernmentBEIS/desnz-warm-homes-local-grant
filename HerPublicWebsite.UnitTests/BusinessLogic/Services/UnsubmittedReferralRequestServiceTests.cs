@@ -44,8 +44,8 @@ public class UnsubmittedReferralRequestsServiceTests
         {
             new ReferralRequestBuilder(1).WithReferralCreated(false).WithRequestDate(new DateTime(2023, 03, 01)).Build()
         };
-        mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsAsync().Result).Returns(newReferralList);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync(newReferralList[0].CustodianCode, 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsForCurrentGrantAsync().Result).Returns(newReferralList);
+        mockDataAccessProvider.Setup(dap => dap.GetCurrentGrantReferralRequestsByCustodianAndRequestDateAsync(newReferralList[0].CustodianCode, 3, 2023).Result)
             .Returns(newReferralList);
         
         // Act
@@ -64,8 +64,8 @@ public class UnsubmittedReferralRequestsServiceTests
         {
             new ReferralRequestBuilder(1).WithReferralCreated(false).WithRequestDate(new DateTime(2023, 03, 01)).Build()
         };
-        mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsAsync().Result).Returns(newReferralList);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync(newReferralList[0].CustodianCode, 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsForCurrentGrantAsync().Result).Returns(newReferralList);
+        mockDataAccessProvider.Setup(dap => dap.GetCurrentGrantReferralRequestsByCustodianAndRequestDateAsync(newReferralList[0].CustodianCode, 3, 2023).Result)
             .Returns(newReferralList);
         
         // Act
@@ -97,8 +97,8 @@ public class UnsubmittedReferralRequestsServiceTests
             oldReferral,
             newReferral
         };
-        mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsAsync().Result).Returns(newReferralList);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync(newReferralList[0].CustodianCode, 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsForCurrentGrantAsync().Result).Returns(newReferralList);
+        mockDataAccessProvider.Setup(dap => dap.GetCurrentGrantReferralRequestsByCustodianAndRequestDateAsync(newReferralList[0].CustodianCode, 3, 2023).Result)
             .Returns(allReferralList);
         
         // Act
@@ -127,10 +127,10 @@ public class UnsubmittedReferralRequestsServiceTests
         var newReferralList = new List<ReferralRequest> { newReferral1, newReferral2 };
         var allReferralListForCustodianCode5 = new List<ReferralRequest> { newReferral1 };
         var allReferralListForCustodianCode6 = new List<ReferralRequest> { newReferral2 };
-        mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsAsync().Result).Returns(newReferralList);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync("5", 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsForCurrentGrantAsync().Result).Returns(newReferralList);
+        mockDataAccessProvider.Setup(dap => dap.GetCurrentGrantReferralRequestsByCustodianAndRequestDateAsync("5", 3, 2023).Result)
             .Returns(allReferralListForCustodianCode5);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync("6", 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetCurrentGrantReferralRequestsByCustodianAndRequestDateAsync("6", 3, 2023).Result)
             .Returns(allReferralListForCustodianCode6);
         
         // Act
@@ -162,10 +162,10 @@ public class UnsubmittedReferralRequestsServiceTests
         var newReferralList = new List<ReferralRequest> { newReferral1, newReferral2 };
         var allReferralListForCustodianCode5 = new List<ReferralRequest> { newReferral1 };
         var allReferralListForCustodianCode6 = new List<ReferralRequest> { newReferral2 };
-        mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsAsync().Result).Returns(newReferralList);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync("5", 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsForCurrentGrantAsync().Result).Returns(newReferralList);
+        mockDataAccessProvider.Setup(dap => dap.GetCurrentGrantReferralRequestsByCustodianAndRequestDateAsync("5", 3, 2023).Result)
             .Returns(allReferralListForCustodianCode5);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync("6", 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetCurrentGrantReferralRequestsByCustodianAndRequestDateAsync("6", 3, 2023).Result)
             .Returns(allReferralListForCustodianCode6);
         mockS3FileWriter.Setup(fw => fw.WriteFileAsync("6", 3, 2023, It.IsAny<MemoryStream>()))
             .Throws(new InvalidOperationException("Test exception"));

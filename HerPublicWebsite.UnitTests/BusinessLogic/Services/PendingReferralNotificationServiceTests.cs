@@ -41,7 +41,7 @@ public class PendingReferralNotificationServiceTests
         // Arrange
         var allReferralRequests = new List<ReferralRequest>();
         mockDataAccessProvider
-            .Setup(dap => dap.GetAllReferralRequests())
+            .Setup(dap => dap.GetAllCurrentGrantReferralRequests())
             .ReturnsAsync(allReferralRequests);
 
         var filteredReferralRequests = new List<ReferralRequest>();

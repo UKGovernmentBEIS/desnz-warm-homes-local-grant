@@ -30,7 +30,7 @@ public class PendingReferralNotificationService
 
     private async Task<MemoryStream> BuildPendingReferralRequestsFileData()
     {
-        var referralRequests = await dataProvider.GetAllReferralRequests();
+        var referralRequests = await dataProvider.GetAllCurrentGrantReferralRequests();
         var pendingReferralRequests = referralFilterService.FilterForPendingReferralReport(referralRequests);
         return csvFileCreator.CreatePendingReferralRequestFileData(pendingReferralRequests);
     }
