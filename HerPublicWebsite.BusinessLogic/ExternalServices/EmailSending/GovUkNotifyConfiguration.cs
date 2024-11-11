@@ -3,7 +3,7 @@
 public class GovUkNotifyConfiguration
 {
     public const string ConfigSection = "GovUkNotify";
-        
+
     public string ApiKey { get; set; }
     public string ComplianceEmailRecipients { get; set; }
     public string PendingReferralEmailRecipients { get; set; }
@@ -31,7 +31,7 @@ public class ReferralFollowUpConfiguration
     public string ReferenceCodePlaceholder { get; set; }
     public string LocalAuthorityNamePlaceholder { get; set; }
     public string ReferralDatePlaceholder { get; set; }
-    public string FollowUpLinkPlaceholder {get; set; }
+    public string FollowUpLinkPlaceholder { get; set; }
 }
 
 public class ComplianceReportConfiguration

@@ -79,7 +79,8 @@ public class DataAccessProvider : IDataAccessProvider
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetCurrentGrantReferralRequestsBetweenDates(DateTime startDate, DateTime endDate)
+    public async Task<IList<ReferralRequest>> GetCurrentGrantReferralRequestsBetweenDates(DateTime startDate,
+        DateTime endDate)
     {
         return await context.ReferralRequests
             .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.WasSubmittedForFutureGrants)
@@ -87,15 +88,18 @@ public class DataAccessProvider : IDataAccessProvider
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetCurrentGrantReferralRequestsWithNoFollowUpBetweenDates(DateTime startDate,
+    public async Task<IList<ReferralRequest>> GetCurrentGrantReferralRequestsWithNoFollowUpBetweenDates(
+        DateTime startDate,
         DateTime endDate)
     {
         return await context.ReferralRequests
-            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.FollowUpEmailSent && !rr.WasSubmittedForFutureGrants)
+            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.FollowUpEmailSent &&
+                         !rr.WasSubmittedForFutureGrants)
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetCurrentGrantReferralRequestsByCustodianAndRequestDateAsync(string custodianCode,
+    public async Task<IList<ReferralRequest>> GetCurrentGrantReferralRequestsByCustodianAndRequestDateAsync(
+        string custodianCode,
         int month, int year)
     {
         return await context.ReferralRequests
@@ -141,7 +145,7 @@ public class DataAccessProvider : IDataAccessProvider
         await context.SaveChangesAsync();
         return session;
     }
-    
+
     public async Task RecordEligiblityAndJourneyCompletion(int sessionId, bool? isEligible)
     {
         var referralRequest = await context.Sessions.SingleAsync(session => session.Id == sessionId);

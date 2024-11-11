@@ -512,7 +512,7 @@ public class QuestionnaireController : Controller
         );
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
-    
+
     [HttpGet("no-longer-participating")]
     public IActionResult NoLongerParticipating_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
     {
@@ -522,7 +522,8 @@ public class QuestionnaireController : Controller
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             Submitted = emailPreferenceSubmitted,
             EmailAddress = questionnaire.NotificationEmailAddress,
-            LocalAuthorityMessagePartialViewPath = GetLocalAuthorityNoLongerParticipatingMessagePartialViewPath(questionnaire),
+            LocalAuthorityMessagePartialViewPath =
+                GetLocalAuthorityNoLongerParticipatingMessagePartialViewPath(questionnaire),
             CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
             EntryPoint = entryPoint,
             BackLink = GetBackUrl(QuestionFlowStep.NotTakingPart, questionnaire, entryPoint)
@@ -544,7 +545,8 @@ public class QuestionnaireController : Controller
             viewModel.EmailAddress
         );
 
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.NoLongerParticipating, questionnaire, viewModel.EntryPoint);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.NoLongerParticipating, questionnaire,
+            viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
             viewModel.EntryPoint,
@@ -585,7 +587,7 @@ public class QuestionnaireController : Controller
         );
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
-    
+
     [HttpGet("taking-future-referrals")]
     public IActionResult TakingFutureReferrals_Get(QuestionFlowStep? entryPoint)
     {
@@ -600,15 +602,16 @@ public class QuestionnaireController : Controller
 
         return View("TakingFutureReferrals", viewModel);
     }
-    
+
     [HttpPost("taking-future-referrals")]
     public async Task<IActionResult> TakingFutureReferrals_Post(TakingFutureReferralsViewModel viewModel)
     {
-        if (!ModelState.IsValid) return Pending_Get(viewModel.EntryPoint);
+        if (!ModelState.IsValid) return TakingFutureReferrals_Get(viewModel.EntryPoint);
         var questionnaire =
             await questionnaireService.UpdateAcknowledgedFutureReferral(viewModel.UserAcknowledgedFutureReferral,
                 viewModel.EntryPoint);
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.TakingFutureReferrals, questionnaire, viewModel.EntryPoint);
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.TakingFutureReferrals, questionnaire,
+            viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
             viewModel.EntryPoint
@@ -684,7 +687,8 @@ public class QuestionnaireController : Controller
         var viewModel = new EligibleViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
-            LocalAuthorityIsTakingFutureReferrals = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.TakingFutureReferrals,
+            LocalAuthorityIsTakingFutureReferrals =
+                questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.TakingFutureReferrals,
             LocalAuthorityIsLiveWithHug2 = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Live,
             CanContactByEmail = questionnaire.LaCanContactByEmail.ToNullableYesOrNo(),
             CanContactByPhone = questionnaire.LaCanContactByPhone.ToNullableYesOrNo(),
@@ -782,7 +786,8 @@ public class QuestionnaireController : Controller
         {
             EpcIsTooHigh = questionnaire.EpcIsTooHigh,
             IncomeIsTooHigh = questionnaire.IncomeIsTooHigh,
-            ShowWarmHomesText = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.TakingFutureReferrals,
+            ShowWarmHomesText =
+                questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.TakingFutureReferrals,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
             EmailAddress = questionnaire.NotificationEmailAddress,
@@ -928,8 +933,7 @@ public class QuestionnaireController : Controller
         };
         return $"~/Views/Partials/LocalAuthorityMessages/NotParticipating/{partialViewName}.cshtml";
     }
-    
-    
+
     private static string GetLocalAuthorityNoLongerParticipatingMessagePartialViewPath(Questionnaire questionnaire)
     {
         var partialViewName = questionnaire.CustodianCode switch

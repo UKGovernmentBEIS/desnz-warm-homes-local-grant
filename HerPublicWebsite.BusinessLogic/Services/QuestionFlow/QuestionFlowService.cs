@@ -68,7 +68,8 @@ public class QuestionFlowService : IQuestionFlowService
             QuestionFlowStep.NotParticipating => NotParticipatingForwardDestination(questionnaire),
             QuestionFlowStep.NotTakingPart => NotTakingPartForwardDestination(questionnaire),
             QuestionFlowStep.NoLongerParticipating => NoLongerParticipatingForwardDestination(questionnaire),
-            QuestionFlowStep.TakingFutureReferrals => TakingFutureReferralsForwardDestination(questionnaire, entryPoint),
+            QuestionFlowStep.TakingFutureReferrals =>
+                TakingFutureReferralsForwardDestination(questionnaire, entryPoint),
             QuestionFlowStep.Pending => PendingForwardDestination(questionnaire, entryPoint),
             QuestionFlowStep.HouseholdIncome => HouseholdIncomeForwardDestination(questionnaire),
             QuestionFlowStep.CheckAnswers => CheckAnswersForwardDestination(questionnaire),
@@ -191,7 +192,7 @@ public class QuestionFlowService : IQuestionFlowService
             _ => QuestionFlowStep.Address
         };
     }
-    
+
     private QuestionFlowStep TakingFutureReferralsBackDestination(Questionnaire questionnaire)
     {
         if (questionnaire.FoundEpcBandIsTooHigh)
@@ -378,7 +379,8 @@ public class QuestionFlowService : IQuestionFlowService
         return QuestionFlowStep.NoLongerParticipating;
     }
 
-    private QuestionFlowStep TakingFutureReferralsForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
+    private QuestionFlowStep TakingFutureReferralsForwardDestination(Questionnaire questionnaire,
+        QuestionFlowStep? entryPoint)
     {
         // If the LA has changed and the income band the user selected previously is no longer valid then we don't
         // go back to the check your answers page as the user will need to select a new income band.
@@ -386,7 +388,7 @@ public class QuestionFlowService : IQuestionFlowService
             return QuestionFlowStep.CheckAnswers;
         return QuestionFlowStep.HouseholdIncome;
     }
-    
+
     private QuestionFlowStep PendingForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
     {
         // If the LA has changed and the income band the user selected previously is no longer valid then we don't

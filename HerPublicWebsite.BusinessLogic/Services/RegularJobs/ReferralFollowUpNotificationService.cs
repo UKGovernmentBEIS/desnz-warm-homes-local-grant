@@ -49,7 +49,8 @@ public class ReferralFollowUpNotificationService : IReferralFollowUpNotification
             await dataProvider.GetCurrentGrantReferralRequestsWithNoFollowUpBetweenDates(startDate, endDate));
         var uriBuilder = new UriBuilder(globalConfig.AppBaseUrl);
         uriBuilder.Path = "referral-follow-up";
-        foreach (var newReferral in newReferrals) {
+        foreach (var newReferral in newReferrals)
+        {
             var referralRequestFollowUp = await referralFollowUpManager.CreateReferralRequestFollowUp(newReferral);
             uriBuilder.Query = "token=" + referralRequestFollowUp.Token;
             emailSender.SendFollowUpEmail(newReferral, uriBuilder.ToString());
@@ -57,4 +58,3 @@ public class ReferralFollowUpNotificationService : IReferralFollowUpNotification
         }
     }
 }
-

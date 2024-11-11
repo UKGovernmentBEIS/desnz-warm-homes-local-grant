@@ -12,40 +12,40 @@
 
     Func<object, object> otherGovernmentSchemesSection =
         @<text>
-            <h2 class="govuk-heading-m">Other government schemes</h2>
-            @if (!Model.EpcIsTooHigh)
-            {
-                <p class="govuk-body">If you are on certain benefits you might be eligible for <a class="govuk-link" href="https://www.gov.uk/energy-company-obligation">Energy Company Obligation (ECO)</a>.</p>
-            }
-            <p class="govuk-body">You can also check if you might be eligible for the <a class="govuk-link" href="https://www.gov.uk/apply-boiler-upgrade-scheme/check-if-youre-eligible">Boiler Upgrade Scheme (BUS)</a>.</p>
-         </text>;
+             <h2 class="govuk-heading-m">Other government schemes</h2>
+             @if (!Model.EpcIsTooHigh)
+             {
+                 <p class="govuk-body">If you are on certain benefits you might be eligible for <a class="govuk-link" href="https://www.gov.uk/energy-company-obligation">Energy Company Obligation (ECO)</a>.</p>
+             }
+             <p class="govuk-body">You can also check if you might be eligible for the <a class="govuk-link" href="https://www.gov.uk/apply-boiler-upgrade-scheme/check-if-youre-eligible">Boiler Upgrade Scheme (BUS)</a>.</p>
+    </text>;
 
     Func<object, object> contactYourLaSection =
         @<text>
-            <h2 class="govuk-heading-m">Contact your local authority</h2>
-            <p class="govuk-body">
-                <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName</a> might have
-                additional grants or supports available. Contact them to find out more or visit their website.
-            </p>
-            <p class="govuk-body">
-                Based on the postcode and address you provided, your local authority is <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName</a>.
-                If this does not look right, you can <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your local council here</a>
-            </p>
-         </text>;
-    
+             <h2 class="govuk-heading-m">Contact your local authority</h2>
+             <p class="govuk-body">
+                 <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName</a> might have
+                 additional grants or supports available. Contact them to find out more or visit their website.
+             </p>
+             <p class="govuk-body">
+                 Based on the postcode and address you provided, your local authority is <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName</a>.
+                 If this does not look right, you can <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your local council here</a>
+             </p>
+    </text>;
+
     Func<object, object> yourLaMayBeAbleToHelpSection =
         @<text>
-            <h2 class="govuk-heading-m">Your local authority may be able to help</h2>
-            <p class="govuk-body">
-                Many local authorities have additional support available and can determine your eligibility using different
-                methods. Contact <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName</a>
-                to find out what support you could get.
-            </p>
-            <p class="govuk-body">
-                Based on the postcode and address you provided, your local authority is <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName</a>.
-                If this does not look right, you can <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your local council here</a>
-            </p>
-         </text>;
+             <h2 class="govuk-heading-m">Your local authority may be able to help</h2>
+             <p class="govuk-body">
+                 Many local authorities have additional support available and can determine your eligibility using different
+                 methods. Contact <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName</a>
+                 to find out what support you could get.
+             </p>
+             <p class="govuk-body">
+                 Based on the postcode and address you provided, your local authority is <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName</a>.
+                 If this does not look right, you can <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your local council here</a>
+             </p>
+    </text>;
 
     var incomeHighButEpcLow = !Model.EpcIsTooHigh && Model.IncomeIsTooHigh;
 }
@@ -62,11 +62,11 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        
+
         <h1 class="govuk-heading-l">We do not think you are eligible</h1>
-        
+
         <p class="govuk-body">
-            We do not think you are eligible for the Home Upgrade Grant 
+            We do not think you are eligible for the Home Upgrade Grant
             @{
                 if (Model.ShowWarmHomesText)
                 {
@@ -76,29 +76,27 @@
                 }
             }
             @{
-            switch (Model.EpcIsTooHigh, Model.IncomeIsTooHigh)
-            {
-                case (true, true):
-                    <text>
+                switch (Model.EpcIsTooHigh, Model.IncomeIsTooHigh)
+                {
+                    case (true, true):
+                        <text>
                             because your EPC rating is A, B, or C and your income is more than £36,000 but you may be able to get other help for your energy needs.
                         </text>
-                    break;
-                case (true, false):
-                    <text>
+                        break;
+                    case (true, false):
+                        <text>
                             because your EPC rating is A, B, or C but you may be able to get other help for your energy needs.
                         </text>
-                    break;
-                default:
-                    <text>
-                             because your income is more than £36,000 but you may be able to get other help for your energy needs.
+                        break;
+                    default:
+                        <text>
+                            because your income is more than £36,000 but you may be able to get other help for your energy needs.
                         </text>
-                    break;
-            }
-
-            ;
+                        break;
+                }
             }
         </p>
-        
+
         @if (incomeHighButEpcLow)
         {
             @yourLaMayBeAbleToHelpSection(new object())
@@ -107,18 +105,18 @@
         {
             @otherGovernmentSchemesSection(new object())
         }
-        
+
         @if (Model.Submitted)
         {
             @await Html.GovUkNotificationBanner(
-                       new NotificationBannerViewModel
-                       {
-                           Type = "success",
-                           TitleText = "Success",
-                           Text = "Your contact details have been submitted.",
-                           Role = "alert"
-                       }
-                       )
+                new NotificationBannerViewModel
+                {
+                    Type = "success",
+                    TitleText = "Success",
+                    Text = "Your contact details have been submitted.",
+                    Role = "alert"
+                }
+            )
         }
         else
         {
@@ -127,45 +125,45 @@
                 @Html.AntiForgeryToken()
 
                 @await Html.GovUkRadiosFor(
-                           m => m.CanContactByEmailAboutFutureSchemes,
-                           fieldsetOptions: new FieldsetViewModel
-                           {
-                               Legend = new LegendViewModel
-                               {
-                                   Html = @<text>
-                                              <h2 class="govuk-fieldset__legend--m">Can we email you about future energy grants?</h2>
-                                              <p class="govuk-body">We will only email you when new grants for homes become available.</p>
-                                           </text>
-                               },
-                           },
-                           conditionalOptions: new Dictionary<YesOrNo, Conditional>
-                           {
-                               {
-                                   YesOrNo.Yes,
-                                   new Conditional
-                                   {
-                                       Html = (@<text>
-                                                   @await Html.GovUkTextInputFor(
-                                                              m => m.EmailAddress,
-                                                              labelOptions: new LabelViewModel
-                                                              {
-                                                                  Text = "Email address",
-                                                              },
-                                                              classes: "govuk-input govuk-input--width-20",
-                                                              autocomplete: "email")
-                                                </text>)
-                                   }
-                               }
-                           })
+                    m => m.CanContactByEmailAboutFutureSchemes,
+                    fieldsetOptions: new FieldsetViewModel
+                    {
+                        Legend = new LegendViewModel
+                        {
+                            Html = @<text>
+                                        <h2 class="govuk-fieldset__legend--m">Can we email you about future energy grants?</h2>
+                                        <p class="govuk-body">We will only email you when new grants for homes become available.</p>
+                                    </text>
+                        }
+                    },
+                    conditionalOptions: new Dictionary<YesOrNo, Conditional>
+                    {
+                        {
+                            YesOrNo.Yes,
+                            new Conditional
+                            {
+                                Html = (@<text>
+                                             @await Html.GovUkTextInputFor(
+                                                 m => m.EmailAddress,
+                                                 new LabelViewModel
+                                                 {
+                                                     Text = "Email address"
+                                                 },
+                                                 classes: "govuk-input govuk-input--width-20",
+                                                 autocomplete: "email")
+                                         </text>)
+                            }
+                        }
+                    })
                 <div class="govuk-button-group">
                     @(await Html.GovUkButton(new ButtonViewModel
                     {
-                        Text = "Submit",
+                        Text = "Submit"
                     }))
                 </div>
             </form>
         }
-        
+
         @if (incomeHighButEpcLow)
         {
             @otherGovernmentSchemesSection(new object())
@@ -181,13 +179,14 @@
         </p>
         <ul class="govuk-list govuk-list--bullet">
             <li>
-                using the <a class="govuk-link" href="https://helpforhouseholds.campaign.gov.uk/energy-saving-advice/">
+                using the
+                <a class="govuk-link" href="https://helpforhouseholds.campaign.gov.uk/energy-saving-advice/">
                     Find ways to save energy in your home
                 </a> service to get recommendations for home improvements that could make your property cheaper to heat.
             </li>
             <li>
                 visiting the
-                <a class="govuk-link" href="https://energysavingtrust.org.uk/energy-at-home/">Energy Saving Trust</a>, 
+                <a class="govuk-link" href="https://energysavingtrust.org.uk/energy-at-home/">Energy Saving Trust</a>,
                 <a class="govuk-link" href="https://www.ofgem.gov.uk/information-consumers/energy-advice-households/find-schemes-grants-and-benefits-help-home-energy">Ofgem</a>, and <a class="govuk-link" href="https://www.citizensadvice.org.uk/consumer/energy/energy-supply/">Citizens Advice</a>
                 websites for more ways to save energy and reduce your bills.
             </li>

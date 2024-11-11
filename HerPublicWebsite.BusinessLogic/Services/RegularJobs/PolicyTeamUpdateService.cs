@@ -16,7 +16,7 @@ public class PolicyTeamUpdateService : IPolicyTeamUpdate
     private readonly IWorkingDayHelperService workingDayHelperService;
     private readonly IEmailSender emailSender;
     private readonly IReferralFilterService referralFilterService;
-    
+
     public PolicyTeamUpdateService(
         IDataAccessProvider dataProvider,
         ICsvFileCreator csvFileCreator,
@@ -36,11 +36,11 @@ public class PolicyTeamUpdateService : IPolicyTeamUpdate
     {
         var recentReferralRequestOverviewFileData = await CreateReferralRequestOverviewFileData();
         var (recentLocalAuthorityReferralRequestFollowUpFileData,
-            recentConsortiumReferralRequestFollowUpFileData) =
-                await BuildRecentReferralRequestFollowUpFileData();
-        var (historicLocalAuthorityReferralRequestFollowUpFileData, 
-            historicConsortiumReferralRequestFollowUpFileData) = 
-                await BuildHistoricReferralRequestFollowUpFileData();
+                recentConsortiumReferralRequestFollowUpFileData) =
+            await BuildRecentReferralRequestFollowUpFileData();
+        var (historicLocalAuthorityReferralRequestFollowUpFileData,
+                historicConsortiumReferralRequestFollowUpFileData) =
+            await BuildHistoricReferralRequestFollowUpFileData();
         emailSender.SendComplianceEmail(
             recentReferralRequestOverviewFileData,
             recentLocalAuthorityReferralRequestFollowUpFileData,
