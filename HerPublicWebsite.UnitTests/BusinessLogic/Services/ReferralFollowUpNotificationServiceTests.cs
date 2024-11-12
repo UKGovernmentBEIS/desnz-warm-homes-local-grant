@@ -59,7 +59,8 @@ public class ReferralFollowUpNotificationServiceTests
     }
 
     [Test]
-    public async Task SendReferralFollowUpNotifications_WhenCalled_CallsCreateReferralsRequestFollowUpWithReferralsIncludedInFilter()
+    public async Task
+        SendReferralFollowUpNotifications_WhenCalled_CallsCreateReferralsRequestFollowUpWithReferralsIncludedInFilter()
     {
         // Arrange
         var validReferral = new ReferralRequestBuilder(1)
@@ -68,7 +69,7 @@ public class ReferralFollowUpNotificationServiceTests
         var invalidReferral = new ReferralRequestBuilder(2)
             .WithWasSubmittedToPendingLocalAuthority(true)
             .Build();
-        
+
         var allReferrals = new List<ReferralRequest>
         {
             validReferral, invalidReferral
@@ -76,19 +77,19 @@ public class ReferralFollowUpNotificationServiceTests
 
         mockDataProvider
             .Setup(dp =>
-                dp.GetCurrentGrantReferralRequestsWithNoFollowUpBetweenDates(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+                dp.GetHug2ReferralRequestsWithNoFollowUpBetweenDates(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
             .ReturnsAsync(allReferrals);
-        
+
         var referralFollowUp = new ReferralRequestFollowUpBuilder(1)
             .WithToken("token1")
             .Build(validReferral);
-        
+
         mockReferralFollowUpService.Setup(rfus => rfus.CreateReferralRequestFollowUp(
             validReferral)).ReturnsAsync(referralFollowUp);
-        
+
         // Act
         await referralFollowUpNotificationService.SendReferralFollowUpNotifications();
-        
+
         // Assert
         mockReferralFollowUpService.Verify(rfus => rfus.CreateReferralRequestFollowUp(
             validReferral), Times.Once);
