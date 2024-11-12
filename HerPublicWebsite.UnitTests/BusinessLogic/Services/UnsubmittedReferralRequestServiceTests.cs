@@ -25,13 +25,14 @@ public class UnsubmittedReferralRequestsServiceTests
     private Mock<IDataAccessProvider> mockDataAccessProvider;
     private Mock<IS3FileWriter> mockS3FileWriter;
     private MockHttpMessageHandler mockHttpHandler;
-    
+
     [SetUp]
     public void Setup()
     {
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
         mockS3FileWriter = new Mock<IS3FileWriter>();
-        unsubmittedReferralRequestsService = new UnsubmittedReferralRequestsService(mockDataAccessProvider.Object, mockS3FileWriter.Object, new CsvFileCreator());
+        unsubmittedReferralRequestsService = new UnsubmittedReferralRequestsService(mockDataAccessProvider.Object,
+            mockS3FileWriter.Object, new CsvFileCreator());
         mockHttpHandler = new MockHttpMessageHandler();
         HttpRequestHelper.handler = mockHttpHandler;
     }
@@ -44,10 +45,13 @@ public class UnsubmittedReferralRequestsServiceTests
         {
             new ReferralRequestBuilder(1).WithReferralCreated(false).WithRequestDate(new DateTime(2023, 03, 01)).Build()
         };
-        mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsAsync().Result).Returns(newReferralList);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync(newReferralList[0].CustodianCode, 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetHug2UnsubmittedReferralRequestsAsync().Result)
             .Returns(newReferralList);
-        
+        mockDataAccessProvider.Setup(dap =>
+                dap.GetHug2ReferralRequestsByCustodianAndRequestDateAsync(newReferralList[0].CustodianCode, 3,
+                    2023).Result)
+            .Returns(newReferralList);
+
         // Act
         await unsubmittedReferralRequestsService.WriteUnsubmittedReferralRequestsToCsv();
 
@@ -55,7 +59,7 @@ public class UnsubmittedReferralRequestsServiceTests
         newReferralList.Should().AllSatisfy(rr => rr.ReferralWrittenToCsv.Should().BeTrue());
         mockDataAccessProvider.Verify(dap => dap.PersistAllChangesAsync());
     }
-    
+
     [Test]
     public async Task WriteUnsubmittedReferralRequestsToCsv_WhenCalledWithNewReferral_CreatesFile()
     {
@@ -64,10 +68,13 @@ public class UnsubmittedReferralRequestsServiceTests
         {
             new ReferralRequestBuilder(1).WithReferralCreated(false).WithRequestDate(new DateTime(2023, 03, 01)).Build()
         };
-        mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsAsync().Result).Returns(newReferralList);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync(newReferralList[0].CustodianCode, 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetHug2UnsubmittedReferralRequestsAsync().Result)
             .Returns(newReferralList);
-        
+        mockDataAccessProvider.Setup(dap =>
+                dap.GetHug2ReferralRequestsByCustodianAndRequestDateAsync(newReferralList[0].CustodianCode, 3,
+                    2023).Result)
+            .Returns(newReferralList);
+
         // Act
         await unsubmittedReferralRequestsService.WriteUnsubmittedReferralRequestsToCsv();
 
@@ -75,9 +82,10 @@ public class UnsubmittedReferralRequestsServiceTests
         mockS3FileWriter.Verify(fw =>
             fw.WriteFileAsync(newReferralList[0].CustodianCode, 3, 2023, It.IsAny<MemoryStream>()));
     }
-    
+
     [Test]
-    public async Task WriteUnsubmittedReferralRequestsToCsv_WhenCalledWithNewReferralForSameMonthAsOldReferrals_UpdatesReferralCreated()
+    public async Task
+        WriteUnsubmittedReferralRequestsToCsv_WhenCalledWithNewReferralForSameMonthAsOldReferrals_UpdatesReferralCreated()
     {
         // Arrange
         var oldReferral = new ReferralRequestBuilder(1)
@@ -97,10 +105,13 @@ public class UnsubmittedReferralRequestsServiceTests
             oldReferral,
             newReferral
         };
-        mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsAsync().Result).Returns(newReferralList);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync(newReferralList[0].CustodianCode, 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetHug2UnsubmittedReferralRequestsAsync().Result)
+            .Returns(newReferralList);
+        mockDataAccessProvider.Setup(dap =>
+                dap.GetHug2ReferralRequestsByCustodianAndRequestDateAsync(newReferralList[0].CustodianCode, 3,
+                    2023).Result)
             .Returns(allReferralList);
-        
+
         // Act
         await unsubmittedReferralRequestsService.WriteUnsubmittedReferralRequestsToCsv();
 
@@ -108,9 +119,10 @@ public class UnsubmittedReferralRequestsServiceTests
         allReferralList.Should().AllSatisfy(rr => rr.ReferralWrittenToCsv.Should().BeTrue());
         mockDataAccessProvider.Verify(dap => dap.PersistAllChangesAsync());
     }
-    
+
     [Test]
-    public async Task WriteUnsubmittedReferralRequestsToCsv_WhenCalledWithMultipleNewReferralsForDifferentCustodianCodes_CreatesMultipleFiles()
+    public async Task
+        WriteUnsubmittedReferralRequestsToCsv_WhenCalledWithMultipleNewReferralsForDifferentCustodianCodes_CreatesMultipleFiles()
     {
         // Arrange
         var newReferral1 = new ReferralRequestBuilder(1)
@@ -123,16 +135,19 @@ public class UnsubmittedReferralRequestsServiceTests
             .WithCustodianCode("6")
             .WithRequestDate(new DateTime(2023, 03, 02))
             .Build();
-        
+
         var newReferralList = new List<ReferralRequest> { newReferral1, newReferral2 };
         var allReferralListForCustodianCode5 = new List<ReferralRequest> { newReferral1 };
         var allReferralListForCustodianCode6 = new List<ReferralRequest> { newReferral2 };
-        mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsAsync().Result).Returns(newReferralList);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync("5", 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetHug2UnsubmittedReferralRequestsAsync().Result)
+            .Returns(newReferralList);
+        mockDataAccessProvider.Setup(dap =>
+                dap.GetHug2ReferralRequestsByCustodianAndRequestDateAsync("5", 3, 2023).Result)
             .Returns(allReferralListForCustodianCode5);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync("6", 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap =>
+                dap.GetHug2ReferralRequestsByCustodianAndRequestDateAsync("6", 3, 2023).Result)
             .Returns(allReferralListForCustodianCode6);
-        
+
         // Act
         await unsubmittedReferralRequestsService.WriteUnsubmittedReferralRequestsToCsv();
 
@@ -142,10 +157,11 @@ public class UnsubmittedReferralRequestsServiceTests
         mockS3FileWriter.Verify(fw =>
             fw.WriteFileAsync("6", 3, 2023, It.IsAny<MemoryStream>()));
     }
-    
-   
+
+
     [Test]
-    public async Task WriteUnsubmittedReferralRequestsToCsv_WhenCalledWritingTheSecondFileFails_UpdatesTheReferralsInTheFirstFileButNotTheSecond()
+    public async Task
+        WriteUnsubmittedReferralRequestsToCsv_WhenCalledWritingTheSecondFileFails_UpdatesTheReferralsInTheFirstFileButNotTheSecond()
     {
         // Arrange
         var newReferral1 = new ReferralRequestBuilder(1)
@@ -158,18 +174,21 @@ public class UnsubmittedReferralRequestsServiceTests
             .WithCustodianCode("6")
             .WithRequestDate(new DateTime(2023, 03, 02))
             .Build();
-        
+
         var newReferralList = new List<ReferralRequest> { newReferral1, newReferral2 };
         var allReferralListForCustodianCode5 = new List<ReferralRequest> { newReferral1 };
         var allReferralListForCustodianCode6 = new List<ReferralRequest> { newReferral2 };
-        mockDataAccessProvider.Setup(dap => dap.GetUnsubmittedReferralRequestsAsync().Result).Returns(newReferralList);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync("5", 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap => dap.GetHug2UnsubmittedReferralRequestsAsync().Result)
+            .Returns(newReferralList);
+        mockDataAccessProvider.Setup(dap =>
+                dap.GetHug2ReferralRequestsByCustodianAndRequestDateAsync("5", 3, 2023).Result)
             .Returns(allReferralListForCustodianCode5);
-        mockDataAccessProvider.Setup(dap => dap.GetReferralRequestsByCustodianAndRequestDateAsync("6", 3, 2023).Result)
+        mockDataAccessProvider.Setup(dap =>
+                dap.GetHug2ReferralRequestsByCustodianAndRequestDateAsync("6", 3, 2023).Result)
             .Returns(allReferralListForCustodianCode6);
         mockS3FileWriter.Setup(fw => fw.WriteFileAsync("6", 3, 2023, It.IsAny<MemoryStream>()))
             .Throws(new InvalidOperationException("Test exception"));
-        
+
         // Act
         try
         {
@@ -179,7 +198,7 @@ public class UnsubmittedReferralRequestsServiceTests
         {
             // This is the exception we deliberately threw during the test.
         }
-        
+
 
         // Assert
         mockS3FileWriter.Verify(fw =>

@@ -206,6 +206,9 @@ namespace HerPublicWebsite.Data.Migrations
                     b.Property<string>("Uprn")
                         .HasColumnType("text");
 
+                    b.Property<bool>("WasSubmittedForFutureGrants")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("WasSubmittedToPendingLocalAuthority")
                         .HasColumnType("boolean");
 

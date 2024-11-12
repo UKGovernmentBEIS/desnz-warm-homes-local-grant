@@ -29,6 +29,7 @@ public record Questionnaire
     public bool? IsLsoaProperty { get; set; }
     public HasGasBoilerEnum? HasGasBoiler { get; set; }
     public bool? AcknowledgedPending { get; set; }
+    public bool? AcknowledgedFutureReferral { get; set; }
     public IncomeBandEnum? IncomeBand { get; set; }
 
     public DateTime ReferralCreated { get; set; }
@@ -50,14 +51,15 @@ public record Questionnaire
     public Questionnaire UneditedData { get; set; }
 
     public bool IsEligibleForHug2 =>
-            (IncomeIsTooHigh, HasGasBoiler, EpcIsTooHigh, Country, OwnershipStatus) is
-                (false, not HasGasBoilerEnum.Yes, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy);
+        (IncomeIsTooHigh, HasGasBoiler, EpcIsTooHigh, Country, OwnershipStatus) is
+        (false, not HasGasBoilerEnum.Yes, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy);
 
     public string LocalAuthorityName
     {
         get
         {
-            if (string.IsNullOrEmpty(CustodianCode) || !LocalAuthorityData.LocalAuthorityDetailsByCustodianCode.ContainsKey(CustodianCode))
+            if (string.IsNullOrEmpty(CustodianCode) ||
+                !LocalAuthorityData.LocalAuthorityDetailsByCustodianCode.ContainsKey(CustodianCode))
             {
                 return "unrecognised local authority";
             }
@@ -134,8 +136,9 @@ public record Questionnaire
             return EpcDetails.EpcRating ?? EpcRating.Unknown;
         }
     }
-    
-    private EpcRating FoundEpcBand {
+
+    private EpcRating FoundEpcBand
+    {
         get
         {
             if (EpcDetails is null)
@@ -151,21 +154,24 @@ public record Questionnaire
             return EpcDetails.EpcRating ?? EpcRating.Unknown;
         }
     }
-    
+
     public bool FoundEpcBandIsTooHigh =>
         FoundEpcBand is EpcRating.A or EpcRating.B or EpcRating.C;
 
     public bool EpcIsTooHigh => EffectiveEpcBand is EpcRating.A or EpcRating.B or EpcRating.C;
 
 #pragma warning disable CS0618 // Obsolete Income Bands used to preserve backwards-compatibility
-    public bool IncomeIsTooHigh => IncomeBand is (IncomeBandEnum.GreaterThan31000 or IncomeBandEnum.GreaterThan34500 or IncomeBandEnum.GreaterThan36000) && IsLsoaProperty is not true;
+    public bool IncomeIsTooHigh =>
+        IncomeBand is (IncomeBandEnum.GreaterThan31000 or IncomeBandEnum.GreaterThan34500
+            or IncomeBandEnum.GreaterThan36000) && IsLsoaProperty is not true;
 #pragma warning restore CS0618
 
 
     public bool IncomeBandIsValid =>
         CustodianCode is not null
         && IncomeBand is not null
-        && LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[CustodianCode].IncomeBandOptions.Contains(IncomeBand.Value);
+        && LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[CustodianCode].IncomeBandOptions
+            .Contains(IncomeBand.Value);
 
     public void CreateUneditedData()
     {
@@ -203,6 +209,5 @@ public record Questionnaire
                 propertyInfo.SetValue(other, propertyInfo.GetValue(this));
             }
         }
-
     }
 }

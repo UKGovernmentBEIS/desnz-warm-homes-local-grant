@@ -52,7 +52,7 @@ public class PolicyTeamUpdateServiceTests
         var invalidReferral = new ReferralRequestBuilder(2)
             .WithWasSubmittedToPendingLocalAuthority(true)
             .Build();
-        
+
         var allReferrals = new List<ReferralRequest>
         {
             validReferral, invalidReferral
@@ -64,17 +64,17 @@ public class PolicyTeamUpdateServiceTests
 
         mockDataProvider
             .Setup(dp =>
-                dp.GetReferralRequestsBetweenDates(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+                dp.GetHug2ReferralRequestsBetweenDates(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
             .ReturnsAsync(allReferrals);
 
         mockDataProvider
             .Setup(dp =>
-                dp.GetAllReferralRequests())
+                dp.GetAllHug2ReferralRequests())
             .ReturnsAsync(allReferrals);
-        
+
         // Act
         await policyTeamUpdateService.SendPolicyTeamUpdate();
-        
+
         // Assert
         mockCsvFileCreator.Verify(cfc => cfc.CreateReferralRequestOverviewFileData(
             filteredReferrals), Times.Once);
