@@ -64,7 +64,7 @@ public class DataAccessProvider : IDataAccessProvider
         return report;
     }
 
-    public async Task<IList<ReferralRequest>> GetUnsubmittedReferralRequestsForCurrentGrantAsync()
+    public async Task<IList<ReferralRequest>> GetCurrentGrantUnsubmittedReferralRequestsAsync()
     {
         return await context.ReferralRequests
             .Where(rr => !rr.ReferralWrittenToCsv && !rr.WasSubmittedForFutureGrants)
