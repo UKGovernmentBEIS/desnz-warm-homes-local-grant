@@ -144,21 +144,23 @@ public class QuestionnaireUpdater
         questionnaire.ReferralCreated = referralRequest.RequestDate;
 
         if (!string.IsNullOrEmpty(emailAddress))
-        {
-            if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending)
+            switch (questionnaire.LocalAuthorityHug2Status)
             {
-                emailSender.SendReferenceCodeEmailForPendingLocalAuthority(emailAddress, name, referralRequest);
+                case LocalAuthorityData.Hug2Status.Pending:
+                    emailSender.SendReferenceCodeEmailForPendingLocalAuthority(emailAddress, name, referralRequest);
+                    break;
+                case LocalAuthorityData.Hug2Status.TakingFutureReferrals:
+                    emailSender.SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority(emailAddress, name,
+                        referralRequest);
+                    break;
+                case LocalAuthorityData.Hug2Status.Live:
+                    emailSender.SendReferenceCodeEmailForLiveLocalAuthority(emailAddress, name, referralRequest);
+                    break;
+                default:
+                    logger.LogError("No reference code email template for Local Authority status: {}",
+                        questionnaire.LocalAuthorityHug2Status);
+                    break;
             }
-            else if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.TakingFutureReferrals)
-            {
-                emailSender.SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority(emailAddress, name,
-                    referralRequest);
-            }
-            else
-            {
-                emailSender.SendReferenceCodeEmailForLiveLocalAuthority(emailAddress, name, referralRequest);
-            }
-        }
 
         try
         {
