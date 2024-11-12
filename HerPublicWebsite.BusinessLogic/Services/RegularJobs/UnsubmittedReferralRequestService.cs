@@ -23,15 +23,18 @@ public class UnsubmittedReferralRequestsService : IUnsubmittedReferralRequestsSe
         this.s3FileWriter = s3FileWriter;
         this.csvFileCreator = csvFileCreator;
     }
-    
+
     public async Task WriteUnsubmittedReferralRequestsToCsv()
     {
-        var newReferrals = await dataProvider.GetUnsubmittedReferralRequestsAsync();
+        var newReferrals = await dataProvider.GetHug2UnsubmittedReferralRequestsAsync();
 
-        foreach (var referralsByCustodianMonthAndYear in newReferrals.GroupBy(nr => new { nr.CustodianCode, nr.RequestDate.Month, nr.RequestDate.Year }))
+        foreach (var referralsByCustodianMonthAndYear in newReferrals.GroupBy(nr =>
+                     new { nr.CustodianCode, nr.RequestDate.Month, nr.RequestDate.Year }))
         {
             var grouping = referralsByCustodianMonthAndYear.Key;
-            var referralsForFile = await dataProvider.GetReferralRequestsByCustodianAndRequestDateAsync(grouping.CustodianCode, grouping.Month, grouping.Year);
+            var referralsForFile =
+                await dataProvider.GetHug2ReferralRequestsByCustodianAndRequestDateAsync(grouping.CustodianCode,
+                    grouping.Month, grouping.Year);
 
             using (var fileData = csvFileCreator.CreateReferralRequestFileData(referralsForFile))
             {
@@ -47,4 +50,3 @@ public class UnsubmittedReferralRequestsService : IUnsubmittedReferralRequestsSe
         }
     }
 }
-

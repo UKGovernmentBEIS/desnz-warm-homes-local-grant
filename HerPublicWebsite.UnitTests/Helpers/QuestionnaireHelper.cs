@@ -19,6 +19,7 @@ public static class QuestionnaireHelper
             CustodianCode = "5210",
             LocalAuthorityConfirmed = true,
             AcknowledgedPending = false,
+            AcknowledgedFutureReferral = false,
             Uprn = "123456789123",
             EpcDetails = new EpcDetails(),
             EpcDetailsAreCorrect = EpcConfirmation.Yes,
