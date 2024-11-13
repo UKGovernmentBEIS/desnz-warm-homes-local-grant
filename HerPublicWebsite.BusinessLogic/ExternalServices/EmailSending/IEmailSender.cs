@@ -14,12 +14,17 @@ public interface IEmailSender
         string recipientName,
         ReferralRequest referralRequest);
 
+    public void SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority(
+        string emailAddress,
+        string recipientName,
+        ReferralRequest referralRequest);
+
     public void SendFollowUpEmail
     (
         ReferralRequest referralRequest,
         string followUpLink
     );
-    
+
     public void SendComplianceEmail
     (
         MemoryStream recentReferralRequestOverviewFileData,
@@ -28,6 +33,6 @@ public interface IEmailSender
         MemoryStream historicLocalAuthorityReferralRequestFollowUpFileData,
         MemoryStream historicConsortiumReferralRequestFollowUpFileData
     );
-    
+
     public void SendPendingReferralReportEmail(MemoryStream pendingReferralRequestsFileData);
 }

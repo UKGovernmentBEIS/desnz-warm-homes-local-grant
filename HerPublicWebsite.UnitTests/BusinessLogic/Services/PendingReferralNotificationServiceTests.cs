@@ -20,7 +20,7 @@ public class PendingReferralNotificationServiceTests
     private Mock<IEmailSender> mockEmailSender;
     private Mock<IReferralFilterService> mockReferralFilterService;
     private PendingReferralNotificationService pendingReferralNotificationService;
-    
+
     [SetUp]
     public void Setup()
     {
@@ -29,8 +29,8 @@ public class PendingReferralNotificationServiceTests
         mockEmailSender = new Mock<IEmailSender>();
         mockReferralFilterService = new Mock<IReferralFilterService>();
         pendingReferralNotificationService = new PendingReferralNotificationService(
-            mockDataAccessProvider.Object, 
-            mockCsvFileCreator.Object, 
+            mockDataAccessProvider.Object,
+            mockCsvFileCreator.Object,
             mockEmailSender.Object,
             mockReferralFilterService.Object);
     }
@@ -41,7 +41,7 @@ public class PendingReferralNotificationServiceTests
         // Arrange
         var allReferralRequests = new List<ReferralRequest>();
         mockDataAccessProvider
-            .Setup(dap => dap.GetAllReferralRequests())
+            .Setup(dap => dap.GetAllHug2ReferralRequests())
             .ReturnsAsync(allReferralRequests);
 
         var filteredReferralRequests = new List<ReferralRequest>();
@@ -54,10 +54,10 @@ public class PendingReferralNotificationServiceTests
         mockCsvFileCreator
             .Setup(cfc => cfc.CreatePendingReferralRequestFileData(filteredReferralRequests))
             .Returns(memoryStream);
-        
+
         // Act
         await pendingReferralNotificationService.SendPendingReferralNotifications();
-        
+
         // Assert
         mockEmailSender.Verify(es => es.SendPendingReferralReportEmail(memoryStream));
     }

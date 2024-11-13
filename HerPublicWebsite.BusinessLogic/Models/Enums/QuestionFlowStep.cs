@@ -23,6 +23,7 @@ public enum QuestionFlowStep
     NotTakingPart,
     NotParticipating,
     NoLongerParticipating,
+    TakingFutureReferrals,
     Pending,
     HouseholdIncome,
     CheckAnswers,

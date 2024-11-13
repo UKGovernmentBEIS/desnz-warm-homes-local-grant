@@ -47,7 +47,8 @@ public class QuestionnaireUpdater
             QuestionFlowStep.OwnershipStatus, entryPoint);
     }
 
-    public async Task<Questionnaire> UpdateAddressAsync(Questionnaire questionnaire, Address address, QuestionFlowStep? entryPoint)
+    public async Task<Questionnaire> UpdateAddressAsync(Questionnaire questionnaire, Address address,
+        QuestionFlowStep? entryPoint)
     {
         // Try to find an EPC for this property
         var epcDetails = address.Uprn != null ? await epcApi.EpcFromUprnAsync(address.Uprn) : null;
@@ -64,7 +65,7 @@ public class QuestionnaireUpdater
                 q.AddressCounty = address.County;
                 q.CustodianCode = address.LocalCustodianCode;
                 q.LocalAuthorityConfirmed = string.IsNullOrEmpty(address.LocalCustodianCode) ? null : true;
-                
+
                 q.EpcDetails = epcDetails;
 
                 q.EpcDetailsAreCorrect = null;
@@ -105,12 +106,19 @@ public class QuestionnaireUpdater
         return UpdateQuestionnaire(q => q.LocalAuthorityConfirmed = confirmed, questionnaire,
             QuestionFlowStep.ConfirmLocalAuthority, entryPoint);
     }
-    
+
     public Questionnaire UpdateAcknowledgedPending(Questionnaire questionnaire, bool? acknowledgedPending,
         QuestionFlowStep? entryPoint)
     {
         return UpdateQuestionnaire(q => q.AcknowledgedPending = acknowledgedPending, questionnaire,
             QuestionFlowStep.Pending, entryPoint);
+    }
+
+    public Questionnaire UpdateAcknowledgedFutureReferral(Questionnaire questionnaire, bool? acknowledgedFutureReferral,
+        QuestionFlowStep? entryPoint)
+    {
+        return UpdateQuestionnaire(q => q.AcknowledgedFutureReferral = acknowledgedFutureReferral, questionnaire,
+            QuestionFlowStep.TakingFutureReferrals, entryPoint);
     }
 
     public Questionnaire UpdateHouseholdIncome(Questionnaire questionnaire, IncomeBand incomeBand,
@@ -136,16 +144,23 @@ public class QuestionnaireUpdater
         questionnaire.ReferralCreated = referralRequest.RequestDate;
 
         if (!string.IsNullOrEmpty(emailAddress))
-        {
-            if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending)
+            switch (questionnaire.LocalAuthorityHug2Status)
             {
-                emailSender.SendReferenceCodeEmailForPendingLocalAuthority(emailAddress, name, referralRequest);
+                case LocalAuthorityData.Hug2Status.Pending:
+                    emailSender.SendReferenceCodeEmailForPendingLocalAuthority(emailAddress, name, referralRequest);
+                    break;
+                case LocalAuthorityData.Hug2Status.TakingFutureReferrals:
+                    emailSender.SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority(emailAddress, name,
+                        referralRequest);
+                    break;
+                case LocalAuthorityData.Hug2Status.Live:
+                    emailSender.SendReferenceCodeEmailForLiveLocalAuthority(emailAddress, name, referralRequest);
+                    break;
+                default:
+                    logger.LogError("No reference code email template for Local Authority status: {}",
+                        questionnaire.LocalAuthorityHug2Status);
+                    break;
             }
-            else
-            {
-                emailSender.SendReferenceCodeEmailForLiveLocalAuthority(emailAddress, name, referralRequest);
-            }
-        }
 
         try
         {
@@ -181,7 +196,8 @@ public class QuestionnaireUpdater
         questionnaire.NotificationEmailAddress = consentGranted ? questionnaire.LaContactEmailAddress : null;
 
         var notificationContactDetails = new NotificationDetails(questionnaire);
-        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.ReferralCode, notificationContactDetails);
+        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.ReferralCode,
+            notificationContactDetails);
 
         return questionnaire;
     }
@@ -211,33 +227,34 @@ public class QuestionnaireUpdater
         questionnaire.ConfirmationEmailAddress = confirmationConsentGranted ? confirmationEmailAddress : null;
 
         var notificationContactDetails = new NotificationDetails(questionnaire);
-        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.ReferralCode, notificationContactDetails);
+        await dataAccessProvider.PersistNotificationConsentAsync(questionnaire.ReferralCode,
+            notificationContactDetails);
 
         if (confirmationConsentGranted)
         {
             if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending)
             {
                 emailSender.SendReferenceCodeEmailForPendingLocalAuthority(
-                    confirmationEmailAddress, 
-                    questionnaire.LaContactName,                 
+                    confirmationEmailAddress,
+                    questionnaire.LaContactName,
                     new ReferralRequest(questionnaire));
             }
             else
             {
                 emailSender.SendReferenceCodeEmailForLiveLocalAuthority(
-                    confirmationEmailAddress, 
-                    questionnaire.LaContactName, 
+                    confirmationEmailAddress,
+                    questionnaire.LaContactName,
                     new ReferralRequest(questionnaire));
             }
         }
 
         return questionnaire;
     }
-    
+
     public Questionnaire RecordSessionId(Questionnaire questionnaire, int sessionId)
     {
         questionnaire.SessionId = sessionId;
-        
+
         return questionnaire;
     }
 

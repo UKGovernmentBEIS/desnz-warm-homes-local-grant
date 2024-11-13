@@ -16,7 +16,7 @@ public class PolicyTeamUpdateService : IPolicyTeamUpdate
     private readonly IWorkingDayHelperService workingDayHelperService;
     private readonly IEmailSender emailSender;
     private readonly IReferralFilterService referralFilterService;
-    
+
     public PolicyTeamUpdateService(
         IDataAccessProvider dataProvider,
         ICsvFileCreator csvFileCreator,
@@ -36,11 +36,11 @@ public class PolicyTeamUpdateService : IPolicyTeamUpdate
     {
         var recentReferralRequestOverviewFileData = await CreateReferralRequestOverviewFileData();
         var (recentLocalAuthorityReferralRequestFollowUpFileData,
-            recentConsortiumReferralRequestFollowUpFileData) =
-                await BuildRecentReferralRequestFollowUpFileData();
-        var (historicLocalAuthorityReferralRequestFollowUpFileData, 
-            historicConsortiumReferralRequestFollowUpFileData) = 
-                await BuildHistoricReferralRequestFollowUpFileData();
+                recentConsortiumReferralRequestFollowUpFileData) =
+            await BuildRecentReferralRequestFollowUpFileData();
+        var (historicLocalAuthorityReferralRequestFollowUpFileData,
+                historicConsortiumReferralRequestFollowUpFileData) =
+            await BuildHistoricReferralRequestFollowUpFileData();
         emailSender.SendComplianceEmail(
             recentReferralRequestOverviewFileData,
             recentLocalAuthorityReferralRequestFollowUpFileData,
@@ -55,7 +55,7 @@ public class PolicyTeamUpdateService : IPolicyTeamUpdate
         var endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now, -10);
         var startDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now.AddDays(-7), -10);
         var referrals = referralFilterService.FilterForSentToNonPending(
-            await dataProvider.GetReferralRequestsBetweenDates(startDate, endDate));
+            await dataProvider.GetHug2ReferralRequestsBetweenDates(startDate, endDate));
         return csvFileCreator.CreateReferralRequestOverviewFileData(referrals);
     }
 
@@ -70,7 +70,7 @@ public class PolicyTeamUpdateService : IPolicyTeamUpdate
     {
         var (endDate, startDate) = await RecentReferralRequestTimePeriod();
         var referrals = referralFilterService.FilterForSentToNonPending(
-            await dataProvider.GetReferralRequestsBetweenDates(startDate, endDate)).ToList();
+            await dataProvider.GetHug2ReferralRequestsBetweenDates(startDate, endDate)).ToList();
         return (csvFileCreator.CreateLocalAuthorityReferralRequestFollowUpFileData(referrals),
             csvFileCreator.CreateConsortiumReferralRequestFollowUpFileData(referrals));
     }
@@ -78,7 +78,7 @@ public class PolicyTeamUpdateService : IPolicyTeamUpdate
     private async Task<(MemoryStream, MemoryStream)> BuildHistoricReferralRequestFollowUpFileData()
     {
         var referrals = referralFilterService.FilterForSentToNonPending(
-            await dataProvider.GetAllReferralRequests()).ToList();
+            await dataProvider.GetAllHug2ReferralRequests()).ToList();
         return (csvFileCreator.CreateLocalAuthorityReferralRequestFollowUpFileData(referrals),
             csvFileCreator.CreateConsortiumReferralRequestFollowUpFileData(referrals));
     }

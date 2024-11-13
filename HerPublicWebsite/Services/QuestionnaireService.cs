@@ -58,7 +58,8 @@ public class QuestionnaireService
         return questionnaire;
     }
 
-    public async Task<Questionnaire> UpdateOwnershipStatus(OwnershipStatus ownershipStatus, QuestionFlowStep? entryPoint)
+    public async Task<Questionnaire> UpdateOwnershipStatus(OwnershipStatus ownershipStatus,
+        QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = questionnaireUpdater.UpdateOwnershipStatus(questionnaire, ownershipStatus, entryPoint);
@@ -92,7 +93,11 @@ public class QuestionnaireService
     {
         var questionnaire = GetQuestionnaire();
         if (questionnaire.CustodianCode != custodianCode)
+        {
             questionnaire = questionnaireUpdater.UpdateAcknowledgedPending(questionnaire, false, entryPoint);
+            questionnaire = questionnaireUpdater.UpdateAcknowledgedFutureReferral(questionnaire, false, entryPoint);
+        }
+
         questionnaire = questionnaireUpdater.UpdateLocalAuthority(questionnaire, custodianCode, entryPoint);
         await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
@@ -110,6 +115,17 @@ public class QuestionnaireService
     {
         var questionnaire = GetQuestionnaire();
         questionnaire = questionnaireUpdater.UpdateAcknowledgedPending(questionnaire, acknowledgedPending, entryPoint);
+        await SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+
+    public async Task<Questionnaire> UpdateAcknowledgedFutureReferral(bool acknowledgedFutureReferral,
+        QuestionFlowStep? entryPoint)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire =
+            questionnaireUpdater.UpdateAcknowledgedFutureReferral(questionnaire, acknowledgedFutureReferral,
+                entryPoint);
         await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
     }
@@ -181,7 +197,7 @@ public class QuestionnaireService
             var newSessionStarted = await sessionRecorderService.RecordNewSessionStarted();
             questionnaire = questionnaireUpdater.RecordSessionId(questionnaire, newSessionStarted.Id);
         }
-        
+
         var questionnaireString = JsonSerializer.Serialize(questionnaire, JsonSerializerOptions);
         httpContextAccessor.HttpContext!.Session.SetString(SessionKeyQuestionnaire, questionnaireString);
     }
