@@ -7,11 +7,16 @@ public interface IDataAccessProvider
     Task<ReferralRequest> PersistNewReferralRequestAsync(ReferralRequest referralRequest);
     Task<ReferralRequest> UpdateReferralRequestByIdWithFollowUpSentAsync(int id);
     Task PersistNotificationConsentAsync(string referralId, NotificationDetails notificationDetails);
-    Task<IList<ReferralRequest>> GetUnsubmittedReferralRequestsAsync();
-    Task<IList<ReferralRequest>> GetAllReferralRequests();
-    Task<IList<ReferralRequest>> GetReferralRequestsBetweenDates(DateTime startDate, DateTime endDate);
-    Task<IList<ReferralRequest>> GetReferralRequestsWithNoFollowUpBetweenDates(DateTime startDate, DateTime endDate);
-    Task<IList<ReferralRequest>> GetReferralRequestsByCustodianAndRequestDateAsync(string custodianCode, int month, int year);
+    Task<IList<ReferralRequest>> GetHug2UnsubmittedReferralRequestsAsync();
+    Task<IList<ReferralRequest>> GetAllHug2ReferralRequests();
+    Task<IList<ReferralRequest>> GetHug2ReferralRequestsBetweenDates(DateTime startDate, DateTime endDate);
+
+    Task<IList<ReferralRequest>> GetHug2ReferralRequestsWithNoFollowUpBetweenDates(DateTime startDate,
+        DateTime endDate);
+
+    Task<IList<ReferralRequest>> GetHug2ReferralRequestsByCustodianAndRequestDateAsync(string custodianCode,
+        int month, int year);
+
     Task<AnonymisedReport> PersistAnonymisedReportAsync(AnonymisedReport report);
     Task<PerReferralReport> PersistPerReferralReportAsync(PerReferralReport report);
     Task PersistAllChangesAsync();

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using HerPublicWebsite.BusinessLogic;
@@ -29,12 +28,18 @@ public class QuestionnaireUpdaterTests
     private Mock<ILogger<QuestionnaireUpdater>> mockLogger;
     private string liveCustodianCode;
     private string pendingCustodianCode;
-    
+    private string takingFutureReferralsCustodianCode;
+
     [SetUp]
     public void Setup()
     {
-        liveCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Live);
-        pendingCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Pending);
+        liveCustodianCode =
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Live);
+        pendingCustodianCode =
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Pending);
+        takingFutureReferralsCustodianCode =
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status
+                .TakingFutureReferrals);
         mockEpcApi = new Mock<IEpcApi>();
         mockPostCodeService = new Mock<IEligiblePostcodeService>();
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
@@ -51,7 +56,7 @@ public class QuestionnaireUpdaterTests
             mockLogger.Object
         );
     }
-    
+
     [Test]
     public async Task UpdateAddressAsync_CalledWithUprn_GetsEpcDetails()
     {
@@ -69,16 +74,16 @@ public class QuestionnaireUpdaterTests
             AddressLine1 = "epc line 1",
         };
         mockEpcApi.Setup(e => e.EpcFromUprnAsync("123456789012")).ReturnsAsync(epcDetails);
-        
+
         // Act
         var result = await underTest.UpdateAddressAsync(questionnaire, address, null);
-        
+
         // Assert
         mockEpcApi.Verify(e => e.EpcFromUprnAsync("123456789012"));
         result.EpcDetails.Should().Be(epcDetails);
         result.EpcDetailsAreCorrect.Should().BeNull();
     }
-    
+
     [Test]
     public async Task UpdateAddressAsync_CalledWithoutUprn_ResetsEpcDetails()
     {
@@ -96,13 +101,13 @@ public class QuestionnaireUpdaterTests
 
         // Act
         var result = await underTest.UpdateAddressAsync(questionnaire, address, null);
-        
+
         // Assert
         mockEpcApi.VerifyNoOtherCalls();
         result.EpcDetails.Should().BeNull();
         result.EpcDetailsAreCorrect.Should().BeNull();
     }
-    
+
     [TestCase(true)]
     [TestCase(false)]
     public async Task UpdateAddressAsync_WhenCalled_SetsLsoaStatusToMatchEligibility(bool isEligible)
@@ -120,7 +125,7 @@ public class QuestionnaireUpdaterTests
 
         // Act
         var result = await underTest.UpdateAddressAsync(questionnaire, address, null);
-        
+
         // Assert
         result.IsLsoaProperty.Should().Be(isEligible);
     }
@@ -134,10 +139,10 @@ public class QuestionnaireUpdaterTests
             CustodianCode = "old code",
             LocalAuthorityConfirmed = true
         };
-        
+
         // Act
         var result = underTest.UpdateLocalAuthority(questionnaire, "new code", null);
-        
+
         // Assert
         result.LocalAuthorityConfirmed.Should().BeNull();
         result.CustodianCode.Should().Be("new code");
@@ -155,14 +160,14 @@ public class QuestionnaireUpdaterTests
         };
         mockDataAccessProvider.Setup(dap =>
             dap.PersistNewReferralRequestAsync(It.IsAny<ReferralRequest>())).ReturnsAsync(new ReferralRequest());
-        
+
         // Act
         await underTest.GenerateReferralAsync(questionnaire, "name", "email", "telephone");
-        
+
         // Assert
         mockDataAccessProvider.Verify(dap => dap.PersistNewReferralRequestAsync(It.IsAny<ReferralRequest>()));
     }
-    
+
     [Test]
     public async Task GenerateReferralAsync_WhenCalled_UpdatesQuestionnaireContactDetails()
     {
@@ -175,16 +180,16 @@ public class QuestionnaireUpdaterTests
         };
         mockDataAccessProvider.Setup(dap =>
             dap.PersistNewReferralRequestAsync(It.IsAny<ReferralRequest>())).ReturnsAsync(new ReferralRequest());
-        
+
         // Act
         var result = await underTest.GenerateReferralAsync(questionnaire, "name", "email", "telephone");
-        
+
         // Assert
         result.LaContactName.Should().Be("name");
         result.LaContactEmailAddress.Should().Be("email");
         result.LaContactTelephone.Should().Be("telephone");
     }
-    
+
     [Test]
     public async Task GenerateReferralAsync_WhenCalled_UpdatesQuestionnaireReferralData()
     {
@@ -203,17 +208,18 @@ public class QuestionnaireUpdaterTests
         };
         mockDataAccessProvider.Setup(dap =>
             dap.PersistNewReferralRequestAsync(It.IsAny<ReferralRequest>())).ReturnsAsync(referral);
-        
+
         // Act
         var result = await underTest.GenerateReferralAsync(questionnaire, "name", "email", "telephone");
-        
+
         // Assert
         result.ReferralCode.Should().Be("code");
         result.ReferralCreated.Should().Be(creationDate);
     }
-    
+
     [Test]
-    public async Task GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsLive_SendOneEmailWithReferralCodeWithLiveTemplate()
+    public async Task
+        GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsLive_SendOneEmailWithReferralCodeWithLiveTemplate()
     {
         // Arrange
         string testCustodianCode = liveCustodianCode;
@@ -229,12 +235,12 @@ public class QuestionnaireUpdaterTests
             HasGasBoiler = HasGasBoiler.No
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
-        
+
         var referral = new ReferralRequestBuilder(testReferralId);
         referral.WithCustodianCode(testCustodianCode);
         referral.WithRequestDate(creationDate);
         var testReferralRequest = referral.Build();
-        
+
         mockDataAccessProvider.Setup(dap =>
             dap.PersistNewReferralRequestAsync
             (
@@ -257,7 +263,7 @@ public class QuestionnaireUpdaterTests
             testEmailAddress,
             ""
         );
-        
+
         // Assert
         mockEmailSender.Verify(es => es.SendReferenceCodeEmailForLiveLocalAuthority
         (
@@ -266,9 +272,10 @@ public class QuestionnaireUpdaterTests
             testReferralRequest
         ), Times.Once);
     }
-    
+
     [Test]
-    public async Task GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsPending_SendOneEmailWithReferralCodeWithPendingTemplate()
+    public async Task
+        GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsPending_SendOneEmailWithReferralCodeWithPendingTemplate()
     {
         // Arrange
         string testCustodianCode = pendingCustodianCode;
@@ -284,12 +291,12 @@ public class QuestionnaireUpdaterTests
             HasGasBoiler = HasGasBoiler.No
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
-        
+
         var referral = new ReferralRequestBuilder(testReferralId);
         referral.WithCustodianCode(testCustodianCode);
         referral.WithRequestDate(creationDate);
         var testReferralRequest = referral.Build();
-        
+
         mockDataAccessProvider.Setup(dap =>
             dap.PersistNewReferralRequestAsync
             (
@@ -310,7 +317,7 @@ public class QuestionnaireUpdaterTests
             testEmailAddress,
             ""
         );
-        
+
         // Assert
         mockEmailSender.Verify(es => es.SendReferenceCodeEmailForPendingLocalAuthority
         (
@@ -319,7 +326,61 @@ public class QuestionnaireUpdaterTests
             testReferralRequest
         ), Times.Once);
     }
-    
+
+    [Test]
+    public async Task
+        GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsTakingFutureReferrals_SendOneEmailWithReferralCodeWithTakingFutureReferralTemplate()
+    {
+        // Arrange
+        var testCustodianCode = takingFutureReferralsCustodianCode;
+        const int testReferralId = 12;
+        const string testName = "Example Person";
+        const string testEmailAddress = "test@example.com";
+
+        var questionnaire = new Questionnaire
+        {
+            CustodianCode = testCustodianCode,
+            IsLsoaProperty = false,
+            IncomeBand = IncomeBand.UnderOrEqualTo36000,
+            HasGasBoiler = HasGasBoiler.No
+        };
+        var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
+
+        var referral = new ReferralRequestBuilder(testReferralId);
+        referral.WithCustodianCode(testCustodianCode);
+        referral.WithRequestDate(creationDate);
+        var testReferralRequest = referral.Build();
+
+        mockDataAccessProvider.Setup(dap =>
+            dap.PersistNewReferralRequestAsync
+            (
+                It.Is<ReferralRequest>(rr => rr.CustodianCode == testCustodianCode)
+            )).ReturnsAsync(testReferralRequest);
+        mockEmailSender.Setup(es =>
+            es.SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority(
+                testEmailAddress,
+                testName,
+                testReferralRequest)
+        );
+
+        // Act
+        var result = await underTest.GenerateReferralAsync
+        (
+            questionnaire,
+            testName,
+            testEmailAddress,
+            ""
+        );
+
+        // Assert
+        mockEmailSender.Verify(es => es.SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority
+        (
+            testEmailAddress,
+            testName,
+            testReferralRequest
+        ), Times.Once);
+    }
+
     [Test]
     public async Task GenerateReferralAsync_WhenCalledWithoutEmail_DoesNotSendEmail()
     {
@@ -357,7 +418,7 @@ public class QuestionnaireUpdaterTests
             "",
             ""
         );
-        
+
         // Assert
         mockEmailSender.Verify(es => es.SendReferenceCodeEmailForLiveLocalAuthority
         (
@@ -366,7 +427,7 @@ public class QuestionnaireUpdaterTests
             It.IsAny<ReferralRequest>()
         ), Times.Never);
     }
-    
+
     [Test]
     public async Task RecordNotificationConsentAsync_WhenCalledWithLaContactEmail_PersistsConsent()
     {
@@ -376,14 +437,15 @@ public class QuestionnaireUpdaterTests
             LaContactEmailAddress = "test@example.com",
             ReferralCode = "referral code"
         };
-        
+
         // Act
         await underTest.RecordNotificationConsentAsync(questionnaire, true);
-        
+
         // Assert
-        mockDataAccessProvider.Verify(dap => dap.PersistNotificationConsentAsync("referral code",It.IsAny<NotificationDetails>()));
+        mockDataAccessProvider.Verify(dap =>
+            dap.PersistNotificationConsentAsync("referral code", It.IsAny<NotificationDetails>()));
     }
-    
+
     [Test]
     public async Task RecordNotificationConsentAsync_WhenCalledWithLaContactEmailAndConsent_UsesLaContactEmail()
     {
@@ -396,12 +458,12 @@ public class QuestionnaireUpdaterTests
 
         // Act
         var result = await underTest.RecordNotificationConsentAsync(questionnaire, true);
-        
+
         // Assert
         result.NotificationConsent.Should().BeTrue();
         result.NotificationEmailAddress.Should().Be("test@example.com");
     }
-    
+
     [Test]
     public async Task RecordNotificationConsentAsync_WhenCalledWithLaContactEmailAndNoConsent_UsesNullEmail()
     {
@@ -414,7 +476,7 @@ public class QuestionnaireUpdaterTests
 
         // Act
         var result = await underTest.RecordNotificationConsentAsync(questionnaire, false);
-        
+
         // Assert
         result.NotificationConsent.Should().BeFalse();
         result.NotificationEmailAddress.Should().BeNull();
@@ -422,11 +484,12 @@ public class QuestionnaireUpdaterTests
 
     [TestCase(true, "test@example.com")]
     [TestCase(false, "")]
-    public async Task RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentGrantedAndEmailGivenAndLocalAuthorityIsLive_SendsOneLiveTemplateEmailWithReferralCode
-    (
-        bool notificationConsentGranted,
-        string notificationEmailAddress
-    )
+    public async Task
+        RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentGrantedAndEmailGivenAndLocalAuthorityIsLive_SendsOneLiveTemplateEmailWithReferralCode
+        (
+            bool notificationConsentGranted,
+            string notificationEmailAddress
+        )
     {
         // Arrange
         string testCustodianCode = liveCustodianCode;
@@ -456,7 +519,7 @@ public class QuestionnaireUpdaterTests
                 testName,
                 testReferralRequest)
         );
-        
+
         // Act
         var result = await underTest.RecordConfirmationAndNotificationConsentAsync
         (
@@ -466,22 +529,23 @@ public class QuestionnaireUpdaterTests
             true,
             testEmailAddress
         );
-        
+
         // Assert
         mockEmailSender.Verify(es => es.SendReferenceCodeEmailForLiveLocalAuthority(
-            testEmailAddress,
-            testName,
-            It.IsAny<ReferralRequest>()), 
+                testEmailAddress,
+                testName,
+                It.IsAny<ReferralRequest>()),
             Times.Once);
     }
-    
+
     [TestCase(true, "test@example.com")]
     [TestCase(false, "")]
-    public async Task RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentGrantedAndEmailGivenAndLocalAuthorityIsPending_SendsOnePendingTemplateEmailWithReferralCode
-    (
-        bool notificationConsentGranted,
-        string notificationEmailAddress
-    )
+    public async Task
+        RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentGrantedAndEmailGivenAndLocalAuthorityIsPending_SendsOnePendingTemplateEmailWithReferralCode
+        (
+            bool notificationConsentGranted,
+            string notificationEmailAddress
+        )
     {
         // Arrange
         string testCustodianCode = pendingCustodianCode;
@@ -505,14 +569,14 @@ public class QuestionnaireUpdaterTests
         referral.WithCustodianCode(testCustodianCode);
         referral.WithRequestDate(creationDate);
         var testReferralRequest = referral.Build();
-        
+
         mockEmailSender.Setup(es =>
             es.SendReferenceCodeEmailForPendingLocalAuthority(
                 testEmailAddress,
                 testName,
                 testReferralRequest)
         );
-        
+
         // Act
         var result = await underTest.RecordConfirmationAndNotificationConsentAsync
         (
@@ -522,22 +586,23 @@ public class QuestionnaireUpdaterTests
             true,
             testEmailAddress
         );
-        
+
         // Assert
         mockEmailSender.Verify(es => es.SendReferenceCodeEmailForPendingLocalAuthority(
-            testEmailAddress,
-            testName,
-            It.IsAny<ReferralRequest>()), 
+                testEmailAddress,
+                testName,
+                It.IsAny<ReferralRequest>()),
             Times.Once);
     }
-    
+
     [TestCase(true, "test@example.com")]
     [TestCase(false, "")]
-    public async Task RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentNotGrantedAndEmailNotGiven_DoesNotSendEmail
-    (
-        bool notificationConsentGranted,
-        string notificationEmailAddress
-    )
+    public async Task
+        RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentNotGrantedAndEmailNotGiven_DoesNotSendEmail
+        (
+            bool notificationConsentGranted,
+            string notificationEmailAddress
+        )
     {
         // Arrange
         const string testCustodianCode = "1234";
@@ -557,7 +622,7 @@ public class QuestionnaireUpdaterTests
                 It.IsAny<ReferralRequest>()
             )
         );
-        
+
         // Act
         var result = await underTest.RecordConfirmationAndNotificationConsentAsync
         (
@@ -567,7 +632,7 @@ public class QuestionnaireUpdaterTests
             false,
             ""
         );
-        
+
         // Assert
         mockEmailSender.Verify(es => es.SendReferenceCodeEmailForLiveLocalAuthority
         (
@@ -620,7 +685,7 @@ public class QuestionnaireUpdaterTests
     public async Task UpdateQuestionnaire_EditWhileExistingData_UneditedDataPreserved()
     {
         // Arrange
-        var questionnaire = new Questionnaire() { UneditedData = new Questionnaire()};
+        var questionnaire = new Questionnaire() { UneditedData = new Questionnaire() };
 
         mockQuestionFlowService.Setup(qfs => qfs.NextStep(
             It.IsAny<QuestionFlowStep>(),
@@ -639,7 +704,7 @@ public class QuestionnaireUpdaterTests
     public async Task UpdateQuestionnaire_EditComplete_DataCommitted()
     {
         // Arrange
-        var questionnaire = new Questionnaire() { UneditedData = new Questionnaire()};
+        var questionnaire = new Questionnaire() { UneditedData = new Questionnaire() };
 
         mockQuestionFlowService.Setup(qfs => qfs.NextStep(
             It.IsAny<QuestionFlowStep>(),

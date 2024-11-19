@@ -9,7 +9,7 @@ public class PendingReferralNotificationService
     private readonly ICsvFileCreator csvFileCreator;
     private readonly IEmailSender emailSender;
     private readonly IReferralFilterService referralFilterService;
-    
+
     public PendingReferralNotificationService(
         IDataAccessProvider dataProvider,
         ICsvFileCreator csvFileCreator,
@@ -21,7 +21,7 @@ public class PendingReferralNotificationService
         this.emailSender = emailSender;
         this.referralFilterService = referralFilterService;
     }
-    
+
     public async Task SendPendingReferralNotifications()
     {
         var pendingReferralRequestsFileData = await BuildPendingReferralRequestsFileData();
@@ -30,7 +30,7 @@ public class PendingReferralNotificationService
 
     private async Task<MemoryStream> BuildPendingReferralRequestsFileData()
     {
-        var referralRequests = await dataProvider.GetAllReferralRequests();
+        var referralRequests = await dataProvider.GetAllHug2ReferralRequests();
         var pendingReferralRequests = referralFilterService.FilterForPendingReferralReport(referralRequests);
         return csvFileCreator.CreatePendingReferralRequestFileData(pendingReferralRequests);
     }
