@@ -1,4 +1,4 @@
-﻿namespace HerPublicWebsite.ExternalServices.GoogleAnalytics;
+﻿namespace WhlgPublicWebsite.ExternalServices.GoogleAnalytics;
 
 public class GoogleAnalyticsConfiguration
 {

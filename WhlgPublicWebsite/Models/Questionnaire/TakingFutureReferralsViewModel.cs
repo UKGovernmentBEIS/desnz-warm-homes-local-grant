@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using GovUkDesignSystem.ModelBinders;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HerPublicWebsite.Models.Questionnaire;
+namespace WhlgPublicWebsite.Models.Questionnaire;
 
 public class TakingFutureReferralsViewModel : QuestionFlowViewModel, IValidatableObject
 {

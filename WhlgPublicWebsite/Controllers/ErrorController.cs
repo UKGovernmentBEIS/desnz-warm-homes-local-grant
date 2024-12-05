@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HerPublicWebsite.Controllers;
+namespace WhlgPublicWebsite.Controllers;
 
 [Route("error")]
 public class ErrorController: Controller

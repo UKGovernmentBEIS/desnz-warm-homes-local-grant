@@ -1,8 +1,8 @@
 using System.Globalization;
-using HerPublicWebsite.BusinessLogic.Models;
 using Newtonsoft.Json;
+using WhlgPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
+namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 
 public class OsPlacesDpaDto
 {

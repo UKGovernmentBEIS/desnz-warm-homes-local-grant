@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using HerPublicWebsite.BusinessLogic.Extensions;
+using WhlgPublicWebsite.BusinessLogic.Extensions;
 
 namespace Tests.BusinessLogic.Extensions;
 

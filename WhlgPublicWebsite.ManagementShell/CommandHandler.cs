@@ -1,4 +1,4 @@
-﻿namespace HerPublicWebsite.ManagementShell;
+﻿namespace WhlgPublicWebsite.ManagementShell;
 
 public class CommandHandler
 {

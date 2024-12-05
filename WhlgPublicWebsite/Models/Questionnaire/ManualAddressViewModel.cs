@@ -1,6 +1,6 @@
 using GovUkDesignSystem.Attributes.ValidationAttributes;
 
-namespace HerPublicWebsite.Models.Questionnaire;
+namespace WhlgPublicWebsite.Models.Questionnaire;
 
 public class ManualAddressViewModel : QuestionFlowViewModel
 {

@@ -1,7 +1,7 @@
-﻿using HerPublicWebsite.BusinessLogic.Models.Enums;
-using HerPublicWebsite.Models.Enums;
+﻿using WhlgPublicWebsite.BusinessLogic.Models.Enums;
+using WhlgPublicWebsite.Models.Enums;
 
-namespace HerPublicWebsite.Extensions;
+namespace WhlgPublicWebsite.Extensions;
 
 public static class EnumExtensions
 {

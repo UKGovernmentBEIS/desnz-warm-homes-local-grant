@@ -1,12 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using HerPublicWebsite.Models.ReferralRequestFollowUp;
 using Microsoft.AspNetCore.Mvc;
-using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
-using HerPublicWebsite.Models.Enums;
-using HerPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
+using WhlgPublicWebsite.Models.Enums;
+using WhlgPublicWebsite.Models.ReferralRequestFollowUp;
 
-namespace HerPublicWebsite.Controllers;
+namespace WhlgPublicWebsite.Controllers;
 
 [Route("referral-follow-up")]
 public class ReferralRequestFollowUpController : Controller

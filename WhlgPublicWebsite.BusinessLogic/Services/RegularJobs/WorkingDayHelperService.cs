@@ -1,6 +1,6 @@
-using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.Common;
 
-namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+namespace WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public interface IWorkingDayHelperService
 {

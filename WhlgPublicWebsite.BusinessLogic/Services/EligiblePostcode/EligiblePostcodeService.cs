@@ -1,7 +1,7 @@
-﻿using HerPublicWebsite.BusinessLogic.Extensions;
+﻿using WhlgPublicWebsite.BusinessLogic.Extensions;
 using Microsoft.Extensions.Logging;
 
-namespace HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
+namespace WhlgPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 
 public interface IEligiblePostcodeService
 {

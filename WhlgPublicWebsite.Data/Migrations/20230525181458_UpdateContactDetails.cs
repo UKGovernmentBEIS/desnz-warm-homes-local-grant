@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace HerPublicWebsite.Data.Migrations
+namespace WhlgPublicWebsite.Data.Migrations
 {
     public partial class UpdateContactDetails : Migration
     {

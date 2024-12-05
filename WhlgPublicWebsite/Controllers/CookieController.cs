@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using HerPublicWebsite.Models.Cookies;
-using HerPublicWebsite.Services.Cookies;
+using WhlgPublicWebsite.Models.Cookies;
+using WhlgPublicWebsite.Services.Cookies;
 
-namespace HerPublicWebsite.Controllers;
+namespace WhlgPublicWebsite.Controllers;
 
 public class CookieController: Controller
 {

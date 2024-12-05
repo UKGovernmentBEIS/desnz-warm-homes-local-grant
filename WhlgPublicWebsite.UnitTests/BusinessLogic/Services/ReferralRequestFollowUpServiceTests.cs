@@ -1,12 +1,12 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using HerPublicWebsite.BusinessLogic;
-using HerPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic;
+using WhlgPublicWebsite.BusinessLogic.Models;
 using NUnit.Framework;
 using Moq;
 using Tests.Builders;
-using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
+using WhlgPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 
 namespace Tests.BusinessLogic.Services;
 

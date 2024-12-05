@@ -1,6 +1,6 @@
 ﻿using System;
 using FluentAssertions;
-using HerPublicWebsite.BusinessLogic.Services.S3ReferralFileKeyGenerator;
+using WhlgPublicWebsite.BusinessLogic.Services.S3ReferralFileKeyGenerator;
 using NUnit.Framework;
 
 namespace Tests.BusinessLogic.Services;

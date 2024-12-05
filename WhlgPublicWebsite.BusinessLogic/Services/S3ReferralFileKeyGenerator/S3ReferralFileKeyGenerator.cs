@@ -1,6 +1,6 @@
-﻿using HerPublicWebsite.BusinessLogic.Models;
+﻿using WhlgPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.BusinessLogic.Services.S3ReferralFileKeyGenerator;
+namespace WhlgPublicWebsite.BusinessLogic.Services.S3ReferralFileKeyGenerator;
 
 public class S3ReferralFileKeyGenerator
 {

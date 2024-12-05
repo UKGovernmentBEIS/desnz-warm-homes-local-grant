@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HerPublicWebsite.ErrorHandling
+namespace WhlgPublicWebsite.ErrorHandling
 {
 
     public abstract class CustomErrorPageException : Exception

@@ -1,14 +1,14 @@
 using System.Globalization;
 using Hangfire;
-using HerPublicWebsite.BusinessLogic.Services.PolicyTeamUpdate;
-using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using HerPublicWebsite.Data;
+using WhlgPublicWebsite.BusinessLogic.Services.PolicyTeamUpdate;
+using WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
+using WhlgPublicWebsite.Data;
 
-namespace HerPublicWebsite
+namespace WhlgPublicWebsite
 {
     public class Program
     {

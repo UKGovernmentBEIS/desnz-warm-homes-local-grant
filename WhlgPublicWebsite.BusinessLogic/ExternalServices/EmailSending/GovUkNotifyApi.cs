@@ -1,12 +1,12 @@
-﻿using HerPublicWebsite.BusinessLogic.Models;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using Notify.Client;
 using Notify.Exceptions;
 using Notify.Interfaces;
+using WhlgPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
+namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
 {
     public class GovUkNotifyApi : IEmailSender
     {

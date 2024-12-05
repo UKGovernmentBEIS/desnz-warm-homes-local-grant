@@ -1,7 +1,7 @@
-using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.Data;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.Data;
 
-namespace HerPublicWebsite.ManagementShell;
+namespace WhlgPublicWebsite.ManagementShell;
 
 public interface IDatabaseOperation
 {

@@ -1,4 +1,4 @@
-﻿namespace HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
+﻿namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
 
 public class S3Configuration
 {

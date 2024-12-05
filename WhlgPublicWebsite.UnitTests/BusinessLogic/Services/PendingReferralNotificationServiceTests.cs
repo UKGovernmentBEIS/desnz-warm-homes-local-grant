@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using HerPublicWebsite.BusinessLogic;
-using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
-using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
-using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+using WhlgPublicWebsite.BusinessLogic;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
+using WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
 using Moq;
 using NUnit.Framework;
 

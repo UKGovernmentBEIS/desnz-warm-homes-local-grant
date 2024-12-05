@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using HerPublicWebsite.Models.Cookies;
+using WhlgPublicWebsite.Models.Cookies;
 
-namespace HerPublicWebsite.Services.Cookies;
+namespace WhlgPublicWebsite.Services.Cookies;
 
 public class CookieService
 {

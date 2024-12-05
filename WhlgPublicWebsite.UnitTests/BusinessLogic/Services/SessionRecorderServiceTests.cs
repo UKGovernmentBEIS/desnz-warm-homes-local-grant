@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions.Extensions;
-using HerPublicWebsite.BusinessLogic;
-using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Services.SessionRecorder;
+using WhlgPublicWebsite.BusinessLogic;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Services.SessionRecorder;
 using Moq;
 using NUnit.Framework;
 using Tests.Helpers;

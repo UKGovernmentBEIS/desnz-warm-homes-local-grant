@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.Common;
 
-namespace HerPublicWebsite.ExternalServices.GoogleAnalytics;
+namespace WhlgPublicWebsite.ExternalServices.GoogleAnalytics;
 
 public class GoogleAnalyticsService
 {

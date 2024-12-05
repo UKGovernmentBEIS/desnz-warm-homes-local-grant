@@ -1,8 +1,8 @@
 ﻿using System;
 using FluentAssertions;
 using NUnit.Framework;
-using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 
 namespace Tests.BusinessLogic.Models;
 

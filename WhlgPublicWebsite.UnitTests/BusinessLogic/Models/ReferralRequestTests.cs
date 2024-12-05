@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using NUnit.Framework;
-using HerPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models;
 using Tests.Helpers;
 
 namespace Tests.BusinessLogic.Models;

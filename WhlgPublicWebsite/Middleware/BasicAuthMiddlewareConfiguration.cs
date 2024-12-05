@@ -1,4 +1,4 @@
-﻿namespace HerPublicWebsite.Middleware
+﻿namespace WhlgPublicWebsite.Middleware
 {
     public class BasicAuthMiddlewareConfiguration
     {

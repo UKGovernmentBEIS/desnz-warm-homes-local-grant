@@ -1,4 +1,4 @@
-﻿namespace HerPublicWebsite.Services.Cookies;
+﻿namespace WhlgPublicWebsite.Services.Cookies;
 
 public enum BannerState
 {

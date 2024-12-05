@@ -3,8 +3,8 @@
 @using GovUkDesignSystem.GovUkDesignSystemComponents.SubComponents
 @using Microsoft.AspNetCore.Http.Extensions
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@using HerPublicWebsite.Controllers
-@using HerPublicWebsite.Services.Cookies
+@using WhlgPublicWebsite.Controllers
+@using WhlgPublicWebsite.Services.Cookies
 @inject CookieService CookieService
 @{
     var bannerState = CookieService.GetAndUpdateBannerState(Context.Request, Context.Response);

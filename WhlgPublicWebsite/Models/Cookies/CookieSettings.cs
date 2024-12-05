@@ -1,6 +1,6 @@
 ﻿using GovUkDesignSystem.GovUkDesignSystemComponents;
 
-namespace HerPublicWebsite.Models.Cookies;
+namespace WhlgPublicWebsite.Models.Cookies;
 
 public class CookieSettings
 {

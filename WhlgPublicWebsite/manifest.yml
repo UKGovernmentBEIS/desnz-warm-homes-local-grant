@@ -2,7 +2,7 @@
 applications:
  - buildpacks:
      - dotnet_core_buildpack
-   command: dotnet HerPublicWebsite.dll
+   command: dotnet WhlgPublicWebsite.dll
    health-check-http-endpoint: /health-check
    health-check-type: http
    timeout: 60

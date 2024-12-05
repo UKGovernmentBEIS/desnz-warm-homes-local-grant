@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using NUnit.Framework;
 
 namespace Tests.BusinessLogic.ExternalServices.OsPlaces;

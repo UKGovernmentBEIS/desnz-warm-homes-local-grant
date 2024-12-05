@@ -1,7 +1,7 @@
-﻿using HerPublicWebsite.BusinessLogic.Models.Enums;
-using HerPublicWebsite.BusinessLogic.Models;
+﻿using WhlgPublicWebsite.BusinessLogic.Models.Enums;
+using WhlgPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.Models.Questionnaire;
+namespace WhlgPublicWebsite.Models.Questionnaire;
 
 public class CheckAnswersViewModel : QuestionFlowViewModel
 {

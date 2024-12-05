@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
-using static HerPublicWebsite.BusinessLogic.Models.Enums.IncomeBand;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
+using static WhlgPublicWebsite.BusinessLogic.Models.Enums.IncomeBand;
 
 namespace Tests.BusinessLogic.Models.ExpectedLocalAuthorityData;
 

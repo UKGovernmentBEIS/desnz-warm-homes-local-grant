@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using FluentAssertions;
-using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.Models.Questionnaire;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.Models.Questionnaire;
 using NUnit.Framework;
 
 namespace Tests.Website.Models.Questionnaire;

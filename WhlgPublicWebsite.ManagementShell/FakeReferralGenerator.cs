@@ -1,8 +1,8 @@
 ﻿using Bogus;
-using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 
-namespace HerPublicWebsite.ManagementShell;
+namespace WhlgPublicWebsite.ManagementShell;
 
 public interface IFakeReferralGenerator
 {

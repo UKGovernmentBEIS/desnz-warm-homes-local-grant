@@ -1,6 +1,6 @@
-using HerPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
+namespace WhlgPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 
 public interface IReferralFollowUpService
 {

@@ -4,7 +4,7 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
 using Tests.BusinessLogic.Models.ExpectedLocalAuthorityData;
-using static HerPublicWebsite.BusinessLogic.Models.LocalAuthorityData;
+using static WhlgPublicWebsite.BusinessLogic.Models.LocalAuthorityData;
 
 namespace Tests.BusinessLogic.Models;
 

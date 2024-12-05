@@ -16,7 +16,7 @@
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
       }
     },
-    "HerPublicWebsite": {
+    "WhlgPublicWebsite": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": false,

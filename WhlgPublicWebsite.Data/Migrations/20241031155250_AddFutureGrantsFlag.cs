@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace HerPublicWebsite.Data.Migrations
+namespace WhlgPublicWebsite.Data.Migrations
 {
     public partial class AddFutureGrantsFlag : Migration
     {

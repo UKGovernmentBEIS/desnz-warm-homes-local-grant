@@ -1,5 +1,5 @@
-﻿using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
+﻿using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 
 namespace Tests.Helpers;
 

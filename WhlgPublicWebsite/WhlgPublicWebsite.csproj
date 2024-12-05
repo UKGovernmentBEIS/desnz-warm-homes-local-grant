@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <LangVersion>12</LangVersion>
         <UserSecretsId>2bd00328-b459-4cd2-a057-0b702ddf830c</UserSecretsId>
-        <RootNamespace>HerPublicWebsite</RootNamespace>
+        <RootNamespace>WhlgPublicWebsite</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

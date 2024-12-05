@@ -1,4 +1,4 @@
-﻿namespace HerPublicWebsite.BusinessLogic.Services.SessionRecorder;
+﻿namespace WhlgPublicWebsite.BusinessLogic.Services.SessionRecorder;
 
 public interface IDateTimeProvider
 {

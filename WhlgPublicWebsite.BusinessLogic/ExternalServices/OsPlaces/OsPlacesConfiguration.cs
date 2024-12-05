@@ -1,4 +1,4 @@
-﻿namespace HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces
+﻿namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.OsPlaces
 {
     public class OsPlacesConfiguration
     {

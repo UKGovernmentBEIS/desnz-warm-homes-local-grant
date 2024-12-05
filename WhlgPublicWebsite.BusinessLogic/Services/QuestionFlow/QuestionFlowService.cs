@@ -1,7 +1,7 @@
-﻿using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
+﻿using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 
-namespace HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
+namespace WhlgPublicWebsite.BusinessLogic.Services.QuestionFlow;
 
 public interface IQuestionFlowService
 {

@@ -3,10 +3,10 @@ using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
-using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 
-namespace HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
+namespace WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 
 public interface ICsvFileCreator
 {

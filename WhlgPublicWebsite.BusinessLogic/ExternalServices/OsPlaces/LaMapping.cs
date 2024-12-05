@@ -1,4 +1,4 @@
-﻿namespace HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
+﻿namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 
 // Sometimes, local authorities merge and we need to map the old custodian codes
 public class LaMapping

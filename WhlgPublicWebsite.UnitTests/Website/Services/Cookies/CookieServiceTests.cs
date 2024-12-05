@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
-using HerPublicWebsite.Models.Cookies;
-using HerPublicWebsite.Services.Cookies;
+using WhlgPublicWebsite.Models.Cookies;
+using WhlgPublicWebsite.Services.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;

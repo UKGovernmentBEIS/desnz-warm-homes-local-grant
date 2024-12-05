@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
-using HerPublicWebsite.ExternalServices.GoogleAnalytics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using WhlgPublicWebsite.ExternalServices.GoogleAnalytics;
 
-namespace HerPublicWebsite.Controllers;
+namespace WhlgPublicWebsite.Controllers;
 
 public class StaticPagesController : Controller
 {

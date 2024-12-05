@@ -1,4 +1,4 @@
-﻿namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
+﻿namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
 {
     public class EpbEpcConfiguration
     {

@@ -1,13 +1,13 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using HerPublicWebsite.BusinessLogic;
-using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
-using HerPublicWebsite.BusinessLogic.Services.SessionRecorder;
 using Microsoft.AspNetCore.Http;
+using WhlgPublicWebsite.BusinessLogic;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
+using WhlgPublicWebsite.BusinessLogic.Services.SessionRecorder;
 
-namespace HerPublicWebsite.Services;
+namespace WhlgPublicWebsite.Services;
 
 public class QuestionnaireService
 {

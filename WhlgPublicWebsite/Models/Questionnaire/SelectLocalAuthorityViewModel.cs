@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using HerPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.Models.Questionnaire;
+namespace WhlgPublicWebsite.Models.Questionnaire;
 
 public class SelectLocalAuthorityViewModel : QuestionFlowViewModel
 {

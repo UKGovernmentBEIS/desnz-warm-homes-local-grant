@@ -1,6 +1,6 @@
-﻿using HerPublicWebsite.BusinessLogic.Models.Enums;
+﻿using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 
-namespace HerPublicWebsite.BusinessLogic.Models;
+namespace WhlgPublicWebsite.BusinessLogic.Models;
 
 public record EpcDetails
 {

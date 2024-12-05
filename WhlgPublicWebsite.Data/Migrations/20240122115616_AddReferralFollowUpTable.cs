@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace HerPublicWebsite.Data.Migrations
+namespace WhlgPublicWebsite.Data.Migrations
 {
     public partial class AddReferralFollowUpTable : Migration
     {

@@ -1,6 +1,6 @@
-﻿using HerPublicWebsite.BusinessLogic.Models;
+﻿using WhlgPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
+namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 
 public interface IEmailSender
 {

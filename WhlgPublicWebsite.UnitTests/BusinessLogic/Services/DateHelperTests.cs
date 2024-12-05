@@ -1,6 +1,6 @@
 ﻿using System;
 using FluentAssertions;
-using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+using WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
 using NUnit.Framework;
 
 namespace Tests.BusinessLogic.Services;

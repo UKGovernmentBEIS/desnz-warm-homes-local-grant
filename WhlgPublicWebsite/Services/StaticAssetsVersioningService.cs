@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace HerPublicWebsite.Services
+namespace WhlgPublicWebsite.Services
 {
     public class StaticAssetsVersioningService
     {

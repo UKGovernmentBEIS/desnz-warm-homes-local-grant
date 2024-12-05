@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
-using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 using NUnit.Framework;
 using Tests.Helpers;
 

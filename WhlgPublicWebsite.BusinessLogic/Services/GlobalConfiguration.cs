@@ -1,4 +1,4 @@
-namespace HerPublicWebsite.BusinessLogic;
+namespace WhlgPublicWebsite.BusinessLogic;
 
 public class GlobalConfiguration
 {

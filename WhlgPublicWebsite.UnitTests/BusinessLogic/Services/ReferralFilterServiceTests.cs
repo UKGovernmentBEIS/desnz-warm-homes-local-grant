@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using FluentAssertions.Extensions;
-using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
 using Moq;
 using NUnit.Framework;
 using Tests.Builders;
 using Tests.Helpers;
-using static HerPublicWebsite.BusinessLogic.Models.LocalAuthorityData;
+using static WhlgPublicWebsite.BusinessLogic.Models.LocalAuthorityData;
 
 namespace Tests.BusinessLogic.Services;
 

@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using GovUkDesignSystem.Attributes.ValidationAttributes;
-using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
-using HerPublicWebsite.Extensions;
-using HerPublicWebsite.Models.Enums;
+using WhlgPublicWebsite.Extensions;
+using WhlgPublicWebsite.Models.Enums;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 
-namespace HerPublicWebsite.Models.Questionnaire;
+namespace WhlgPublicWebsite.Models.Questionnaire;
 
 public class ReviewEpcViewModel : QuestionFlowViewModel
 {

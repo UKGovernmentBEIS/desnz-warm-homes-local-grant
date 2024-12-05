@@ -1,10 +1,10 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Transfer;
-using HerPublicWebsite.BusinessLogic.Services.S3ReferralFileKeyGenerator;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using WhlgPublicWebsite.BusinessLogic.Services.S3ReferralFileKeyGenerator;
 
-namespace HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
+namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
 
 public class S3FileWriter : IS3FileWriter
 {

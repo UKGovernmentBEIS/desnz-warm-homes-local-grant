@@ -1,4 +1,4 @@
-namespace HerPublicWebsite.BusinessLogic.Models;
+namespace WhlgPublicWebsite.BusinessLogic.Models;
 
 public record Address {
   public string AddressLine1 {get; set;}

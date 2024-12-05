@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using PhoneNumbers;
 
-namespace HerPublicWebsite.Helpers;
+namespace WhlgPublicWebsite.Helpers;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 public class ValidUkPhoneNumberAttribute : DataTypeAttribute

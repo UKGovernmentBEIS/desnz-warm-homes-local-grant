@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HerPublicWebsite.BusinessLogic.Models;
+namespace WhlgPublicWebsite.BusinessLogic.Models;
 
 [Table("Sessions")]
 public class Session

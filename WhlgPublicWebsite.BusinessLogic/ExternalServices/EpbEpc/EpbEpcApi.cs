@@ -1,13 +1,13 @@
 ﻿using System.Net;
-using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
-using HerPublicWebsite.BusinessLogic.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Caching.Memory;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.Common;
+using WhlgPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
+namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
 {
     public class EpbEpcApi : IEpcApi
     {

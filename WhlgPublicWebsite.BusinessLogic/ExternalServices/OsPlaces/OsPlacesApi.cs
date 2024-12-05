@@ -1,11 +1,11 @@
 using System.Text.RegularExpressions;
-using HerPublicWebsite.BusinessLogic.Extensions;
-using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
-using HerPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.Common;
+using WhlgPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
+namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 
 public class OsPlacesApi : IOsPlacesApi
 {

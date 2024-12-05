@@ -1,7 +1,7 @@
 using GovUkDesignSystem.Attributes.ValidationAttributes;
-using HerPublicWebsite.Models.Enums;
+using WhlgPublicWebsite.Models.Enums;
 
-namespace HerPublicWebsite.Models.Questionnaire;
+namespace WhlgPublicWebsite.Models.Questionnaire;
 
 public class ConfirmLocalAuthorityViewModel : QuestionFlowViewModel
 {

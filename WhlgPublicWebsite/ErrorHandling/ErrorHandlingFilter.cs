@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace HerPublicWebsite.ErrorHandling
+namespace WhlgPublicWebsite.ErrorHandling
 {
     public class ErrorHandlingFilter : ExceptionFilterAttribute
     {

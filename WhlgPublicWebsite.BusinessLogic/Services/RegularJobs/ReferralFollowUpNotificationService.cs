@@ -1,9 +1,9 @@
-﻿using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
-using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
-using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
+using WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
+using WhlgPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 
-namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+namespace WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public interface IReferralFollowUpNotificationService
 {

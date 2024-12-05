@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
-using HerPublicWebsite.Models.Questionnaire;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
+using WhlgPublicWebsite.Models.Questionnaire;
 using NUnit.Framework;
 
 namespace Tests.Website.Models.Questionnaire;

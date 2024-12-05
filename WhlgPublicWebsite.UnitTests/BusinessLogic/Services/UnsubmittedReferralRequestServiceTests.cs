@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
-using HerPublicWebsite.BusinessLogic;
-using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
-using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
+using WhlgPublicWebsite.BusinessLogic;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using NUnit.Framework;
-using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+using WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
 using Moq;
 using Tests.Builders;
 using RichardSzalay.MockHttp;
-using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
-using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
-using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.Common;
+using WhlgPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 
 namespace Tests.BusinessLogic.Services;
 

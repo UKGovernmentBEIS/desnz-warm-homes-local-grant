@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace HerPublicWebsite.Controllers
+namespace WhlgPublicWebsite.Controllers
 {
     public class HealthCheckController : Controller
     {

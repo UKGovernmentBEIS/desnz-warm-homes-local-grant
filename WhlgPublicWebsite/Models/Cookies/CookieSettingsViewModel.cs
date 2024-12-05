@@ -1,4 +1,4 @@
-﻿namespace HerPublicWebsite.Models.Cookies;
+﻿namespace WhlgPublicWebsite.Models.Cookies;
 
 public class CookieSettingsViewModel
 {

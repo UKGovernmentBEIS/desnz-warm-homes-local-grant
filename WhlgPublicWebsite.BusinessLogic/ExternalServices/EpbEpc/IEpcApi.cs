@@ -1,6 +1,6 @@
-﻿using HerPublicWebsite.BusinessLogic.Models;
+﻿using WhlgPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
+namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
 {
     public interface IEpcApi
     {

@@ -2,7 +2,7 @@
 using System.Text;
 using Newtonsoft.Json;
 
-namespace HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
+namespace WhlgPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 
 public class EligiblePostcodeListCache
 {

@@ -1,7 +1,7 @@
-﻿using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
-using HerPublicWebsite.BusinessLogic.Models;
+﻿using WhlgPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
+using WhlgPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+namespace WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public interface IReferralFilterService
 {

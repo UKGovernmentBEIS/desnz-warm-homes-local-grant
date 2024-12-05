@@ -1,7 +1,7 @@
-﻿using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
-using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
+﻿using WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
+using WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 
-namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+namespace WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public class PendingReferralNotificationService
 {

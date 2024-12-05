@@ -1,13 +1,13 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
-using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 using Microsoft.Extensions.Options;
 using RichardSzalay.MockHttp;
-using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.Common;
 using System.Threading.Tasks;
 using System;
-using HerPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;

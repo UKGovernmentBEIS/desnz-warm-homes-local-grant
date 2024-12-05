@@ -1,6 +1,6 @@
-﻿using HerPublicWebsite.BusinessLogic.Models;
+﻿using WhlgPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces
+namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.OsPlaces
 {
     public interface IOsPlacesApi
     {

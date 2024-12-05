@@ -2,12 +2,12 @@
 using NUnit.Framework;
 using Microsoft.Extensions.Options;
 using RichardSzalay.MockHttp;
-using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.Common;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
-using HerPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
+using WhlgPublicWebsite.BusinessLogic.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 

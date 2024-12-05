@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
-using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
-using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.Common;
+using WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 namespace Tests.BusinessLogic.Services;
 

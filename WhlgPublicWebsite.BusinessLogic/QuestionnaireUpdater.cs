@@ -1,12 +1,12 @@
-﻿using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
-using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
-using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
-using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
-using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
+using WhlgPublicWebsite.BusinessLogic.Services.EligiblePostcode;
+using WhlgPublicWebsite.BusinessLogic.Services.QuestionFlow;
 
-namespace HerPublicWebsite.BusinessLogic;
+namespace WhlgPublicWebsite.BusinessLogic;
 
 public class QuestionnaireUpdater
 {

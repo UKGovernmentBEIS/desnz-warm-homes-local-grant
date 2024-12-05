@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using HerPublicWebsite.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using WhlgPublicWebsite.Controllers;
 
-namespace HerPublicWebsite.Filters;
+namespace WhlgPublicWebsite.Filters;
 
 /// <summary>
 /// Add the session expiry attribute to a controller or action to redirect to the session expiry page

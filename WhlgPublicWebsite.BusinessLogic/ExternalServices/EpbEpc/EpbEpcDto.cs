@@ -1,8 +1,8 @@
-﻿using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 
-namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
+namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
 
 public record class EpbEpcDto
 {
@@ -114,18 +114,18 @@ public record class EpcAssessmentDto
 
         if (PropertyType.Contains("House", StringComparison.OrdinalIgnoreCase))
         {
-            return HerPublicWebsite.BusinessLogic.Models.Enums.PropertyType.House;
+            return Models.Enums.PropertyType.House;
         }
 
         if (PropertyType.Contains("Bungalow", StringComparison.OrdinalIgnoreCase))
         {
-            return HerPublicWebsite.BusinessLogic.Models.Enums.PropertyType.Bungalow;
+            return Models.Enums.PropertyType.Bungalow;
         }
 
         if (PropertyType.Contains("Flat", StringComparison.OrdinalIgnoreCase) ||
             PropertyType.Contains("Maisonette", StringComparison.OrdinalIgnoreCase))
         {
-            return HerPublicWebsite.BusinessLogic.Models.Enums.PropertyType.ApartmentFlatOrMaisonette;
+            return Models.Enums.PropertyType.ApartmentFlatOrMaisonette;
         }
 
         return null;
@@ -133,7 +133,7 @@ public record class EpcAssessmentDto
 
     private HouseType? ParseHouseType()
     {
-        if (ParsePropertyType() is not HerPublicWebsite.BusinessLogic.Models.Enums.PropertyType.House)
+        if (ParsePropertyType() is not Models.Enums.PropertyType.House)
         {
             return null;
         }
@@ -163,7 +163,7 @@ public record class EpcAssessmentDto
 
     private BungalowType? ParseBungalowType()
     {
-        if (ParsePropertyType() is not HerPublicWebsite.BusinessLogic.Models.Enums.PropertyType.Bungalow)
+        if (ParsePropertyType() is not Models.Enums.PropertyType.Bungalow)
         {
             return null;
         }
@@ -193,7 +193,7 @@ public record class EpcAssessmentDto
 
     private FlatType? ParseFlatType()
     {
-        if (ParsePropertyType() is not HerPublicWebsite.BusinessLogic.Models.Enums.PropertyType.ApartmentFlatOrMaisonette)
+        if (ParsePropertyType() is not Models.Enums.PropertyType.ApartmentFlatOrMaisonette)
         {
             return null;
         }

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using GovUkDesignSystem.Attributes.ValidationAttributes;
-using HerPublicWebsite.Helpers;
-using HerPublicWebsite.Models.Enums;
+using WhlgPublicWebsite.Helpers;
+using WhlgPublicWebsite.Models.Enums;
 
-namespace HerPublicWebsite.Models.Questionnaire;
+namespace WhlgPublicWebsite.Models.Questionnaire;
 
 public class EligibleViewModel : QuestionFlowViewModel
 {

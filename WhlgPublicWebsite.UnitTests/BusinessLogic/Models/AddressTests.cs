@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using HerPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models;
 using NUnit.Framework;
 
 namespace Tests.BusinessLogic.Models;

@@ -1,4 +1,4 @@
-﻿namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+﻿namespace WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public interface IDateHelper
 {

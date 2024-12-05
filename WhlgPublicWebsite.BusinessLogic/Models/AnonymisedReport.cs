@@ -1,7 +1,7 @@
-﻿using HerPublicWebsite.BusinessLogic.Models.Enums;
-using HerPublicWebsite.BusinessLogic.Extensions;
+﻿using WhlgPublicWebsite.BusinessLogic.Extensions;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 
-namespace HerPublicWebsite.BusinessLogic.Models;
+namespace WhlgPublicWebsite.BusinessLogic.Models;
 
 public class AnonymisedReport
 {

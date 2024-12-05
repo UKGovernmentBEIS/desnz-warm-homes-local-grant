@@ -1,8 +1,8 @@
-using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
-using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
-using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
+using WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
+using WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
 
-namespace HerPublicWebsite.BusinessLogic.Services.PolicyTeamUpdate;
+namespace WhlgPublicWebsite.BusinessLogic.Services.PolicyTeamUpdate;
 
 public interface IPolicyTeamUpdate
 {

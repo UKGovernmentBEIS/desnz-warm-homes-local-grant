@@ -1,7 +1,7 @@
-using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
-using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
+using WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 
-namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
+namespace WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public interface IUnsubmittedReferralRequestsService
 {

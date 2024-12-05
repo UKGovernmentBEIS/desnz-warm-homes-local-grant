@@ -1,17 +1,17 @@
-﻿using HerPublicWebsite.BusinessLogic.Models.Enums;
-using IncomeBandEnum = HerPublicWebsite.BusinessLogic.Models.Enums.IncomeBand;
-using HasGasBoilerEnum = HerPublicWebsite.BusinessLogic.Models.Enums.HasGasBoiler;
-using CountryEnum = HerPublicWebsite.BusinessLogic.Models.Enums.Country;
-using OwnershipStatusEnum = HerPublicWebsite.BusinessLogic.Models.Enums.OwnershipStatus;
+﻿using WhlgPublicWebsite.BusinessLogic.Models.Enums;
+using IncomeBandEnum = WhlgPublicWebsite.BusinessLogic.Models.Enums.IncomeBand;
+using HasGasBoilerEnum = WhlgPublicWebsite.BusinessLogic.Models.Enums.HasGasBoiler;
+using CountryEnum = WhlgPublicWebsite.BusinessLogic.Models.Enums.Country;
+using OwnershipStatusEnum = WhlgPublicWebsite.BusinessLogic.Models.Enums.OwnershipStatus;
 
-namespace HerPublicWebsite.BusinessLogic.Models;
+namespace WhlgPublicWebsite.BusinessLogic.Models;
 
 public record Questionnaire
 {
     public int? SessionId { get; set; }
 
-    public CountryEnum? Country { get; set; }
-    public OwnershipStatusEnum? OwnershipStatus { get; set; }
+    public Country? Country { get; set; }
+    public OwnershipStatus? OwnershipStatus { get; set; }
 
     public string AddressLine1 { get; set; }
     public string AddressLine2 { get; set; }
@@ -27,10 +27,10 @@ public record Questionnaire
     public EpcDetails EpcDetails { get; set; }
     public EpcConfirmation? EpcDetailsAreCorrect { get; set; }
     public bool? IsLsoaProperty { get; set; }
-    public HasGasBoilerEnum? HasGasBoiler { get; set; }
+    public HasGasBoiler? HasGasBoiler { get; set; }
     public bool? AcknowledgedPending { get; set; }
     public bool? AcknowledgedFutureReferral { get; set; }
-    public IncomeBandEnum? IncomeBand { get; set; }
+    public IncomeBand? IncomeBand { get; set; }
 
     public DateTime ReferralCreated { get; set; }
 
@@ -52,7 +52,7 @@ public record Questionnaire
 
     public bool IsEligibleForHug2 =>
         (IncomeIsTooHigh, HasGasBoiler, EpcIsTooHigh, Country, OwnershipStatus) is
-        (false, not HasGasBoilerEnum.Yes, false, CountryEnum.England, OwnershipStatusEnum.OwnerOccupancy);
+        (false, not Enums.HasGasBoiler.Yes, false, Enums.Country.England, Enums.OwnershipStatus.OwnerOccupancy);
 
     public string LocalAuthorityName
     {
@@ -162,8 +162,8 @@ public record Questionnaire
 
 #pragma warning disable CS0618 // Obsolete Income Bands used to preserve backwards-compatibility
     public bool IncomeIsTooHigh =>
-        IncomeBand is (IncomeBandEnum.GreaterThan31000 or IncomeBandEnum.GreaterThan34500
-            or IncomeBandEnum.GreaterThan36000) && IsLsoaProperty is not true;
+        IncomeBand is (Enums.IncomeBand.GreaterThan31000 or Enums.IncomeBand.GreaterThan34500
+            or Enums.IncomeBand.GreaterThan36000) && IsLsoaProperty is not true;
 #pragma warning restore CS0618
 
 

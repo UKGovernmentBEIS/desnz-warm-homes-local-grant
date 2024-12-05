@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
-using HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
-using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Models.Enums;
+using WhlgPublicWebsite.BusinessLogic.ExternalServices.EpbEpc;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 using NUnit.Framework;
 
 namespace Tests.BusinessLogic.ExternalServices.EpbEpc;

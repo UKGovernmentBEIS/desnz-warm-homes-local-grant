@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using GovUkDesignSystem.Attributes.ValidationAttributes;
-using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
+using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.Models.Enums;
 
-namespace HerPublicWebsite.Models.Questionnaire;
+namespace WhlgPublicWebsite.Models.Questionnaire;
 
 public class SelectAddressViewModel : QuestionFlowViewModel
 {

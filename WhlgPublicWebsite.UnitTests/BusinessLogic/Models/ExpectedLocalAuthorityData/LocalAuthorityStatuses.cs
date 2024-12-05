@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using static HerPublicWebsite.BusinessLogic.Models.LocalAuthorityData;
-using static HerPublicWebsite.BusinessLogic.Models.LocalAuthorityData.Hug2Status;
+using static WhlgPublicWebsite.BusinessLogic.Models.LocalAuthorityData;
+using static WhlgPublicWebsite.BusinessLogic.Models.LocalAuthorityData.Hug2Status;
 
 namespace Tests.BusinessLogic.Models.ExpectedLocalAuthorityData;
 

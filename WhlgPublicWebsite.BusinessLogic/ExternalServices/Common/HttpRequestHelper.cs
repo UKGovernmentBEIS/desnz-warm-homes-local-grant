@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using Newtonsoft.Json;
 
-namespace HerPublicWebsite.BusinessLogic.ExternalServices.Common
+namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.Common
 {
     public static class HttpRequestHelper
     {

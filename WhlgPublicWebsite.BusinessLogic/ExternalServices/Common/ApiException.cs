@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace HerPublicWebsite.BusinessLogic.ExternalServices.Common
+namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.Common
 {
     public class ApiException : Exception
     {

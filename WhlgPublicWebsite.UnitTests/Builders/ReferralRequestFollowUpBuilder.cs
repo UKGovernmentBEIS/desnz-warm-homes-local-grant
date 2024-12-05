@@ -1,5 +1,5 @@
 using System;
-using HerPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models;
 
 namespace Tests.Builders;
 

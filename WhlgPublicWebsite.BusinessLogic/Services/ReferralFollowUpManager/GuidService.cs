@@ -1,4 +1,4 @@
-namespace HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
+namespace WhlgPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 public interface IGuidService { string NewGuidString(); }
 
 public class GuidService : IGuidService

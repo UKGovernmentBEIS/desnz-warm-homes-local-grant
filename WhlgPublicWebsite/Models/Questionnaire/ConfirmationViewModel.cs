@@ -1,8 +1,8 @@
 ﻿using GovUkDesignSystem.Attributes.ValidationAttributes;
-using HerPublicWebsite.Models.Enums;
 using System.ComponentModel.DataAnnotations;
+using WhlgPublicWebsite.Models.Enums;
 
-namespace HerPublicWebsite.Models.Questionnaire;
+namespace WhlgPublicWebsite.Models.Questionnaire;
 
 public class ConfirmationViewModel : QuestionFlowViewModel
 {

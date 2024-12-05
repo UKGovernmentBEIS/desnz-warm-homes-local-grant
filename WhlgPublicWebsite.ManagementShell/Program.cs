@@ -1,7 +1,7 @@
-﻿using HerPublicWebsite.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using WhlgPublicWebsite.Data;
 
-namespace HerPublicWebsite.ManagementShell;
+namespace WhlgPublicWebsite.ManagementShell;
 
 public static class Program
 {

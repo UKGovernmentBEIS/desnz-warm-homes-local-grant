@@ -1,6 +1,6 @@
-﻿using HerPublicWebsite.BusinessLogic.Models.Enums;
+﻿using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 
-namespace HerPublicWebsite.Models.Questionnaire
+namespace WhlgPublicWebsite.Models.Questionnaire
 {
     public abstract class QuestionFlowViewModel
     {

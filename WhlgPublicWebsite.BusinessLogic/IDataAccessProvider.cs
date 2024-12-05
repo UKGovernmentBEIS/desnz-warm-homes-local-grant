@@ -1,6 +1,6 @@
-﻿using HerPublicWebsite.BusinessLogic.Models;
+﻿using WhlgPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.BusinessLogic;
+namespace WhlgPublicWebsite.BusinessLogic;
 
 public interface IDataAccessProvider
 {

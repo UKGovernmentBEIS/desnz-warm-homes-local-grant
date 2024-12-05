@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using HerPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.Data;
+namespace WhlgPublicWebsite.Data;
 
 public class HerDbContext : DbContext, IDataProtectionKeyContext
 {

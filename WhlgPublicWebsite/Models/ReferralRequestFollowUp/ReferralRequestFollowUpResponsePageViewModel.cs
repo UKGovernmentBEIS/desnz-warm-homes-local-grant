@@ -1,8 +1,8 @@
 using System;
 using GovUkDesignSystem.Attributes.ValidationAttributes;
-using HerPublicWebsite.Models.Enums;
+using WhlgPublicWebsite.Models.Enums;
 
-namespace HerPublicWebsite.Models.ReferralRequestFollowUp;
+namespace WhlgPublicWebsite.Models.ReferralRequestFollowUp;
 
 public class ReferralRequestFollowUpResponsePageViewModel
 {
