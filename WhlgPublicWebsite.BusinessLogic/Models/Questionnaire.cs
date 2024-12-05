@@ -50,7 +50,7 @@ public record Questionnaire
 
     public Questionnaire UneditedData { get; set; }
 
-    public bool IsEligibleForHug2 =>
+    public bool IsEligibleForWhlg =>
         (IncomeIsTooHigh, HasGasBoiler, EpcIsTooHigh, Country, OwnershipStatus) is
         (false, not Enums.HasGasBoiler.Yes, false, Enums.Country.England, Enums.OwnershipStatus.OwnerOccupancy);
 
@@ -82,7 +82,7 @@ public record Questionnaire
         }
     }
 
-    public LocalAuthorityData.Hug2Status? LocalAuthorityHug2Status
+    public LocalAuthorityData.LocalAuthorityStatus? LocalAuthorityStatus
     {
         get
         {

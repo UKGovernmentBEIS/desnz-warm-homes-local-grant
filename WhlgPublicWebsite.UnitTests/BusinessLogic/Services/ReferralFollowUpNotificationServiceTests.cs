@@ -77,7 +77,7 @@ public class ReferralFollowUpNotificationServiceTests
 
         mockDataProvider
             .Setup(dp =>
-                dp.GetHug2ReferralRequestsWithNoFollowUpBetweenDates(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+                dp.GetWhlgReferralRequestsWithNoFollowUpBetweenDates(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
             .ReturnsAsync(allReferrals);
 
         var referralFollowUp = new ReferralRequestFollowUpBuilder(1)

@@ -64,12 +64,12 @@ public class PolicyTeamUpdateServiceTests
 
         mockDataProvider
             .Setup(dp =>
-                dp.GetHug2ReferralRequestsBetweenDates(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+                dp.GetWhlgReferralRequestsBetweenDates(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
             .ReturnsAsync(allReferrals);
 
         mockDataProvider
             .Setup(dp =>
-                dp.GetAllHug2ReferralRequests())
+                dp.GetAllWhlgReferralRequests())
             .ReturnsAsync(allReferrals);
 
         // Act

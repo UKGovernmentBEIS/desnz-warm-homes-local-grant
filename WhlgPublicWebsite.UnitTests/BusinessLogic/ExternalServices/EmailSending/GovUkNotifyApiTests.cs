@@ -156,7 +156,7 @@ public class GovUkNotifyApiTests
         // Arrange
         var referralRequestBuilder = new ReferralRequestBuilder(1)
             .WithRequestDate(new DateTime(year, month, day))
-            .WithCustodianCode(LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Live));
+            .WithCustodianCode(LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live));
         var testReferralRequest = referralRequestBuilder.Build();
         var expectedKeyValuePair =
             new KeyValuePair<string, object>("TestReferralDate", expectedDateString);

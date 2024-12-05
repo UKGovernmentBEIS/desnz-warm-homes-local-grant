@@ -34,11 +34,11 @@ public class QuestionnaireUpdaterTests
     public void Setup()
     {
         liveCustodianCode =
-            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Live);
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live);
         pendingCustodianCode =
-            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status.Pending);
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
         takingFutureReferralsCustodianCode =
-            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.Hug2Status
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
                 .TakingFutureReferrals);
         mockEpcApi = new Mock<IEpcApi>();
         mockPostCodeService = new Mock<IEligiblePostcodeService>();

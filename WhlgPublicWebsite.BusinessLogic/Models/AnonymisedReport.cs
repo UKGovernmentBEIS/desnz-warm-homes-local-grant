@@ -28,7 +28,7 @@ public class AnonymisedReport
         EpcLodgementDate = questionnaire.EpcDetails?.LodgementDate;
         HasGasBoiler = questionnaire.HasGasBoiler!.Value;
         IncomeBand = questionnaire.IncomeBand!.Value;
-        IsEligible = questionnaire.IsEligibleForHug2;
+        IsEligible = questionnaire.IsEligibleForWhlg;
         OwnershipStatus = questionnaire.OwnershipStatus!.Value;
     }
 }

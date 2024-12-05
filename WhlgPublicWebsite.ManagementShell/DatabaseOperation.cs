@@ -24,7 +24,7 @@ public class DatabaseOperation : IDatabaseOperation
         outputProvider.Output("(1/2) Adding fake referrals");
         PerformTransaction(() => { dbContext.ReferralRequests.AddRange(referralRequests); });
 
-        outputProvider.Output("(2/2) Adding HUG2 IDs for each referral");
+        outputProvider.Output("(2/2) Adding WHLG IDs for each referral");
         PerformTransaction(() =>
         {
             foreach (var referralRequest in referralRequests) referralRequest.UpdateReferralCode();

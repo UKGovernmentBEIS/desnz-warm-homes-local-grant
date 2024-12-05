@@ -37,9 +37,9 @@ public class ReferralRequestTests
         act.Should().Throw<InvalidOperationException>();
     }
     
-    [TestCase(LocalAuthorityData.Hug2Status.Live, false)]
-    [TestCase(LocalAuthorityData.Hug2Status.Pending, true)]
-    public void WasSubmittedToPendingFlag_IfLocalAuthorityIsPending_WasSubmittedToPendingIsTrueOtherwiseFalse(LocalAuthorityData.Hug2Status localAuthorityStatus, bool expectedWasSubmittedToPendingLocalAuthorityValue)
+    [TestCase(LocalAuthorityData.LocalAuthorityStatus.Live, false)]
+    [TestCase(LocalAuthorityData.LocalAuthorityStatus.Pending, true)]
+    public void WasSubmittedToPendingFlag_IfLocalAuthorityIsPending_WasSubmittedToPendingIsTrueOtherwiseFalse(LocalAuthorityData.LocalAuthorityStatus localAuthorityStatus, bool expectedWasSubmittedToPendingLocalAuthorityValue)
     {
         // Arrange
         var testQuestionnaire = QuestionnaireHelper.InitializeQuestionnaire();

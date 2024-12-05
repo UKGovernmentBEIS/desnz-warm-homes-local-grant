@@ -111,7 +111,7 @@ public class ReferralFilterServiceTests
         bool localAuthorityWasPending,
         bool referralWasSubmittedInTheLastMonth)
     {
-        var currentStatus = localAuthorityIsNowPending ? Hug2Status.Pending : Hug2Status.Live;
+        var currentStatus = localAuthorityIsNowPending ? LocalAuthorityStatus.Pending : LocalAuthorityStatus.Live;
         var custodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(currentStatus);
         
         var requestDate = referralWasSubmittedInTheLastMonth

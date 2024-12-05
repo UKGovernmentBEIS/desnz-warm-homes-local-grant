@@ -33,7 +33,7 @@
 
         @await Html.PartialAsync(Model.LocalAuthorityMessagePartialViewPath)
 
-        @if (Model.LocalAuthorityIsLiveWithHug2)
+        @if (Model.LocalAuthorityIsLive)
         {
             @await Html.GovUkInsetText(new InsetTextViewModel
                    {

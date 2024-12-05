@@ -29,9 +29,9 @@ public class ReferralRequest
 
         RequestDate = DateTime.Now;
         WasSubmittedToPendingLocalAuthority =
-            questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending;
+            questionnaire.LocalAuthorityStatus == LocalAuthorityData.LocalAuthorityStatus.Pending;
         WasSubmittedForFutureGrants =
-            questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.TakingFutureReferrals;
+            questionnaire.LocalAuthorityStatus == LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals;
     }
 
     public int Id { get; set; }

@@ -34,7 +34,7 @@ public class ReferralFilterService : IReferralFilterService
     {
         var custodianCode = LaMapping.GetCurrentCustodianCode(referral.CustodianCode);
         var localAuthority = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[custodianCode];
-        var localAuthorityIsPending = localAuthority.Status == LocalAuthorityData.Hug2Status.Pending;
+        var localAuthorityIsPending = localAuthority.Status == LocalAuthorityData.LocalAuthorityStatus.Pending;
 
         // Also include referrals to local authorities that have gone from Pending to another status in the last month.
         var wasSubmittedToPendingLocalAuthorityInLastMonth =

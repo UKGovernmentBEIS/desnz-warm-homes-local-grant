@@ -260,7 +260,7 @@ public class QuestionnaireTests
     [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.B, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible EPC rating
     [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.C, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible EPC rating
     [TestCase(HasGasBoiler.No, Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.GreaterThan36000, false)] // Ineligible high income
-    public void IsEligibleForHug2_ForVariousAnswers_IsCorrect(
+    public void IsEligibleForWhlg_ForVariousAnswers_IsCorrect(
         HasGasBoiler hasGasBoiler,
         Country country,
         OwnershipStatus ownershipStatus,
@@ -289,7 +289,7 @@ public class QuestionnaireTests
         }
         
         // Act
-        var result = underTest.IsEligibleForHug2;
+        var result = underTest.IsEligibleForWhlg;
         
         // Assert
         result.Should().Be(isEligible);

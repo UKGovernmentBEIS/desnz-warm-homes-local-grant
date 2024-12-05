@@ -215,9 +215,9 @@ public class QuestionFlowService : IQuestionFlowService
     {
         if (entryPoint is QuestionFlowStep.HouseholdIncome)
             return QuestionFlowStep.CheckAnswers;
-        if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.Pending)
+        if (questionnaire.LocalAuthorityStatus == LocalAuthorityData.LocalAuthorityStatus.Pending)
             return QuestionFlowStep.Pending;
-        if (questionnaire.LocalAuthorityHug2Status == LocalAuthorityData.Hug2Status.TakingFutureReferrals)
+        if (questionnaire.LocalAuthorityStatus == LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals)
             return QuestionFlowStep.TakingFutureReferrals;
         if (questionnaire.FoundEpcBandIsTooHigh)
             return QuestionFlowStep.ReviewEpc;
@@ -291,21 +291,21 @@ public class QuestionFlowService : IQuestionFlowService
 
     private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
     {
-        if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotTakingPart)
+        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NotTakingPart)
             return QuestionFlowStep.NotTakingPart;
 #pragma warning disable CS0618 // Type or member is obsolete
-        if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotParticipating)
+        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NotParticipating)
 #pragma warning restore CS0618 // Type or member is obsolete
             return QuestionFlowStep.NotParticipating;
 #pragma warning disable CS0618 // Type or member is obsolete
-        if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NoLongerParticipating)
+        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NoLongerParticipating)
 #pragma warning restore CS0618 // Type or member is obsolete
             return QuestionFlowStep.NoLongerParticipating;
-        if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.TakingFutureReferrals)
+        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals)
             return QuestionFlowStep.TakingFutureReferrals;
         if (questionnaire.FoundEpcBandIsTooHigh)
             return QuestionFlowStep.ReviewEpc;
-        if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Pending)
+        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Pending)
             return QuestionFlowStep.Pending;
         // If the LA has changed and the income band the user selected previously is no longer valid then we don't
         // go back to the check your answers page as the user will need to select a new income band.
@@ -317,7 +317,7 @@ public class QuestionFlowService : IQuestionFlowService
 
     private QuestionFlowStep ReviewEpcForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
     {
-        if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Pending)
+        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Pending)
             return QuestionFlowStep.Pending;
         // If the LA has changed and the income band the user selected previously is no longer valid then we don't
         // go back to the check your answers page as the user will need to select a new income band.
@@ -342,19 +342,19 @@ public class QuestionFlowService : IQuestionFlowService
     {
         if (questionnaire.LocalAuthorityConfirmed is not true)
             return QuestionFlowStep.SelectLocalAuthority;
-        if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotTakingPart)
+        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NotTakingPart)
             return QuestionFlowStep.NotTakingPart;
 #pragma warning disable CS0618 // Type or member is obsolete
-        if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NoLongerParticipating)
+        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NoLongerParticipating)
 #pragma warning restore CS0618 // Type or member is obsolete
             return QuestionFlowStep.NoLongerParticipating;
-        if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.TakingFutureReferrals)
+        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals)
             return QuestionFlowStep.TakingFutureReferrals;
 #pragma warning disable CS0618 // Type or member is obsolete
-        if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.NotParticipating)
+        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NotParticipating)
 #pragma warning restore CS0618 // Type or member is obsolete
             return QuestionFlowStep.NotParticipating;
-        if (questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Pending)
+        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Pending)
             return QuestionFlowStep.Pending;
         // If the LA has changed and the income band the user selected previously is no longer valid then we don't
         // go back to the check your answers page as the user will need to select a new income band.
@@ -405,7 +405,7 @@ public class QuestionFlowService : IQuestionFlowService
 
     private QuestionFlowStep CheckAnswersForwardDestination(Questionnaire questionnaire)
     {
-        return questionnaire.IsEligibleForHug2 ? QuestionFlowStep.Eligible : QuestionFlowStep.Ineligible;
+        return questionnaire.IsEligibleForWhlg ? QuestionFlowStep.Eligible : QuestionFlowStep.Ineligible;
     }
 
     private QuestionFlowStep EligibleForwardDestination(Questionnaire questionnaire)

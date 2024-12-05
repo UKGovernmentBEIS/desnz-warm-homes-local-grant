@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using static WhlgPublicWebsite.BusinessLogic.Models.LocalAuthorityData;
-using static WhlgPublicWebsite.BusinessLogic.Models.LocalAuthorityData.Hug2Status;
+using static WhlgPublicWebsite.BusinessLogic.Models.LocalAuthorityData.LocalAuthorityStatus;
 
 namespace Tests.BusinessLogic.Models.ExpectedLocalAuthorityData;
 
 internal static class LocalAuthorityStatuses
 {
-    internal static Dictionary<string, Hug2Status> StatusesByCustodianCode()
+    internal static Dictionary<string, LocalAuthorityStatus> StatusesByCustodianCode()
     {
-        return new Dictionary<string, Hug2Status>
+        return new Dictionary<string, LocalAuthorityStatus>
         {
             { "9052", NotTakingPart },
             { "3805", Live },

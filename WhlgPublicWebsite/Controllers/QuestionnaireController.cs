@@ -688,8 +688,8 @@ public class QuestionnaireController : Controller
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityIsTakingFutureReferrals =
-                questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.TakingFutureReferrals,
-            LocalAuthorityIsLiveWithHug2 = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Live,
+                questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals,
+            LocalAuthorityIsLive = questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Live,
             CanContactByEmail = questionnaire.LaCanContactByEmail.ToNullableYesOrNo(),
             CanContactByPhone = questionnaire.LaCanContactByPhone.ToNullableYesOrNo(),
             Name = questionnaire.LaContactName,
@@ -731,7 +731,7 @@ public class QuestionnaireController : Controller
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityMessagePartialViewPath = GetLocalAuthorityConfirmationMessagePartialViewPath(questionnaire),
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
-            LocalAuthorityIsLiveWithHug2 = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Live,
+            LocalAuthorityIsLive = questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Live,
             ConfirmationSentToEmailAddress =
                 questionnaire.LaContactEmailAddress ?? questionnaire.ConfirmationEmailAddress,
             RequestEmailAddress = questionnaire.LaCanContactByEmail is not true,
@@ -787,7 +787,7 @@ public class QuestionnaireController : Controller
             EpcIsTooHigh = questionnaire.EpcIsTooHigh,
             IncomeIsTooHigh = questionnaire.IncomeIsTooHigh,
             ShowWarmHomesText =
-                questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.TakingFutureReferrals,
+                questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
             EmailAddress = questionnaire.NotificationEmailAddress,
@@ -945,10 +945,10 @@ public class QuestionnaireController : Controller
 
     private static string GetLocalAuthorityConfirmationMessagePartialViewPath(Questionnaire questionnaire)
     {
-        var partialViewName = (questionnaire.LocalAuthorityHug2Status, questionnaire.CustodianCode) switch
+        var partialViewName = (LocalAuthorityStatus: questionnaire.LocalAuthorityStatus, questionnaire.CustodianCode) switch
         {
-            (LocalAuthorityData.Hug2Status.Pending, _) => "Pending",
-            (LocalAuthorityData.Hug2Status.TakingFutureReferrals, _) => "TakingFutureReferrals",
+            (LocalAuthorityData.LocalAuthorityStatus.Pending, _) => "Pending",
+            (LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals, _) => "TakingFutureReferrals",
             _ => "Default"
         };
         return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";

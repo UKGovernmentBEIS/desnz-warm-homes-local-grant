@@ -46,7 +46,7 @@ public class ReferralFollowUpNotificationService : IReferralFollowUpNotification
         var endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Today, -10);
         var startDate = referralRequestNotificationConfig.CutoffEpoch;
         var newReferrals = referralFilterService.FilterForSentToNonPending(
-            await dataProvider.GetHug2ReferralRequestsWithNoFollowUpBetweenDates(startDate, endDate));
+            await dataProvider.GetWhlgReferralRequestsWithNoFollowUpBetweenDates(startDate, endDate));
         var uriBuilder = new UriBuilder(globalConfig.AppBaseUrl);
         uriBuilder.Path = "referral-follow-up";
         foreach (var newReferral in newReferrals)

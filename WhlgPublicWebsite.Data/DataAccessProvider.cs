@@ -64,14 +64,14 @@ public class DataAccessProvider : IDataAccessProvider
         return report;
     }
 
-    public async Task<IList<ReferralRequest>> GetHug2UnsubmittedReferralRequestsAsync()
+    public async Task<IList<ReferralRequest>> GetWhlgUnsubmittedReferralRequestsAsync()
     {
         return await context.ReferralRequests
             .Where(rr => !rr.ReferralWrittenToCsv && !rr.WasSubmittedForFutureGrants)
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetAllHug2ReferralRequests()
+    public async Task<IList<ReferralRequest>> GetAllWhlgReferralRequests()
     {
         return await context.ReferralRequests
             .Where(rr => !rr.WasSubmittedForFutureGrants)
@@ -79,7 +79,7 @@ public class DataAccessProvider : IDataAccessProvider
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetHug2ReferralRequestsBetweenDates(DateTime startDate,
+    public async Task<IList<ReferralRequest>> GetWhlgReferralRequestsBetweenDates(DateTime startDate,
         DateTime endDate)
     {
         return await context.ReferralRequests
@@ -88,7 +88,7 @@ public class DataAccessProvider : IDataAccessProvider
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetHug2ReferralRequestsWithNoFollowUpBetweenDates(
+    public async Task<IList<ReferralRequest>> GetWhlgReferralRequestsWithNoFollowUpBetweenDates(
         DateTime startDate,
         DateTime endDate)
     {
@@ -98,7 +98,7 @@ public class DataAccessProvider : IDataAccessProvider
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetHug2ReferralRequestsByCustodianAndRequestDateAsync(
+    public async Task<IList<ReferralRequest>> GetWhlgReferralRequestsByCustodianAndRequestDateAsync(
         string custodianCode,
         int month, int year)
     {
