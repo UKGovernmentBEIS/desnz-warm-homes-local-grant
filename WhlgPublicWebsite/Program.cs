@@ -35,7 +35,7 @@ namespace WhlgPublicWebsite
             // very unlikely we run into concurrency issues. If that changes though we should look at moving migrations
             // to a deployment pipeline step, and only doing the following locally (PC-1151).
             using var scope = app.Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<HerDbContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<WhlgDbContext>();
             dbContext.Database.Migrate();
 
             var recurringJobManager = app.Services.GetService<IRecurringJobManager>();

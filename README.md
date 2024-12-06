@@ -82,7 +82,7 @@ To use [Minio](https://min.io/) to provide a local S3 bucket follow these steps:
 5. The first time that you do this:
     1. Visit http://localhost:9090
     2. Login (default is minioadmin/minioadmin)
-    3. Create a new bucket called `desnz-her-portal-referrals`
+    3. Create a new bucket called `desnz-whlg-portal-referrals`
 
 ### GovUkDesignSystem
 
@@ -96,8 +96,8 @@ If you need to make changes to the GovUkDesignSystem (e.g. to add a new componen
 - Develop and commit your changes (don't forget automated tests as applicable)
 - Build and package your branch with `dotnet pack -p:PackageVersion=1.0.0-$(git rev-parse --short HEAD) -c Release -o .` in the `GovUkDesignSystem` folder
 - Copy the built package to /Lib and delete the old package
-- Update the package version in the HER project
-- Test that your changes work on the HER site
+- Update the package version in the WH:LG project
+- Test that your changes work on the WH:LG site
 - Create a PR from your branch back to `master`
 - Get the PR reviewed and merged
 - From time to time create a PR to merge the `master` branch back to the Cabinet Office repository (https://github.com/cabinetoffice/govuk-design-system-dotnet)

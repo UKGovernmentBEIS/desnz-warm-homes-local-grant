@@ -10,10 +10,10 @@ public interface IDatabaseOperation
 
 public class DatabaseOperation : IDatabaseOperation
 {
-    private readonly HerDbContext dbContext;
+    private readonly WhlgDbContext dbContext;
     private readonly IOutputProvider outputProvider;
 
-    public DatabaseOperation(HerDbContext dbContext, IOutputProvider outputProvider)
+    public DatabaseOperation(WhlgDbContext dbContext, IOutputProvider outputProvider)
     {
         this.dbContext = dbContext;
         this.outputProvider = outputProvider;

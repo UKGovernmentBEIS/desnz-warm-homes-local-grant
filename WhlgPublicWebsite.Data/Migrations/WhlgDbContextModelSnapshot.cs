@@ -3,7 +3,6 @@ using System;
 using WhlgPublicWebsite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,10 +11,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace WhlgPublicWebsite.Data.Migrations
 {
     [DbContext(typeof(WhlgDbContext))]
-    [Migration("20230713104758_RemoveLaFromAnonymisedData")]
-    partial class RemoveLaFromAnonymisedData
+    partial class WhlgDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,6 +179,9 @@ namespace WhlgPublicWebsite.Data.Migrations
                     b.Property<int>("EpcRating")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("FollowUpEmailSent")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("FullName")
                         .HasColumnType("text");
 
@@ -205,6 +206,12 @@ namespace WhlgPublicWebsite.Data.Migrations
                     b.Property<string>("Uprn")
                         .HasColumnType("text");
 
+                    b.Property<bool>("WasSubmittedForFutureGrants")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("WasSubmittedToPendingLocalAuthority")
+                        .HasColumnType("boolean");
+
                     b.Property<uint>("xmin")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -213,6 +220,69 @@ namespace WhlgPublicWebsite.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ReferralRequests");
+                });
+
+            modelBuilder.Entity("WhlgPublicWebsite.BusinessLogic.Models.ReferralRequestFollowUp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("DateOfFollowUpResponse")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("ReferralRequestId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("WasFollowedUp")
+                        .HasColumnType("boolean");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReferralRequestId")
+                        .IsUnique();
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.ToTable("ReferralRequestFollowUps");
+                });
+
+            modelBuilder.Entity("WhlgPublicWebsite.BusinessLogic.Models.Session", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("IsEligible")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsJourneyComplete")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sessions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
@@ -241,6 +311,22 @@ namespace WhlgPublicWebsite.Data.Migrations
                         .HasForeignKey("ReferralRequestId");
 
                     b.Navigation("ReferralRequest");
+                });
+
+            modelBuilder.Entity("WhlgPublicWebsite.BusinessLogic.Models.ReferralRequestFollowUp", b =>
+                {
+                    b.HasOne("WhlgPublicWebsite.BusinessLogic.Models.ReferralRequest", "ReferralRequest")
+                        .WithOne("FollowUp")
+                        .HasForeignKey("WhlgPublicWebsite.BusinessLogic.Models.ReferralRequestFollowUp", "ReferralRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ReferralRequest");
+                });
+
+            modelBuilder.Entity("WhlgPublicWebsite.BusinessLogic.Models.ReferralRequest", b =>
+                {
+                    b.Navigation("FollowUp");
                 });
 #pragma warning restore 612, 618
         }

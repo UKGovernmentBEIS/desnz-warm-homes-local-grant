@@ -5,7 +5,7 @@ using WhlgPublicWebsite.BusinessLogic.Models;
 
 namespace WhlgPublicWebsite.Data;
 
-public class HerDbContext : DbContext, IDataProtectionKeyContext
+public class WhlgDbContext : DbContext, IDataProtectionKeyContext
 {
     public DbSet<ReferralRequest> ReferralRequests { get; set; }
     public DbSet<NotificationDetails> NotificationDetails { get; set; }
@@ -15,7 +15,7 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<ReferralRequestFollowUp> ReferralRequestFollowUps { get; set; }
     public DbSet<Session> Sessions { get; set; }
 
-    public HerDbContext(DbContextOptions<HerDbContext> options) : base(options)
+    public WhlgDbContext(DbContextOptions<WhlgDbContext> options) : base(options)
     {
     }
 

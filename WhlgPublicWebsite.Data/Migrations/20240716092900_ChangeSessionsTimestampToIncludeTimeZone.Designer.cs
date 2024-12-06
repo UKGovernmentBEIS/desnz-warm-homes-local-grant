@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace WhlgPublicWebsite.Data.Migrations
 {
-    [DbContext(typeof(HerDbContext))]
+    [DbContext(typeof(WhlgDbContext))]
     [Migration("20240716092900_ChangeSessionsTimestampToIncludeTimeZone")]
     partial class ChangeSessionsTimestampToIncludeTimeZone
     {

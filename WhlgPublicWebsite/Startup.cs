@@ -84,7 +84,7 @@ public class Startup
         services.AddSingleton<StaticAssetsVersioningService>();
         services.AddSingleton<EligiblePostcodeListCache>();
         // This allows encrypted cookies to be understood across multiple web server instances
-        services.AddDataProtection().PersistKeysToDbContext<HerDbContext>();
+        services.AddDataProtection().PersistKeysToDbContext<WhlgDbContext>();
 
         ConfigureReferralFollowUpNotificationService(services);
         ConfigureS3Client(services);
@@ -144,7 +144,7 @@ public class Startup
     private void ConfigureDatabaseContext(IServiceCollection services)
     {
         var databaseConnectionString = configuration.GetConnectionString("PostgreSQLConnection");
-        services.AddDbContext<HerDbContext>(opt =>
+        services.AddDbContext<WhlgDbContext>(opt =>
             opt.UseNpgsql(databaseConnectionString));
     }
 
