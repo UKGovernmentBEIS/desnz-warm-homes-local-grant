@@ -9,9 +9,9 @@ namespace Tests.BusinessLogic.Models;
 [TestFixture]
 public class ReferralRequestTests
 {
-    [TestCase(1, "HUG20000001")] // First code
-    [TestCase(9999999, "HUG29999999")] // Highest expected code
-    [TestCase(99999999, "HUG299999999")] // Things work sensibly if we get too many referrals
+    [TestCase(1, "WHLG0000001")] // First code
+    [TestCase(9999999, "WHLG9999999")] // Highest expected code
+    [TestCase(99999999, "WHLG99999999")] // Things work sensibly if we get too many referrals
     public void ReferralCode_IsGeneratedFromId(int id, string expectedReferralCode)
     {
         // Arrange

@@ -27,7 +27,7 @@ public static class QuestionnaireHelper
             HasGasBoiler = HasGasBoiler.No,
             IncomeBand = IncomeBand.UnderOrEqualTo36000,
             ReferralCreated = default,
-            ReferralCode = "HUG21023",
+            ReferralCode = "WHLG1023",
             LaContactName = "Contact Name",
             LaCanContactByEmail = true,
             LaCanContactByPhone = true,

@@ -75,6 +75,6 @@ public class ReferralRequest
         if (Id == 0)
             throw new InvalidOperationException("Cannot generate referral code until referral request has a unique ID");
 
-        ReferralCode = $"HUG2{Id:D7}";
+        ReferralCode = $"WHLG{Id:D7}";
     }
 }
