@@ -56,7 +56,9 @@ For critical bug fixes on production
 - Install EF Core CLI tools (https://docs.microsoft.com/en-us/ef/core/cli/dotnet)
 - Node v14+ (https://nodejs.org/en/)
 - If you're using Rider then you will need to install the ".net core user secrets" plugin
-- If you need to work on the S3 file writing code, download and configure Minio for Windows (https://min.io/download#/windows) (see below)
+- If you need to work on the S3 file writing code, download and configure Minio (see below)
+   - [Windows](https://min.io/download#/windows)
+   - [Mac](https://min.io/docs/minio/macos/index.html#procedure)
 
 In HerPublicWebsite run `npm install`
 
@@ -64,15 +66,23 @@ In HerPublicWebsite run `npm install`
 
 The portal site lists files hosted in an S3 bucket. For local development we need a fake S3 bucket to connect to.
 To use [Minio](https://min.io/) to provide a local S3 bucket follow these steps:
-1. [Download minio](https://min.io/download#/windows)
+1. Download minio
+    * [Windows](https://min.io/download#/windows)
+    * [Mac](https://min.io/docs/minio/macos/index.html#procedure)
 2. Put the executable somewhere on your machine (e.g. c:\Program Files\Minio)
 3. Decide on a folder for Minio to store its data in (e.g. c:\data\minio)
-4. In a PowerShell window go to the folder that you put Minio in
-5. Run `.\minio.exe server <path to data folder> --console-address :9090`
-6. The first time that you do this:
-   1. Visit http://localhost:9090
-   2. Login (default is minioadmin/minioadmin)
-   3. Create a new bucket called `desnz-her-portal-referrals`
+4. To run the server:
+    * Windows
+        * Open a PowerShell window and go to the folder that you put Minio in
+        * Run `.\minio.exe server <path to data folder> --console-address :9090`
+    * Mac:
+        * Open any terminal
+        * Run `export MINIO_CONFIG_ENV_FILE=/etc/default/minio`
+        * Run `minio server <path to data folder> --console-address :9090`
+5. The first time that you do this:
+    1. Visit http://localhost:9090
+    2. Login (default is minioadmin/minioadmin)
+    3. Create a new bucket called `desnz-her-portal-referrals`
 
 ### GovUkDesignSystem
 
@@ -145,14 +155,24 @@ cat secrets.json | dotnet user-secrets set
 - In Visual Studio / Rider build the solution
 - In `HerPublicWebsite` run `npm run watch`
 - In Visual Studio / Rider run the `HerPublicWebsite` project
+- In a browser, visit https://localhost:5001/questionnaire/boiler
 
 ## Database
 
 ### Local Database Setup
 
-- For Windows: Download the installer and PostgreSQL 15 here: https://www.postgresql.org/download/windows/
+#### Windows
+- Download the installer and PostgreSQL 15 [here](https://www.postgresql.org/download/windows/)
 - Follow default installation steps (no additional software is required from Stack Builder upon completion)
   - You may be prompted for a password for the postgres user and a port (good defaults are "postgres" and "5432", respectively). If you choose your own, you will have to update the connection string in appsettings.json
+
+#### Mac
+- Select a download option from [here](https://www.postgresql.org/download/macosx/) and download PostgreSQL 15
+  - The [Postgres.app](https://postgresapp.com/) option works well
+- Initialise a server with the following configuration (or update `PostgreSQLConnection` in `appsettings.json` to match your own):
+  - Port: `5432`
+  - User: `postgres`
+  - Password: `postgres`
 
 ### Creating/updating the local database
 
