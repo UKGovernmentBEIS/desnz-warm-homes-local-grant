@@ -1,4 +1,8 @@
-# Find Energy Saving Grants You May Be Eligible For BETA
+# Warm Home: Local Grants BETA
+
+This repository was cloned from [HUG2](https://github.com/UKGovernmentBEIS/desnz-home-energy-retrofit-beta) in December 2024, keeping all previous commits.
+
+The code was then adapted into the WH:LG service.
 
 ## Deployment
 
