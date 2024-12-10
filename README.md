@@ -1,4 +1,8 @@
-# Find Energy Saving Grants You May Be Eligible For BETA
+# Warm Home: Local Grants BETA
+
+This repository was cloned from [HUG2](https://github.com/UKGovernmentBEIS/desnz-home-energy-retrofit-beta) in December 2024, keeping all previous commits.
+
+The code was then adapted into the WH:LG service.
 
 ## Deployment
 
@@ -11,7 +15,7 @@ Migrations will be run automatically on deployment. If a migration needs to be r
 2. Generate and run a rollback script
    1. Check out the same commit locally
    2. [Install EF Core CLI tools](https://docs.microsoft.com/en-us/ef/core/cli/dotnet) if you haven't already
-   3. Generate a rollback script using `dotnet ef migrations script 2022010112345678_BadMigration 2022010112345678_LastGoodMigration -o revert.sql` from the `HerPublicWebsite` directory
+   3. Generate a rollback script using `dotnet ef migrations script 2022010112345678_BadMigration 2022010112345678_LastGoodMigration -o revert.sql` from the `WhlgPublicWebsite` directory
    4. Review the script 
    5. Connect to the database and run the script
 
@@ -60,7 +64,7 @@ For critical bug fixes on production
    - [Windows](https://min.io/download#/windows)
    - [Mac](https://min.io/docs/minio/macos/index.html#procedure)
 
-In HerPublicWebsite run `npm install`
+In WhlgPublicWebsite run `npm install`
 
 #### Minio
 
@@ -82,7 +86,7 @@ To use [Minio](https://min.io/) to provide a local S3 bucket follow these steps:
 5. The first time that you do this:
     1. Visit http://localhost:9090
     2. Login (default is minioadmin/minioadmin)
-    3. Create a new bucket called `desnz-her-portal-referrals`
+    3. Create a new bucket called `desnz-whlg-portal-referrals`
 
 ### GovUkDesignSystem
 
@@ -96,8 +100,8 @@ If you need to make changes to the GovUkDesignSystem (e.g. to add a new componen
 - Develop and commit your changes (don't forget automated tests as applicable)
 - Build and package your branch with `dotnet pack -p:PackageVersion=1.0.0-$(git rev-parse --short HEAD) -c Release -o .` in the `GovUkDesignSystem` folder
 - Copy the built package to /Lib and delete the old package
-- Update the package version in the HER project
-- Test that your changes work on the HER site
+- Update the package version in the WH:LG project
+- Test that your changes work on the WH:LG site
 - Create a PR from your branch back to `master`
 - Get the PR reviewed and merged
 - From time to time create a PR to merge the `master` branch back to the Cabinet Office repository (https://github.com/cabinetoffice/govuk-design-system-dotnet)
@@ -117,7 +121,7 @@ the GovUkDesignSystem you may also need to update the GOV.UK Frontend NPM packag
 The app communicates with a number of APIs. You will need to obtain and configure credentials for these APIs in your user secrets file.
 
 In Rider:
-- Right-click on the `HerPublicWebsite` project
+- Right-click on the `WhlgPublicWebsite` project
 - Select `Tools`
 - Select `Open Project User Secrets`
 
@@ -153,8 +157,8 @@ cat secrets.json | dotnet user-secrets set
 
 - If you're working on the S3 writing code, in your Minio folder run Minio `.\minio.exe server <path to data folder> --console-address :9090`
 - In Visual Studio / Rider build the solution
-- In `HerPublicWebsite` run `npm run watch`
-- In Visual Studio / Rider run the `HerPublicWebsite` project
+- In `WhlgPublicWebsite` run `npm run watch`
+- In Visual Studio / Rider run the `WhlgPublicWebsite` project
 - In a browser, visit https://localhost:5001/questionnaire/boiler
 
 ## Database
@@ -177,18 +181,18 @@ cat secrets.json | dotnet user-secrets set
 ### Creating/updating the local database
 
 - You can just run the website project and it will create and update the database on startup
-- If you want to manually update the database (e.g. to test a new migration) in the terminal (from the solution directory) run `dotnet ef database update --project .\HerPublicWebsite`
+- If you want to manually update the database (e.g. to test a new migration) in the terminal (from the solution directory) run `dotnet ef database update --project .\WhlgPublicWebsite`
 
 ### Adding Migrations
 
-- In the terminal (from the solution directory) run `dotnet ef migrations add <YOUR_MIGRATION_NAME> --project .\HerPublicWebsite.Data --startup-project .\HerPublicWebsite`
+- In the terminal (from the solution directory) run `dotnet ef migrations add <YOUR_MIGRATION_NAME> --project .\WhlgPublicWebsite.Data --startup-project .\WhlgPublicWebsite`
 - Then update the local database
 
 ### Reverting Migrations
 
 You may want to revert a migration on your local database as part of a merge, or just because it's wrong and you need to fix it (only do this for migrations that haven't been merged to main yet)
-- Run `dotnet ef database update <MIGRATION_BEFORE_YOURS> --project .\HerPublicWebsite` to rollback your local database
-- Run `dotnet ef migrations remove --project .\HerPublicWebsite.Data --startup-project .\HerPublicWebsite` to delete the migration and undo the snapshot changes
+- Run `dotnet ef database update <MIGRATION_BEFORE_YOURS> --project .\WhlgPublicWebsite` to rollback your local database
+- Run `dotnet ef migrations remove --project .\WhlgPublicWebsite.Data --startup-project .\WhlgPublicWebsite` to delete the migration and undo the snapshot changes
 
 #### Merging Migrations
 

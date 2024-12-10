@@ -1,0 +1,32 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model WhlgPublicWebsite.Models.Questionnaire.IneligibleWalesViewModel
+@{
+    ViewBag.Title = "Sorry, this service isn't for you";
+}
+
+@section BeforeMain {
+    <nav>
+        @await Html.GovUkBackLink(new BackLinkViewModel
+        {
+            Text = "Back",
+            Href = Model.BackLink,
+        })
+    </nav>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <h1 class="govuk-heading-l">This service is for homes in England</h1>
+        
+        <h2 class="govuk-heading-m">You might be able to get help from your energy supplier</h2>
+        <p class="govuk-body">You might be able to get help for energy-saving improvements to your home if you either:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>claim certain benefits and live in private housing (for example you own your home or rent from a private landlord)</li>
+            <li>live in social housing</li>
+        </ul>
+        <p class="govuk-body">Check if you are eligible for the <a target="_blank" href="https://www.gov.uk/energy-company-obligation">Energy Company Obligation</a> scheme.</p>
+    </div>
+</div>

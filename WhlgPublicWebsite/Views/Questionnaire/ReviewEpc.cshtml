@@ -1,0 +1,100 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using WhlgPublicWebsite.Controllers
+
+@model WhlgPublicWebsite.Models.Questionnaire.ReviewEpcViewModel
+@{
+    ViewBag.Title = "Confirm EPC";
+}
+
+@section BeforeMain {
+    <nav>
+        @await Html.GovUkBackLink(new BackLinkViewModel
+        {
+            Text = "Back",
+            Href = Model.BackLink,
+        })
+    </nav>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-l">
+            We found an Energy Performance Certificate that might be yours
+        </h1>
+
+        <p class="govuk-body">
+            This certificate may be registered to your property or one of the properties nearby that shares part of your address.
+        </p>
+
+        <div class="govuk-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title govuk-heading-m">Certificate</h2>
+            </div>
+            <div class="govuk-summary-card__content">
+                @await Html.GovUkSummaryList(new SummaryListViewModel
+                       {
+                           Rows = new List<SummaryListRowViewModel>
+                           {
+                               new()
+                               {
+                                   Key = new SummaryListRowKey { Text = "Registered address" },
+                                   Value = new SummaryListRowValue
+                                   {
+                                       Html = @<text>@Html.Raw(Model.AddressRawHtml)</text>
+                                   }
+                               },
+                               new()
+                               {
+                                   Key = new SummaryListRowKey { Text = "Energy rating" },
+                                   Value = new SummaryListRowValue
+                                   {
+                                       Text = Model.EpcBand
+                                   }
+                               },
+                               new()
+                               {
+                                   Key = new SummaryListRowKey { Text = "Valid from" },
+                                   Value = new SummaryListRowValue
+                                   {
+                                       Text = Model.ValidFrom
+                                   }
+                               },
+                               new()
+                               {
+                                   Key = new SummaryListRowKey { Text = "Valid until" },
+                                   Value = new SummaryListRowValue
+                                   {
+                                       Text = Model.ValidUntil
+                                   }
+                               }
+                           }
+                       })
+            </div>
+        </div>
+        
+        <form action="@Url.Action(nameof(QuestionnaireController.ReviewEpc_Post), "Questionnaire")" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+
+            @await Html.GovUkRadiosFor(m => m.EpcIsCorrect,
+                       fieldsetOptions: new FieldsetViewModel()
+                       {
+                           Legend = new LegendViewModel()
+                           {
+                               Text = "Is this correct?",
+                               Classes = "govuk-fieldset__legend--m",
+                           }
+                       }
+                       )
+
+
+            @(await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Continue",
+            }))
+        </form>
+    </div>
+</div>
