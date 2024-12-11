@@ -21,6 +21,10 @@ public class StaticPagesController : Controller
     [HttpGet("/")]
     public IActionResult Index()
     {
+        #if DEBUG
+        return Redirect("/questionnaire/boiler");
+        #endif
+        
         return Redirect("https://www.gov.uk/apply-home-upgrade-grant");
     }
 
