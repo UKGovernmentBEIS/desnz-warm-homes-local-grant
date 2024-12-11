@@ -21,6 +21,10 @@ public class StaticPagesController : Controller
     [HttpGet("/")]
     public IActionResult Index()
     {
+#if DEBUG
+        return Redirect("/questionnaire/boiler");
+#endif
+
         return Redirect("https://www.gov.uk/apply-home-upgrade-grant");
     }
 
@@ -29,7 +33,7 @@ public class StaticPagesController : Controller
     {
         return View("AccessibilityStatement");
     }
-    
+
     [HttpGet("/privacy-policy")]
     public IActionResult PrivacyPolicy()
     {
@@ -41,7 +45,7 @@ public class StaticPagesController : Controller
     {
         return View("SessionExpired");
     }
-    
+
     [HttpGet("/digitalassistance")]
     public async Task<IActionResult> DigitalAssistance()
     {
