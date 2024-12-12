@@ -22,7 +22,7 @@ public class StaticPagesController : Controller
     public IActionResult Index()
     {
 #if DEBUG
-        return Redirect("/questionnaire/boiler");
+        return Redirect("/questionnaire/");
 #endif
 
         return Redirect("https://www.gov.uk/apply-home-upgrade-grant");
