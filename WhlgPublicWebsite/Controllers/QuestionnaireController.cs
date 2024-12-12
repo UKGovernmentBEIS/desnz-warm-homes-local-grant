@@ -57,9 +57,15 @@ public class QuestionnaireController : Controller
 
     [HttpGet("country/")]
     [ExcludeFromSessionExpiry]
-    public IActionResult Country_Get(QuestionFlowStep? entryPoint)
+    public async Task<IActionResult> Country_Get(QuestionFlowStep? entryPoint, bool triggerEvent = true)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
+        
+        // This metric isn't very reliable, but we can cut out false triggers from editing answers and from validation
+        // failures.
+        if (questionnaire.Country is null && triggerEvent)
+            await googleAnalyticsService.SendFirstQuestionViewedEventAsync(Request);
+        
         var viewModel = new CountryViewModel
         {
             Country = questionnaire.Country,
@@ -70,9 +76,10 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("country/")]
+    [ExcludeFromSessionExpiry]
     public async Task<IActionResult> Country_Post(CountryViewModel viewModel)
     {
-        if (!ModelState.IsValid) return Country_Get(viewModel.EntryPoint);
+        if (!ModelState.IsValid) return await Country_Get(viewModel.EntryPoint, false);
 
         var questionnaire = await questionnaireService.UpdateCountry(viewModel.Country!.Value, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Country, questionnaire, viewModel.EntryPoint);
