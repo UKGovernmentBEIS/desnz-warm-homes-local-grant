@@ -56,6 +56,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("country/")]
+    [ExcludeFromSessionExpiry]
     public IActionResult Country_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
