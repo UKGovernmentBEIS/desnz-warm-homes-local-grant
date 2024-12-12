@@ -21,8 +21,6 @@ public class QuestionFlowService : IQuestionFlowService
     {
         return page switch
         {
-            QuestionFlowStep.GasBoiler => GasBoilerBackDestination(entryPoint),
-            QuestionFlowStep.DirectToEco => DirectToEcoBackDestination(),
             QuestionFlowStep.Country => CountryBackDestination(entryPoint),
             QuestionFlowStep.IneligibleWales => IneligibleWalesBackDestination(),
             QuestionFlowStep.IneligibleScotland => IneligibleScotlandBackDestination(),
@@ -55,7 +53,6 @@ public class QuestionFlowService : IQuestionFlowService
     {
         return page switch
         {
-            QuestionFlowStep.GasBoiler => GasBoilerForwardDestination(questionnaire, entryPoint),
             QuestionFlowStep.Country => CountryForwardDestination(questionnaire, entryPoint),
             QuestionFlowStep.OwnershipStatus => OwnershipStatusForwardDestination(questionnaire, entryPoint),
             QuestionFlowStep.Address => AddressForwardDestination(questionnaire),
@@ -80,26 +77,12 @@ public class QuestionFlowService : IQuestionFlowService
         };
     }
 
-    private QuestionFlowStep GasBoilerBackDestination(QuestionFlowStep? entryPoint)
-    {
-        return entryPoint switch
-        {
-            QuestionFlowStep.GasBoiler => QuestionFlowStep.CheckAnswers,
-            _ => QuestionFlowStep.Start
-        };
-    }
-
-    private QuestionFlowStep DirectToEcoBackDestination()
-    {
-        return QuestionFlowStep.GasBoiler;
-    }
-
     private QuestionFlowStep CountryBackDestination(QuestionFlowStep? entryPoint)
     {
         return entryPoint switch
         {
             QuestionFlowStep.Country => QuestionFlowStep.CheckAnswers,
-            _ => QuestionFlowStep.GasBoiler
+            _ => QuestionFlowStep.Start
         };
     }
 
@@ -249,16 +232,6 @@ public class QuestionFlowService : IQuestionFlowService
     private QuestionFlowStep IneligibleBackDestination()
     {
         return QuestionFlowStep.CheckAnswers;
-    }
-
-    private QuestionFlowStep GasBoilerForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
-    {
-        return (entryPoint, questionnaire.HasGasBoiler) switch
-        {
-            (_, HasGasBoiler.Yes) => QuestionFlowStep.DirectToEco,
-            (QuestionFlowStep.GasBoiler, _) => QuestionFlowStep.CheckAnswers,
-            _ => QuestionFlowStep.Country
-        };
     }
 
     private QuestionFlowStep CountryForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)

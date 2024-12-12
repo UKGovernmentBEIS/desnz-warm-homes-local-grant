@@ -47,30 +47,6 @@
                            {
                                Key = new SummaryListRowKey
                                {
-                                   Text = "Do you have a mains gas boiler?"
-                               },
-                               Value = new SummaryListRowValue
-                               {
-                                   Text = GovUkRadioCheckboxLabelTextAttribute.GetLabelText(Model.Questionnaire.HasGasBoiler)
-                               },
-                               Actions = new SummaryListRowActionViewModel()
-                               {
-                                   Items = new List<SummaryListRowActionItemViewModel>
-                                   {
-                                       new()
-                                       {
-                                           Text = "Change",
-                                           VisuallyHiddenText = "boiler type",
-                                           Href = @Url.Action(nameof(QuestionnaireController.GasBoiler_Get), controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.GasBoiler } )
-                                       }
-                                   }
-                               },
-                               ShowActions = true,
-                           },
-                           new()
-                           {
-                               Key = new SummaryListRowKey
-                               {
                                    Text = "Where is your property?"
                                },
                                Value = new SummaryListRowValue

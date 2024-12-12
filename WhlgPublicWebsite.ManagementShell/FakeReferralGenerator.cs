@@ -53,8 +53,6 @@ public class FakeReferralGenerator : IFakeReferralGenerator
                 new[] { 0.01f, 0.01f, 0.01f, 0.25f, 0.25f, 0.15f, 0.07f, 0.25f }))
             // true 25%
             .RuleFor(rr => rr.IsLsoaProperty, f => f.Random.Bool(0.25f))
-            // No 100%
-            .RuleFor(rr => rr.HasGasBoiler, f => HasGasBoiler.No)
             // < 31000 40% 
             // > 31000 4%
             // < 34500 1%

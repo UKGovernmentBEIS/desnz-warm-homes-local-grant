@@ -52,54 +52,7 @@ public class QuestionnaireController : Controller
     [ExcludeFromSessionExpiry]
     public IActionResult Index()
     {
-        return RedirectToAction(nameof(GasBoiler_Get), "Questionnaire");
-    }
-
-    [HttpGet("boiler")]
-    [ExcludeFromSessionExpiry]
-    public async Task<IActionResult> GasBoiler_Get(QuestionFlowStep? entryPoint, bool triggerEvent = true)
-    {
-        var questionnaire = questionnaireService.GetQuestionnaire();
-
-        // This metric isn't very reliable, but we can cut out false triggers from editing answers and from validation
-        // failures.
-        if (questionnaire.HasGasBoiler is null && triggerEvent)
-            await googleAnalyticsService.SendBoilerQuestionViewedEventAsync(Request);
-
-        var viewModel = new GasBoilerViewModel
-        {
-            HasGasBoiler = questionnaire.HasGasBoiler,
-            BackLink = "https://www.gov.uk/apply-home-upgrade-grant"
-        };
-
-        return View("GasBoiler", viewModel);
-    }
-
-    [HttpPost("boiler")]
-    [ExcludeFromSessionExpiry]
-    public async Task<IActionResult> GasBoiler_Post(GasBoilerViewModel viewModel)
-    {
-        if (!ModelState.IsValid) return await GasBoiler_Get(viewModel.EntryPoint, false);
-
-        var questionnaire =
-            await questionnaireService.UpdateGasBoiler(viewModel.HasGasBoiler!.Value, viewModel.EntryPoint);
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.GasBoiler, questionnaire, viewModel.EntryPoint);
-
-        return RedirectToNextStep(nextStep, viewModel.EntryPoint);
-    }
-
-    [HttpGet("direct-to-eco/")]
-    public async Task<IActionResult> DirectToEco_Get(QuestionFlowStep? entryPoint)
-    {
-        var questionnaire = questionnaireService.GetQuestionnaire();
-        await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, false);
-
-        var viewModel = new DirectToEcoViewModel
-        {
-            BackLink = GetBackUrl(QuestionFlowStep.DirectToEco, entryPoint: entryPoint)
-        };
-
-        return View("DirectToEco", viewModel);
+        return RedirectToAction(nameof(Country_Get), "Questionnaire");
     }
 
     [HttpGet("country/")]
@@ -858,10 +811,6 @@ public class QuestionnaireController : Controller
         return question switch
         {
             QuestionFlowStep.Start => new PathByActionArguments(nameof(Index), "Questionnaire"),
-            QuestionFlowStep.GasBoiler => new PathByActionArguments(nameof(GasBoiler_Get), "Questionnaire",
-                GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.DirectToEco => new PathByActionArguments(nameof(DirectToEco_Get), "Questionnaire",
-                GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.Country => new PathByActionArguments(nameof(Country_Get), "Questionnaire",
                 GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.IneligibleWales => new PathByActionArguments(nameof(IneligibleWales_Get), "Questionnaire",

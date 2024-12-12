@@ -21,7 +21,6 @@ public class ReferralRequest
         EpcConfirmation = questionnaire.EpcDetailsAreCorrect;
         EpcLodgementDate = questionnaire.EpcDetails?.LodgementDate;
         IsLsoaProperty = questionnaire.IsLsoaProperty!.Value;
-        HasGasBoiler = questionnaire.HasGasBoiler!.Value;
         IncomeBand = questionnaire.IncomeBand!.Value;
         FullName = questionnaire.LaContactName;
         ContactEmailAddress = questionnaire.LaContactEmailAddress;
@@ -51,7 +50,6 @@ public class ReferralRequest
 
     public DateTime? EpcLodgementDate { get; set; }
     public bool IsLsoaProperty { get; set; }
-    public HasGasBoiler HasGasBoiler { get; set; }
     public IncomeBand IncomeBand { get; set; }
 
     public string FullName { get; set; }

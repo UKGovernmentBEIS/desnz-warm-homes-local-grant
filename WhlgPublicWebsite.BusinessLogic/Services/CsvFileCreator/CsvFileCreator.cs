@@ -288,12 +288,6 @@ public class CsvFileCreator : ICsvFileCreator
                 _ => throw new ArgumentOutOfRangeException("request.EpcConfirmation", "Unrecognised EpcConfirmation value: " + request.EpcConfirmation),
             };
             EpcLodgementDate = request.EpcLodgementDate?.ToString("yyyy-MM-dd HH:mm:ss");
-            OffGasGrid = request.HasGasBoiler switch
-            {
-                HasGasBoiler.No => "yes",
-                HasGasBoiler.Yes => "no",
-                _ => throw new ArgumentOutOfRangeException("request.HasGasBoiler", "Unrecognised HasGasBoiler value: " + request.HasGasBoiler)
-            };
             HouseholdIncome = request.IncomeBand switch
             {
 #pragma warning disable CS0618 // Obsolete Income Bands used to preserve backwards-compatibility

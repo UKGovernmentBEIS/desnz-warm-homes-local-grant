@@ -22,7 +22,6 @@ public class ReferralRequestBuilder
             EpcRating = EpcRating.E,
             EpcConfirmation = null,
             EpcLodgementDate = new DateTime(2023, 01, 01, 15, 00, id),
-            HasGasBoiler = HasGasBoiler.No,
             Id = id,
             IncomeBand = IncomeBand.UnderOrEqualTo36000,
             Uprn = $"100 111 222 {id:D3}",
@@ -56,12 +55,6 @@ public class ReferralRequestBuilder
     public ReferralRequestBuilder WithCustodianCode(string custodianCode)
     {
         referralRequest.CustodianCode = custodianCode;
-        return this;
-    }
-
-    public ReferralRequestBuilder WithHasGasBoiler(HasGasBoiler hasGasBoiler)
-    {
-        referralRequest.HasGasBoiler = hasGasBoiler;
         return this;
     }
 
