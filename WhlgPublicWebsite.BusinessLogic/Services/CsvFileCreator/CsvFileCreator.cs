@@ -247,22 +247,16 @@ public class CsvFileCreator : ICsvFileCreator
         public string EpcLodgementDate { get; set; }
         
         [Index(14)]
-        [Name("Is off gas grid")]
-        [BooleanTrueValues("yes")]
-        [BooleanFalseValues("no")]
-        public string OffGasGrid { get; set; }
-        
-        [Index(15)]
         [Name("Household income band")]
         public string HouseholdIncome { get; set; }
         
-        [Index(16)]
+        [Index(15)]
         [Name("Is eligible postcode")]
         [BooleanTrueValues("yes")]
         [BooleanFalseValues("no")]
         public bool EligiblePostcode { get; set; }
         
-        [Index(17)]
+        [Index(16)]
         public string Tenure { get; set; }
 
         public CsvRowReferralRequest(ReferralRequest request)
