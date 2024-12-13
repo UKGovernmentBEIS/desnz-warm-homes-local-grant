@@ -56,16 +56,18 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("country/")]
+    // This attribute needs to be applied to the first question, as a session isn't started until the first question is
+    // answered. If this question is removed, we should move this attribute to the next first question.
     [ExcludeFromSessionExpiry]
     public async Task<IActionResult> Country_Get(QuestionFlowStep? entryPoint, bool triggerEvent = true)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        
+
         // This metric isn't very reliable, but we can cut out false triggers from editing answers and from validation
         // failures.
         if (questionnaire.Country is null && triggerEvent)
             await googleAnalyticsService.SendFirstQuestionViewedEventAsync(Request);
-        
+
         var viewModel = new CountryViewModel
         {
             Country = questionnaire.Country,
@@ -76,6 +78,8 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("country/")]
+    // This attribute needs to be applied to the first question, as a session isn't started until the first question is
+    // answered. If this question is removed, we should move this attribute to the next first question.
     [ExcludeFromSessionExpiry]
     public async Task<IActionResult> Country_Post(CountryViewModel viewModel)
     {
@@ -902,12 +906,13 @@ public class QuestionnaireController : Controller
 
     private static string GetLocalAuthorityConfirmationMessagePartialViewPath(Questionnaire questionnaire)
     {
-        var partialViewName = (LocalAuthorityStatus: questionnaire.LocalAuthorityStatus, questionnaire.CustodianCode) switch
-        {
-            (LocalAuthorityData.LocalAuthorityStatus.Pending, _) => "Pending",
-            (LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals, _) => "TakingFutureReferrals",
-            _ => "Default"
-        };
+        var partialViewName =
+            (LocalAuthorityStatus: questionnaire.LocalAuthorityStatus, questionnaire.CustodianCode) switch
+            {
+                (LocalAuthorityData.LocalAuthorityStatus.Pending, _) => "Pending",
+                (LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals, _) => "TakingFutureReferrals",
+                _ => "Default"
+            };
         return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";
     }
 
