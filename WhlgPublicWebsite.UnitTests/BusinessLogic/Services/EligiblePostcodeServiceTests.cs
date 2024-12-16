@@ -21,8 +21,8 @@ public class EligiblePostcodeServiceTests
     private ILogger<EligiblePostcodeService> logger;
     private EligiblePostcodeService underTest;
 
-    [TestCase("AL1 2AP")]
-    [TestCase("YO8 9SF")]
+    [TestCase("BN99 9GA")]
+    [TestCase("YO24 3LY")]
     public void IsEligiblePostcode_CalledWithEligiblePostcode_ReturnsTrue(string postcode)
     {
         // Act
@@ -36,7 +36,7 @@ public class EligiblePostcodeServiceTests
     public void IsEligiblePostcode_CalledWithIneligiblePostcode_ReturnsFalse()
     {
         // Act
-        var result = underTest.IsEligiblePostcode("NW5 1TL");
+        var result = underTest.IsEligiblePostcode("AL1 2AP");
 
         // Assert
         result.Should().BeFalse();
