@@ -1,6 +1,5 @@
 ﻿using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 using IncomeBandEnum = WhlgPublicWebsite.BusinessLogic.Models.Enums.IncomeBand;
-using HasGasBoilerEnum = WhlgPublicWebsite.BusinessLogic.Models.Enums.HasGasBoiler;
 using CountryEnum = WhlgPublicWebsite.BusinessLogic.Models.Enums.Country;
 using OwnershipStatusEnum = WhlgPublicWebsite.BusinessLogic.Models.Enums.OwnershipStatus;
 
@@ -27,7 +26,6 @@ public record Questionnaire
     public EpcDetails EpcDetails { get; set; }
     public EpcConfirmation? EpcDetailsAreCorrect { get; set; }
     public bool? IsLsoaProperty { get; set; }
-    public HasGasBoiler? HasGasBoiler { get; set; }
     public bool? AcknowledgedPending { get; set; }
     public bool? AcknowledgedFutureReferral { get; set; }
     public IncomeBand? IncomeBand { get; set; }
@@ -51,8 +49,8 @@ public record Questionnaire
     public Questionnaire UneditedData { get; set; }
 
     public bool IsEligibleForWhlg =>
-        (IncomeIsTooHigh, HasGasBoiler, EpcIsTooHigh, Country, OwnershipStatus) is
-        (false, not Enums.HasGasBoiler.Yes, false, Enums.Country.England, Enums.OwnershipStatus.OwnerOccupancy);
+        (IncomeIsTooHigh, EpcIsTooHigh, Country, OwnershipStatus) is
+        (false, false, Enums.Country.England, Enums.OwnershipStatus.OwnerOccupancy);
 
     public string LocalAuthorityName
     {

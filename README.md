@@ -159,7 +159,7 @@ cat secrets.json | dotnet user-secrets set
 - In Visual Studio / Rider build the solution
 - In `WhlgPublicWebsite` run `npm run watch`
 - In Visual Studio / Rider run the `WhlgPublicWebsite` project
-- In a browser, visit https://localhost:5001/questionnaire/boiler
+- In a browser, visit https://localhost:5001/questionnaire/
 
 ## Database
 
@@ -185,7 +185,7 @@ cat secrets.json | dotnet user-secrets set
 
 ### Adding Migrations
 
-- In the terminal (from the solution directory) run `dotnet ef migrations add <YOUR_MIGRATION_NAME> --project .\WhlgPublicWebsite.Data --startup-project .\WhlgPublicWebsite`
+- In the terminal (from the solution directory) run `dotnet ef migrations add <YOUR_MIGRATION_NAME> --project WhlgPublicWebsite.Data --startup-project WhlgPublicWebsite`
 - Then update the local database
 
 ### Reverting Migrations

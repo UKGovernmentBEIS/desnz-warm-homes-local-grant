@@ -6,8 +6,6 @@
 public enum QuestionFlowStep
 {
     Start,
-    GasBoiler,
-    DirectToEco,
     Country,
     IneligibleWales,
     IneligibleScotland,

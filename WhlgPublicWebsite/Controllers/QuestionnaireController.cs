@@ -52,60 +52,22 @@ public class QuestionnaireController : Controller
     [ExcludeFromSessionExpiry]
     public IActionResult Index()
     {
-        return RedirectToAction(nameof(GasBoiler_Get), "Questionnaire");
+        return RedirectToAction(nameof(Country_Get), "Questionnaire");
     }
 
-    [HttpGet("boiler")]
+    [HttpGet("country/")]
+    // This attribute needs to be applied to the first question, as a session isn't started until the first question is
+    // answered. If this question is removed, we should move this attribute to the next first question.
     [ExcludeFromSessionExpiry]
-    public async Task<IActionResult> GasBoiler_Get(QuestionFlowStep? entryPoint, bool triggerEvent = true)
+    public async Task<IActionResult> Country_Get(QuestionFlowStep? entryPoint, bool triggerEvent = true)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
 
         // This metric isn't very reliable, but we can cut out false triggers from editing answers and from validation
         // failures.
-        if (questionnaire.HasGasBoiler is null && triggerEvent)
-            await googleAnalyticsService.SendBoilerQuestionViewedEventAsync(Request);
+        if (questionnaire.Country is null && triggerEvent)
+            await googleAnalyticsService.SendFirstQuestionViewedEventAsync(Request);
 
-        var viewModel = new GasBoilerViewModel
-        {
-            HasGasBoiler = questionnaire.HasGasBoiler,
-            BackLink = "https://www.gov.uk/apply-home-upgrade-grant"
-        };
-
-        return View("GasBoiler", viewModel);
-    }
-
-    [HttpPost("boiler")]
-    [ExcludeFromSessionExpiry]
-    public async Task<IActionResult> GasBoiler_Post(GasBoilerViewModel viewModel)
-    {
-        if (!ModelState.IsValid) return await GasBoiler_Get(viewModel.EntryPoint, false);
-
-        var questionnaire =
-            await questionnaireService.UpdateGasBoiler(viewModel.HasGasBoiler!.Value, viewModel.EntryPoint);
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.GasBoiler, questionnaire, viewModel.EntryPoint);
-
-        return RedirectToNextStep(nextStep, viewModel.EntryPoint);
-    }
-
-    [HttpGet("direct-to-eco/")]
-    public async Task<IActionResult> DirectToEco_Get(QuestionFlowStep? entryPoint)
-    {
-        var questionnaire = questionnaireService.GetQuestionnaire();
-        await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, false);
-
-        var viewModel = new DirectToEcoViewModel
-        {
-            BackLink = GetBackUrl(QuestionFlowStep.DirectToEco, entryPoint: entryPoint)
-        };
-
-        return View("DirectToEco", viewModel);
-    }
-
-    [HttpGet("country/")]
-    public IActionResult Country_Get(QuestionFlowStep? entryPoint)
-    {
-        var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new CountryViewModel
         {
             Country = questionnaire.Country,
@@ -116,9 +78,12 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("country/")]
+    // This attribute needs to be applied to the first question, as a session isn't started until the first question is
+    // answered. If this question is removed, we should move this attribute to the next first question.
+    [ExcludeFromSessionExpiry]
     public async Task<IActionResult> Country_Post(CountryViewModel viewModel)
     {
-        if (!ModelState.IsValid) return Country_Get(viewModel.EntryPoint);
+        if (!ModelState.IsValid) return await Country_Get(viewModel.EntryPoint, false);
 
         var questionnaire = await questionnaireService.UpdateCountry(viewModel.Country!.Value, viewModel.EntryPoint);
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Country, questionnaire, viewModel.EntryPoint);
@@ -858,10 +823,6 @@ public class QuestionnaireController : Controller
         return question switch
         {
             QuestionFlowStep.Start => new PathByActionArguments(nameof(Index), "Questionnaire"),
-            QuestionFlowStep.GasBoiler => new PathByActionArguments(nameof(GasBoiler_Get), "Questionnaire",
-                GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.DirectToEco => new PathByActionArguments(nameof(DirectToEco_Get), "Questionnaire",
-                GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.Country => new PathByActionArguments(nameof(Country_Get), "Questionnaire",
                 GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.IneligibleWales => new PathByActionArguments(nameof(IneligibleWales_Get), "Questionnaire",
@@ -945,12 +906,13 @@ public class QuestionnaireController : Controller
 
     private static string GetLocalAuthorityConfirmationMessagePartialViewPath(Questionnaire questionnaire)
     {
-        var partialViewName = (LocalAuthorityStatus: questionnaire.LocalAuthorityStatus, questionnaire.CustodianCode) switch
-        {
-            (LocalAuthorityData.LocalAuthorityStatus.Pending, _) => "Pending",
-            (LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals, _) => "TakingFutureReferrals",
-            _ => "Default"
-        };
+        var partialViewName =
+            (LocalAuthorityStatus: questionnaire.LocalAuthorityStatus, questionnaire.CustodianCode) switch
+            {
+                (LocalAuthorityData.LocalAuthorityStatus.Pending, _) => "Pending",
+                (LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals, _) => "TakingFutureReferrals",
+                _ => "Default"
+            };
         return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";
     }
 

@@ -30,26 +30,8 @@ public class CsvFileCreatorTests
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
-"Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Is off gas grid,Household income band,Is eligible postcode,Tenure\r\n" +
-"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,,2023-01-01 15:00:01,yes,\"£36,000 or less\",no,Owner\r\n");
-    }
-    
-    [Test]
-    public void CreateReferralRequestFileData_CalledWithReferralRequestWithGasBoiler_GeneratesExpectedFileData()
-    {
-        // Arrange
-        var underTest = new CsvFileCreator();
-        var referralRequest = new ReferralRequestBuilder(1).WithHasGasBoiler(HasGasBoiler.Yes).Build();
-        var referralRequests = new List<ReferralRequest>() { referralRequest };
-
-        // Act
-        var data = underTest.CreateReferralRequestFileData(referralRequests);
-        
-        // Assert
-        var reader = new StreamReader(data, Encoding.UTF8);
-        reader.ReadToEnd().Should().Be(
-"Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Is off gas grid,Household income band,Is eligible postcode,Tenure\r\n" +
-"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,,2023-01-01 15:00:01,no,\"£36,000 or less\",no,Owner\r\n");
+"Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Household income band,Is eligible postcode,Tenure\r\n" +
+"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,,2023-01-01 15:00:01,\"£36,000 or less\",no,Owner\r\n");
     }
     
     
@@ -74,8 +56,8 @@ public class CsvFileCreatorTests
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
-"Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Is off gas grid,Household income band,Is eligible postcode,Tenure\r\n" +
-$"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,,2023-01-01 15:00:01,yes,{expectedValue},no,Owner\r\n");
+"Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Household income band,Is eligible postcode,Tenure\r\n" +
+$"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,,2023-01-01 15:00:01,{expectedValue},no,Owner\r\n");
     }
 
     [Test]
@@ -92,8 +74,8 @@ $"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 12345
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
-"Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Is off gas grid,Household income band,Is eligible postcode,Tenure\r\n" +
-"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,Homeowner unsure,2023-01-01 15:00:01,yes,\"£36,000 or less\",no,Owner\r\n");
+"Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Household income band,Is eligible postcode,Tenure\r\n" +
+"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,Homeowner unsure,2023-01-01 15:00:01,\"£36,000 or less\",no,Owner\r\n");
     }
     
     [Test]
@@ -112,10 +94,10 @@ $"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 12345
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
-"Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Is off gas grid,Household income band,Is eligible postcode,Tenure\r\n" +
-"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,,2023-01-01 15:00:01,yes,\"£36,000 or less\",no,Owner\r\n" +
-"2023-01-01 13:00:02,DummyCode00002,Full Name2,contact2@example.com,00002 123456,Address 2 line 1,Address 2 line 2,Town2,County2,AL02 1RS,100 111 222 002,E,,2023-01-01 15:00:02,yes,\"£36,000 or less\",no,Owner\r\n" +
-"2023-01-01 13:00:03,DummyCode00003,Full Name3,contact3@example.com,00003 123456,Address 3 line 1,Address 3 line 2,Town3,County3,AL03 1RS,100 111 222 003,E,,2023-01-01 15:00:03,yes,\"£36,000 or less\",no,Owner\r\n");
+"Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Household income band,Is eligible postcode,Tenure\r\n" +
+"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,,2023-01-01 15:00:01,\"£36,000 or less\",no,Owner\r\n" +
+"2023-01-01 13:00:02,DummyCode00002,Full Name2,contact2@example.com,00002 123456,Address 2 line 1,Address 2 line 2,Town2,County2,AL02 1RS,100 111 222 002,E,,2023-01-01 15:00:02,\"£36,000 or less\",no,Owner\r\n" +
+"2023-01-01 13:00:03,DummyCode00003,Full Name3,contact3@example.com,00003 123456,Address 3 line 1,Address 3 line 2,Town3,County3,AL03 1RS,100 111 222 003,E,,2023-01-01 15:00:03,\"£36,000 or less\",no,Owner\r\n");
     }
 
     [TestCase("comma,separated,value", "\"comma,separated,value\"")]
@@ -135,8 +117,8 @@ $"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 12345
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
-"Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Is off gas grid,Household income band,Is eligible postcode,Tenure\r\n" +
-$"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,,2023-01-01 15:00:01,yes,\"£36,000 or less\",no,Owner\r\n");
+"Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Household income band,Is eligible postcode,Tenure\r\n" +
+$"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,,2023-01-01 15:00:01,\"£36,000 or less\",no,Owner\r\n");
     }
 
     [Test]

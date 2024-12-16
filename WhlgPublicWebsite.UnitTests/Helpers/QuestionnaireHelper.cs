@@ -24,7 +24,6 @@ public static class QuestionnaireHelper
             EpcDetails = new EpcDetails(),
             EpcDetailsAreCorrect = EpcConfirmation.Yes,
             IsLsoaProperty = true,
-            HasGasBoiler = HasGasBoiler.No,
             IncomeBand = IncomeBand.UnderOrEqualTo36000,
             ReferralCreated = default,
             ReferralCode = "WHLG1023",

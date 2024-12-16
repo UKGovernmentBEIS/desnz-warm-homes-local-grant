@@ -76,13 +76,6 @@ public class QuestionnaireUpdater
         );
     }
 
-    public Questionnaire UpdateGasBoiler(Questionnaire questionnaire, HasGasBoiler hasGasBoiler,
-        QuestionFlowStep? entryPoint)
-    {
-        return UpdateQuestionnaire(q => q.HasGasBoiler = hasGasBoiler, questionnaire, QuestionFlowStep.GasBoiler,
-            entryPoint);
-    }
-
     public Questionnaire UpdateEpcIsCorrect(Questionnaire questionnaire, EpcConfirmation? epcIsCorrect,
         QuestionFlowStep? entryPoint)
     {

@@ -47,23 +47,11 @@ public class QuestionFlowServiceTests
     private static QuestionFlowServiceTestCase[] BackTestCases =
     {
         new(
-            "Gas boiler goes back to start",
-            new Input(
-                QuestionFlowStep.GasBoiler
-            ),
-            QuestionFlowStep.Start),
-        new(
-            "Direct to ECO goes back to gas boiler",
-            new Input(
-                QuestionFlowStep.DirectToEco
-            ),
-            QuestionFlowStep.GasBoiler),
-        new(
-            "Country goes back to gas boiler",
+            "Country goes back to start",
             new Input(
                 QuestionFlowStep.Country
             ),
-            QuestionFlowStep.GasBoiler),
+            QuestionFlowStep.Start),
         new(
             "Ineligible Wales goes back to country",
             new Input(
@@ -198,20 +186,6 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Eligible),
         new(
-            "Gas boiler goes back to check answers if was changing answer",
-            new Input(
-                QuestionFlowStep.GasBoiler,
-                entryPoint: QuestionFlowStep.GasBoiler
-            ),
-            QuestionFlowStep.CheckAnswers),
-        new(
-            "Direct to ECO goes back to gas boiler if was changing answer",
-            new Input(
-                QuestionFlowStep.DirectToEco,
-                entryPoint: QuestionFlowStep.GasBoiler
-            ),
-            QuestionFlowStep.GasBoiler),
-        new(
             "Country goes back to check answers if was changing answer",
             new Input(
                 QuestionFlowStep.Country,
@@ -320,20 +294,6 @@ public class QuestionFlowServiceTests
 
     private static QuestionFlowServiceTestCase[] ForwardTestCases =
     {
-        new(
-            "Gas boiler continues to direct to ECO if the user has a boiler",
-            new Input(
-                QuestionFlowStep.GasBoiler,
-                HasGasBoiler.Yes
-            ),
-            QuestionFlowStep.DirectToEco),
-        new(
-            "Gas boiler continues to country if the user doesn't have a boiler",
-            new Input(
-                QuestionFlowStep.GasBoiler,
-                HasGasBoiler.No
-            ),
-            QuestionFlowStep.Country),
         new(
             "Country continues to ineligible Wales if the country is Wales",
             new Input(
@@ -484,7 +444,6 @@ public class QuestionFlowServiceTests
             "Check answers continues to eligible if eligible",
             new Input(
                 QuestionFlowStep.CheckAnswers,
-                HasGasBoiler.No,
                 OwnershipStatus.OwnerOccupancy,
                 Country.England,
                 epcDetailsAreCorrect: EpcConfirmation.No,
@@ -494,8 +453,7 @@ public class QuestionFlowServiceTests
         new(
             "Check answers continues to ineligible if ineligible",
             new Input(
-                QuestionFlowStep.CheckAnswers,
-                HasGasBoiler.Yes
+                QuestionFlowStep.CheckAnswers
             ),
             QuestionFlowStep.Ineligible),
         new(
@@ -516,22 +474,6 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.Ineligible
             ),
             QuestionFlowStep.Ineligible),
-        new(
-            "Gas boiler continues to direct to ECO if the user has a boiler and was changing answer",
-            new Input(
-                QuestionFlowStep.GasBoiler,
-                HasGasBoiler.Yes,
-                entryPoint: QuestionFlowStep.GasBoiler
-            ),
-            QuestionFlowStep.DirectToEco),
-        new(
-            "Gas boiler returns to check answers if user doesn't have a boiler, and was changing answer",
-            new Input(
-                QuestionFlowStep.GasBoiler,
-                HasGasBoiler.No,
-                entryPoint: QuestionFlowStep.GasBoiler
-            ),
-            QuestionFlowStep.CheckAnswers),
         new(
             "Country continues to ineligible Wales if the country is Wales and was changing answer",
             new Input(
@@ -756,7 +698,6 @@ public class QuestionFlowServiceTests
 
         public Input(
             QuestionFlowStep page,
-            HasGasBoiler? hasGasBoiler = null,
             OwnershipStatus? ownershipStatus = null,
             Country? country = null,
             string uprn = null,
@@ -771,7 +712,6 @@ public class QuestionFlowServiceTests
             Page = page;
             Questionnaire = new Questionnaire
             {
-                HasGasBoiler = hasGasBoiler,
                 Uprn = uprn,
                 OwnershipStatus = ownershipStatus,
                 Country = country,

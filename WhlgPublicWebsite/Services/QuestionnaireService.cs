@@ -42,14 +42,6 @@ public class QuestionnaireService
         return questionnaire;
     }
 
-    public async Task<Questionnaire> UpdateGasBoiler(HasGasBoiler hasGasBoiler, QuestionFlowStep? entryPoint)
-    {
-        var questionnaire = GetQuestionnaire();
-        questionnaire = questionnaireUpdater.UpdateGasBoiler(questionnaire, hasGasBoiler, entryPoint);
-        await SaveQuestionnaireToSession(questionnaire);
-        return questionnaire;
-    }
-
     public async Task<Questionnaire> UpdateCountry(Country country, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();

@@ -18,7 +18,6 @@ public class AnonymisedReportTests
         var questionnaire = new Questionnaire
         {
             AddressPostcode = postcode,
-            HasGasBoiler = HasGasBoiler.Yes,
             Country = Country.England,
             OwnershipStatus = OwnershipStatus.Landlord,
             EpcDetailsAreCorrect = EpcConfirmation.Yes,

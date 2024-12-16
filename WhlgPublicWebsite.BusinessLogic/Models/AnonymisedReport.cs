@@ -11,7 +11,6 @@ public class AnonymisedReport
     public EpcRating EpcRating { get; set; }
     public DateTime? EpcLodgementDate { get; set; }
     public bool IsEligible { get; set; }
-    public HasGasBoiler HasGasBoiler { get; set; }
     public IncomeBand IncomeBand { get; set; }
     public OwnershipStatus OwnershipStatus { get; set; }
 
@@ -26,7 +25,6 @@ public class AnonymisedReport
         IsLsoaProperty = questionnaire.IsLsoaProperty!.Value;
         EpcRating = questionnaire.EffectiveEpcBand;
         EpcLodgementDate = questionnaire.EpcDetails?.LodgementDate;
-        HasGasBoiler = questionnaire.HasGasBoiler!.Value;
         IncomeBand = questionnaire.IncomeBand!.Value;
         IsEligible = questionnaire.IsEligibleForWhlg;
         OwnershipStatus = questionnaire.OwnershipStatus!.Value;

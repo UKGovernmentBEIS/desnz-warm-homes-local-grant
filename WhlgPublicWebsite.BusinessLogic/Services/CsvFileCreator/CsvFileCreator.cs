@@ -247,22 +247,16 @@ public class CsvFileCreator : ICsvFileCreator
         public string EpcLodgementDate { get; set; }
         
         [Index(14)]
-        [Name("Is off gas grid")]
-        [BooleanTrueValues("yes")]
-        [BooleanFalseValues("no")]
-        public string OffGasGrid { get; set; }
-        
-        [Index(15)]
         [Name("Household income band")]
         public string HouseholdIncome { get; set; }
         
-        [Index(16)]
+        [Index(15)]
         [Name("Is eligible postcode")]
         [BooleanTrueValues("yes")]
         [BooleanFalseValues("no")]
         public bool EligiblePostcode { get; set; }
         
-        [Index(17)]
+        [Index(16)]
         public string Tenure { get; set; }
 
         public CsvRowReferralRequest(ReferralRequest request)
@@ -288,12 +282,6 @@ public class CsvFileCreator : ICsvFileCreator
                 _ => throw new ArgumentOutOfRangeException("request.EpcConfirmation", "Unrecognised EpcConfirmation value: " + request.EpcConfirmation),
             };
             EpcLodgementDate = request.EpcLodgementDate?.ToString("yyyy-MM-dd HH:mm:ss");
-            OffGasGrid = request.HasGasBoiler switch
-            {
-                HasGasBoiler.No => "yes",
-                HasGasBoiler.Yes => "no",
-                _ => throw new ArgumentOutOfRangeException("request.HasGasBoiler", "Unrecognised HasGasBoiler value: " + request.HasGasBoiler)
-            };
             HouseholdIncome = request.IncomeBand switch
             {
 #pragma warning disable CS0618 // Obsolete Income Bands used to preserve backwards-compatibility
