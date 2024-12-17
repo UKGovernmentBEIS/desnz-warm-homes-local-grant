@@ -21,7 +21,7 @@ public class EligiblePostcodeService : IEligiblePostcodeService
     }
 
     // Check whether a postcode is in the list of eligible postcodes found on this page
-    // https://www.gov.uk/government/publications/home-upgrade-grant-phase-2 in the "HUG: Phase 2 - eligible postcodes"
+    // https://www.gov.uk/government/publications/warm-homes-local-grant in the "Warm Homes: Local Grant - eligible postcodes"
     // spreadsheet.
     public bool IsEligiblePostcode(string postcode)
     {
