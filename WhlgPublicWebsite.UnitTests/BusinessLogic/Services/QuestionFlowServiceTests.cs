@@ -1,9 +1,9 @@
 ﻿using System;
 using FluentAssertions;
+using NUnit.Framework;
 using WhlgPublicWebsite.BusinessLogic.Models;
 using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 using WhlgPublicWebsite.BusinessLogic.Services.QuestionFlow;
-using NUnit.Framework;
 
 namespace Tests.BusinessLogic.Services;
 
@@ -17,6 +17,10 @@ public class QuestionFlowServiceTests
     }
 
     private IQuestionFlowService questionFlowService;
+    private const string LiveCustodianCode = "3805";
+    private const string NotTakingPartCustodianCode = "9052";
+    private const string PendingCustodianCode = "3010";
+    private const string TakingFutureReferralsCustodianCode = "1005";
 
     [TestCaseSource(nameof(BackTestCases))]
     public void RunBackLinkTestCases(QuestionFlowServiceTestCase testCase)
@@ -174,11 +178,19 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Eligible),
         new(
-            "Ineligible goes back to check answers",
+            "Ineligible goes back to review EPC if EPC is ineligible",
             new Input(
-                QuestionFlowStep.Ineligible
+                QuestionFlowStep.Ineligible,
+                epcRating: EpcRating.C
             ),
-            QuestionFlowStep.CheckAnswers),
+            QuestionFlowStep.ReviewEpc),
+        new(
+            "Ineligible goes back to household income if income band is ineligible",
+            new Input(
+                QuestionFlowStep.Ineligible,
+                incomeBand: IncomeBand.GreaterThan36000
+            ),
+            QuestionFlowStep.HouseholdIncome),
         new(
             "No consent goes back to eligible",
             new Input(
@@ -289,7 +301,17 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.HouseholdIncome,
                 entryPoint: QuestionFlowStep.HouseholdIncome
             ),
-            QuestionFlowStep.CheckAnswers)
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Pending goes back to check answers",
+            new Input(QuestionFlowStep.Pending),
+            QuestionFlowStep.CheckAnswers
+        ),
+        new(
+            "Taking future referrals goes back to check answers",
+            new Input(QuestionFlowStep.TakingFutureReferrals),
+            QuestionFlowStep.CheckAnswers
+        )
     };
 
     private static QuestionFlowServiceTestCase[] ForwardTestCases =
@@ -326,21 +348,21 @@ public class QuestionFlowServiceTests
             "Ownership status continues to ineligible tenure if user is private tenant",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
-                ownershipStatus: OwnershipStatus.PrivateTenancy
+                OwnershipStatus.PrivateTenancy
             ),
             QuestionFlowStep.IneligibleTenure),
         new(
             "Ownership status continues to ineligible tenure if user is landlord",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
-                ownershipStatus: OwnershipStatus.Landlord
+                OwnershipStatus.Landlord
             ),
             QuestionFlowStep.IneligibleTenure),
         new(
             "Ownership status continues to address if user is owner occupier",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
-                ownershipStatus: OwnershipStatus.OwnerOccupancy
+                OwnershipStatus.OwnerOccupancy
             ),
             QuestionFlowStep.Address),
         new(
@@ -349,14 +371,15 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.Address
             ),
             QuestionFlowStep.SelectAddress),
-        new(
-            "Address selection continues to not taking part if local authority is not participating",
-            new Input(
-                QuestionFlowStep.SelectAddress,
-                epcRating: EpcRating.D,
-                custodianCode: "9052"
-            ),
-            QuestionFlowStep.NotTakingPart),
+        // this is removed as there are currently no not participating LAs
+        // new(
+        //     "Address selection continues to not participating if local authority is not participating",
+        //     new Input(
+        //         QuestionFlowStep.SelectAddress,
+        //         epcRating: EpcRating.D,
+        //         custodianCode: notParticipatingCustodianCode
+        //     ),
+        //     QuestionFlowStep.NotParticipating),
         new(
             "Address selection continues to household income if EPC is low",
             new Input(
@@ -380,26 +403,53 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
-            "Review EPC continues to household income if EPC is incorrect",
+            "Review EPC continues to household income if EPC is incorrect and eligible",
             new Input(
                 QuestionFlowStep.ReviewEpc,
-                epcDetailsAreCorrect: EpcConfirmation.No
+                epcDetailsAreCorrect: EpcConfirmation.No,
+                epcRating: EpcRating.D
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
-            "Review EPC continues to household income if EPC is unsure",
+            "Review EPC continues to household income if EPC is incorrect and ineligible",
             new Input(
                 QuestionFlowStep.ReviewEpc,
-                epcDetailsAreCorrect: EpcConfirmation.Unknown
+                epcDetailsAreCorrect: EpcConfirmation.No,
+                epcRating: EpcRating.C
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
-            "Review EPC continues to household income if EPC is correct",
+            "Review EPC continues to household income if EPC is unsure and eligible",
             new Input(
                 QuestionFlowStep.ReviewEpc,
-                epcDetailsAreCorrect: EpcConfirmation.Yes
+                epcDetailsAreCorrect: EpcConfirmation.Unknown,
+                epcRating: EpcRating.D
             ),
             QuestionFlowStep.HouseholdIncome),
+        new(
+            "Review EPC continues to household income if EPC is unsure and ineligible",
+            new Input(
+                QuestionFlowStep.ReviewEpc,
+                epcDetailsAreCorrect: EpcConfirmation.Unknown,
+                epcRating: EpcRating.C
+            ),
+            QuestionFlowStep.HouseholdIncome),
+        new(
+            "Review EPC continues to household income if EPC is correct and eligible",
+            new Input(
+                QuestionFlowStep.ReviewEpc,
+                epcDetailsAreCorrect: EpcConfirmation.Yes,
+                epcRating: EpcRating.D
+            ),
+            QuestionFlowStep.HouseholdIncome),
+        new(
+            "Review EPC continues to ineligible if EPC is correct and ineligible",
+            new Input(
+                QuestionFlowStep.ReviewEpc,
+                epcDetailsAreCorrect: EpcConfirmation.Yes,
+                epcRating: EpcRating.C
+            ),
+            QuestionFlowStep.Ineligible),
         new(
             "Manual address continues to select local authority",
             new Input(
@@ -431,31 +481,50 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.ConfirmLocalAuthority,
                 localAuthorityIsCorrect: true,
-                custodianCode: "9052"
+                custodianCode: NotTakingPartCustodianCode
             ),
             QuestionFlowStep.NotTakingPart),
         new(
-            "Household income continues to check answers",
+            "Household income continues to check answers if income is eligible",
             new Input(
-                QuestionFlowStep.HouseholdIncome
+                QuestionFlowStep.HouseholdIncome,
+                incomeBand: IncomeBand.UnderOrEqualTo36000
             ),
             QuestionFlowStep.CheckAnswers),
         new(
-            "Check answers continues to eligible if eligible",
+            "Household income continues to ineligible if income is ineligible",
+            new Input(
+                QuestionFlowStep.HouseholdIncome,
+                incomeBand: IncomeBand.GreaterThan36000
+            ),
+            QuestionFlowStep.Ineligible),
+        new(
+            "Check answers continues to eligible if LA is live",
             new Input(
                 QuestionFlowStep.CheckAnswers,
-                OwnershipStatus.OwnerOccupancy,
-                Country.England,
-                epcDetailsAreCorrect: EpcConfirmation.No,
-                incomeBand: IncomeBand.UnderOrEqualTo36000
+                custodianCode: LiveCustodianCode
             ),
             QuestionFlowStep.Eligible),
         new(
-            "Check answers continues to ineligible if ineligible",
+            "Check answers continues to pending if LA is pending",
             new Input(
-                QuestionFlowStep.CheckAnswers
+                QuestionFlowStep.CheckAnswers,
+                custodianCode: PendingCustodianCode
             ),
-            QuestionFlowStep.Ineligible),
+            QuestionFlowStep.Pending),
+        new(
+            "Check answers continues to taking future referrals if LA is taking future referrals",
+            new Input(
+                QuestionFlowStep.CheckAnswers,
+                custodianCode: TakingFutureReferralsCustodianCode
+            ),
+            QuestionFlowStep.TakingFutureReferrals),
+        new(
+            "Pending continues to eligible",
+            new Input(
+                QuestionFlowStep.Pending
+            ),
+            QuestionFlowStep.Eligible),
         new(
             "Eligible continues to confirmation",
             new Input(
@@ -510,7 +579,7 @@ public class QuestionFlowServiceTests
             "Ownership status continues to ineligible tenure if user is private tenant and was changing answer",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
-                ownershipStatus: OwnershipStatus.PrivateTenancy,
+                OwnershipStatus.PrivateTenancy,
                 entryPoint: QuestionFlowStep.OwnershipStatus
             ),
             QuestionFlowStep.IneligibleTenure),
@@ -518,7 +587,7 @@ public class QuestionFlowServiceTests
             "Ownership status continues to ineligible tenure if user is landlord and was changing answer",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
-                ownershipStatus: OwnershipStatus.Landlord,
+                OwnershipStatus.Landlord,
                 entryPoint: QuestionFlowStep.OwnershipStatus
             ),
             QuestionFlowStep.IneligibleTenure),
@@ -526,7 +595,7 @@ public class QuestionFlowServiceTests
             "Ownership status returns to check answers if user is owner occupier and was changing answer",
             new Input(
                 QuestionFlowStep.OwnershipStatus,
-                ownershipStatus: OwnershipStatus.OwnerOccupancy,
+                OwnershipStatus.OwnerOccupancy,
                 entryPoint: QuestionFlowStep.OwnershipStatus
             ),
             QuestionFlowStep.CheckAnswers),
@@ -537,15 +606,15 @@ public class QuestionFlowServiceTests
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.SelectAddress),
-        new(
-            "Address selection continues to not taking part if local authority is not participating and was changing answer",
-            new Input(
-                QuestionFlowStep.SelectAddress,
-                epcRating: EpcRating.D,
-                custodianCode: "9052",
-                entryPoint: QuestionFlowStep.Address
-            ),
-            QuestionFlowStep.NotTakingPart),
+        // new(
+        //     "Address selection continues to not participating if local authority is not participating and was changing answer",
+        //     new Input(
+        //         QuestionFlowStep.SelectAddress,
+        //         epcRating: EpcRating.D,
+        //         custodianCode: notParticipatingCustodianCode,
+        //         entryPoint: QuestionFlowStep.Address
+        //     ),
+        //     QuestionFlowStep.NotParticipating),
         new(
             "Address selection returns to check answers income if EPC is low and was changing answer",
             new Input(
@@ -578,7 +647,8 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.ReviewEpc,
                 epcDetailsAreCorrect: EpcConfirmation.No,
-                entryPoint: QuestionFlowStep.Address
+                entryPoint: QuestionFlowStep.Address,
+                epcRating: EpcRating.D
             ),
             QuestionFlowStep.CheckAnswers),
         new(
@@ -586,7 +656,8 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.ReviewEpc,
                 epcDetailsAreCorrect: EpcConfirmation.Unknown,
-                entryPoint: QuestionFlowStep.Address
+                entryPoint: QuestionFlowStep.Address,
+                epcRating: EpcRating.D
             ),
             QuestionFlowStep.CheckAnswers),
         // disabling this test as we don't have live local authority on WHLG with income bands based on £34,000 at the moment
@@ -601,13 +672,23 @@ public class QuestionFlowServiceTests
         //     ),
         //     QuestionFlowStep.HouseholdIncome),
         new(
-            "Review EPC continues to check answers if EPC is correct and was changing answer",
+            "Review EPC returns to check answers if EPC is correct and eligible and was changing answer",
             new Input(
                 QuestionFlowStep.ReviewEpc,
                 epcDetailsAreCorrect: EpcConfirmation.Yes,
-                entryPoint: QuestionFlowStep.Address
+                entryPoint: QuestionFlowStep.Address,
+                epcRating: EpcRating.D
             ),
             QuestionFlowStep.CheckAnswers),
+        new(
+            "Review EPC continues to ineligible if EPC is correct and ineligible and was changing answer",
+            new Input(
+                QuestionFlowStep.ReviewEpc,
+                epcDetailsAreCorrect: EpcConfirmation.Yes,
+                entryPoint: QuestionFlowStep.Address,
+                epcRating: EpcRating.C
+            ),
+            QuestionFlowStep.Ineligible),
         new(
             "Manual address continues to select local authority if was changing answer",
             new Input(
@@ -642,7 +723,7 @@ public class QuestionFlowServiceTests
         //     ),
         //     QuestionFlowStep.HouseholdIncome),
         new(
-            "Confirm local authority continues to check answers if authority is correct if was changing answer",
+            "Confirm local authority returns to check answers if authority is correct if was changing answer",
             new Input(
                 QuestionFlowStep.ConfirmLocalAuthority,
                 localAuthorityIsCorrect: true,
@@ -654,17 +735,26 @@ public class QuestionFlowServiceTests
             new Input(
                 QuestionFlowStep.ConfirmLocalAuthority,
                 localAuthorityIsCorrect: true,
-                custodianCode: "9052",
+                custodianCode: NotTakingPartCustodianCode,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.NotTakingPart),
         new(
-            "Household income continues to check answers if was changing answer",
+            "Household income returns to check answers if income is eligible and was changing answer",
             new Input(
                 QuestionFlowStep.HouseholdIncome,
-                entryPoint: QuestionFlowStep.HouseholdIncome
+                entryPoint: QuestionFlowStep.HouseholdIncome,
+                incomeBand: IncomeBand.UnderOrEqualTo36000
             ),
-            QuestionFlowStep.CheckAnswers)
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Household income continues to ineligible if income is ineligible and was changing answer",
+            new Input(
+                QuestionFlowStep.HouseholdIncome,
+                entryPoint: QuestionFlowStep.HouseholdIncome,
+                incomeBand: IncomeBand.GreaterThan36000
+            ),
+            QuestionFlowStep.Ineligible)
     };
 
     public class QuestionFlowServiceTestCase
