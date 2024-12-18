@@ -371,15 +371,6 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.Address
             ),
             QuestionFlowStep.SelectAddress),
-        // this is removed as there are currently no not participating LAs
-        // new(
-        //     "Address selection continues to not participating if local authority is not participating",
-        //     new Input(
-        //         QuestionFlowStep.SelectAddress,
-        //         epcRating: EpcRating.D,
-        //         custodianCode: notParticipatingCustodianCode
-        //     ),
-        //     QuestionFlowStep.NotParticipating),
         new(
             "Address selection continues to household income if EPC is low",
             new Input(
@@ -606,15 +597,6 @@ public class QuestionFlowServiceTests
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.SelectAddress),
-        // new(
-        //     "Address selection continues to not participating if local authority is not participating and was changing answer",
-        //     new Input(
-        //         QuestionFlowStep.SelectAddress,
-        //         epcRating: EpcRating.D,
-        //         custodianCode: notParticipatingCustodianCode,
-        //         entryPoint: QuestionFlowStep.Address
-        //     ),
-        //     QuestionFlowStep.NotParticipating),
         new(
             "Address selection returns to check answers income if EPC is low and was changing answer",
             new Input(
@@ -623,17 +605,6 @@ public class QuestionFlowServiceTests
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.CheckAnswers),
-        // disabling this test as we don't have live local authority on WHLG with income bands based on £34,000 at the moment
-        // new(
-        //     "Address selection continues to household income if authority is correct but income band is invalid and was changing answer",
-        //     new Input(
-        //         QuestionFlowStep.SelectAddress,
-        //         epcRating: EpcRating.D,
-        //         entryPoint: QuestionFlowStep.Address,
-        //         incomeBand: IncomeBand.GreaterThan31000,
-        //         custodianCode: "505" // Cambridge has income bands based on £34,000
-        //     ),
-        //     QuestionFlowStep.HouseholdIncome),
         new(
             "Address selection continues to review EPC if EPC is high and was changing answer",
             new Input(
@@ -660,17 +631,6 @@ public class QuestionFlowServiceTests
                 epcRating: EpcRating.D
             ),
             QuestionFlowStep.CheckAnswers),
-        // disabling this test as we don't have live local authority on WHLG with income bands based on £34,000 at the moment
-        // new(
-        //     "Review EPC continues to household income if authority is correct but income band is invalid and was changing answer",
-        //     new Input(
-        //         QuestionFlowStep.ReviewEpc,
-        //         epcDetailsAreCorrect: EpcConfirmation.Yes,
-        //         entryPoint: QuestionFlowStep.Address,
-        //         incomeBand: IncomeBand.GreaterThan31000,
-        //         custodianCode: "505" // Cambridge has income bands based on £34,000
-        //     ),
-        //     QuestionFlowStep.HouseholdIncome),
         new(
             "Review EPC returns to check answers if EPC is correct and eligible and was changing answer",
             new Input(
@@ -711,17 +671,6 @@ public class QuestionFlowServiceTests
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.SelectLocalAuthority),
-        // disabling this test as we don't have live local authority on WHLG with income bands based on £34,000 at the moment
-        // new(
-        //     "Confirm local authority continues to household income if authority is correct but income band is invalid and was changing answer",
-        //     new Input(
-        //         QuestionFlowStep.ConfirmLocalAuthority,
-        //         localAuthorityIsCorrect: true,
-        //         entryPoint: QuestionFlowStep.Address,
-        //         incomeBand: IncomeBand.GreaterThan31000,
-        //         custodianCode: "505" // Cambridge has income bands based on £34,000
-        //     ),
-        //     QuestionFlowStep.HouseholdIncome),
         new(
             "Confirm local authority returns to check answers if authority is correct if was changing answer",
             new Input(
