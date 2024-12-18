@@ -24,8 +24,9 @@ public class StaticPagesController : Controller
 #if DEBUG
         return Redirect("/questionnaire/");
 #endif
-
+#pragma warning disable CS0162 // Unreachable code detected
         return Redirect("https://www.gov.uk/apply-home-upgrade-grant");
+#pragma warning restore CS0162
     }
 
     [HttpGet("/accessibility-statement")]
