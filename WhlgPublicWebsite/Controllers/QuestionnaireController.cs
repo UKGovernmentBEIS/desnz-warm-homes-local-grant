@@ -745,6 +745,11 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> Ineligible_Get(bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
+
+        if (questionnaire.IsEligibleForWhlg)
+        {
+            throw new Exception($"Ineligible page shown when questionnaire {questionnaire.SessionId} is eligible");
+        }
         await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, false);
 
         var viewModel = new IneligibleViewModel
