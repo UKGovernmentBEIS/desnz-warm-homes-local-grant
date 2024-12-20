@@ -78,11 +78,6 @@
             @{
                 switch (Model.EpcIsTooHigh, Model.IncomeIsTooHigh)
                 {
-                    case (true, true):
-                        <text>
-                            because your EPC rating is A, B, or C and your income is more than £36,000 but you may be able to get other help for your energy needs.
-                        </text>
-                        break;
                     case (true, false):
                         <text>
                             because your EPC rating is A, B, or C but you may be able to get other help for your energy needs.

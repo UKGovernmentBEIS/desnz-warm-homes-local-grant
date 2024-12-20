@@ -33,17 +33,17 @@ public class QuestionFlowService : IQuestionFlowService
             QuestionFlowStep.NotParticipating => NotParticipatingBackDestination(questionnaire),
             QuestionFlowStep.NotTakingPart => NotTakingPartBackDestination(questionnaire),
             QuestionFlowStep.NoLongerParticipating => NoLongerParticipatingBackDestination(questionnaire),
-            QuestionFlowStep.TakingFutureReferrals => TakingFutureReferralsBackDestination(questionnaire),
-            QuestionFlowStep.Pending => PendingBackDestination(questionnaire),
-            QuestionFlowStep.ManualAddress => ManualAddressBackDestination(entryPoint),
+            QuestionFlowStep.TakingFutureReferrals => TakingFutureReferralsBackDestination(),
+            QuestionFlowStep.Pending => PendingBackDestination(),
+            QuestionFlowStep.ManualAddress => ManualAddressBackDestination(),
             QuestionFlowStep.SelectLocalAuthority => SelectLocalAuthorityBackDestination(),
             QuestionFlowStep.ConfirmLocalAuthority => ConfirmLocalAuthorityBackDestination(),
             QuestionFlowStep.HouseholdIncome => HouseholdIncomeBackDestination(questionnaire, entryPoint),
-            QuestionFlowStep.CheckAnswers => CheckAnswersBackDestination(questionnaire),
-            QuestionFlowStep.Eligible => EligibleBackDestination(),
+            QuestionFlowStep.CheckAnswers => CheckAnswersBackDestination(),
+            QuestionFlowStep.Eligible => EligibleBackDestination(questionnaire),
             QuestionFlowStep.Confirmation => ConfirmationBackDestination(),
             QuestionFlowStep.NoConsent => NoConsentBackDestination(),
-            QuestionFlowStep.Ineligible => IneligibleBackDestination(),
+            QuestionFlowStep.Ineligible => IneligibleBackDestination(questionnaire),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -55,24 +55,24 @@ public class QuestionFlowService : IQuestionFlowService
         {
             QuestionFlowStep.Country => CountryForwardDestination(questionnaire, entryPoint),
             QuestionFlowStep.OwnershipStatus => OwnershipStatusForwardDestination(questionnaire, entryPoint),
-            QuestionFlowStep.Address => AddressForwardDestination(questionnaire),
+            QuestionFlowStep.Address => AddressForwardDestination(),
             QuestionFlowStep.SelectAddress => SelectAddressForwardDestination(questionnaire, entryPoint),
             QuestionFlowStep.ReviewEpc => ReviewEpcForwardDestination(questionnaire, entryPoint),
-            QuestionFlowStep.ManualAddress => ManualAddressForwardDestination(questionnaire),
-            QuestionFlowStep.SelectLocalAuthority => SelectLocalAuthorityForwardDestination(questionnaire),
+            QuestionFlowStep.ManualAddress => ManualAddressForwardDestination(),
+            QuestionFlowStep.SelectLocalAuthority => SelectLocalAuthorityForwardDestination(),
             QuestionFlowStep.ConfirmLocalAuthority =>
                 ConfirmLocalAuthorityForwardDestination(questionnaire, entryPoint),
-            QuestionFlowStep.NotParticipating => NotParticipatingForwardDestination(questionnaire),
-            QuestionFlowStep.NotTakingPart => NotTakingPartForwardDestination(questionnaire),
-            QuestionFlowStep.NoLongerParticipating => NoLongerParticipatingForwardDestination(questionnaire),
+            QuestionFlowStep.NotParticipating => NotParticipatingForwardDestination(),
+            QuestionFlowStep.NotTakingPart => NotTakingPartForwardDestination(),
+            QuestionFlowStep.NoLongerParticipating => NoLongerParticipatingForwardDestination(),
             QuestionFlowStep.TakingFutureReferrals =>
-                TakingFutureReferralsForwardDestination(questionnaire, entryPoint),
-            QuestionFlowStep.Pending => PendingForwardDestination(questionnaire, entryPoint),
+                TakingFutureReferralsForwardDestination(),
+            QuestionFlowStep.Pending => PendingForwardDestination(),
             QuestionFlowStep.HouseholdIncome => HouseholdIncomeForwardDestination(questionnaire),
             QuestionFlowStep.CheckAnswers => CheckAnswersForwardDestination(questionnaire),
-            QuestionFlowStep.Eligible => EligibleForwardDestination(questionnaire),
-            QuestionFlowStep.Confirmation => ConfirmationForwardDestination(questionnaire),
-            QuestionFlowStep.Ineligible => IneligibleForwardDestination(questionnaire),
+            QuestionFlowStep.Eligible => EligibleForwardDestination(),
+            QuestionFlowStep.Confirmation => ConfirmationForwardDestination(),
+            QuestionFlowStep.Ineligible => IneligibleForwardDestination(),
             _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
         };
     }
@@ -129,12 +129,7 @@ public class QuestionFlowService : IQuestionFlowService
         return QuestionFlowStep.Address;
     }
 
-    private QuestionFlowStep ReviewEpcBackDestination()
-    {
-        return QuestionFlowStep.Address;
-    }
-
-    private QuestionFlowStep ManualAddressBackDestination(QuestionFlowStep? entryPoint)
+    private QuestionFlowStep ManualAddressBackDestination()
     {
         return QuestionFlowStep.Address;
     }
@@ -149,74 +144,71 @@ public class QuestionFlowService : IQuestionFlowService
         return QuestionFlowStep.SelectLocalAuthority;
     }
 
+    private QuestionFlowStep LaStatusSwitchBackDestionation(Questionnaire questionnaire)
+    {
+        return questionnaire.Uprn == null ? QuestionFlowStep.ConfirmLocalAuthority : QuestionFlowStep.Address;
+    }
+
+    private QuestionFlowStep ReviewEpcBackDestination()
+    {
+        // it is never possible that the user needs to go back to confirm authority
+        // since the manual flow will never find an EPC
+        return QuestionFlowStep.Address;
+    }
+
     private QuestionFlowStep NotTakingPartBackDestination(Questionnaire questionnaire)
     {
-        return questionnaire.Uprn switch
-        {
-            null => QuestionFlowStep.ConfirmLocalAuthority,
-            _ => QuestionFlowStep.Address
-        };
+        return LaStatusSwitchBackDestionation(questionnaire);
     }
 
     private QuestionFlowStep NotParticipatingBackDestination(Questionnaire questionnaire)
     {
-        return questionnaire.Uprn switch
-        {
-            null => QuestionFlowStep.ConfirmLocalAuthority,
-            _ => QuestionFlowStep.Address
-        };
+        return LaStatusSwitchBackDestionation(questionnaire);
     }
 
     private QuestionFlowStep NoLongerParticipatingBackDestination(Questionnaire questionnaire)
     {
-        return questionnaire.Uprn switch
-        {
-            null => QuestionFlowStep.ConfirmLocalAuthority,
-            _ => QuestionFlowStep.Address
-        };
-    }
-
-    private QuestionFlowStep TakingFutureReferralsBackDestination(Questionnaire questionnaire)
-    {
-        if (questionnaire.FoundEpcBandIsTooHigh)
-            return QuestionFlowStep.ReviewEpc;
-        if (questionnaire.Uprn is null) return QuestionFlowStep.ConfirmLocalAuthority;
-
-        return QuestionFlowStep.Address;
-    }
-
-    private QuestionFlowStep PendingBackDestination(Questionnaire questionnaire)
-    {
-        if (questionnaire.FoundEpcBandIsTooHigh)
-            return QuestionFlowStep.ReviewEpc;
-        if (questionnaire.Uprn is null) return QuestionFlowStep.ConfirmLocalAuthority;
-
-        return QuestionFlowStep.Address;
+        return LaStatusSwitchBackDestionation(questionnaire);
     }
 
     private QuestionFlowStep HouseholdIncomeBackDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
     {
         if (entryPoint is QuestionFlowStep.HouseholdIncome)
             return QuestionFlowStep.CheckAnswers;
-        if (questionnaire.LocalAuthorityStatus == LocalAuthorityData.LocalAuthorityStatus.Pending)
-            return QuestionFlowStep.Pending;
-        if (questionnaire.LocalAuthorityStatus == LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals)
-            return QuestionFlowStep.TakingFutureReferrals;
         if (questionnaire.FoundEpcBandIsTooHigh)
             return QuestionFlowStep.ReviewEpc;
-        if (questionnaire.Uprn is null) return QuestionFlowStep.ConfirmLocalAuthority;
 
-        return QuestionFlowStep.Address;
+        return LaStatusSwitchBackDestionation(questionnaire);
     }
 
-    private QuestionFlowStep CheckAnswersBackDestination(Questionnaire questionnaire)
+    private QuestionFlowStep IneligibleBackDestination(Questionnaire questionnaire)
+    {
+        return questionnaire.IncomeIsTooHigh ? QuestionFlowStep.HouseholdIncome : QuestionFlowStep.ReviewEpc;
+    }
+
+    private QuestionFlowStep CheckAnswersBackDestination()
     {
         return QuestionFlowStep.HouseholdIncome;
     }
 
-    private QuestionFlowStep EligibleBackDestination()
+    private QuestionFlowStep TakingFutureReferralsBackDestination()
     {
         return QuestionFlowStep.CheckAnswers;
+    }
+
+    private QuestionFlowStep PendingBackDestination()
+    {
+        return QuestionFlowStep.CheckAnswers;
+    }
+
+    private QuestionFlowStep EligibleBackDestination(Questionnaire questionnaire)
+    {
+        return questionnaire.LocalAuthorityStatus switch
+        {
+            LocalAuthorityData.LocalAuthorityStatus.Pending => QuestionFlowStep.Pending,
+            LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals => QuestionFlowStep.TakingFutureReferrals,
+            _ => QuestionFlowStep.CheckAnswers
+        };
     }
 
     private QuestionFlowStep NoConsentBackDestination()
@@ -227,11 +219,6 @@ public class QuestionFlowService : IQuestionFlowService
     private QuestionFlowStep ConfirmationBackDestination()
     {
         return QuestionFlowStep.Eligible;
-    }
-
-    private QuestionFlowStep IneligibleBackDestination()
-    {
-        return QuestionFlowStep.CheckAnswers;
     }
 
     private QuestionFlowStep CountryForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
@@ -257,12 +244,12 @@ public class QuestionFlowService : IQuestionFlowService
         };
     }
 
-    private QuestionFlowStep AddressForwardDestination(Questionnaire questionnaire)
+    private QuestionFlowStep AddressForwardDestination()
     {
         return QuestionFlowStep.SelectAddress;
     }
 
-    private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
+    private QuestionFlowStep LaStatusSwitchForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
     {
         if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NotTakingPart)
             return QuestionFlowStep.NotTakingPart;
@@ -274,12 +261,8 @@ public class QuestionFlowService : IQuestionFlowService
         if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NoLongerParticipating)
 #pragma warning restore CS0618 // Type or member is obsolete
             return QuestionFlowStep.NoLongerParticipating;
-        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals)
-            return QuestionFlowStep.TakingFutureReferrals;
         if (questionnaire.FoundEpcBandIsTooHigh)
             return QuestionFlowStep.ReviewEpc;
-        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Pending)
-            return QuestionFlowStep.Pending;
         // If the LA has changed and the income band the user selected previously is no longer valid then we don't
         // go back to the check your answers page as the user will need to select a new income band.
         if (entryPoint is QuestionFlowStep.Address && questionnaire.IncomeBandIsValid)
@@ -288,24 +271,17 @@ public class QuestionFlowService : IQuestionFlowService
         return QuestionFlowStep.HouseholdIncome;
     }
 
-    private QuestionFlowStep ReviewEpcForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
+    private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
     {
-        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Pending)
-            return QuestionFlowStep.Pending;
-        // If the LA has changed and the income band the user selected previously is no longer valid then we don't
-        // go back to the check your answers page as the user will need to select a new income band.
-        if (entryPoint is QuestionFlowStep.Address && questionnaire.IncomeBandIsValid)
-            return QuestionFlowStep.CheckAnswers;
-
-        return QuestionFlowStep.HouseholdIncome;
+        return LaStatusSwitchForwardDestination(questionnaire, entryPoint);
     }
 
-    private QuestionFlowStep ManualAddressForwardDestination(Questionnaire questionnaire)
+    private QuestionFlowStep ManualAddressForwardDestination()
     {
         return QuestionFlowStep.SelectLocalAuthority;
     }
 
-    private QuestionFlowStep SelectLocalAuthorityForwardDestination(Questionnaire questionnaire)
+    private QuestionFlowStep SelectLocalAuthorityForwardDestination()
     {
         return QuestionFlowStep.ConfirmLocalAuthority;
     }
@@ -315,83 +291,74 @@ public class QuestionFlowService : IQuestionFlowService
     {
         if (questionnaire.LocalAuthorityConfirmed is not true)
             return QuestionFlowStep.SelectLocalAuthority;
-        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NotTakingPart)
-            return QuestionFlowStep.NotTakingPart;
-#pragma warning disable CS0618 // Type or member is obsolete
-        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NoLongerParticipating)
-#pragma warning restore CS0618 // Type or member is obsolete
-            return QuestionFlowStep.NoLongerParticipating;
-        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals)
-            return QuestionFlowStep.TakingFutureReferrals;
-#pragma warning disable CS0618 // Type or member is obsolete
-        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NotParticipating)
-#pragma warning restore CS0618 // Type or member is obsolete
-            return QuestionFlowStep.NotParticipating;
-        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Pending)
-            return QuestionFlowStep.Pending;
-        // If the LA has changed and the income band the user selected previously is no longer valid then we don't
-        // go back to the check your answers page as the user will need to select a new income band.
-        if (entryPoint is QuestionFlowStep.Address && questionnaire.IncomeBandIsValid)
-            return QuestionFlowStep.CheckAnswers;
 
-        return QuestionFlowStep.HouseholdIncome;
+        return LaStatusSwitchForwardDestination(questionnaire, entryPoint);
     }
 
-    private QuestionFlowStep NotTakingPartForwardDestination(Questionnaire questionnaire)
+    private QuestionFlowStep NotTakingPartForwardDestination()
     {
         return QuestionFlowStep.NotTakingPart;
     }
 
-    private QuestionFlowStep NotParticipatingForwardDestination(Questionnaire questionnaire)
+    private QuestionFlowStep NotParticipatingForwardDestination()
     {
         return QuestionFlowStep.NotParticipating;
     }
 
-    private QuestionFlowStep NoLongerParticipatingForwardDestination(Questionnaire questionnaire)
+    private QuestionFlowStep NoLongerParticipatingForwardDestination()
     {
         return QuestionFlowStep.NoLongerParticipating;
     }
 
-    private QuestionFlowStep TakingFutureReferralsForwardDestination(Questionnaire questionnaire,
-        QuestionFlowStep? entryPoint)
+    private QuestionFlowStep ReviewEpcForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
     {
-        // If the LA has changed and the income band the user selected previously is no longer valid then we don't
-        // go back to the check your answers page as the user will need to select a new income band.
-        if (entryPoint is QuestionFlowStep.Address && questionnaire.IncomeBandIsValid)
-            return QuestionFlowStep.CheckAnswers;
-        return QuestionFlowStep.HouseholdIncome;
-    }
+        if (questionnaire.EpcIsTooHigh)
+            return QuestionFlowStep.Ineligible;
 
-    private QuestionFlowStep PendingForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
-    {
         // If the LA has changed and the income band the user selected previously is no longer valid then we don't
         // go back to the check your answers page as the user will need to select a new income band.
         if (entryPoint is QuestionFlowStep.Address && questionnaire.IncomeBandIsValid)
             return QuestionFlowStep.CheckAnswers;
+
         return QuestionFlowStep.HouseholdIncome;
     }
 
     private QuestionFlowStep HouseholdIncomeForwardDestination(Questionnaire questionnaire)
     {
-        return QuestionFlowStep.CheckAnswers;
+        return questionnaire.IncomeIsTooHigh ? QuestionFlowStep.Ineligible : QuestionFlowStep.CheckAnswers;
     }
 
     private QuestionFlowStep CheckAnswersForwardDestination(Questionnaire questionnaire)
     {
-        return questionnaire.IsEligibleForWhlg ? QuestionFlowStep.Eligible : QuestionFlowStep.Ineligible;
+        return questionnaire.LocalAuthorityStatus switch
+        {
+            LocalAuthorityData.LocalAuthorityStatus.Pending => QuestionFlowStep.Pending,
+            LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals => QuestionFlowStep.TakingFutureReferrals,
+            _ => QuestionFlowStep.Eligible
+        };
     }
 
-    private QuestionFlowStep EligibleForwardDestination(Questionnaire questionnaire)
+    private QuestionFlowStep PendingForwardDestination()
+    {
+        return QuestionFlowStep.Eligible;
+    }
+
+    private QuestionFlowStep TakingFutureReferralsForwardDestination()
+    {
+        return QuestionFlowStep.Eligible;
+    }
+
+    private QuestionFlowStep EligibleForwardDestination()
     {
         return QuestionFlowStep.Confirmation;
     }
 
-    private QuestionFlowStep ConfirmationForwardDestination(Questionnaire questionnaire)
+    private QuestionFlowStep ConfirmationForwardDestination()
     {
         return QuestionFlowStep.Confirmation;
     }
 
-    private QuestionFlowStep IneligibleForwardDestination(Questionnaire questionnaire)
+    private QuestionFlowStep IneligibleForwardDestination()
     {
         return QuestionFlowStep.Ineligible;
     }

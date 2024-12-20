@@ -2,16 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using WhlgPublicWebsite.BusinessLogic.Extensions;
-using WhlgPublicWebsite.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+using WhlgPublicWebsite.BusinessLogic.Extensions;
 using WhlgPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using WhlgPublicWebsite.BusinessLogic.Models;
 using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 using WhlgPublicWebsite.BusinessLogic.Services.QuestionFlow;
 using WhlgPublicWebsite.BusinessLogic.Services.SessionRecorder;
+using WhlgPublicWebsite.Extensions;
 using WhlgPublicWebsite.ExternalServices.GoogleAnalytics;
 using WhlgPublicWebsite.Filters;
 using WhlgPublicWebsite.Models.Enums;
@@ -500,10 +500,7 @@ public class QuestionnaireController : Controller
     [HttpPost("no-longer-participating")]
     public async Task<IActionResult> NoLongerParticipating_Post(IneligibleViewModel viewModel)
     {
-        if (!ModelState.IsValid)
-        {
-            return NoLongerParticipating_Get(viewModel.EntryPoint);
-        }
+        if (!ModelState.IsValid) return NoLongerParticipating_Get(viewModel.EntryPoint);
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
@@ -515,7 +512,7 @@ public class QuestionnaireController : Controller
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
             viewModel.EntryPoint,
-            extraRouteValues: new Dictionary<string, object>
+            new Dictionary<string, object>
             {
                 { "emailPreferenceSubmitted", true }
             }
@@ -745,6 +742,9 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> Ineligible_Get(bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
+
+        if (questionnaire.IsEligibleForWhlg)
+            throw new Exception($"Ineligible page shown when questionnaire {questionnaire.SessionId} is eligible");
         await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, false);
 
         var viewModel = new IneligibleViewModel
@@ -907,7 +907,7 @@ public class QuestionnaireController : Controller
     private static string GetLocalAuthorityConfirmationMessagePartialViewPath(Questionnaire questionnaire)
     {
         var partialViewName =
-            (LocalAuthorityStatus: questionnaire.LocalAuthorityStatus, questionnaire.CustodianCode) switch
+            (questionnaire.LocalAuthorityStatus, questionnaire.CustodianCode) switch
             {
                 (LocalAuthorityData.LocalAuthorityStatus.Pending, _) => "Pending",
                 (LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals, _) => "TakingFutureReferrals",
