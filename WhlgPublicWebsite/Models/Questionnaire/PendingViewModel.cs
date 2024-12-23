@@ -17,7 +17,7 @@ public class PendingViewModel : QuestionFlowViewModel, IValidatableObject
         if (!UserAcknowledgedPending)
         {
             yield return new ValidationResult(
-                "You must acknowledge that your application will not be processed until your local authority has signed up to use the service",
+                "You must acknowledge that your application will not be processed until your Local Authority has signed up to use the service",
                 new[] { nameof(UserAcknowledgedPending) });
         }
     }

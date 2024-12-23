@@ -59,7 +59,7 @@ public record Questionnaire
             if (string.IsNullOrEmpty(CustodianCode) ||
                 !LocalAuthorityData.LocalAuthorityDetailsByCustodianCode.ContainsKey(CustodianCode))
             {
-                return "unrecognised local authority";
+                return "unrecognised Local Authority";
             }
 
             return LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[CustodianCode].Name;
@@ -73,7 +73,7 @@ public record Questionnaire
             if (string.IsNullOrEmpty(CustodianCode) ||
                 !LocalAuthorityData.LocalAuthorityDetailsByCustodianCode.ContainsKey(CustodianCode))
             {
-                return "unrecognised local authority";
+                return "unrecognised Local Authority";
             }
 
             return LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[CustodianCode].WebsiteUrl;
