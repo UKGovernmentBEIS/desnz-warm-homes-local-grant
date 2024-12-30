@@ -5,7 +5,7 @@
 
 @model WhlgPublicWebsite.Models.Questionnaire.ConfirmLocalAuthorityViewModel
 @{
-    ViewBag.Title = "Confirm your local authority";
+    ViewBag.Title = "Confirm your Local Authority";
 }
 
 @section BeforeMain {
@@ -22,10 +22,10 @@
     <div class="govuk-grid-column-two-thirds">
 
         <h1 class="govuk-heading-l">
-            Confirm your local authority
+            Confirm your Local Authority
         </h1>
         
-        <p class="govuk-body">You've selected <strong>@Model.LocalAuthorityName</strong> as your local authority.</p>
+        <p class="govuk-body">You've selected <strong>@Model.LocalAuthorityName</strong> as your Local Authority.</p>
 
         <form action="@Url.Action(nameof(QuestionnaireController.ConfirmLocalAuthority_Post), "Questionnaire")" method="post" novalidate>
             @(Html.HiddenFor(m => m.EntryPoint))

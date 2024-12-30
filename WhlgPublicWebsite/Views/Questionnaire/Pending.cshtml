@@ -26,18 +26,18 @@
         <h2 class="govuk-heading-m">What to do next</h2>
 
         <p class="govuk-body">
-            Based on the information you have provided, it looks like your local authority,
+            Based on the information you have provided, it looks like your Local Authority,
             <strong class="govuk-!-font-weight-bold">@Model.LocalAuthorityName</strong>,
             is not signed up to use this service yet.
             This means that you can create an application, but it may not be processed for a while.
         </p>
         <p class="govuk-body">
             You will receive monthly updates from the Department of Energy Security and Net Zero
-            about the progress of your local authority signing up to use the service.
+            about the progress of your Local Authority signing up to use the service.
         </p>
 
         <p class="govuk-body">
-            If your local authority does not seem to be right, <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your correct local authority</a> and contact them directly.
+            If your Local Authority does not seem to be right, <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your correct Local Authority</a> and contact them directly.
         </p>
 
         <form action="@Url.Action(nameof(QuestionnaireController.Pending_Post), "Questionnaire")" method="post" novalidate>
@@ -47,7 +47,7 @@
             @await Html.GovUkCheckboxFromBoolFor(m => m.UserAcknowledgedPending,
                 new LabelViewModel
                 {
-                    Text = "I want to create a referral and acknowledge that my application will not be processed until my local authority is signed up to use the service"
+                    Text = "I want to create a referral and acknowledge that my application will not be processed until my Local Authority is signed up to use the service"
                 })
             <div class="govuk-button-group">
                 @(await Html.GovUkButton(new ButtonViewModel

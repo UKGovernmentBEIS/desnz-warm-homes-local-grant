@@ -305,7 +305,7 @@ public class QuestionnaireTests
         var result = underTest.LocalAuthorityName;
         
         // Assert
-        result.Should().Be("unrecognised local authority");
+        result.Should().Be("unrecognised Local Authority");
     }
     
     
@@ -338,7 +338,7 @@ public class QuestionnaireTests
         var result = underTest.LocalAuthorityWebsite;
         
         // Assert
-        result.Should().Be("unrecognised local authority");
+        result.Should().Be("unrecognised Local Authority");
     }
     
     
