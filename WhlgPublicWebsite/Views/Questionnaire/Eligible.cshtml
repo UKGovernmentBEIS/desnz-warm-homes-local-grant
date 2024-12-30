@@ -28,11 +28,18 @@
         <h2 class="govuk-heading-m">What to do next</h2>
 
         <p class="govuk-body">
-            We will send your answers and contact details to <strong>@Model.LocalAuthorityName or their official contractor</strong>@(
-                                                                                                                                    Model.LocalAuthorityIsTakingFutureReferrals
-                                                                                                                                        ? " in spring 2025 should they get funding for Warm Homes: Local Grant."
-                                                                                                                                        : "."
-                                                                                                                                    )
+            @{
+                var message = $"We will send your answers and contact details to <strong>{Model.LocalAuthorityName} or their official contractor</strong>";
+                if (Model.LocalAuthorityIsTakingFutureReferrals)
+                {
+                    message += " in spring 2025 should they get funding for Warm Homes: Local Grant.";
+                }
+                else
+                {
+                    message += ".";
+                }
+            }
+            @Html.Raw(message)
             @{
                 if (Model.LocalAuthorityIsPending)
                 {
