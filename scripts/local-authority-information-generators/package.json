@@ -1,0 +1,10 @@
+﻿{
+  "name": "desnz-local-authority-information-generator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^12.1.0",
+    "csv": "^6.3.10"
+  }
+}
