@@ -29,28 +29,25 @@
 
         <p class="govuk-body">
             @{
-                var message = $"We will send your answers and contact details to <strong>{Model.LocalAuthorityName} or their official contractor</strong>";
                 if (Model.LocalAuthorityIsTakingFutureReferrals)
                 {
-                    message += " in spring 2025 should they get funding for Warm Homes: Local Grant.";
+                    <text>We will send your answers and contact details to <strong>@Model.LocalAuthorityName or their official contractor</strong> in spring 2025 should they get funding for Warm Homes: Local Grant.</text>
                 }
                 else
                 {
-                    message += ".";
+                    <text>We will send your answers and contact details to <strong>@Model.LocalAuthorityName or their official contractor</strong>.</text>
                 }
             }
-            @Html.Raw(message)
             @{
                 if (Model.LocalAuthorityIsPending)
                 {
-                    <text>Once they have signed up to the service, they </text>
+                    <text> Once they have signed up to the service, they will contact you for further information about your eligibility and property before they can book a home survey.</text>
                 }
                 else
                 {
-                    <text>They </text>
+                    <text> They will contact you for further information about your eligibility and property before they can book a home survey.</text>
                 }
             }
-            will contact you for further information about your eligibility and property before they can book a home survey.
         </p>
 
         <p class="govuk-body">
