@@ -41,5 +41,5 @@ The solution is unfortunately tedious. Given branch 1 with migration A and branc
 - On branch 2
 - Revert and remove migration B
 - Merge main into branch 2
-- Recreate migration B (which will now be on top of migation A)
+- Recreate migration B (which will now be on top of migration A)
 - Merge branch 2 into main
