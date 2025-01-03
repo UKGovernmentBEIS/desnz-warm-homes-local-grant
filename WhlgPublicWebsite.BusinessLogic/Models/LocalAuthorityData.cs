@@ -34,7 +34,9 @@ public class LocalAuthorityData
     };
 
     // The list of custodian codes comes from the publicly available "Local custodian codes" download link
-    // on https://www.ordnancesurvey.co.uk/business-government/tools-support/addressbase-support
+    // on https://docs.os.uk/os-downloads/addressing-and-location/addressbase-core-principles/addressbase-local-custodian-codes
+    // This link was initially retrieved from
+    // https://www.ordnancesurvey.co.uk/business-government/tools-support/addressbase-support
     // The download link itself can be found within the technical specification for the OS Places API
     // here: https://osdatahub.os.uk/docs/places/technicalSpecification
     // The local authority names and websites mainly come from the local-links-manager Gov.UK service
