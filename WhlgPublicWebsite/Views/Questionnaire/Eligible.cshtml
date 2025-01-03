@@ -28,15 +28,26 @@
         <h2 class="govuk-heading-m">What to do next</h2>
 
         <p class="govuk-body">
-            We will send your answers and contact details to <strong>@Model.LocalAuthorityName or their official contractor</strong>
             @{
                 if (Model.LocalAuthorityIsTakingFutureReferrals)
                 {
-                    <text> in spring 2025 should they get funding for Warm Homes: Local Grant</text>
+                    <text>We will send your answers and contact details to <strong>@Model.LocalAuthorityName or their official contractor</strong> in spring 2025 should they get funding for Warm Homes: Local Grant.</text>
+                }
+                else
+                {
+                    <text>We will send your answers and contact details to <strong>@Model.LocalAuthorityName or their official contractor</strong>.</text>
                 }
             }
-            .
-            They will contact you for further information about your eligibility and property before they can book a home survey.
+            @{
+                if (Model.LocalAuthorityIsPending)
+                {
+                    <text> Once they have signed up to the service, they will contact you for further information about your eligibility and property before they can book a home survey.</text>
+                }
+                else
+                {
+                    <text> They will contact you for further information about your eligibility and property before they can book a home survey.</text>
+                }
+            }
         </p>
 
         <p class="govuk-body">

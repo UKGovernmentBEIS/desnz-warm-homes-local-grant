@@ -100,6 +100,8 @@ cat secrets.json | dotnet user-secrets set
 
 Once the server is running, you should be able to run the project locally.
 
+If you are having issues the first time you run the project after initialising the server, you may need to manually create the `whlgdev` database first.
+
 For further information on interacting with the database and using migrations, please see [here](Documentation/database.md).
 
 ### Running the service locally
