@@ -752,8 +752,6 @@ public class QuestionnaireController : Controller
         {
             EpcIsTooHigh = questionnaire.EpcIsTooHigh,
             IncomeIsTooHigh = questionnaire.IncomeIsTooHigh,
-            ShowWarmHomesText =
-                questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
             EmailAddress = questionnaire.NotificationEmailAddress,
