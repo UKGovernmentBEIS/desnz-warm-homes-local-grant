@@ -652,7 +652,8 @@ public class QuestionnaireController : Controller
             LocalAuthorityIsTakingFutureReferrals =
                 questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals,
             LocalAuthorityIsLive = questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Live,
-            LocalAuthorityIsPending = questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Pending,
+            LocalAuthorityIsPending =
+                questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Pending,
             CanContactByEmail = questionnaire.LaCanContactByEmail.ToNullableYesOrNo(),
             CanContactByPhone = questionnaire.LaCanContactByPhone.ToNullableYesOrNo(),
             Name = questionnaire.LaContactName,
