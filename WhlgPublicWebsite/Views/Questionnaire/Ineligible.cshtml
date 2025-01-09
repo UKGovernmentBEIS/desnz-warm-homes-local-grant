@@ -70,26 +70,19 @@
         <h1 class="govuk-heading-l">We do not think you are eligible</h1>
 
         <p class="govuk-body">
-            We do not think you are eligible for the Warm Homes: Local Grant
-            @{
-                if (Model.ShowWarmHomesText)
-                {
-                    <text>
-                        or the Warm Homes: Local Grant
-                    </text>
-                }
-            }
             @{
                 switch (Model.EpcIsTooHigh, Model.IncomeIsTooHigh)
                 {
                     case (true, false):
                         <text>
-                            because your EPC rating is A, B, or C but you may be able to get other help for your energy needs.
+                            We do not think you are eligible for the Warm Homes: Local Grant because your
+                            EPC rating is A, B, or C but you may be able to get other help for your energy needs.
                         </text>
                         break;
                     default:
                         <text>
-                            because your income is more than £36,000 but you may be able to get other help for your energy needs.
+                            We do not think you are eligible for the Warm Homes: Local Grant because your
+                            income is more than £36,000 but you may be able to get other help for your energy needs.
                         </text>
                         break;
                 }

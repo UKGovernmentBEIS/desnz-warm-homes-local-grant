@@ -20,8 +20,6 @@ public class IneligibleViewModel : QuestionFlowViewModel
 
     public bool IncomeIsTooHigh { get; set; }
 
-    public bool ShowWarmHomesText { get; set; }
-
     public string LocalAuthorityName { get; set; }
 
     public string LocalAuthorityWebsite { get; set; }
