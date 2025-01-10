@@ -71,7 +71,7 @@ public class QuestionnaireController : Controller
         var viewModel = new CountryViewModel
         {
             Country = questionnaire.Country,
-            BackLink = GetBackUrl(QuestionFlowStep.Country, questionnaire, entryPoint)
+            BackLink = "https://www.gov.uk/apply-home-upgrade-grant"
         };
 
         return View("Country", viewModel);
