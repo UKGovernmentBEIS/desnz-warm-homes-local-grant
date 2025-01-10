@@ -1,0 +1,38 @@
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using WhlgPublicWebsite.BusinessLogic.Models.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using WhlgPublicWebsite.Controllers
+
+@model WhlgPublicWebsite.Models.Questionnaire.NoConsentViewModel
+@{
+    ViewBag.Title = "We cannot use your information";
+}
+
+@section BeforeMain {
+    <nav>
+        @await Html.GovUkBackLink(new BackLinkViewModel
+        {
+            Text = "Back",
+            Href = Model.BackLink,
+        })
+    </nav>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <h1 class="govuk-heading-l">
+            We cannot use your information
+        </h1>
+        
+        <p class="govuk-body">
+            We can only use your information if you agree.
+        </p>
+        
+        <p class="govuk-body">
+            If you do not want to give us your information, you can contact
+            <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName</a> directly.
+        </p>
+    </div>
+</div>

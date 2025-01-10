@@ -1,0 +1,166 @@
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using WhlgPublicWebsite.BusinessLogic.Models.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using WhlgPublicWebsite.Controllers
+@using System.Runtime.CompilerServices
+@using GovUkDesignSystem.Attributes
+
+@model WhlgPublicWebsite.Models.Questionnaire.CheckAnswersViewModel
+
+@{
+    ViewBag.Title = "Check your answers";
+}
+
+@section BeforeMain {
+    <nav>
+        @await Html.GovUkBackLink(new BackLinkViewModel
+        {
+            Text = "Back",
+            Href = Model.BackLink,
+        })
+    </nav>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <form action="@Url.Action(nameof(QuestionnaireController.CheckAnswers_Post), "Questionnaire")" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+            
+            @{ var values = new Dictionary<string, object> { { "entryPoint", QuestionFlowStep.CheckAnswers } }; }
+
+            <h1 class="govuk-heading-l">
+                Check your answers
+            </h1>
+            
+            <p class="govuk-body">
+                Please review the information we have gathered. You can still change your answers if anything looks wrong. 
+            </p>
+
+            @await Html.GovUkSummaryList( new SummaryListViewModel()
+                   {
+                       Rows = new List<SummaryListRowViewModel>
+                       {
+                           new()
+                           {
+                               Key = new SummaryListRowKey
+                               {
+                                   Text = "Where is your property?"
+                               },
+                               Value = new SummaryListRowValue
+                               {
+                                   Text = GovUkRadioCheckboxLabelTextAttribute.GetLabelText(Model.Questionnaire.Country)
+                               },
+                               Actions = new SummaryListRowActionViewModel()
+                               {
+                                   Items = new List<SummaryListRowActionItemViewModel>
+                                   {
+                                       new()
+                                       {
+                                           Text = "Change",
+                                           VisuallyHiddenText = "country",
+                                           Href = @Url.Action(nameof(QuestionnaireController.Country_Get), controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.Country } )
+                                       }
+                                   }
+                               },
+                               ShowActions = true,
+                           },
+                           new()
+                           {
+                               Key = new SummaryListRowKey
+                               {
+                                   Text = "Do you own your property?"
+                               },
+                               Value = new SummaryListRowValue
+                               {
+                                   Text = GovUkRadioCheckboxLabelTextAttribute.GetLabelText(Model.Questionnaire.OwnershipStatus)
+                               },
+                               Actions = new SummaryListRowActionViewModel()
+                               {
+                                   Items = new List<SummaryListRowActionItemViewModel>
+                                   {
+                                       new()
+                                       {
+                                           Text = "Change",
+                                           VisuallyHiddenText = "property ownership status",
+                                           Href = @Url.Action(nameof(QuestionnaireController.OwnershipStatus_Get), controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.OwnershipStatus } )
+                                       }
+                                   }
+                               },
+                               ShowActions = true,
+                           },
+                           new()
+                           {
+                               Key = new SummaryListRowKey
+                               {
+                                   Text = "What is the property address?"
+                               },
+                               Value = new SummaryListRowValue
+                               {
+                                   Html = @<text>@Html.Raw(
+                                                     string.Join("<br/>",
+                                                         new List<string>{
+                                                             Model.Questionnaire.AddressLine1,
+                                                             Model.Questionnaire.AddressLine2,
+                                                             Model.Questionnaire.AddressCounty,
+                                                             Model.Questionnaire.AddressTown,
+                                                             Model.Questionnaire.AddressPostcode
+                                                         }
+                                                             .Where(x => !string.IsNullOrEmpty(x))
+                                                             .Select(x => Html.Encode(x))))
+                                           </text>
+                               },
+                               Actions = new SummaryListRowActionViewModel()
+                               {
+                                   Items = new List<SummaryListRowActionItemViewModel>
+                                   {
+                                       new()
+                                       {
+                                           Text = "Change",
+                                           VisuallyHiddenText = "address",
+                                           Href = Url.Action(nameof(QuestionnaireController.Address_Get),
+                                               controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.Address } )
+                                       }
+                                   }
+                               },
+                               ShowActions = true,
+
+                           },
+                           new()
+                           {
+                               Key = new SummaryListRowKey
+                               {
+                                   Text = "What is your household income?"
+                               },
+                               Value = new SummaryListRowValue
+                               {
+                                   Text = GovUkRadioCheckboxLabelTextAttribute.GetLabelText(Model.Questionnaire.IncomeBand)
+                               },
+                               Actions = new SummaryListRowActionViewModel()
+                               {
+                                   Items = new List<SummaryListRowActionItemViewModel>
+                                   {
+                                       new()
+                                       {
+                                           Text = "Change",
+                                           VisuallyHiddenText = "household income",
+                                           Href = @Url.Action(nameof(QuestionnaireController.HouseholdIncome_Get), controller: "Questionnaire", values: new { entryPoint = QuestionFlowStep.HouseholdIncome } )
+                                       }
+                                   }
+                               },
+                               ShowActions = true,
+                           }
+                       }
+                   })
+
+            @(await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Continue",
+            }))
+
+        </form>
+        
+    </div>
+</div>

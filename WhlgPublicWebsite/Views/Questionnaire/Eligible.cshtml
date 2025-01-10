@@ -1,0 +1,156 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using WhlgPublicWebsite.Controllers
+@using WhlgPublicWebsite.Models.Enums
+
+@model WhlgPublicWebsite.Models.Questionnaire.EligibleViewModel
+
+@{
+    ViewBag.Title = "You may be eligible";
+}
+
+@section BeforeMain {
+    <nav>
+        @await Html.GovUkBackLink(new BackLinkViewModel
+        {
+            Text = "Back",
+            Href = Model.BackLink
+        })
+    </nav>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-l">We think you might be eligible</h1>
+
+        <h2 class="govuk-heading-m">What to do next</h2>
+
+        <p class="govuk-body">
+            @{
+                if (Model.LocalAuthorityIsTakingFutureReferrals)
+                {
+                    <text>We will send your answers and contact details to <strong>@Model.LocalAuthorityName or their official contractor</strong> in spring 2025 should they get funding for Warm Homes: Local Grant.</text>
+                }
+                else
+                {
+                    <text>We will send your answers and contact details to <strong>@Model.LocalAuthorityName or their official contractor</strong>.</text>
+                }
+            }
+            @{
+                if (Model.LocalAuthorityIsPending)
+                {
+                    <text> Once they have signed up to the service, they will contact you for further information about your eligibility and property before they can book a home survey.</text>
+                }
+                else
+                {
+                    <text> They will contact you for further information about your eligibility and property before they can book a home survey.</text>
+                }
+            }
+        </p>
+
+        <p class="govuk-body">
+            An official contractor is a vetted organisation that may carry out some of the work on
+            behalf of your Local Authority. They will not sell you any services and will never ask for bank details.
+        </p>
+
+        @await Html.GovUkWarningText(new WarningTextViewModel
+        {
+            Text = "Your application will progress faster if they are more easily able to contact you."
+        })
+
+        <form action="@Url.Action(nameof(QuestionnaireController.Eligible_Post), "Questionnaire")" method="post" novalidate>
+            @(Html.HiddenFor(m => m.EntryPoint))
+            @Html.AntiForgeryToken()
+
+            @await Html.GovUkTextInputFor(
+                m => m.Name,
+                new LabelViewModel
+                {
+                    Text = "Full name",
+                    Classes = "govuk-label--m"
+                },
+                classes: "govuk-input govuk-input--width-20",
+                autocomplete: "name"
+            )
+
+            @await Html.GovUkInsetText(new InsetTextViewModel
+            {
+                Text = "You can be contacted by email, phone or both."
+            })
+
+            @await Html.GovUkRadiosFor(
+                m => m.CanContactByEmail,
+                fieldsetOptions: new FieldsetViewModel
+                {
+                    Legend = new LegendViewModel
+                    {
+                        Text = "Can they contact you by email?",
+                        Classes = "govuk-fieldset__legend--m"
+                    }
+                },
+                conditionalOptions: new Dictionary<YesOrNo, Conditional>
+                {
+                    {
+                        YesOrNo.Yes,
+                        new Conditional
+                        {
+                            Html = (@<text>
+                                         @await Html.GovUkTextInputFor(
+                                             m => m.EmailAddress,
+                                             new LabelViewModel
+                                             {
+                                                 Text = "Email address"
+                                             },
+                                             classes: "govuk-input govuk-input--width-20",
+                                             autocomplete: "email"
+                                         )
+                                     </text>)
+                        }
+                    }
+                })
+
+            @await Html.GovUkRadiosFor(
+                m => m.CanContactByPhone,
+                fieldsetOptions: new FieldsetViewModel
+                {
+                    Legend = new LegendViewModel
+                    {
+                        Text = "Can they contact you by phone?",
+                        Classes = "govuk-fieldset__legend--m"
+                    }
+                },
+                conditionalOptions: new Dictionary<YesOrNo, Conditional>
+                {
+                    {
+                        YesOrNo.Yes,
+                        new Conditional
+                        {
+                            Html = (@<text>
+                                         @await Html.GovUkTextInputFor(
+                                             m => m.Telephone,
+                                             new LabelViewModel
+                                             {
+                                                 Text = "Phone number"
+                                             },
+                                             classes: "govuk-input govuk-input--width-20",
+                                             autocomplete: "tel"
+                                         )
+                                     </text>)
+                        }
+                    }
+                })
+
+            <p class="govuk-body">
+                <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.NoConsent_Get), "Questionnaire")">I don't want to share my information</a>
+            </p>
+
+            @(await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Submit"
+            }))
+        </form>
+
+    </div>
+</div>
