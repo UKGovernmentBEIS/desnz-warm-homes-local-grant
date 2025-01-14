@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using GovUkDesignSystem.Attributes;
@@ -891,11 +892,19 @@ public class QuestionnaireController : Controller
 
     private static string GetLocalAuthorityNotParticipatingMessagePartialViewPath(Questionnaire questionnaire)
     {
-        var partialViewName = questionnaire.CustodianCode switch
+        var custodianCodesWithCustomText = new Dictionary<string, HashSet<string>>
         {
-            "2605" or "2610" or "2620" or "2625" or "2630" or "2635" => "BroadlandDistrictCouncil",
-            _ => "Default"
+            { "BroadlandDistrictCouncil", ["2605", "2610", "2620", "2625", "2630", "2635"] },
+            {
+                "GreaterManchesterCombinedAuthority",
+                ["4205", "4210", "4215", "4220", "4225", "4230", "4240", "4245", "4250"]
+            }
         };
+
+        var partialViewName = custodianCodesWithCustomText
+            .FirstOrDefault(group => group.Value.Contains(questionnaire.CustodianCode))
+            .Key ?? "Default";
+
         return $"~/Views/Partials/LocalAuthorityMessages/NotParticipating/{partialViewName}.cshtml";
     }
 
