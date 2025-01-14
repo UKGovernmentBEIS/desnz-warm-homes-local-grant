@@ -39,6 +39,7 @@ public class LocalAuthorityData
     // here: https://osdatahub.os.uk/docs/places/technicalSpecification
     // The local authority names and websites mainly come from the local-links-manager Gov.UK service
     // https://docs.publishing.service.gov.uk/repos/local-links-manager/checking-links.html
+    // The structure and status SST is documented on our swiki, page is titled "Source of truth for LAs & Consortia"
     public static readonly Dictionary<string, LocalAuthorityDetails> LocalAuthorityDetailsByCustodianCode = new()
     {
         { "9051", new LocalAuthorityDetails("Aberdeen City Council", LocalAuthorityStatus.NotTakingPart, "https://www.example.com", IncomeBandOptions[IncomeThreshold._36000], null) },
