@@ -12,3 +12,6 @@ bin/
 obj/
 **/wwwroot/compiled
 ci-server-build/
+
+scripts/*/*.csv
+scripts/*/*.txt

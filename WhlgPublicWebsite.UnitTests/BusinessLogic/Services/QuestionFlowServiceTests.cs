@@ -17,10 +17,11 @@ public class QuestionFlowServiceTests
     }
 
     private IQuestionFlowService questionFlowService;
-    private const string LiveCustodianCode = "3805";
-    private const string NotTakingPartCustodianCode = "9052";
-    private const string PendingCustodianCode = "3010";
-    private const string TakingFutureReferralsCustodianCode = "1005";
+    private const string LiveCustodianCode = "3810";
+    private const string NotTakingPartCustodianCode = "9051";
+    private const string NotParticipatingCustodianCode = "4205";
+    private const string PendingCustodianCode = "9053";
+    private const string TakingFutureReferralsCustodianCode = "9054";
 
     [TestCaseSource(nameof(BackTestCases))]
     public void RunBackLinkTestCases(QuestionFlowServiceTestCase testCase)
@@ -132,6 +133,18 @@ public class QuestionFlowServiceTests
             "Not taking part goes back to confirm local authority if no UPRN found",
             new Input(
                 QuestionFlowStep.NotTakingPart, uprn: null
+            ),
+            QuestionFlowStep.ConfirmLocalAuthority),
+        new(
+            "Not participating goes back to Address if UPRN found",
+            new Input(
+                QuestionFlowStep.NotParticipating, uprn: "100023336956"
+            ),
+            QuestionFlowStep.Address),
+        new(
+            "Not participating goes back to confirm local authority if no UPRN found",
+            new Input(
+                QuestionFlowStep.NotParticipating, uprn: null
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
         new(
@@ -290,6 +303,20 @@ public class QuestionFlowServiceTests
             QuestionFlowStep.Address),
         new(
             "Not taking part goes back to confirm local authority if no UPRN found if was changing answer",
+            new Input(
+                QuestionFlowStep.NotParticipating, uprn: null,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.ConfirmLocalAuthority),
+        new(
+            "Not participating goes back to Address if UPRN found if was changing answer",
+            new Input(
+                QuestionFlowStep.NotParticipating, uprn: "100023336956",
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.Address),
+        new(
+            "Not participating goes back to confirm local authority if no UPRN found if was changing answer",
             new Input(
                 QuestionFlowStep.NotTakingPart, uprn: null,
                 entryPoint: QuestionFlowStep.Address
@@ -475,6 +502,14 @@ public class QuestionFlowServiceTests
                 custodianCode: NotTakingPartCustodianCode
             ),
             QuestionFlowStep.NotTakingPart),
+        new(
+            "Confirm local authority continues to not participating if authority is participating",
+            new Input(
+                QuestionFlowStep.ConfirmLocalAuthority,
+                localAuthorityIsCorrect: true,
+                custodianCode: NotParticipatingCustodianCode
+            ),
+            QuestionFlowStep.NotParticipating),
         new(
             "Household income continues to check answers if income is eligible",
             new Input(
@@ -680,14 +715,14 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.CheckAnswers),
         new(
-            "Confirm local authority continues to not taking part if authority is not taking part if was changing answer",
+            "Confirm local authority continues to not participating if authority is not participating if was changing answer",
             new Input(
                 QuestionFlowStep.ConfirmLocalAuthority,
                 localAuthorityIsCorrect: true,
-                custodianCode: NotTakingPartCustodianCode,
+                custodianCode: NotParticipatingCustodianCode,
                 entryPoint: QuestionFlowStep.Address
             ),
-            QuestionFlowStep.NotTakingPart),
+            QuestionFlowStep.NotParticipating),
         new(
             "Household income returns to check answers if income is eligible and was changing answer",
             new Input(
