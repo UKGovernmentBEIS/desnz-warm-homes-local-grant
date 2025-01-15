@@ -1,72 +1,42 @@
-﻿using System;
-using System.Net.Http.Headers;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
+using WhlgPublicWebsite.BusinessLogic.Services.Password;
 
-namespace WhlgPublicWebsite.Middleware
+namespace WhlgPublicWebsite.Middleware;
+
+public class PasswordAuthMiddleware(RequestDelegate next)
 {
-    public class PasswordAuthMiddleware(RequestDelegate next, IOptions<PasswordAuthMiddlewareConfiguration> options)
+    private static readonly string[] IgnoredPaths = ["/health-check", "/password", "/compiled", "/assets"];
+    
+    public async Task Invoke(HttpContext httpContext, PasswordService passwordService)
     {
-        private readonly PasswordAuthMiddlewareConfiguration configuration = options.Value;
-
-        public async Task Invoke(HttpContext httpContext)
+        if (IgnoredPaths.Any(path => httpContext.Request.Path.StartsWithSegments(new PathString(path))))
         {
-            if (httpContext.Request.Path.StartsWithSegments(new PathString("/health-check")))
-            {
-                await next.Invoke(httpContext);
-                return;
-            }
-
-            if (IsAuthorised(httpContext))
-            {
-                await next.Invoke(httpContext);
-            }
-            else
-            {
-                SendUnauthorisedResponse(httpContext);
-            }
+            await next.Invoke(httpContext);
+            return;
         }
 
-        private bool IsAuthorised(HttpContext httpContext)
+        if (IsAuthorised(httpContext, passwordService))
         {
-            try
-            {
-                var authHeader = AuthenticationHeaderValue.Parse(httpContext.Request.Headers["Authorization"]);
-                var credentialBytes = Convert.FromBase64String(authHeader.Parameter);
-                var credentials = Encoding.UTF8.GetString(credentialBytes).Split(new[] { ':' }, 2);
-                var username = credentials[0];
-                var password = credentials[1];
-
-                return configuration.Username == username
-                       && configuration.Password == password;
-            }
-            catch
-            {
-                // Default to denying access if anything goes wrong
-                return false;
-            }
+            await next.Invoke(httpContext);
         }
-
-        private static void SendUnauthorisedResponse(HttpContext httpContext)
+        else
         {
-            httpContext.Response.StatusCode = 401;
-            AddOrUpdateHeader(httpContext, "WWW-Authenticate", $"Basic realm=\"{Constants.SERVICE_NAME}\"");
+            RedirectResponseToPasswordPage(httpContext);
         }
+    }
 
-        private static void AddOrUpdateHeader(HttpContext httpContext, string headerName, string headerValue)
-        {
-            if (httpContext.Response.Headers.ContainsKey(headerName))
-            {
-                httpContext.Response.Headers[headerName] = headerValue;
-            }
-            else
-            {
-                httpContext.Response.Headers.Append(headerName, headerValue);
-            }
-        }
+    private static bool IsAuthorised(HttpContext httpContext, PasswordService passwordService)
+    {
+        httpContext.Request.Cookies.TryGetValue("Authorization", out var auth);
 
+        return auth != null && passwordService.HashMatchesConfiguredPassword(auth);
+    }
 
+    private static void RedirectResponseToPasswordPage(HttpContext httpContext)
+    {
+        httpContext.Response.Redirect("/password");
     }
 }
+

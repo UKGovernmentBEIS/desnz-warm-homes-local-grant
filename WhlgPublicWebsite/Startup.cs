@@ -80,7 +80,6 @@ public class Startup
         services.AddScoped<IReferralFilterService, ReferralFilterService>();
         services.AddScoped<ISessionRecorderService, SessionRecorderService>();
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();
-        services.AddScoped<PasswordService>();
 
         services.AddMemoryCache();
         services.AddSingleton<StaticAssetsVersioningService>();
@@ -97,10 +96,11 @@ public class Startup
         ConfigureCookieService(services);
         ConfigureDatabaseContext(services);
         ConfigureGoogleAnalyticsService(services);
+        ConfigurePassword(services);
 
         if (!webHostEnvironment.IsDevelopment() && !webHostEnvironment.IsProduction())
-            services.Configure<PasswordAuthMiddlewareConfiguration>(
-                configuration.GetSection(PasswordAuthMiddlewareConfiguration.ConfigSection));
+            services.Configure<PasswordConfiguration>(
+                configuration.GetSection(PasswordConfiguration.ConfigSection));
 
         services.AddControllersWithViews(options =>
             {
@@ -230,6 +230,13 @@ public class Startup
         services.AddScoped<IReferralFollowUpNotificationService, ReferralFollowUpNotificationService>();
     }
 
+    private void ConfigurePassword(IServiceCollection services)
+    {
+        services.Configure<PasswordConfiguration>(
+            configuration.GetSection(PasswordConfiguration.ConfigSection));
+        services.AddScoped<PasswordService>();
+    }
+
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
@@ -298,7 +305,7 @@ public class Startup
     {
         if (!webHostEnvironment.IsDevelopment() && !webHostEnvironment.IsProduction())
         {
-            // Add HTTP Basic Authentication in our non-local-development and non-production environments
+            // Add password authentication in our non-local-development and non-production environments
             // to make sure people don't accidentally stumble across the site
             app.UseMiddleware<PasswordAuthMiddleware>();
         }

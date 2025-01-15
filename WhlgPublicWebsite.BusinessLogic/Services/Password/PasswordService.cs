@@ -1,13 +1,19 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Options;
 
 namespace WhlgPublicWebsite.BusinessLogic.Services.Password;
 
-public class PasswordService
+public class PasswordService(IOptions<PasswordConfiguration> options)
 {
-    public bool HashMatches(string hash, string password)
+    public bool HashMatchesConfiguredPassword(string hash)
     {
-        return HashPassword(password) == hash;
+        if (options.Value.Password == null)
+        {
+            return false;
+        }
+        
+        return HashPassword(options.Value.Password) == hash;
     }
 
     public string HashPassword(string password)
