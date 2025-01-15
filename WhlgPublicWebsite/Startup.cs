@@ -26,6 +26,7 @@ using WhlgPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using WhlgPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
 using WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using WhlgPublicWebsite.BusinessLogic.Services.EligiblePostcode;
+using WhlgPublicWebsite.BusinessLogic.Services.Password;
 using WhlgPublicWebsite.BusinessLogic.Services.QuestionFlow;
 using WhlgPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 using WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
@@ -79,6 +80,7 @@ public class Startup
         services.AddScoped<IReferralFilterService, ReferralFilterService>();
         services.AddScoped<ISessionRecorderService, SessionRecorderService>();
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+        services.AddScoped<PasswordService>();
 
         services.AddMemoryCache();
         services.AddSingleton<StaticAssetsVersioningService>();
@@ -295,8 +297,10 @@ public class Startup
     private void ConfigurePasswordAuth(IApplicationBuilder app)
     {
         if (!webHostEnvironment.IsDevelopment() && !webHostEnvironment.IsProduction())
+        {
             // Add HTTP Basic Authentication in our non-local-development and non-production environments
             // to make sure people don't accidentally stumble across the site
             app.UseMiddleware<PasswordAuthMiddleware>();
+        }
     }
 }
