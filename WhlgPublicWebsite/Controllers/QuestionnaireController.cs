@@ -139,10 +139,11 @@ public class QuestionnaireController : Controller
     public IActionResult OwnershipStatus_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-        var sharedOwnershipAnswerLabel = GovUkRadioCheckboxLabelTextAttribute.GetLabelText(OwnershipStatus.PrivateTenancy);
+        var sharedOwnershipAnswerLabel =
+            GovUkRadioCheckboxLabelTextAttribute.GetLabelText(OwnershipStatus.PrivateTenancy);
         var viewModel = new OwnershipStatusViewModel
         {
-            OwnershipStatus = questionnaire.OwnershipStatus, 
+            OwnershipStatus = questionnaire.OwnershipStatus,
             SharedOwnershipAnswerLabel = sharedOwnershipAnswerLabel,
             BackLink = GetBackUrl(QuestionFlowStep.OwnershipStatus, questionnaire, entryPoint)
         };
