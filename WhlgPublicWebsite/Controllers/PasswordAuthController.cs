@@ -10,9 +10,12 @@ namespace WhlgPublicWebsite.Controllers;
 public class PasswordAuthController(PasswordService passwordService) : Controller
 {
     [HttpGet]
-    public IActionResult Index_Get()
+    public IActionResult Index_Get([FromQuery] string returnPath)
     {
-        var viewModel = new PasswordAuthViewModel();
+        var viewModel = new PasswordAuthViewModel
+        {
+            ReturnPath = returnPath ?? "/"
+        };
         
         return View("Index", viewModel);
     }
@@ -20,14 +23,14 @@ public class PasswordAuthController(PasswordService passwordService) : Controlle
     [HttpPost]
     public IActionResult Index_Post(PasswordAuthViewModel viewModel)
     {
-        if (!ModelState.IsValid) return Index_Get();
+        if (!ModelState.IsValid) return Index_Get(viewModel.ReturnPath);
         
         var hashedPassword = passwordService.HashPassword(viewModel.Password);
 
         if (!passwordService.HashMatchesConfiguredPassword(hashedPassword))
         {
             ModelState.AddModelError("password", "The password is not correct");
-            return Index_Get();
+            return Index_Get(viewModel.ReturnPath);
         }
 
         Response.Cookies.Append(PasswordAuthService.PasswordAuthCookieName, hashedPassword, new CookieOptions
@@ -36,6 +39,6 @@ public class PasswordAuthController(PasswordService passwordService) : Controlle
             HttpOnly = true
         });
 
-        return Redirect("questionnaire");
+        return Redirect(viewModel.ReturnPath);
     }
 }

@@ -18,6 +18,7 @@
 
         <form action="@Url.Action(nameof(PasswordAuthController.Index_Post), "PasswordAuth")" method="post" novalidate>
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.ReturnPath)
             
             @await Html.GovUkTextInputFor(
                 m => m.Password,

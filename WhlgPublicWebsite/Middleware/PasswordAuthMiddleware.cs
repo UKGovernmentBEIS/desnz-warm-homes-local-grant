@@ -1,5 +1,7 @@
 ﻿using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Http;
 using WhlgPublicWebsite.BusinessLogic.Services.Password;
 
@@ -36,7 +38,8 @@ public class PasswordAuthMiddleware(RequestDelegate next)
 
     private static void RedirectResponseToPasswordPage(HttpContext httpContext)
     {
-        httpContext.Response.Redirect("/password");
+        var returnPath = HttpUtility.UrlEncode(httpContext.Request.Path.ToString(), Encoding.UTF8);
+        httpContext.Response.Redirect($"/password?returnPath={returnPath}");
     }
 }
 
