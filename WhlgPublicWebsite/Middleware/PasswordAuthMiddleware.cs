@@ -7,16 +7,9 @@ using Microsoft.Extensions.Options;
 
 namespace WhlgPublicWebsite.Middleware
 {
-    public class BasicAuthMiddleware
+    public class PasswordAuthMiddleware(RequestDelegate next, IOptions<PasswordAuthMiddlewareConfiguration> options)
     {
-        private readonly RequestDelegate next;
-        private readonly BasicAuthMiddlewareConfiguration configuration;
-
-        public BasicAuthMiddleware(RequestDelegate next, IOptions<BasicAuthMiddlewareConfiguration> options)
-        {
-            this.next = next;
-            configuration = options.Value;
-        }
+        private readonly PasswordAuthMiddlewareConfiguration configuration = options.Value;
 
         public async Task Invoke(HttpContext httpContext)
         {

@@ -97,8 +97,8 @@ public class Startup
         ConfigureGoogleAnalyticsService(services);
 
         if (!webHostEnvironment.IsDevelopment() && !webHostEnvironment.IsProduction())
-            services.Configure<BasicAuthMiddlewareConfiguration>(
-                configuration.GetSection(BasicAuthMiddlewareConfiguration.ConfigSection));
+            services.Configure<PasswordAuthMiddlewareConfiguration>(
+                configuration.GetSection(PasswordAuthMiddlewareConfiguration.ConfigSection));
 
         services.AddControllersWithViews(options =>
             {
@@ -283,7 +283,7 @@ public class Startup
 
         app.UseAuthorization();
 
-        ConfigureHttpBasicAuth(app);
+        ConfigurePasswordAuth(app);
 
         app.UseMiddleware<SecurityHeadersMiddleware>();
 
@@ -292,11 +292,11 @@ public class Startup
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }
 
-    private void ConfigureHttpBasicAuth(IApplicationBuilder app)
+    private void ConfigurePasswordAuth(IApplicationBuilder app)
     {
         if (!webHostEnvironment.IsDevelopment() && !webHostEnvironment.IsProduction())
             // Add HTTP Basic Authentication in our non-local-development and non-production environments
             // to make sure people don't accidentally stumble across the site
-            app.UseMiddleware<BasicAuthMiddleware>();
+            app.UseMiddleware<PasswordAuthMiddleware>();
     }
 }

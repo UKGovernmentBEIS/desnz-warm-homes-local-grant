@@ -196,8 +196,8 @@ Secrets must be configured in the ECS tasks, corresponding to the variables in `
 - `OsPlaces__Key`
 
 To prevent public access to DEV and UAT environments, we should also override the basic auth credentials:
-- `BasicAuth__Username`
-- `BasicAuth__Password`
+- `PasswordAuth__Username`
+- `PasswordAuth__Password`
 
 (These are not required for production)
 
