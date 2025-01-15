@@ -892,7 +892,7 @@ public class QuestionnaireController : Controller
 
     private static string GetLocalAuthorityNotParticipatingMessagePartialViewPath(Questionnaire questionnaire)
     {
-        var custodianCodesWithCustomText = new Dictionary<string, HashSet<string>>
+        var customPartialNamesByCustodianCode = new Dictionary<string, HashSet<string>>
         {
             { "BroadlandDistrictCouncil", ["2605", "2610", "2620", "2625", "2630", "2635"] },
             {
@@ -901,7 +901,7 @@ public class QuestionnaireController : Controller
             }
         };
 
-        var partialViewName = custodianCodesWithCustomText
+        var partialViewName = customPartialNamesByCustodianCode
             .FirstOrDefault(group => group.Value.Contains(questionnaire.CustodianCode))
             .Key ?? "Default";
 
