@@ -10,6 +10,7 @@ Add the ticket number below and uncomment
 # Checklist
 
 - [ ] I have made any necessary updates to the documentation
+- [ ] If necessary, I've added QA guidance notes to the original ticket
 - [ ] I have checked there are no unnecessary IDE warnings in this PR
 - [ ] I have checked there are no unintentional line ending changes
 - [ ] I have added tests where applicable
