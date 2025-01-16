@@ -894,7 +894,6 @@ public class QuestionnaireController : Controller
     {
         var partialViewName = questionnaire.CustodianCode switch
         {
-            "2605" or "2610" or "2620" or "2625" or "2630" or "2635" => "BroadlandDistrictCouncil",
             "4205" or "4210" or "4215" or "4220" or "4225" or "4230" or "4240" or "4245" or "4250" =>
                 "GreaterManchesterCombinedAuthority",
             _ => "Default"
