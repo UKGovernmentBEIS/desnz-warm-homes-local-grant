@@ -45,12 +45,15 @@ namespace WhlgPublicWebsite;
 public class Startup
 {
     private readonly IConfiguration configuration;
+    private readonly PasswordAuthService passwordAuthService;
     private readonly IWebHostEnvironment webHostEnvironment;
 
     public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
     {
         this.configuration = configuration;
         this.webHostEnvironment = webHostEnvironment;
+
+        passwordAuthService = new PasswordAuthService(this.webHostEnvironment);
     }
 
     // This method gets called by the runtime. Use this method to add services to the container.
@@ -97,10 +100,6 @@ public class Startup
         ConfigureDatabaseContext(services);
         ConfigureGoogleAnalyticsService(services);
         ConfigurePassword(services);
-
-        if (!webHostEnvironment.IsDevelopment() && !webHostEnvironment.IsProduction())
-            services.Configure<PasswordConfiguration>(
-                configuration.GetSection(PasswordConfiguration.ConfigSection));
 
         services.AddControllersWithViews(options =>
             {
@@ -235,6 +234,7 @@ public class Startup
         services.Configure<PasswordConfiguration>(
             configuration.GetSection(PasswordConfiguration.ConfigSection));
         services.AddScoped<PasswordService>();
+        services.AddScoped<PasswordAuthService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -292,7 +292,10 @@ public class Startup
 
         app.UseAuthorization();
 
-        ConfigurePasswordAuth(app);
+        if (passwordAuthService.PasswordAuthIsEnabled())
+        {
+            ConfigurePasswordAuth(app);
+        }
 
         app.UseMiddleware<SecurityHeadersMiddleware>();
 
@@ -303,11 +306,8 @@ public class Startup
 
     private void ConfigurePasswordAuth(IApplicationBuilder app)
     {
-        if (!webHostEnvironment.IsDevelopment() && !webHostEnvironment.IsProduction())
-        {
-            // Add password authentication in our non-local-development and non-production environments
-            // to make sure people don't accidentally stumble across the site
-            app.UseMiddleware<PasswordAuthMiddleware>();
-        }
+        // Add password authentication in our non-local-development and non-production environments
+        // to make sure people don't accidentally stumble across the site
+        app.UseMiddleware<PasswordAuthMiddleware>();
     }
 }

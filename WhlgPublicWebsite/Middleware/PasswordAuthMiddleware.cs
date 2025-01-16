@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Http;
 using WhlgPublicWebsite.BusinessLogic.Services.Password;
+using WhlgPublicWebsite.Services;
 
 namespace WhlgPublicWebsite.Middleware;
 
@@ -31,7 +32,7 @@ public class PasswordAuthMiddleware(RequestDelegate next)
 
     private static bool IsAuthorised(HttpContext httpContext, PasswordService passwordService)
     {
-        httpContext.Request.Cookies.TryGetValue("Authorization", out var auth);
+        httpContext.Request.Cookies.TryGetValue(PasswordAuthService.PasswordAuthCookieName, out var auth);
 
         return auth != null && passwordService.HashMatchesConfiguredPassword(auth);
     }

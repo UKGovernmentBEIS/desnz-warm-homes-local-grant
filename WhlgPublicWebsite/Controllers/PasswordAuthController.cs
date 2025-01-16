@@ -2,15 +2,22 @@
 using Microsoft.AspNetCore.Mvc;
 using WhlgPublicWebsite.BusinessLogic.Services.Password;
 using WhlgPublicWebsite.Models.PasswordAuth;
+using WhlgPublicWebsite.Services;
 
 namespace WhlgPublicWebsite.Controllers;
 
 [Route("password")]
-public class PasswordAuthController(PasswordService passwordService) : Controller
+public class PasswordAuthController(PasswordService passwordService, PasswordAuthService passwordAuthService)
+    : Controller
 {
     [HttpGet]
     public IActionResult Index_Get([FromQuery] string returnPath)
     {
+        if (!passwordAuthService.PasswordAuthIsEnabled())
+        {
+            return NotFound();
+        }
+
         var viewModel = new PasswordAuthViewModel
         {
             ReturnPath = returnPath ?? "/"
