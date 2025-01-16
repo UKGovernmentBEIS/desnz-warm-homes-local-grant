@@ -1,4 +1,5 @@
 ﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.Attributes
 @using GovUkDesignSystem.GovUkDesignSystemComponents
 @using WhlgPublicWebsite.BusinessLogic.Models.Enums
 @using Microsoft.AspNetCore.Mvc.TagHelpers
@@ -14,15 +15,15 @@
         @await Html.GovUkBackLink(new BackLinkViewModel
         {
             Text = "Back",
-            Href = Model.BackLink,
+            Href = Model.BackLink
         })
     </nav>
 }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        
-        <form action="@Url.Action(nameof(QuestionnaireController.OwnershipStatus_Post), "Questionnaire")" method="post" novalidate>  
+
+        <form action="@Url.Action(nameof(QuestionnaireController.OwnershipStatus_Post), "Questionnaire")" method="post" novalidate>
             @Html.AntiForgeryToken()
             @(Html.HiddenFor(m => m.EntryPoint))
 
@@ -36,22 +37,21 @@
                         IsPageHeading = true
                     }
                 },
-                radioHints: new Dictionary<OwnershipStatus, HintViewModel>()
+                hintOptions: new HintViewModel
                 {
-                    {
-                        OwnershipStatus.PrivateTenancy, new HintViewModel()
-                        {
-                            Html = @<text>If you have a <a href="https://www.gov.uk/shared-ownership-scheme">shared ownership home</a> select this one.</text>
-                        }
-                    }
+                    Html = @<text>
+                                <p class="govuk-body">
+                                    If you have a <a href="https://www.gov.uk/shared-ownership-scheme">shared ownership property,</a> please select "@Model.SharedOwnershipAnswerLabel."
+                                </p>
+                            </text>
                 })
 
             @(await Html.GovUkButton(new ButtonViewModel
             {
-                Text = "Continue",
+                Text = "Continue"
             }))
 
         </form>
-        
+
     </div>
 </div>

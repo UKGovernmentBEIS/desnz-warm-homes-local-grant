@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using GovUkDesignSystem.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
@@ -138,10 +139,12 @@ public class QuestionnaireController : Controller
     public IActionResult OwnershipStatus_Get(QuestionFlowStep? entryPoint)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
-
+        var sharedOwnershipAnswerLabel =
+            GovUkRadioCheckboxLabelTextAttribute.GetLabelText(OwnershipStatus.PrivateTenancy);
         var viewModel = new OwnershipStatusViewModel
         {
             OwnershipStatus = questionnaire.OwnershipStatus,
+            SharedOwnershipAnswerLabel = sharedOwnershipAnswerLabel,
             BackLink = GetBackUrl(QuestionFlowStep.OwnershipStatus, questionnaire, entryPoint)
         };
 

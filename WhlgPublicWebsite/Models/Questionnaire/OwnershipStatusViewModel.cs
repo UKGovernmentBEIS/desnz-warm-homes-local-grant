@@ -7,4 +7,6 @@ public class OwnershipStatusViewModel : QuestionFlowViewModel
 {
     [GovUkValidateRequired(ErrorMessageIfMissing = "Select your ownership status of the property")]
     public OwnershipStatus? OwnershipStatus { get; set; }
+
+    public string SharedOwnershipAnswerLabel { get; set; }
 }
