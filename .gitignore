@@ -1,8 +1,7 @@
 
 # User preferences
 .idea
-**.sln.DotSettings
-**.sln.DotSettings.user
+WarmHomesLocalGrant.sln.DotSettings.user
 
 # Dependencies
 node_modules/
