@@ -12,7 +12,7 @@ public class PasswordService(IOptions<PasswordConfiguration> options)
         {
             return false;
         }
-        
+
         return HashPassword(options.Value.Password) == hash;
     }
 

@@ -10,7 +10,7 @@ namespace WhlgPublicWebsite.Middleware;
 public class PasswordAuthMiddleware(RequestDelegate next)
 {
     private static readonly string[] IgnoredPaths = ["/health-check", "/password", "/compiled", "/assets"];
-    
+
     public async Task Invoke(HttpContext httpContext, PasswordService passwordService)
     {
         if (IgnoredPaths.Any(path => httpContext.Request.Path.StartsWithSegments(new PathString(path))))
@@ -42,4 +42,3 @@ public class PasswordAuthMiddleware(RequestDelegate next)
         httpContext.Response.Redirect($"/password?returnPath={returnPath}");
     }
 }
-

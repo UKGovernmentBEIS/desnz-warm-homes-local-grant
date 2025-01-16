@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WhlgPublicWebsite.BusinessLogic.Services.Password;
 using WhlgPublicWebsite.Models.PasswordAuth;
@@ -16,10 +15,10 @@ public class PasswordAuthController(PasswordService passwordService) : Controlle
         {
             ReturnPath = returnPath ?? "/"
         };
-        
+
         return View("Index", viewModel);
     }
-    
+
     [HttpPost]
     public IActionResult Index_Post(PasswordAuthViewModel viewModel)
     {
