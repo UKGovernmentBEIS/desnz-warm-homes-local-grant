@@ -60,7 +60,7 @@ public class LocalAuthorityData
         { "3010", new LocalAuthorityDetails("Bassetlaw District Council", LocalAuthorityStatus.Live, "https://www.bassetlaw.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Nottingham City Council") },
         { "114", new LocalAuthorityDetails("Bath and North East Somerset Council", LocalAuthorityStatus.Live, "https://www.bathnes.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Bristol City Council") },
         { "235", new LocalAuthorityDetails("Bedford Borough Council", LocalAuthorityStatus.Live, "https://www.bedford.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
-        { "4605", new LocalAuthorityDetails("Birmingham City Council", LocalAuthorityStatus.Live, "https://www.birmingham.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "West Midlands Combined Authority") },
+        { "4605", new LocalAuthorityDetails("Birmingham City Council", LocalAuthorityStatus.NotParticipating, "https://www.birmingham.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "West Midlands Combined Authority") },
         { "2405", new LocalAuthorityDetails("Blaby District Council", LocalAuthorityStatus.Live, "https://www.blaby.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Nottingham City Council") },
         { "2372", new LocalAuthorityDetails("Blackburn with Darwen Borough Council", LocalAuthorityStatus.Live, "https://www.blackburn.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Blackpool Council") },
         { "2373", new LocalAuthorityDetails("Blackpool Council", LocalAuthorityStatus.Live, "https://www.blackpool.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Blackpool Council") },

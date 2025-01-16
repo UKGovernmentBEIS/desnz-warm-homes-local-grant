@@ -896,6 +896,7 @@ public class QuestionnaireController : Controller
         {
             "4205" or "4210" or "4215" or "4220" or "4225" or "4230" or "4240" or "4245" or "4250" =>
                 "GreaterManchesterCombinedAuthority",
+            "4605" => "WestMidlandsCombinedAuthority",
             _ => "Default"
         };
 
