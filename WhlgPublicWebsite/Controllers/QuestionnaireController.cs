@@ -659,6 +659,8 @@ public class QuestionnaireController : Controller
             LocalAuthorityIsLive = questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Live,
             LocalAuthorityIsPending =
                 questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Pending,
+            LocalAuthorityMessagePartialViewPath =
+                GetLocalAuthorityEligibleMessagePartialViewPath(questionnaire),
             CanContactByEmail = questionnaire.LaCanContactByEmail.ToNullableYesOrNo(),
             CanContactByPhone = questionnaire.LaCanContactByPhone.ToNullableYesOrNo(),
             Name = questionnaire.LaContactName,
@@ -889,6 +891,17 @@ public class QuestionnaireController : Controller
 
         return ret;
     }
+    
+    private static string GetLocalAuthorityEligibleMessagePartialViewPath(Questionnaire questionnaire)
+    {
+        var partialViewName = questionnaire.CustodianCode switch
+        {
+            "4610" => "WestMidlandsCombinedAuthority",
+            _ => "Default"
+        };
+
+        return $"~/Views/Partials/LocalAuthorityMessages/Eligible/{partialViewName}.cshtml";
+    }
 
     private static string GetLocalAuthorityNotParticipatingMessagePartialViewPath(Questionnaire questionnaire)
     {
@@ -919,6 +932,7 @@ public class QuestionnaireController : Controller
             {
                 (LocalAuthorityData.LocalAuthorityStatus.Pending, _) => "Pending",
                 (LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals, _) => "TakingFutureReferrals",
+                (LocalAuthorityData.LocalAuthorityStatus.Live, "4610") => "WestMidlandsCombinedAuthority", // Walsall
                 _ => "Default"
             };
         return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";

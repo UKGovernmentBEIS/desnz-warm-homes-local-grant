@@ -33,14 +33,6 @@
 
         @await Html.PartialAsync(Model.LocalAuthorityMessagePartialViewPath)
 
-        @if (Model.LocalAuthorityIsLive)
-        {
-            @await Html.GovUkInsetText(new InsetTextViewModel
-                   {
-                       Text = "If you do not receive a response within 10 working days, please contact your Local Authority directly."
-                   })
-        }
-
         <p class="govuk-body">To enquire about your application visit <a href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName's website</a>.</p>
 
         @if (Model.EmailPreferenceSubmitted)
