@@ -1,8 +1,8 @@
 ﻿using GovUkDesignSystem.Attributes.ValidationAttributes;
 
-namespace WhlgPublicWebsite.Models.PasswordAuth;
+namespace WhlgPublicWebsite.Models.Auth;
 
-public class PasswordAuthViewModel
+public class AuthViewModel
 {
     [GovUkValidateRequired(ErrorMessageIfMissing = "Enter password")]
     public string Password { get; set; }

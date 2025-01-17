@@ -8,7 +8,7 @@ using WhlgPublicWebsite.Services;
 
 namespace WhlgPublicWebsite.Middleware;
 
-public class PasswordAuthMiddleware(RequestDelegate next)
+public class AuthMiddleware(RequestDelegate next)
 {
     private static readonly string[] IgnoredPaths = ["/health-check", "/password", "/compiled", "/assets"];
 
@@ -32,7 +32,7 @@ public class PasswordAuthMiddleware(RequestDelegate next)
 
     private static bool IsAuthorised(HttpContext httpContext, PasswordService passwordService)
     {
-        httpContext.Request.Cookies.TryGetValue(PasswordAuthService.PasswordAuthCookieName, out var auth);
+        httpContext.Request.Cookies.TryGetValue(AuthService.AuthCookieName, out var auth);
 
         return auth != null && passwordService.HashMatchesConfiguredPassword(auth);
     }

@@ -45,7 +45,7 @@ namespace WhlgPublicWebsite;
 public class Startup
 {
     private readonly IConfiguration configuration;
-    private readonly PasswordAuthService passwordAuthService;
+    private readonly AuthService authService;
     private readonly IWebHostEnvironment webHostEnvironment;
 
     public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
@@ -53,7 +53,7 @@ public class Startup
         this.configuration = configuration;
         this.webHostEnvironment = webHostEnvironment;
 
-        passwordAuthService = new PasswordAuthService(this.webHostEnvironment);
+        authService = new AuthService(this.webHostEnvironment);
     }
 
     // This method gets called by the runtime. Use this method to add services to the container.
@@ -234,7 +234,7 @@ public class Startup
         services.Configure<PasswordConfiguration>(
             configuration.GetSection(PasswordConfiguration.ConfigSection));
         services.AddScoped<PasswordService>();
-        services.AddScoped<PasswordAuthService>();
+        services.AddScoped<AuthService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -292,9 +292,9 @@ public class Startup
 
         app.UseAuthorization();
 
-        if (passwordAuthService.PasswordAuthIsEnabled())
+        if (authService.AuthIsEnabled())
         {
-            ConfigurePasswordAuth(app);
+            ConfigureAuth(app);
         }
 
         app.UseMiddleware<SecurityHeadersMiddleware>();
@@ -304,10 +304,10 @@ public class Startup
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }
 
-    private void ConfigurePasswordAuth(IApplicationBuilder app)
+    private void ConfigureAuth(IApplicationBuilder app)
     {
         // Add password authentication in our non-local-development and non-production environments
         // to make sure people don't accidentally stumble across the site
-        app.UseMiddleware<PasswordAuthMiddleware>();
+        app.UseMiddleware<AuthMiddleware>();
     }
 }

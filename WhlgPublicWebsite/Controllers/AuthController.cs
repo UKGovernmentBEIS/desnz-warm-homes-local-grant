@@ -1,24 +1,24 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WhlgPublicWebsite.BusinessLogic.Services.Password;
-using WhlgPublicWebsite.Models.PasswordAuth;
+using WhlgPublicWebsite.Models.Auth;
 using WhlgPublicWebsite.Services;
 
 namespace WhlgPublicWebsite.Controllers;
 
 [Route("password")]
-public class PasswordAuthController(PasswordService passwordService, PasswordAuthService passwordAuthService)
+public class AuthController(PasswordService passwordService, AuthService authService)
     : Controller
 {
     [HttpGet]
     public IActionResult Index_Get([FromQuery] string returnPath)
     {
-        if (!passwordAuthService.PasswordAuthIsEnabled())
+        if (!authService.AuthIsEnabled())
         {
             return NotFound();
         }
 
-        var viewModel = new PasswordAuthViewModel
+        var viewModel = new AuthViewModel
         {
             ReturnPath = returnPath ?? "/"
         };
@@ -27,7 +27,7 @@ public class PasswordAuthController(PasswordService passwordService, PasswordAut
     }
 
     [HttpPost]
-    public IActionResult Index_Post(PasswordAuthViewModel viewModel)
+    public IActionResult Index_Post(AuthViewModel viewModel)
     {
         if (!ModelState.IsValid) return Index_Get(viewModel.ReturnPath);
         
@@ -39,7 +39,7 @@ public class PasswordAuthController(PasswordService passwordService, PasswordAut
             return Index_Get(viewModel.ReturnPath);
         }
 
-        Response.Cookies.Append(PasswordAuthService.PasswordAuthCookieName, hashedPassword, new CookieOptions
+        Response.Cookies.Append(AuthService.AuthCookieName, hashedPassword, new CookieOptions
         {
             Secure = true,
             HttpOnly = true

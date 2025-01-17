@@ -2,7 +2,7 @@
 @using GovUkDesignSystem
 @using GovUkDesignSystem.GovUkDesignSystemComponents
 @using WhlgPublicWebsite.Controllers
-@model WhlgPublicWebsite.Models.PasswordAuth.PasswordAuthViewModel
+@model WhlgPublicWebsite.Models.Auth.AuthViewModel
 
 @{
     ViewBag.Title = "Input Password";
@@ -16,7 +16,7 @@
             It is not a real service. You should only continue if you have been invited to test this prototype.
         </p>
 
-        <form action="@Url.Action(nameof(PasswordAuthController.Index_Post), "PasswordAuth")" method="post" novalidate>
+        <form action="@Url.Action(nameof(AuthController.Index_Post), "Auth")" method="post" novalidate>
             @Html.AntiForgeryToken()
             @Html.HiddenFor(m => m.ReturnPath)
             

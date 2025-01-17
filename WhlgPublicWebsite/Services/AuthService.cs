@@ -3,11 +3,11 @@ using Microsoft.Extensions.Hosting;
 
 namespace WhlgPublicWebsite.Services;
 
-public class PasswordAuthService(IWebHostEnvironment webHostEnvironment)
+public class AuthService(IWebHostEnvironment webHostEnvironment)
 {
-    public const string PasswordAuthCookieName = "authentication";
+    public const string AuthCookieName = "authentication";
 
-    public bool PasswordAuthIsEnabled()
+    public bool AuthIsEnabled()
     {
         // Note IsDevelopment() returns true only on local dev, and not our deployed development environment.
         // So, this function should be true on deployed development and staging only.

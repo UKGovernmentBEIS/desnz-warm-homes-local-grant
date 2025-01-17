@@ -2,7 +2,7 @@
 
 public class PasswordConfiguration
 {
-    public const string ConfigSection = "PasswordAuth";
+    public const string ConfigSection = "Auth";
 
     public string Password { get; set; }
 }
