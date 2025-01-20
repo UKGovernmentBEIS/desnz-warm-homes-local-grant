@@ -7,10 +7,21 @@ namespace WhlgPublicWebsite.Data;
 public class DataAccessProvider : IDataAccessProvider
 {
     private readonly WhlgDbContext context;
+    
+    private readonly IEnumerable<string> liveWmcaCustodianCodes;
 
     public DataAccessProvider(WhlgDbContext context)
     {
         this.context = context;
+        liveWmcaCustodianCodes = GetLiveWmcaCustodianCodes();
+    }
+    
+    private IEnumerable<string> GetLiveWmcaCustodianCodes()
+    {
+        return LocalAuthorityData.LocalAuthorityDetailsByCustodianCode
+            .Where(localAuthority => localAuthority.Value.Consortium == "West Midlands Combined Authority" && localAuthority.Value.Status == LocalAuthorityData.LocalAuthorityStatus.Live)
+            .Select(localAuthority => localAuthority.Key)
+            .ToList();
     }
 
     public async Task<ReferralRequest> PersistNewReferralRequestAsync(ReferralRequest referralRequest)
@@ -74,7 +85,7 @@ public class DataAccessProvider : IDataAccessProvider
     public async Task<IList<ReferralRequest>> GetAllWhlgReferralRequests()
     {
         return await context.ReferralRequests
-            .Where(rr => !rr.WasSubmittedForFutureGrants)
+            .Where(rr => !rr.WasSubmittedForFutureGrants && !liveWmcaCustodianCodes.Contains(rr.CustodianCode))
             .Include(rr => rr.FollowUp)
             .ToListAsync();
     }
@@ -83,7 +94,8 @@ public class DataAccessProvider : IDataAccessProvider
         DateTime endDate)
     {
         return await context.ReferralRequests
-            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.WasSubmittedForFutureGrants)
+            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.WasSubmittedForFutureGrants && 
+                         !liveWmcaCustodianCodes.Contains(rr.CustodianCode))
             .Include(rr => rr.FollowUp)
             .ToListAsync();
     }
@@ -94,7 +106,7 @@ public class DataAccessProvider : IDataAccessProvider
     {
         return await context.ReferralRequests
             .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.FollowUpEmailSent &&
-                         !rr.WasSubmittedForFutureGrants)
+                         !rr.WasSubmittedForFutureGrants && !liveWmcaCustodianCodes.Contains(rr.CustodianCode))
             .ToListAsync();
     }
 
