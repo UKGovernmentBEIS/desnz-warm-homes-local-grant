@@ -891,12 +891,13 @@ public class QuestionnaireController : Controller
 
         return ret;
     }
-    
+
     private static string GetLocalAuthorityEligibleMessagePartialViewPath(Questionnaire questionnaire)
     {
         var partialViewName = questionnaire.CustodianCode switch
         {
-            "4610" => "WestMidlandsCombinedAuthority",
+            "4605" or "4610" or "4615" or "4620" or "4625" or "4630"
+                or "4635" => "WestMidlandsCombinedAuthority",
             _ => "Default"
         };
 
@@ -909,7 +910,8 @@ public class QuestionnaireController : Controller
         {
             "4205" or "4210" or "4215" or "4220" or "4225" or "4230" or "4240" or "4245" or "4250" =>
                 "GreaterManchesterCombinedAuthority",
-            "4605" => "WestMidlandsCombinedAuthority",
+            "4605" or "4610" or "4615" or "4620" or "4625" or "4630"
+                or "4635" => "WestMidlandsCombinedAuthority",
             _ => "Default"
         };
 
@@ -932,7 +934,8 @@ public class QuestionnaireController : Controller
             {
                 (LocalAuthorityData.LocalAuthorityStatus.Pending, _) => "Pending",
                 (LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals, _) => "TakingFutureReferrals",
-                (LocalAuthorityData.LocalAuthorityStatus.Live, "4610") => "WestMidlandsCombinedAuthority", // Walsall
+                (LocalAuthorityData.LocalAuthorityStatus.Live, "4605" or "4610" or "4615" or "4620" or "4625" or "4630"
+                    or "4635") => "WestMidlandsCombinedAuthority",
                 _ => "Default"
             };
         return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";
