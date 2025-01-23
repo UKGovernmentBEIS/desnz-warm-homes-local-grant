@@ -34,21 +34,14 @@ function isWestMidlandsCombinedAuthorityTrailblazer(localAuthority) {
 
 function getLaStatus(localAuthority) {
     switch (localAuthority["WHLG Status"]) {
-        case "":
+        case "Live":
             return "Live";
         case "Not Taking Part":
             return "NotTakingPart";
-        case "Trailblazer":
-            // trailblazers use an existing status 
-            if (isGreaterManchesterTrailblazer(localAuthority)) {
-                return "NotParticipating";
-            } else if (isWestMidlandsCombinedAuthorityTrailblazer(localAuthority)) { // aka birmingham
-                return "Live";
-            } else {
-                throw new Error("LA is an unrecognised trailblazer");
-            }
+        case "Not Participating":
+            return "NotParticipating"
         default:
-            throw new Error("LA in invalid state to determine status");
+            throw new Error(`LA in invalid state to determine status, ${JSON.stringify(localAuthority)}`);
     }
 }
 
@@ -61,12 +54,12 @@ function getLaConsortiumName(localAuthority) {
         case "":
             return undefined;
         default:
-            throw new Error("LA in invalid state to determine consortium name");
+            throw new Error(`LA in invalid state to determine consortium name, ${JSON.stringify(localAuthority)}`);
     }
 }
 
 function getLaWebsite(localAuthority) {
-    return "https://www.example.com"
+    return localAuthority["URL"];
 }
 
 function getLaConsortium(localAuthority, consortia) {
