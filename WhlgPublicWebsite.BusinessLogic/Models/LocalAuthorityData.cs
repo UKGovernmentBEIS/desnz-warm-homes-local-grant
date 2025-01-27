@@ -32,6 +32,18 @@ public class LocalAuthorityData
         { IncomeThreshold._36000, new[] { IncomeBand.UnderOrEqualTo36000, IncomeBand.GreaterThan36000 } }
     };
 
+    private static IEnumerable<string> FilterCustodianCodes(
+        string consortium,
+        LocalAuthorityStatus? status = null)
+    {
+        return LocalAuthorityDetailsByCustodianCode
+            .Where(localAuthority =>
+                localAuthority.Value.Consortium == consortium &&
+                (status == null || localAuthority.Value.Status == status))
+            .Select(localAuthority => localAuthority.Key)
+            .ToList();
+    }
+
     // The list of custodian codes comes from the publicly available "Local custodian codes" download link
     // on https://docs.os.uk/os-downloads/addressing-and-location/addressbase-core-principles/addressbase-local-custodian-codes
     // This link was initially retrieved from
@@ -402,4 +414,14 @@ public class LocalAuthorityData
         { "2370", new LocalAuthorityDetails("Wyre Borough Council", LocalAuthorityStatus.Live, "https://www.wychavon.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Blackpool Council") },
         { "1845", new LocalAuthorityDetails("Wyre Forest District Council", LocalAuthorityStatus.Live, "https://www.wyreforestdc.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
     };
+
+    public static readonly IEnumerable<string> LiveWmcaCustodianCodes = FilterCustodianCodes(
+        ConsortiumNames.WestMidlandsCombinedAuthority,
+        LocalAuthorityStatus.Live);
+
+    public static bool CustodianCodeIsInConsortium(string custodianCode, string consortium)
+    {
+        return LocalAuthorityDetailsByCustodianCode.TryGetValue(custodianCode, out var localAuthority) &&
+               localAuthority.Consortium == consortium;
+    }
 }

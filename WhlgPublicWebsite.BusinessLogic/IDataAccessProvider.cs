@@ -9,6 +9,7 @@ public interface IDataAccessProvider
     Task PersistNotificationConsentAsync(string referralId, NotificationDetails notificationDetails);
     Task<IList<ReferralRequest>> GetWhlgUnsubmittedReferralRequestsAsync();
     Task<IList<ReferralRequest>> GetAllWhlgReferralRequests();
+    Task<IList<ReferralRequest>> GetAllWhlgReferralRequestsForSlaComplianceReporting();
     Task<IList<ReferralRequest>> GetWhlgReferralRequestsBetweenDates(DateTime startDate, DateTime endDate);
 
     Task<IList<ReferralRequest>> GetWhlgReferralRequestsWithNoFollowUpBetweenDates(DateTime startDate,

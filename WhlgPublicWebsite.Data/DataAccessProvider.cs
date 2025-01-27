@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using WhlgPublicWebsite.BusinessLogic;
 using WhlgPublicWebsite.BusinessLogic.Models;
 
@@ -7,21 +8,10 @@ namespace WhlgPublicWebsite.Data;
 public class DataAccessProvider : IDataAccessProvider
 {
     private readonly WhlgDbContext context;
-    
-    private readonly IEnumerable<string> liveWmcaCustodianCodes;
 
     public DataAccessProvider(WhlgDbContext context)
     {
         this.context = context;
-        liveWmcaCustodianCodes = GetLiveWmcaCustodianCodes();
-    }
-    
-    private IEnumerable<string> GetLiveWmcaCustodianCodes()
-    {
-        return LocalAuthorityData.LocalAuthorityDetailsByCustodianCode
-            .Where(localAuthority => localAuthority.Value.Consortium == "West Midlands Combined Authority" && localAuthority.Value.Status == LocalAuthorityData.LocalAuthorityStatus.Live)
-            .Select(localAuthority => localAuthority.Key)
-            .ToList();
     }
 
     public async Task<ReferralRequest> PersistNewReferralRequestAsync(ReferralRequest referralRequest)
@@ -85,7 +75,15 @@ public class DataAccessProvider : IDataAccessProvider
     public async Task<IList<ReferralRequest>> GetAllWhlgReferralRequests()
     {
         return await context.ReferralRequests
-            .Where(rr => !rr.WasSubmittedForFutureGrants && !liveWmcaCustodianCodes.Contains(rr.CustodianCode))
+            .Where(rr => !rr.WasSubmittedForFutureGrants)
+            .Include(rr => rr.FollowUp)
+            .ToListAsync();
+    }
+    
+    public async Task<IList<ReferralRequest>> GetAllWhlgReferralRequestsForSlaComplianceReporting()
+    {
+        return await context.ReferralRequests
+            .Where(IsExcludedFromSlaComplianceReporting)
             .Include(rr => rr.FollowUp)
             .ToListAsync();
     }
@@ -94,8 +92,8 @@ public class DataAccessProvider : IDataAccessProvider
         DateTime endDate)
     {
         return await context.ReferralRequests
-            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.WasSubmittedForFutureGrants && 
-                         !liveWmcaCustodianCodes.Contains(rr.CustodianCode))
+            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate)
+            .Where(IsExcludedFromSlaComplianceReporting)
             .Include(rr => rr.FollowUp)
             .ToListAsync();
     }
@@ -105,8 +103,8 @@ public class DataAccessProvider : IDataAccessProvider
         DateTime endDate)
     {
         return await context.ReferralRequests
-            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.FollowUpEmailSent &&
-                         !rr.WasSubmittedForFutureGrants && !liveWmcaCustodianCodes.Contains(rr.CustodianCode))
+            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.FollowUpEmailSent)
+            .Where(IsExcludedFromSlaComplianceReporting)
             .ToListAsync();
     }
 
@@ -165,4 +163,7 @@ public class DataAccessProvider : IDataAccessProvider
         referralRequest.IsEligible = isEligible;
         await context.SaveChangesAsync();
     }
+    
+    private static Expression<Func<ReferralRequest, bool>> IsExcludedFromSlaComplianceReporting => rr =>
+        !(rr.WasSubmittedForFutureGrants || LocalAuthorityData.LiveWmcaCustodianCodes.Contains(rr.CustodianCode));
 }
