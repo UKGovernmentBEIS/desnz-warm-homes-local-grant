@@ -134,7 +134,7 @@ We follow a process similar to git-flow, with 3 branches corresponding to each o
 - `main` - [Production](https://www.check-eligibility-for-home-upgrade-grant.service.gov.uk)
 
 For normal development:
-- Create a branch from `develop`
+- Create a branch from `develop` with the following name format - `PC-XXXX-short-description-of-ticket` (with `PC-XXXX` to be replaced by your ticket number).
 - Make changes on the branch, e.g. `feat/add-new-widget`
 - Raise a PR back to `develop` once the feature is complete
 - If the PR is accepted merge the branch into `develop`
@@ -195,9 +195,8 @@ Secrets must be configured in the ECS tasks, corresponding to the variables in `
 - `GovUkNotify__PendingReferralEmailRecipients`
 - `OsPlaces__Key`
 
-To prevent public access to DEV and UAT environments, we should also override the basic auth credentials:
-- `BasicAuth__Username`
-- `BasicAuth__Password`
+To prevent public access to DEV and UAT environments, we should also override the auth credentials:
+- `Auth__Password`
 
 (These are not required for production)
 

@@ -1,8 +1,7 @@
 
 # User preferences
 .idea
-**.sln.DotSettings
-**.sln.DotSettings.user
+WarmHomesLocalGrant.sln.DotSettings.user
 
 # Dependencies
 node_modules/
@@ -12,3 +11,6 @@ bin/
 obj/
 **/wwwroot/compiled
 ci-server-build/
+
+scripts/*/*.csv
+scripts/*/*.txt
