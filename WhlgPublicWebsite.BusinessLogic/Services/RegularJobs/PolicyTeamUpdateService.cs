@@ -78,7 +78,7 @@ public class PolicyTeamUpdateService : IPolicyTeamUpdate
     private async Task<(MemoryStream, MemoryStream)> BuildHistoricReferralRequestFollowUpFileData()
     {
         var referrals = referralFilterService.FilterForSentToNonPending(
-            await dataProvider.GetAllWhlgReferralRequests()).ToList();
+            await dataProvider.GetAllWhlgReferralRequestsForSlaComplianceReporting()).ToList();
         return (csvFileCreator.CreateLocalAuthorityReferralRequestFollowUpFileData(referrals),
             csvFileCreator.CreateConsortiumReferralRequestFollowUpFileData(referrals));
     }
