@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Text.Json;
 using System.Threading.Tasks;
 using GovUkDesignSystem.Attributes;
@@ -72,8 +73,7 @@ public class QuestionnaireController : Controller
         var viewModel = new CountryViewModel
         {
             Country = questionnaire.Country,
-            // TODO - PC-1550: Update link to WHLG grant page
-            BackLink = "https://www.gov.uk/apply-home-upgrade-grant"
+            BackLink = Constants.SERVICE_URL
         };
 
         return View("Country", viewModel);
