@@ -155,16 +155,6 @@ public class QuestionnaireUpdater
                     break;
             }
 
-        try
-        {
-            var perReferralReport = new PerReferralReport(referralRequest);
-            await dataAccessProvider.PersistPerReferralReportAsync(perReferralReport);
-        }
-        catch (Exception e)
-        {
-            logger.LogError("Couldn't generate per referral report: {}", e.Message);
-        }
-
         return questionnaire;
     }
 

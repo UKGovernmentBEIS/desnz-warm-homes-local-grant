@@ -9,7 +9,6 @@ public class WhlgDbContext : DbContext, IDataProtectionKeyContext
 {
     public DbSet<ReferralRequest> ReferralRequests { get; set; }
     public DbSet<NotificationDetails> NotificationDetails { get; set; }
-    public DbSet<PerReferralReport> PerReferralReports { get; set; }
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     public DbSet<ReferralRequestFollowUp> ReferralRequestFollowUps { get; set; }
     public DbSet<Session> Sessions { get; set; }
@@ -22,7 +21,6 @@ public class WhlgDbContext : DbContext, IDataProtectionKeyContext
     {
         SetupReferralRequests(modelBuilder);
         SetupContactDetails(modelBuilder);
-        SetupPerReferralReports(modelBuilder);
         SetupReferralRequestFollowUps(modelBuilder);
         SetupSession(modelBuilder);
     }
@@ -59,23 +57,6 @@ public class WhlgDbContext : DbContext, IDataProtectionKeyContext
 
         // Contact details row versioning
         AddRowVersionColumn(modelBuilder.Entity<NotificationDetails>());
-    }
-
-    private void SetupPerReferralReports(ModelBuilder modelBuilder)
-    {
-        // Contact details primary key
-        modelBuilder.Entity<PerReferralReport>()
-            .Property<int>("Id")
-            .HasColumnType("integer")
-            .ValueGeneratedOnAdd();
-        modelBuilder.Entity<PerReferralReport>()
-            .HasKey("Id");
-        modelBuilder.Entity<PerReferralReport>()
-            .Property(rr => rr.ApplicationDate)
-            .HasColumnType("timestamp without time zone");
-
-        // Per referral reports row versioning
-        AddRowVersionColumn(modelBuilder.Entity<PerReferralReport>());
     }
 
     private void SetupReferralRequestFollowUps(ModelBuilder modelBuilder)

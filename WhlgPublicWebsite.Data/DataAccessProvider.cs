@@ -48,14 +48,6 @@ public class DataAccessProvider : IDataAccessProvider
         }
     }
 
-    public async Task<PerReferralReport> PersistPerReferralReportAsync(PerReferralReport report)
-    {
-        context.PerReferralReports.Add(report);
-        await context.SaveChangesAsync();
-
-        return report;
-    }
-
     public async Task<IList<ReferralRequest>> GetWhlgUnsubmittedReferralRequestsAsync()
     {
         return await context.ReferralRequests
