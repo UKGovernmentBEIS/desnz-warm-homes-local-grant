@@ -5,17 +5,13 @@ using WhlgPublicWebsite.BusinessLogic.Models;
 
 namespace WhlgPublicWebsite.Data;
 
-public class WhlgDbContext : DbContext, IDataProtectionKeyContext
+public class WhlgDbContext(DbContextOptions<WhlgDbContext> options) : DbContext(options), IDataProtectionKeyContext
 {
     public DbSet<ReferralRequest> ReferralRequests { get; set; }
     public DbSet<NotificationDetails> NotificationDetails { get; set; }
-    public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     public DbSet<ReferralRequestFollowUp> ReferralRequestFollowUps { get; set; }
     public DbSet<Session> Sessions { get; set; }
-
-    public WhlgDbContext(DbContextOptions<WhlgDbContext> options) : base(options)
-    {
-    }
+    public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -80,7 +76,6 @@ public class WhlgDbContext : DbContext, IDataProtectionKeyContext
 
     private void SetupSession(ModelBuilder modelBuilder)
     {
-        
         modelBuilder.Entity<Session>()
             .Property(s => s.Id)
             .HasColumnType("integer")
@@ -90,7 +85,7 @@ public class WhlgDbContext : DbContext, IDataProtectionKeyContext
         modelBuilder.Entity<Session>()
             .Property(s => s.Timestamp)
             .HasColumnType("timestamp with time zone");
-        
+
         // Session row versioning
         AddRowVersionColumn(modelBuilder.Entity<Session>());
     }

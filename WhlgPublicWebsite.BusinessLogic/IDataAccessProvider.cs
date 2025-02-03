@@ -16,6 +16,7 @@ public interface IDataAccessProvider
 
     Task<IList<ReferralRequest>> GetWhlgReferralRequestsByCustodianAndRequestDateAsync(string custodianCode,
         int month, int year);
+
     Task PersistAllChangesAsync();
     Task<ReferralRequestFollowUp> PersistReferralFollowUpToken(ReferralRequestFollowUp referralRequestFollowUp);
     Task<ReferralRequestFollowUp> GetReferralFollowUpByToken(string token);

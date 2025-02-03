@@ -10,12 +10,12 @@ namespace WhlgPublicWebsite.BusinessLogic;
 
 public class QuestionnaireUpdater
 {
-    private readonly IEpcApi epcApi;
-    private readonly IEligiblePostcodeService eligiblePostcodeService;
     private readonly IDataAccessProvider dataAccessProvider;
+    private readonly IEligiblePostcodeService eligiblePostcodeService;
     private readonly IEmailSender emailSender;
-    private readonly IQuestionFlowService questionFlowService;
+    private readonly IEpcApi epcApi;
     private readonly ILogger logger;
+    private readonly IQuestionFlowService questionFlowService;
 
     public QuestionnaireUpdater(
         IEpcApi epcApi,
@@ -229,7 +229,7 @@ public class QuestionnaireUpdater
     public Questionnaire UpdateQuestionnaire(Action<Questionnaire> update, Questionnaire questionnaire,
         QuestionFlowStep currentPage, QuestionFlowStep? entryPoint = null)
     {
-        if ((entryPoint is not null) && questionnaire.UneditedData is null)
+        if (entryPoint is not null && questionnaire.UneditedData is null)
         {
             questionnaire.CreateUneditedData();
         }
@@ -238,7 +238,7 @@ public class QuestionnaireUpdater
 
         var nextStep = questionFlowService.NextStep(currentPage, questionnaire, entryPoint);
 
-        if ((entryPoint is not null) && nextStep is QuestionFlowStep.CheckAnswers)
+        if (entryPoint is not null && nextStep is QuestionFlowStep.CheckAnswers)
         {
             questionnaire.CommitEdits();
         }
