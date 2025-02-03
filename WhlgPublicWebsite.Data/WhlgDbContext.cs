@@ -9,7 +9,6 @@ public class WhlgDbContext : DbContext, IDataProtectionKeyContext
 {
     public DbSet<ReferralRequest> ReferralRequests { get; set; }
     public DbSet<NotificationDetails> NotificationDetails { get; set; }
-    public DbSet<AnonymisedReport> AnonymisedReports { get; set; }
     public DbSet<PerReferralReport> PerReferralReports { get; set; }
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     public DbSet<ReferralRequestFollowUp> ReferralRequestFollowUps { get; set; }
@@ -23,7 +22,6 @@ public class WhlgDbContext : DbContext, IDataProtectionKeyContext
     {
         SetupReferralRequests(modelBuilder);
         SetupContactDetails(modelBuilder);
-        SetupAnonymisedReports(modelBuilder);
         SetupPerReferralReports(modelBuilder);
         SetupReferralRequestFollowUps(modelBuilder);
         SetupSession(modelBuilder);
@@ -61,26 +59,6 @@ public class WhlgDbContext : DbContext, IDataProtectionKeyContext
 
         // Contact details row versioning
         AddRowVersionColumn(modelBuilder.Entity<NotificationDetails>());
-    }
-
-    private void SetupAnonymisedReports(ModelBuilder modelBuilder)
-    {
-        // Contact details primary key
-        modelBuilder.Entity<AnonymisedReport>()
-            .Property<int>("Id")
-            .HasColumnType("integer")
-            .ValueGeneratedOnAdd();
-        modelBuilder.Entity<AnonymisedReport>()
-            .HasKey("Id");
-        modelBuilder.Entity<AnonymisedReport>()
-            .Property(rr => rr.EpcLodgementDate)
-            .HasColumnType("timestamp without time zone");
-        modelBuilder.Entity<AnonymisedReport>()
-            .Property(rr => rr.SubmissionDate)
-            .HasColumnType("timestamp without time zone");
-
-        // Anonymised reports row versioning
-        AddRowVersionColumn(modelBuilder.Entity<AnonymisedReport>());
     }
 
     private void SetupPerReferralReports(ModelBuilder modelBuilder)

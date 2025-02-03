@@ -168,21 +168,6 @@ public class QuestionnaireUpdater
         return questionnaire;
     }
 
-    public async Task<Questionnaire> GenerateAnonymisedReportAsync(Questionnaire questionnaire)
-    {
-        try
-        {
-            var anonymisedReport = new AnonymisedReport(questionnaire);
-            await dataAccessProvider.PersistAnonymisedReportAsync(anonymisedReport);
-        }
-        catch (Exception e)
-        {
-            logger.LogError("Couldn't generate anonymised report: {}", e.Message);
-        }
-
-        return questionnaire;
-    }
-
     public async Task<Questionnaire> RecordNotificationConsentAsync(Questionnaire questionnaire, bool consentGranted)
     {
         questionnaire.NotificationConsent = consentGranted;
