@@ -5,15 +5,9 @@ using WhlgPublicWebsite.BusinessLogic.Models;
 
 namespace WhlgPublicWebsite.Data;
 
-public class DataAccessProvider : IDataAccessProvider
+public class DataAccessProvider(WhlgDbContext context)
+    : IDataAccessProvider
 {
-    private readonly WhlgDbContext context;
-
-    public DataAccessProvider(WhlgDbContext context)
-    {
-        this.context = context;
-    }
-
     public async Task<ReferralRequest> PersistNewReferralRequestAsync(ReferralRequest referralRequest)
     {
         context.ReferralRequests.Add(referralRequest);
@@ -164,6 +158,10 @@ public class DataAccessProvider : IDataAccessProvider
         await context.SaveChangesAsync();
     }
     
+    private static readonly DateTime Hug2ShutdownDate = new(2025, 02, 03);
+
     private static Expression<Func<ReferralRequest, bool>> IsExcludedFromSlaComplianceReporting => rr =>
-        !(rr.WasSubmittedForFutureGrants || LocalAuthorityData.LiveWmcaCustodianCodes.Contains(rr.CustodianCode));
+        !(rr.WasSubmittedForFutureGrants
+          || LocalAuthorityData.LiveWmcaCustodianCodes.Contains(rr.CustodianCode)
+          || rr.RequestDate <= Hug2ShutdownDate);
 }
