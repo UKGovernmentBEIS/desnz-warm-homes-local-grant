@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection.Metadata;
 using System.Text.Json;
 using System.Threading.Tasks;
 using GovUkDesignSystem.Attributes;
@@ -895,7 +894,8 @@ public class QuestionnaireController : Controller
     {
         var partialViewName = questionnaire.CustodianCode switch
         {
-            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.WestMidlandsCombinedAuthority) =>
+            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(custodianCode,
+                    ConsortiumNames.WestMidlandsCombinedAuthority) =>
                 "WestMidlandsCombinedAuthority",
             _ => "Default"
         };
@@ -907,9 +907,11 @@ public class QuestionnaireController : Controller
     {
         var partialViewName = questionnaire.CustodianCode switch
         {
-            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.GreaterManchesterCombinedAuthority) =>
+            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(custodianCode,
+                    ConsortiumNames.GreaterManchesterCombinedAuthority) =>
                 "GreaterManchesterCombinedAuthority",
-            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.WestMidlandsCombinedAuthority) =>
+            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(custodianCode,
+                    ConsortiumNames.WestMidlandsCombinedAuthority) =>
                 "WestMidlandsCombinedAuthority",
             _ => "Default"
         };
@@ -934,7 +936,8 @@ public class QuestionnaireController : Controller
                 (LocalAuthorityData.LocalAuthorityStatus.Pending, _) => "Pending",
                 (LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals, _) => "TakingFutureReferrals",
                 (LocalAuthorityData.LocalAuthorityStatus.Live, var custodianCode) when LocalAuthorityData
-                    .CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.WestMidlandsCombinedAuthority) => "WestMidlandsCombinedAuthority",
+                        .CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.WestMidlandsCombinedAuthority) =>
+                    "WestMidlandsCombinedAuthority",
                 _ => "Default"
             };
         return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";
