@@ -9,4 +9,4 @@ echo
 export DB_HOST DB_NAME DB_PASSWORD
 
 # Update and install required packages
-sudo apt-get update && sudo apt-get install -y postgresql-client
+sudo apt-get update && sudo apt-get install -y postgresql-client awscli
