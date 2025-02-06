@@ -8,12 +8,12 @@ run_psql_command() {
 echo "Deleting data from Portal DB..."
 
 # Truncate tables
-run_psql_command "TRUNCATE TABLE AuditDownloads;"
-run_psql_command "TRUNCATE TABLE Consortia;"
-run_psql_command "TRUNCATE TABLE ConsortiumUser;"
-run_psql_command "TRUNCATE TABLE CsvFileDownloads;"
-run_psql_command "TRUNCATE TABLE LocalAuthorities;"
-run_psql_command "TRUNCATE TABLE LocalAuthorityUser;"
-run_psql_command "TRUNCATE TABLE Users;"
+run_psql_command "TRUNCATE TABLE \"AuditDownloads\", 
+                                  \"Consortia\", 
+                                  \"ConsortiumUser\", 
+                                  \"CsvFileDownloads\", 
+                                  \"LocalAuthorities\", 
+                                  \"LocalAuthorityUser\", 
+                                  \"Users\";"
 
 echo "Data deletion complete."

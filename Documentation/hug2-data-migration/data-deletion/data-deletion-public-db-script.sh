@@ -8,7 +8,6 @@ run_psql_command() {
 echo "Deleting data from Public DB..."
 
 # Truncate tables
-run_psql_command "TRUNCATE Table sessioncache;"
-run_psql_command "TRUNCATE Table ReferralRequestFollowUps;"
+run_psql_command "TRUNCATE Table \"sessioncache\", \"ReferralRequestFollowUps\";"
 
 echo "Data deletion complete."
