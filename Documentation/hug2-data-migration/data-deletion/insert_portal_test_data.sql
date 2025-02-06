@@ -1,4 +1,4 @@
--- Script to populate the "ReferralRequests" table with test data
+-- Script to populate the to-be-emptied Portal tables with test data
 
 -- Clear existing data
 -- TRUNCATE TABLE "AuditDownloads";

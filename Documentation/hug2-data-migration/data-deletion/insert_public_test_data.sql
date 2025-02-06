@@ -1,10 +1,11 @@
--- Script to populate the "ReferralRequests" table with test data
+-- Script to populate the to-be-emptied Public tables with test data
 
 -- Clear existing data
 -- TRUNCATE TABLE "sessioncache";
 -- TRUNCATE TABLE "ReferralRequestFollowUps";
+-- TRUNCATE TABLE "ReferralRequests";
 
--- Insert test data for Active LAs after 1st Dec
+-- Populate referral requests to allow follow ups something to reference
 INSERT INTO public."ReferralRequests" (
     "AddressLine1", "AddressPostcode", "CustodianCode", "EpcRating", "IsLsoaProperty",
     "IncomeBand", "FullName", "ContactEmailAddress", "RequestDate",
