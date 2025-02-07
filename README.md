@@ -129,9 +129,9 @@ For instructions on making changes to the frontend, see [here](Documentation/mak
 ## Development process
 
 We follow a process similar to git-flow, with 3 branches corresponding to each of the environments:
-- `develop` - [Dev](https://dev.check-eligibility-for-home-upgrade-grant.service.gov.uk)
-- `staging` - [UAT](https://uat.check-eligibility-for-home-upgrade-grant.service.gov.uk)
-- `main` - [Production](https://www.check-eligibility-for-home-upgrade-grant.service.gov.uk)
+- `develop` - [Dev](https://dev.apply-warm-homes-local-grant.service.gov.uk)
+- `staging` - [UAT](https://uat.apply-warm-homes-local-grant.service.gov.uk)
+- `main` - [Production](https://www.apply-warm-homes-local-grant.service.gov.uk)
 
 For normal development:
 - Create a branch from `develop` with the following name format - `PC-XXXX-short-description-of-ticket` (with `PC-XXXX` to be replaced by your ticket number).
