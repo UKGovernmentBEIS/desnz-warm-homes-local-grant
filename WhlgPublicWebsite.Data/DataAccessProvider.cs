@@ -5,14 +5,15 @@ using WhlgPublicWebsite.BusinessLogic.Models;
 
 namespace WhlgPublicWebsite.Data;
 
-public class DataAccessProvider : IDataAccessProvider
+public class DataAccessProvider(WhlgDbContext context)
+    : IDataAccessProvider
 {
-    private readonly WhlgDbContext context;
-
-    public DataAccessProvider(WhlgDbContext context)
-    {
-        this.context = context;
-    }
+    private static readonly DateTime Hug2ShutdownDate = new(2025, 02, 03);
+    
+    private static Expression<Func<ReferralRequest, bool>> IsExcludedFromSlaComplianceReporting => rr =>
+        !(rr.WasSubmittedForFutureGrants
+          || LocalAuthorityData.LiveWmcaCustodianCodes.Contains(rr.CustodianCode)
+          || rr.RequestDate <= Hug2ShutdownDate);
 
     public async Task<ReferralRequest> PersistNewReferralRequestAsync(ReferralRequest referralRequest)
     {
@@ -79,7 +80,7 @@ public class DataAccessProvider : IDataAccessProvider
             .Include(rr => rr.FollowUp)
             .ToListAsync();
     }
-    
+
     public async Task<IList<ReferralRequest>> GetAllWhlgReferralRequestsForSlaComplianceReporting()
     {
         return await context.ReferralRequests
@@ -163,7 +164,4 @@ public class DataAccessProvider : IDataAccessProvider
         referralRequest.IsEligible = isEligible;
         await context.SaveChangesAsync();
     }
-    
-    private static Expression<Func<ReferralRequest, bool>> IsExcludedFromSlaComplianceReporting => rr =>
-        !(rr.WasSubmittedForFutureGrants || LocalAuthorityData.LiveWmcaCustodianCodes.Contains(rr.CustodianCode));
 }
