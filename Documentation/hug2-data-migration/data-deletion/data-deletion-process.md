@@ -10,8 +10,6 @@ This document outlines the process for deleting the contents of several tables, 
   - `data-deletion-portal-db-script.sh`
   - `data-deletion-public-db-script.sh`
 
-
-
 ## Public DB deletion
 ### Connect to the EC2 instance & copy scripts
 Connect to the Public HUG2 external site container instance by following the instructions [here](https://softwiretech.atlassian.net/wiki/spaces/Support/pages/20606746709/DESNZ+HUG2+Common+Tasks#5.-Accessing-Database) up to step 9.
@@ -19,7 +17,9 @@ Connect to the Public HUG2 external site container instance by following the ins
 ```shell
 mkdir -p data-migration/deletion-scripts
 apt-get update && apt-get install -y awscli
-aws s3 cp --recursive s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion /app/data-migration/deletion-scripts
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/setup-script.sh /root/data-migration/deletion-scripts
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/data-deletion-public-db-script.sh /root/data-migration/deletion-scripts
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/testing-public-db-script.sh /root/data-migration/deletion-scripts
 ```
 Replacing `ENV` with the actual environment.
 
@@ -67,7 +67,9 @@ Connect to the Portal HUG2 external site container instance by following the ins
 ```shell
 mkdir -p data-migration/deletion-scripts
 apt-get update && apt-get install -y awscli
-aws s3 cp --recursive s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion /app/data-migration/deletion-scripts
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/setup-script.sh /root/data-migration/deletion-scripts
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/data-deletion-portal-db-script.sh /root/data-migration/deletion-scripts
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/testing-portal-db-script.sh /root/data-migration/deletion-scripts
 ```
 Replacing `ENV` with the actual environment.
 
@@ -105,5 +107,5 @@ data-migration/deletion-scripts/testing-portal-db-script.sh
 ## Clean up
 Run:
 ```shell
-rm -rf /app/data-deletion
+rm -r /app/data-deletion
 ```
