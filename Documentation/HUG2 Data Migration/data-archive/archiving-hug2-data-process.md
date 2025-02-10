@@ -21,9 +21,9 @@ To connect to the portal container instance, follow the instructions for '5. Acc
 cd /root
 mkdir -p data-archive/migration-scripts
 apt-get update && apt-get install -y awscli
-aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-archive/setup-script.sh /root/data-archive/migration-scripts
-aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-archive/count-portal-db-script.sh /root/data-archive/migration-scripts
-aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-archive/archive-portal-db-script.sh /root/data-archive/migration-scripts
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-archive/setup-script.sh /root/data-archive/migration-scripts/
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-archive/count-portal-db-script.sh /root/data-archive/migration-scripts/
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-archive/archive-portal-db-script.sh /root/data-archive/migration-scripts/
 ```
 Replacing `ENV` with the actual environment.
 
@@ -67,9 +67,9 @@ To connect to the public container instance, follow the instructions for '5. Acc
 cd /root
 mkdir -p data-archive/migration-scripts
 apt-get update && apt-get install -y awscli
-aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-archive/setup-script.sh /root/data-archive/migration-scripts
-aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-archive/count-public-db-script.sh /root/data-archive/migration-scripts
-aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-archive/archive-public-db-script.sh /root/data-archive/migration-scripts
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-archive/setup-script.sh /root/data-archive/migration-scripts/
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-archive/count-public-db-script.sh /root/data-archive/migration-scripts/
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-archive/archive-public-db-script.sh /root/data-archive/migration-scripts/
 ```
 Replacing `ENV` with the actual environment.
 
