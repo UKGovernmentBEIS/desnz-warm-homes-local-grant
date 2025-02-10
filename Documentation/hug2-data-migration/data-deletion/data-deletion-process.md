@@ -3,7 +3,7 @@
 This document outlines the process for deleting the contents of several tables, which are not being carried over to the new system.
 
 ## Upload the scripts
-- To the `migration-scripts/data-deletion` folder of the S3 bucket (if not already there),manually upload the following files:
+- To the `migration-scripts/data-deletion` folder of the S3 bucket (if not already there), manually upload the following files:
   - `setup-script.sh`
   - `testing-portal-db-script.sh`
   - `testing-public-db-script.sh`
