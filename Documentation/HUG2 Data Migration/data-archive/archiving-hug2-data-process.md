@@ -41,7 +41,7 @@ source data-archive/migration-scripts/setup-script.sh
 chmod +x data-archive/migration-scripts/count-portal-db-script.sh
 data-archive/migration-scripts/count-portal-db-script.sh
 ```
-- Record the results.
+- Record results in the `data-archive-test-template.xlsx` spreadsheet found on the [data migration Swiki page](https://softwiretech.atlassian.net/wiki/spaces/Support/pages/21481160877/DESNZ+HUG2+Data+Migration).
 
 ### 5. Run archive script
 - Run the script to export the portal DB data:
@@ -53,7 +53,8 @@ data-archive/migration-scripts/archive-portal-db-script.sh
 If there are any issues during the copying from the DB, all the copy operations will be aborted and no files will be copied to S3.
 
 ### 6. Count actual exports
-- Go to the `data-archive/portal-db/` of the relevant S3 bucket, and count the number of rows for each exported table and compare it the expected result.
+- Go to the `data-archive/portal-db/` of the relevant S3 bucket, and count the number of rows for each exported table.
+- Record results in the `data-archive-test-template.xlsx` spreadsheet found on the [data migration Swiki page](https://softwiretech.atlassian.net/wiki/spaces/Support/pages/21481160877/DESNZ+HUG2+Data+Migration) and check it equals those recorded in step 4.
 
 ## Public DB
 
