@@ -1,7 +1,12 @@
+#!/bin/bash
+
+# SQL commands
+SQL_COMMANDS=$(cat <<EOF
+BEGIN;
 -- Script to populate the to-be-emptied Portal tables with test data
 
 -- Clear existing data
--- TRUNCATE TABLE "AuditDownloads", "Consortia", "ConsortiumUser", "CsvFileDownloads", "LocalAuthorities", "LocalAuthorityUser", "Users";
+TRUNCATE TABLE "AuditDownloads", "Consortia", "ConsortiumUser", "CsvFileDownloads", "LocalAuthorities", "LocalAuthorityUser", "Users";
 
 INSERT INTO public."Consortia" ("Id","ConsortiumCode") VALUES
                                                            (1, 'C_0002'),
@@ -56,3 +61,12 @@ INSERT INTO public."LocalAuthorityUser" ("LocalAuthoritiesId", "UsersId") VALUES
 INSERT INTO public."CsvFileDownloads" ("CustodianCode", "Year", "Month", "UserId", "LastDownloaded") VALUES
                                                                                                          (9052, 2025, 1, 1, '2025-02-04 10:11:30.0000000'::timestamp),
                                                                                                          (3810, 2024, 11, 2, '2024-12-24 23:12:10.0000000'::timestamp);
+COMMIT;
+EOF
+)
+
+# Execute the SQL commands
+echo "Executing SQL commands..."
+echo "$SQL_COMMANDS" | PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -U mysqladm -d "$DB_NAME"
+
+echo "SQL commands executed successfully."
