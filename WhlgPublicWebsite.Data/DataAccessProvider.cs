@@ -8,7 +8,7 @@ namespace WhlgPublicWebsite.Data;
 public class DataAccessProvider(WhlgDbContext context)
     : IDataAccessProvider
 {
-    private static readonly DateTime Hug2ShutdownDate = new(2025, 01, 21); // TODO: revert back to 2025, 02, 03
+    private static readonly DateTime Hug2ShutdownDate = new(2025, 02, 03);
     
     private static Expression<Func<ReferralRequest, bool>> IsExcludedFromSlaComplianceReporting => rr =>
         !(rr.WasSubmittedForFutureGrants
