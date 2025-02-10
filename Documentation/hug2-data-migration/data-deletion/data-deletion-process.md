@@ -9,6 +9,8 @@ This document outlines the process for deleting the contents of several tables, 
   - `testing-public-db-script.sh`
   - `data-deletion-portal-db-script.sh`
   - `data-deletion-public-db-script.sh`
+  - `insert-public-test-data.sh` (Not used on Production)
+  - `insert-public-test-data.sh` (Not used on Production)
 
 ## Public DB deletion
 ### Connect to the EC2 instance & copy scripts
@@ -20,9 +22,13 @@ apt-get update && apt-get install -y awscli
 aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/setup-script.sh /root/data-migration/deletion-scripts
 aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/data-deletion-public-db-script.sh /root/data-migration/deletion-scripts
 aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/testing-public-db-script.sh /root/data-migration/deletion-scripts
-aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/insert_public_test_data.sh /root/data-migration/deletion-scripts
 ```
 Replacing `ENV` with the actual environment.
+
+On non-production environments, also run this additional command:
+```shell
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/insert-public-test-data.sh /root/data-migration/deletion-scripts
+```
 
 ### Run setup script
 - Run `env` in the Public EC2 instance - you will need `Server`, `Database`, and `Password` from `ConnectionStrings__PostgreSQLConnection` in the next step
@@ -36,8 +42,8 @@ source data-migration/deletion-scripts/setup-script.sh
 #### On non-production environments:
 - Run the script to insert test data:
 ```shell
-chmod +x data-migration/deletion-scripts/insert_public_test_data.sh
-source data-migration/deletion-scripts/insert_public_test_data.sh
+chmod +x data-migration/deletion-scripts/insert-public-test-data.sh
+source data-migration/deletion-scripts/insert-public-test-data.sh
 ```
 #### On all environments:
 - Run the test script:
@@ -78,10 +84,13 @@ apt-get update && apt-get install -y awscli
 aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/setup-script.sh /root/data-migration/deletion-scripts
 aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/data-deletion-portal-db-script.sh /root/data-migration/deletion-scripts
 aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/testing-portal-db-script.sh /root/data-migration/deletion-scripts
-aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/insert_portal_test_data.sh /root/data-migration/deletion-scripts
 ```
 Replacing `ENV` with the actual environment.
 
+On non-production environments, also run this additional command:
+```shell
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/insert-portal-test-data.sh /root/data-migration/deletion-scripts
+```
 ### Run setup script
 - Run `env` in the Portal EC2 instance - you will need `Server`, `Database`, and `Password` from `ConnectionStrings__PostgreSQLConnection` in the next step
 - Run the setup script to store DB credentials:
@@ -94,8 +103,8 @@ source data-migration/deletion-scripts/setup-script.sh
 #### On non-production environments:
 - Run the script to insert test data:
 ```shell
-chmod +x data-migration/deletion-scripts/insert_portal_test_data.sh
-source data-migration/deletion-scripts/insert_portal_test_data.sh
+chmod +x data-migration/deletion-scripts/insert-portal-test-data.sh
+source data-migration/deletion-scripts/insert-portal-test-data.sh
 ```
 #### On all environments:
 - Run the test script:
