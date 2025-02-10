@@ -20,6 +20,7 @@ apt-get update && apt-get install -y awscli
 aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/setup-script.sh /root/data-migration/deletion-scripts
 aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/data-deletion-public-db-script.sh /root/data-migration/deletion-scripts
 aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/testing-public-db-script.sh /root/data-migration/deletion-scripts
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/insert_public_test_data.sh /root/data-migration/deletion-scripts
 ```
 Replacing `ENV` with the actual environment.
 
@@ -32,6 +33,13 @@ source data-migration/deletion-scripts/setup-script.sh
 ```
 
 ### Pre-Testing
+#### On non-production environments:
+- Run the script to insert test data:
+```shell
+chmod +x data-migration/deletion-scripts/insert_public_test_data.sh
+source data-migration/deletion-scripts/insert_public_test_data.sh
+```
+#### On all environments:
 - Run the test script:
 ```shell
 chmod +x data-migration/deletion-scripts/testing-public-db-script.sh
@@ -70,6 +78,7 @@ apt-get update && apt-get install -y awscli
 aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/setup-script.sh /root/data-migration/deletion-scripts
 aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/data-deletion-portal-db-script.sh /root/data-migration/deletion-scripts
 aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/testing-portal-db-script.sh /root/data-migration/deletion-scripts
+aws s3 cp s3://hug2-<ENV>-data-migration/migration-scripts/data-deletion/insert_portal_test_data.sh /root/data-migration/deletion-scripts
 ```
 Replacing `ENV` with the actual environment.
 
@@ -82,6 +91,13 @@ source data-migration/deletion-scripts/setup-script.sh
 ```
 
 ### Pre-Testing
+#### On non-production environments:
+- Run the script to insert test data:
+```shell
+chmod +x data-migration/deletion-scripts/insert_portal_test_data.sh
+source data-migration/deletion-scripts/insert_portal_test_data.sh
+```
+#### On all environments:
 - Run the test script:
 ```shell
 chmod +x data-migration/deletion-scripts/testing-portal-db-script.sh
