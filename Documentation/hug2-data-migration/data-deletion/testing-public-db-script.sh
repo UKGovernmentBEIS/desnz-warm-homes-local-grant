@@ -1,12 +1,13 @@
 #!/bin/bash
 
 # Function to run psql commands
-run_psql_command() {
-    local table_name="$1"
-    local query="$2"
-    echo -n "Count for $table_name: "
-    PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -U mysqladm -d "$DB_NAME" -t -c "$query" | tr -d ' '
+run_and_print_count_queryd() {
+    local query="$1"
+    local description="$2"
+    echo "=== Count For $description Table ==="
+    PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U mysqladm -d $DB_NAME -c "$query"
+    echo
 }
 
-run_psql_command "sessioncache" "SELECT COUNT(*) FROM public.\"sessioncache\""
-run_psql_command "ReferralRequestFollowUps" "SELECT COUNT(*) FROM public.\"ReferralRequestFollowUps\""
+run_and_print_count_query "SELECT COUNT(*) FROM public.\"sessioncache\";" 'sessioncache'
+run_and_print_count_query "SELECT COUNT(*) FROM public.\"ReferralRequestFollowUps\";" 'ReferralRequestFollowUps'
