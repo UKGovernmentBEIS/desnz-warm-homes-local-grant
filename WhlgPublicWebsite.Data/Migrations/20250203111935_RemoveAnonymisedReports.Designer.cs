@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WhlgPublicWebsite.Data;
@@ -11,9 +12,10 @@ using WhlgPublicWebsite.Data;
 namespace WhlgPublicWebsite.Data.Migrations
 {
     [DbContext(typeof(WhlgDbContext))]
-    partial class WhlgDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250203111935_RemoveAnonymisedReports")]
+    partial class RemoveAnonymisedReports
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,6 +70,48 @@ namespace WhlgPublicWebsite.Data.Migrations
                     b.HasIndex("ReferralRequestId");
 
                     b.ToTable("NotificationDetails");
+                });
+
+            modelBuilder.Entity("WhlgPublicWebsite.BusinessLogic.Models.PerReferralReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AddressCounty")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AddressLine1")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AddressLine2")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AddressPostcode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AddressTown")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ApplicationDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ReferralCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Uprn")
+                        .HasColumnType("text");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PerReferralReports");
                 });
 
             modelBuilder.Entity("WhlgPublicWebsite.BusinessLogic.Models.ReferralRequest", b =>

@@ -138,14 +138,6 @@ public class QuestionnaireService
         return questionnaire;
     }
 
-    public async Task<Questionnaire> ConfirmQuestionnaireAnswers()
-    {
-        var questionnaire = GetQuestionnaire();
-        questionnaire = await questionnaireUpdater.GenerateAnonymisedReportAsync(questionnaire);
-        await SaveQuestionnaireToSession(questionnaire);
-        return questionnaire;
-    }
-
     public async Task<Questionnaire> RecordNotificationConsentAsync(bool consentGranted)
     {
         var questionnaire = GetQuestionnaire();
