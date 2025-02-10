@@ -40,7 +40,8 @@ source data-migration/deletion-scripts/setup-script.sh
 
 ### Pre-Testing
 #### On non-production environments:
-- Run the script to insert test data:
+- Run the script to insert test data. 
+- <strong>CAUTION: This will also wipe the `ReferralRequest` table. Do NOT use this on Production:</strong>
 ```shell
 chmod +x data-migration/deletion-scripts/insert-public-test-data.sh
 source data-migration/deletion-scripts/insert-public-test-data.sh
@@ -51,7 +52,7 @@ source data-migration/deletion-scripts/insert-public-test-data.sh
 chmod +x data-migration/deletion-scripts/testing-public-db-script.sh
 data-migration/deletion-scripts/testing-public-db-script.sh
 ```
-- Record results in spreadsheet
+- Record results in the `data-deletion-test-template.xlsx` spreadsheet found on the [data migration Swiki page](https://softwiretech.atlassian.net/wiki/spaces/Support/pages/21481160877/DESNZ+HUG2+Data+Migration).
 
 ### Run the deletion
 - Run the deletion script with
@@ -112,7 +113,7 @@ source data-migration/deletion-scripts/insert-portal-test-data.sh
 chmod +x data-migration/deletion-scripts/testing-portal-db-script.sh
 data-migration/deletion-scripts/testing-portal-db-script.sh
 ```
-- Record results in spreadsheet
+- Record results in the `data-deletion-test-template.xlsx` spreadsheet found on the [data migration Swiki page](https://softwiretech.atlassian.net/wiki/spaces/Support/pages/21481160877/DESNZ+HUG2+Data+Migration).
 
 ### Run the deletion
 - Run the deletion script with
