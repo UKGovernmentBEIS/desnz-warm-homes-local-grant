@@ -9,21 +9,25 @@ BEGIN;
 TRUNCATE TABLE "sessioncache", "ReferralRequestFollowUps", "ReferralRequests", "NotificationDetails";
 
 -- Populate referral requests to allow follow ups something to reference
-INSERT INTO public."ReferralRequests" ("Id",
+INSERT INTO public."ReferralRequests" ("Id", "HasGasBoiler",
                                        "AddressLine1", "AddressPostcode", "CustodianCode", "EpcRating", "IsLsoaProperty",
                                        "IncomeBand", "FullName", "ContactEmailAddress", "RequestDate",
                                        "WasSubmittedToPendingLocalAuthority", "WasSubmittedForFutureGrants", "ReferralWrittenToCsv"
 ) VALUES
-      (1,'123 Active LA St', 'AC1 1LA', 'ACT001', 7, TRUE, 4, 'John Doe', 'john@example.com',
+      (1,0,'123 Active LA St', 'AC1 1LA', 'ACT001', 7, TRUE, 4, 'John Doe', 'john@example.com',
        '2024-12-15', FALSE, FALSE, TRUE),
-      (2,'456 Active LA St', 'AC2 2LA', 'ACT002', 7, FALSE, 4, 'Jane Smith', 'jane@example.com',
+      (2,0,'456 Active LA St', 'AC2 2LA', 'ACT002', 7, FALSE, 4, 'Jane Smith', 'jane@example.com',
        '2024-12-20', FALSE, FALSE, TRUE),
-      (3,'789 Active LA St', 'AC3 3LA', 'ACT003', 7, TRUE, 4, 'Bob Johnson', 'bob@example.com',
+      (3,0,'789 Active LA St', 'AC3 3LA', 'ACT003', 7, TRUE, 4, 'Bob Johnson', 'bob@example.com',
        '2024-12-25', FALSE, FALSE, TRUE);
 
 INSERT INTO public."ReferralRequestFollowUps" ("ReferralRequestId", "Token", "WasFollowedUp", "DateOfFollowUpResponse"
 ) VALUES (1, 'test-token-1', 'True', '2024-05-05 17:19:37.000000'),
          (2, 'test-token-2', 'False', '2023-01-02 12:10:40.0000000');
+
+INSERT INTO public."NotificationDetails" ("Id", "FutureSchemeNotificationEmail", "FutureSchemeNotificationConsent", "ReferralRequestId"
+) VALUES (1, 'example@example.com', TRUE, 1),
+         (2, 'example1@example.com', TRUE, NULL);
 
 INSERT INTO public."sessioncache" ("Id", "Value", "ExpiresAtTime", "SlidingExpirationInSeconds"
 ) VALUES
@@ -37,6 +41,8 @@ INSERT INTO public."sessioncache" ("Id", "Value", "ExpiresAtTime", "SlidingExpir
 COMMIT;
 EOF
 )
+  
+
 
 # Execute the SQL commands
 echo "Executing SQL commands..."
