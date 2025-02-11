@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Function to run psql commands
-run_and_print_count_queryd() {
+run_and_print_count_query() {
     local query="$1"
     local description="$2"
     echo "=== Count For $description Table ==="
