@@ -72,7 +72,7 @@ data-migration/deletion-scripts/testing-public-db-script.sh
 ## Clean up
 Run:
 ```shell
-rm -rf /app/data-deletion
+rm -r /app/data-deletion
 ```
 
 ## Portal DB deletion
