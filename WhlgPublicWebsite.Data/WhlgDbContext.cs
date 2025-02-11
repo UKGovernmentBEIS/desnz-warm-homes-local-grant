@@ -53,6 +53,13 @@ public class WhlgDbContext(DbContextOptions<WhlgDbContext> options) : DbContext(
 
         // Contact details row versioning
         AddRowVersionColumn(modelBuilder.Entity<NotificationDetails>());
+        
+        // Add the foreign key relationship with SetNull delete behavior
+        modelBuilder.Entity<NotificationDetails>()
+            .HasOne(rr => rr.ReferralRequest)
+            .WithMany()
+            .HasForeignKey(details => details.ReferralRequestId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 
     private void SetupReferralRequestFollowUps(ModelBuilder modelBuilder)

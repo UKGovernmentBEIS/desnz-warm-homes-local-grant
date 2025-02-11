@@ -5,6 +5,8 @@ public class NotificationDetails
     public string FutureSchemeNotificationEmail { get; set; }
     public bool FutureSchemeNotificationConsent { get; set; }
     
+    public int? ReferralRequestId { get; set; }
+    
     public ReferralRequest ReferralRequest { get; set; }
 
     public NotificationDetails()
