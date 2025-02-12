@@ -46,7 +46,7 @@ data-migration/migration-scripts/testing-script.sh
 - Record results in the `referral-request-migration-test-template.xlsx` spreadsheet found on the [data migration Swiki page](https://softwiretech.atlassian.net/wiki/spaces/Support/pages/21481160877/DESNZ+HUG2+Data+Migration).
 
 ## 7. Run the migration
-- Run the migration script with 
+- Run the migration script with
 ```shell 
 chmod +x data-migration/migration-scripts/migration-script.sh
 data-migration/migration-scripts/migration-script.sh
