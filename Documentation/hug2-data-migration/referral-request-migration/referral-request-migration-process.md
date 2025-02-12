@@ -11,6 +11,7 @@ Connect to the HUG2 public site container instance by following the instructions
 
 ## 3. Copy the scripts
 - Manually upload `setup-script.sh`, `testing-script.sh`, `insert-test-data.sh`, and `migration-script.sh` to the `migration-scripts/referral-request-migration` folder of the S3 bucket (if not already there)
+- Ensure the scripts are using LF line endings. After cloning, they may be reset to CRLF depending on your git config.
 - In the EC2 instance, run the following to copy the scripts over:
 ```shell
 cd /root
