@@ -9,6 +9,7 @@ We'll need to archive the data from both the Portal DB and the Public DB. As the
   - `count-portal-db-script.sh`
   - `count-public-db-script.sh`
   - `setup-script.sh`
+  - Ensure the scripts are using LF line endings. After cloning, they may be reset to CRLF depending on your git config.
 
 ## Portal DB
 
