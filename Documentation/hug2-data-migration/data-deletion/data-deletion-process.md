@@ -11,6 +11,7 @@ This document outlines the process for deleting the contents of several tables, 
   - `data-deletion-public-db-script.sh`
   - `insert-public-test-data.sh` (Not used on Production)
   - `insert-portal-test-data.sh` (Not used on Production)
+- Ensure the scripts are using LF line endings. After cloning, they may be reset to CRLF depending on your git config.
 
 ## Public DB deletion
 ### Connect to the EC2 instance & copy scripts
