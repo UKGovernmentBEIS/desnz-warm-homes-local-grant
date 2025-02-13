@@ -23,7 +23,9 @@ This is a convenient way of viewing/editing the database and its data. To do thi
 
 ## Adding Migrations
 
+- Make any necessary changes to the model in `WhlgPublicWebsite.Data/WhlgDbContext.cs`
 - In the terminal (from the solution directory) run `dotnet ef migrations add <YOUR_MIGRATION_NAME> --project WhlgPublicWebsite.Data --startup-project WhlgPublicWebsite`
+- The migration should automatically reflect the changes you made to the model. `WhlgDbContextModelSnapshot.cs` should also have been automatically updated.
 - Then update the local database
 
 ## Reverting Migrations

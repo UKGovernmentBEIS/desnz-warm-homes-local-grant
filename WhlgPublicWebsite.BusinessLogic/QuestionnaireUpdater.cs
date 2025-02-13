@@ -10,12 +10,12 @@ namespace WhlgPublicWebsite.BusinessLogic;
 
 public class QuestionnaireUpdater
 {
-    private readonly IEpcApi epcApi;
-    private readonly IEligiblePostcodeService eligiblePostcodeService;
     private readonly IDataAccessProvider dataAccessProvider;
+    private readonly IEligiblePostcodeService eligiblePostcodeService;
     private readonly IEmailSender emailSender;
-    private readonly IQuestionFlowService questionFlowService;
+    private readonly IEpcApi epcApi;
     private readonly ILogger logger;
+    private readonly IQuestionFlowService questionFlowService;
 
     public QuestionnaireUpdater(
         IEpcApi epcApi,
@@ -155,31 +155,6 @@ public class QuestionnaireUpdater
                     break;
             }
 
-        try
-        {
-            var perReferralReport = new PerReferralReport(referralRequest);
-            await dataAccessProvider.PersistPerReferralReportAsync(perReferralReport);
-        }
-        catch (Exception e)
-        {
-            logger.LogError("Couldn't generate per referral report: {}", e.Message);
-        }
-
-        return questionnaire;
-    }
-
-    public async Task<Questionnaire> GenerateAnonymisedReportAsync(Questionnaire questionnaire)
-    {
-        try
-        {
-            var anonymisedReport = new AnonymisedReport(questionnaire);
-            await dataAccessProvider.PersistAnonymisedReportAsync(anonymisedReport);
-        }
-        catch (Exception e)
-        {
-            logger.LogError("Couldn't generate anonymised report: {}", e.Message);
-        }
-
         return questionnaire;
     }
 
@@ -254,7 +229,7 @@ public class QuestionnaireUpdater
     public Questionnaire UpdateQuestionnaire(Action<Questionnaire> update, Questionnaire questionnaire,
         QuestionFlowStep currentPage, QuestionFlowStep? entryPoint = null)
     {
-        if ((entryPoint is not null) && questionnaire.UneditedData is null)
+        if (entryPoint is not null && questionnaire.UneditedData is null)
         {
             questionnaire.CreateUneditedData();
         }
@@ -263,7 +238,7 @@ public class QuestionnaireUpdater
 
         var nextStep = questionFlowService.NextStep(currentPage, questionnaire, entryPoint);
 
-        if ((entryPoint is not null) && nextStep is QuestionFlowStep.CheckAnswers)
+        if (entryPoint is not null && nextStep is QuestionFlowStep.CheckAnswers)
         {
             questionnaire.CommitEdits();
         }

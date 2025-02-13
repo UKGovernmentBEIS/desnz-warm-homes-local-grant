@@ -9,6 +9,7 @@ public interface IDataAccessProvider
     Task PersistNotificationConsentAsync(string referralId, NotificationDetails notificationDetails);
     Task<IList<ReferralRequest>> GetWhlgUnsubmittedReferralRequestsAsync();
     Task<IList<ReferralRequest>> GetAllWhlgReferralRequests();
+    Task<IList<ReferralRequest>> GetAllWhlgReferralRequestsForSlaComplianceReporting();
     Task<IList<ReferralRequest>> GetWhlgReferralRequestsBetweenDates(DateTime startDate, DateTime endDate);
 
     Task<IList<ReferralRequest>> GetWhlgReferralRequestsWithNoFollowUpBetweenDates(DateTime startDate,
@@ -17,8 +18,6 @@ public interface IDataAccessProvider
     Task<IList<ReferralRequest>> GetWhlgReferralRequestsByCustodianAndRequestDateAsync(string custodianCode,
         int month, int year);
 
-    Task<AnonymisedReport> PersistAnonymisedReportAsync(AnonymisedReport report);
-    Task<PerReferralReport> PersistPerReferralReportAsync(PerReferralReport report);
     Task PersistAllChangesAsync();
     Task<ReferralRequestFollowUp> PersistReferralFollowUpToken(ReferralRequestFollowUp referralRequestFollowUp);
     Task<ReferralRequestFollowUp> GetReferralFollowUpByToken(string token);

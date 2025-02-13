@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using GovUkDesignSystem.Attributes;
@@ -73,8 +72,7 @@ public class QuestionnaireController : Controller
         var viewModel = new CountryViewModel
         {
             Country = questionnaire.Country,
-            // TODO - PC-1550: Update link to WHLG grant page
-            BackLink = "https://www.gov.uk/apply-home-upgrade-grant"
+            BackLink = Constants.SERVICE_URL
         };
 
         return View("Country", viewModel);
@@ -639,7 +637,7 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> CheckAnswers_Post()
     {
         await googleAnalyticsService.SendQuestionnaireCompletedEventAsync(Request);
-        var questionnaire = await questionnaireService.ConfirmQuestionnaireAnswers();
+        var questionnaire = questionnaireService.GetQuestionnaire();
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.CheckAnswers, questionnaire);
 
         return RedirectToNextStep(nextStep);
@@ -659,6 +657,8 @@ public class QuestionnaireController : Controller
             LocalAuthorityIsLive = questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Live,
             LocalAuthorityIsPending =
                 questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Pending,
+            LocalAuthorityMessagePartialViewPath =
+                GetLocalAuthorityEligibleMessagePartialViewPath(questionnaire),
             CanContactByEmail = questionnaire.LaCanContactByEmail.ToNullableYesOrNo(),
             CanContactByPhone = questionnaire.LaCanContactByPhone.ToNullableYesOrNo(),
             Name = questionnaire.LaContactName,
@@ -890,12 +890,29 @@ public class QuestionnaireController : Controller
         return ret;
     }
 
+    private static string GetLocalAuthorityEligibleMessagePartialViewPath(Questionnaire questionnaire)
+    {
+        var partialViewName = questionnaire.CustodianCode switch
+        {
+            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(custodianCode,
+                    ConsortiumNames.WestMidlandsCombinedAuthority) =>
+                "WestMidlandsCombinedAuthority",
+            _ => "Default"
+        };
+
+        return $"~/Views/Partials/LocalAuthorityMessages/Eligible/{partialViewName}.cshtml";
+    }
+
     private static string GetLocalAuthorityNotParticipatingMessagePartialViewPath(Questionnaire questionnaire)
     {
         var partialViewName = questionnaire.CustodianCode switch
         {
-            "4205" or "4210" or "4215" or "4220" or "4225" or "4230" or "4240" or "4245" or "4250" =>
+            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(custodianCode,
+                    ConsortiumNames.GreaterManchesterCombinedAuthority) =>
                 "GreaterManchesterCombinedAuthority",
+            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(custodianCode,
+                    ConsortiumNames.WestMidlandsCombinedAuthority) =>
+                "WestMidlandsCombinedAuthority",
             _ => "Default"
         };
 
@@ -918,6 +935,9 @@ public class QuestionnaireController : Controller
             {
                 (LocalAuthorityData.LocalAuthorityStatus.Pending, _) => "Pending",
                 (LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals, _) => "TakingFutureReferrals",
+                (LocalAuthorityData.LocalAuthorityStatus.Live, var custodianCode) when LocalAuthorityData
+                        .CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.WestMidlandsCombinedAuthority) =>
+                    "WestMidlandsCombinedAuthority",
                 _ => "Default"
             };
         return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";

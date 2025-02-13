@@ -1,17 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using WhlgPublicWebsite.BusinessLogic;
 using WhlgPublicWebsite.BusinessLogic.Models;
 
 namespace WhlgPublicWebsite.Data;
 
-public class DataAccessProvider : IDataAccessProvider
+public class DataAccessProvider(WhlgDbContext context)
+    : IDataAccessProvider
 {
-    private readonly WhlgDbContext context;
-
-    public DataAccessProvider(WhlgDbContext context)
-    {
-        this.context = context;
-    }
+    private static readonly DateTime Hug2ShutdownDate = new(2025, 02, 03);
+    
+    private static Expression<Func<ReferralRequest, bool>> IsExcludedFromSlaComplianceReporting => rr =>
+        !(rr.WasSubmittedForFutureGrants
+          || LocalAuthorityData.LiveWmcaCustodianCodes.Contains(rr.CustodianCode)
+          || rr.RequestDate <= Hug2ShutdownDate);
 
     public async Task<ReferralRequest> PersistNewReferralRequestAsync(ReferralRequest referralRequest)
     {
@@ -48,22 +50,6 @@ public class DataAccessProvider : IDataAccessProvider
         }
     }
 
-    public async Task<AnonymisedReport> PersistAnonymisedReportAsync(AnonymisedReport report)
-    {
-        context.AnonymisedReports.Add(report);
-        await context.SaveChangesAsync();
-
-        return report;
-    }
-
-    public async Task<PerReferralReport> PersistPerReferralReportAsync(PerReferralReport report)
-    {
-        context.PerReferralReports.Add(report);
-        await context.SaveChangesAsync();
-
-        return report;
-    }
-
     public async Task<IList<ReferralRequest>> GetWhlgUnsubmittedReferralRequestsAsync()
     {
         return await context.ReferralRequests
@@ -79,11 +65,20 @@ public class DataAccessProvider : IDataAccessProvider
             .ToListAsync();
     }
 
+    public async Task<IList<ReferralRequest>> GetAllWhlgReferralRequestsForSlaComplianceReporting()
+    {
+        return await context.ReferralRequests
+            .Where(IsExcludedFromSlaComplianceReporting)
+            .Include(rr => rr.FollowUp)
+            .ToListAsync();
+    }
+
     public async Task<IList<ReferralRequest>> GetWhlgReferralRequestsBetweenDates(DateTime startDate,
         DateTime endDate)
     {
         return await context.ReferralRequests
-            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.WasSubmittedForFutureGrants)
+            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate)
+            .Where(IsExcludedFromSlaComplianceReporting)
             .Include(rr => rr.FollowUp)
             .ToListAsync();
     }
@@ -93,8 +88,8 @@ public class DataAccessProvider : IDataAccessProvider
         DateTime endDate)
     {
         return await context.ReferralRequests
-            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.FollowUpEmailSent &&
-                         !rr.WasSubmittedForFutureGrants)
+            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.FollowUpEmailSent)
+            .Where(IsExcludedFromSlaComplianceReporting)
             .ToListAsync();
     }
 

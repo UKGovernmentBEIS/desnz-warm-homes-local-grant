@@ -53,7 +53,7 @@ public class PolicyTeamUpdateServiceTests
             .WithWasSubmittedToPendingLocalAuthority(true)
             .Build();
 
-        var allReferrals = new List<ReferralRequest>
+        var allReferralsForReporting = new List<ReferralRequest>
         {
             validReferral, invalidReferral
         };
@@ -65,12 +65,12 @@ public class PolicyTeamUpdateServiceTests
         mockDataProvider
             .Setup(dp =>
                 dp.GetWhlgReferralRequestsBetweenDates(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
-            .ReturnsAsync(allReferrals);
+            .ReturnsAsync(allReferralsForReporting);
 
         mockDataProvider
             .Setup(dp =>
-                dp.GetAllWhlgReferralRequests())
-            .ReturnsAsync(allReferrals);
+                dp.GetAllWhlgReferralRequestsForSlaComplianceReporting())
+            .ReturnsAsync(allReferralsForReporting);
 
         // Act
         await policyTeamUpdateService.SendPolicyTeamUpdate();
