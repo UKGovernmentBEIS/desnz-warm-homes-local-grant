@@ -53,6 +53,9 @@ public class LocalAuthorityData
     // The local authority names and websites mainly come from the local-links-manager Gov.UK service
     // https://docs.publishing.service.gov.uk/repos/local-links-manager/checking-links.html
     // The structure and status SST is documented on our swiki, page is titled "Source of truth for LAs & Consortia"
+    // This dictionary data is automatically generated
+    // See https://github.com/UKGovernmentBEIS/desnz-warm-homes-local-grant/tree/develop/scripts/local-authority-information-generators
+    // Avoid making manual changes to this code if possible
     public static readonly Dictionary<string, LocalAuthorityDetails> LocalAuthorityDetailsByCustodianCode = new()
     {
         { "9051", new LocalAuthorityDetails("Aberdeen City Council", LocalAuthorityStatus.NotTakingPart, "https://www.aberdeencity.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
