@@ -46,7 +46,7 @@ namespace WhlgPublicWebsite
             recurringJobManager.AddOrUpdate<ReferralFollowUpNotificationService>(
                 "Get referrals passed ten day working threshold with no follow up",
                 service => service.SendReferralFollowUpNotifications(),
-                "30 * * * *"); // at xx:30
+                "30 0 * * *"); // at 00:30 every day
             
             recurringJobManager.AddOrUpdate<UnsubmittedReferralRequestsService>(
                 "Write unsubmitted referral requests to csv",
@@ -56,12 +56,12 @@ namespace WhlgPublicWebsite
             recurringJobManager.AddOrUpdate<PolicyTeamUpdateService>(
                 "Send policy team update email",
                 service => service.SendPolicyTeamUpdate(),
-                "0 * * * *"); // at xx:00
+                "0 7 * * 1"); // at 07:00 on Monday
                 
             recurringJobManager.AddOrUpdate<PendingReferralNotificationService>(
                 "Send monthly pending referral report",
                 service => service.SendPendingReferralNotifications(),
-                "15 * * * *"); // at xx:15
+                "15 7 1 * *"); // at 07:15 on 1st of the month
 
             app.Run();
         }
