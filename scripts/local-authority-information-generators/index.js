@@ -22,16 +22,6 @@ function getLaCustodianCode(localAuthority) {
     return localAuthority["Custodian Code"];
 }
 
-function isGreaterManchesterTrailblazer(localAuthority) {
-    const consortiumName = getConsortiumName(localAuthority);
-    return consortiumName === "Greater Manchester Combined Authority";
-}
-
-function isWestMidlandsCombinedAuthorityTrailblazer(localAuthority) {
-    const consortiumName = getConsortiumName(localAuthority);
-    return consortiumName === "West Midlands Combined Authority";
-}
-
 function getLaStatus(localAuthority) {
     switch (localAuthority["WHLG Status"]) {
         case "Live":

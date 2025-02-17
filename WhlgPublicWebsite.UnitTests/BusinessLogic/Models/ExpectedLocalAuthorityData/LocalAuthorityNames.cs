@@ -4,6 +4,9 @@ namespace Tests.BusinessLogic.Models.ExpectedLocalAuthorityData;
 
 internal static class LocalAuthorityNames
 {
+    // This dictionary data is automatically generated
+    // See https://github.com/UKGovernmentBEIS/desnz-warm-homes-local-grant/tree/develop/scripts/local-authority-information-generators
+    // Avoid making manual changes to this code if possible
     internal static Dictionary<string, string> NamesByCustodianCode()
     {
         return new Dictionary<string, string>
