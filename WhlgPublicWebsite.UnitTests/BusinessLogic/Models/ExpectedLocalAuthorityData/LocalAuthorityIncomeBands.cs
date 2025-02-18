@@ -8,6 +8,9 @@ internal static class LocalAuthorityIncomeBands
 {
     private static readonly IncomeBand[] ThresholdAt36000 = { UnderOrEqualTo36000, GreaterThan36000 };
 
+    // This dictionary data is automatically generated
+    // See https://github.com/UKGovernmentBEIS/desnz-warm-homes-local-grant/tree/develop/scripts/local-authority-information-generators
+    // Avoid making manual changes to this code if possible
     internal static Dictionary<string, IncomeBand[]> IncomeBandOptionsByCustodianCode()
     {
         return new Dictionary<string, IncomeBand[]>

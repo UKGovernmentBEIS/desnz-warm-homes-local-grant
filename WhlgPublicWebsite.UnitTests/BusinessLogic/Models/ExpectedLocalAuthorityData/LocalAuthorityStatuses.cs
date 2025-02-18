@@ -6,6 +6,9 @@ namespace Tests.BusinessLogic.Models.ExpectedLocalAuthorityData;
 
 internal static class LocalAuthorityStatuses
 {
+    // This dictionary data is automatically generated
+    // See https://github.com/UKGovernmentBEIS/desnz-warm-homes-local-grant/tree/develop/scripts/local-authority-information-generators
+    // Avoid making manual changes to this code if possible
     internal static Dictionary<string, LocalAuthorityStatus> StatusesByCustodianCode()
     {
         return new Dictionary<string, LocalAuthorityStatus>
@@ -96,7 +99,7 @@ internal static class LocalAuthorityStatuses
             { "1155", Live },
             { "1265", Live },
             { "2220", Live },
-            { "4615", NotParticipating },
+            { "4615", Live },
             { "9058", NotTakingPart },
             { "9059", NotTakingPart },
             { "1355", Live },
@@ -274,7 +277,7 @@ internal static class LocalAuthorityStatuses
             { "9010", NotTakingPart },
             { "3245", Live },
             { "350", Live },
-            { "4625", NotParticipating },
+            { "4625", Live },
             { "3300", Live },
             { "9076", NotTakingPart },
             { "530", Live },
