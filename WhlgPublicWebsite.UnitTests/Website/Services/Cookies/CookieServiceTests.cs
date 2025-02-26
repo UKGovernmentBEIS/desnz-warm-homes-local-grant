@@ -1,51 +1,50 @@
 ﻿using System;
 using FluentAssertions;
-using WhlgPublicWebsite.Models.Cookies;
-using WhlgPublicWebsite.Services.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using WhlgPublicWebsite.Models.Cookies;
+using WhlgPublicWebsite.Services.Cookies;
 
 namespace Tests.Website.Services.Cookies;
 
 [TestFixture]
 public class CookieServiceTests
 {
-    private CookieService CookieService;
-    private string Key;
-    private static int LatestVersion = 3;
+    private readonly CookieService cookieService;
+    private readonly string testKey;
+    private const int LatestVersion = 3;
 
-    [DatapointSource] 
-    private static CookieServiceTestCase[] CookieServiceTestCases =
-    {
-        new("Accepted latest cookies", new()
+    [DatapointSource] private static CookieServiceTestCase[] CookieServiceTestCases =
+    [
+        new("Accepted latest cookies", new CookieSettings
         {
             Version = LatestVersion,
             ConfirmationShown = true,
             GoogleAnalytics = true
         }),
-        new("Outdated version", new()
+        new("Outdated version", new CookieSettings
         {
             Version = LatestVersion - 1,
             ConfirmationShown = true,
             GoogleAnalytics = true
         }),
-        new("Rejected analytics and confirmation shown", new()
+        new("Rejected analytics and confirmation shown", new CookieSettings
         {
             Version = LatestVersion,
             ConfirmationShown = true,
             GoogleAnalytics = false
         }),
-        new("Rejected analytics and confirmation not shown", new()
+        new("Rejected analytics and confirmation not shown", new CookieSettings
         {
             Version = LatestVersion,
             ConfirmationShown = false,
             GoogleAnalytics = false
         }),
-        new("Missing cookie", new()),
-    };
+        new("Missing cookie", new CookieSettings())
+    ];
 
     public CookieServiceTests()
     {
@@ -56,10 +55,10 @@ public class CookieServiceTests
             DefaultDaysUntilExpiry = 365
         };
         var options = Options.Create(config);
-        CookieService = new CookieService(options, new NullLogger<CookieService>());
-        Key = CookieService.Configuration.CookieSettingsCookieName;
+        cookieService = new CookieService(options, new NullLogger<CookieService>());
+        testKey = cookieService.Configuration.CookieSettingsCookieName;
     }
-    
+
     [TestCaseSource(nameof(CookieServiceTestCases))]
     public void CanSetResponseCookie(CookieServiceTestCase testCase)
     {
@@ -67,14 +66,14 @@ public class CookieServiceTests
         var value = testCase.CookieSettings;
         var context = new DefaultHttpContext();
         var response = context.Response;
-        
+
         // Act
-        CookieService.SetCookie(response, Key, value);
-        
+        cookieService.SetCookie(response, testKey, value);
+
         // Assert
-        AssertResponseContainsCookie(response, Key, value);
+        AssertResponseContainsCookie(response, testKey, value);
     }
-    
+
     [TestCaseSource(nameof(CookieServiceTestCases))]
     public void CanGetRequestCookieSettings(CookieServiceTestCase testCase)
     {
@@ -82,30 +81,30 @@ public class CookieServiceTests
         var value = testCase.CookieSettings;
         var context = new DefaultHttpContext();
         var request = context.Request;
-        request.Headers.Cookie = $"{Key}={ConvertObjectToHttpHeaderSrting(value)}";
-        
+        request.Headers.Cookie = $"{testKey}={ConvertObjectToHttpHeaderSrting(value)}";
+
         // Act
-        var success = CookieService.TryGetCookie<CookieSettings>(request, Key, out var cookie);
-        
+        var success = cookieService.TryGetCookie<CookieSettings>(request, testKey, out var cookie);
+
         // Assert
         success.Should().Be(true);
         cookie.Should().BeEquivalentTo(value);
     }
-    
+
     [Test]
     public void ShouldReturnFalseIfCantGetRequestCookie()
     {
         // Arrange
         var context = new DefaultHttpContext();
         var request = context.Request;
-        
+
         // Act
-        var success = CookieService.TryGetCookie<CookieSettings>(request, Key, out _);
-        
+        var success = cookieService.TryGetCookie<CookieSettings>(request, testKey, out _);
+
         // Assert
         success.Should().Be(false);
     }
-    
+
     [TestCaseSource(nameof(CookieServiceTestCases))]
     public void CanCheckIfCookieSettingsVersionMatches(CookieServiceTestCase testCase)
     {
@@ -113,15 +112,15 @@ public class CookieServiceTests
         var value = testCase.CookieSettings;
         var context = new DefaultHttpContext();
         var request = context.Request;
-        request.Headers.Cookie = $"{Key}={ConvertObjectToHttpHeaderSrting(value)}";
-        
+        request.Headers.Cookie = $"{testKey}={ConvertObjectToHttpHeaderSrting(value)}";
+
         // Act
-        var success = CookieService.CookieSettingsAreUpToDate(request);
-        
+        var success = cookieService.CookieSettingsAreUpToDate(request);
+
         // Assert
         success.Should().Be(value.Version == LatestVersion);
     }
-    
+
     [TestCaseSource(nameof(CookieServiceTestCases))]
     public void CanCheckIfGoogleAnalyticsAreAccepted(CookieServiceTestCase testCase)
     {
@@ -130,15 +129,32 @@ public class CookieServiceTests
         var analytics = value.Version == LatestVersion && value.GoogleAnalytics;
         var context = new DefaultHttpContext();
         var request = context.Request;
-        request.Headers.Cookie = $"{Key}={ConvertObjectToHttpHeaderSrting(value)}";
-        
+        request.Headers.Cookie = $"{testKey}={ConvertObjectToHttpHeaderSrting(value)}";
+
         // Act
-        var success = CookieService.HasAcceptedGoogleAnalytics(request);
-        
+        var success = cookieService.HasAcceptedGoogleAnalytics(request);
+
         // Assert
         success.Should().Be(analytics);
     }
-    
+
+    [TestCase("/password")]
+    [TestCase("/password?returnPath=%2fquestionnaire%2fcountry")]
+    public void HidesBannerIfOnPasswordPage(string passwordUrl)
+    {
+        // Arrange
+        var context = new DefaultHttpContext();
+        var request = context.Request;
+        var response = context.Response;
+        request.Path = passwordUrl;
+
+        // Act
+        var bannerState = cookieService.GetAndUpdateBannerState(request, response);
+
+        // Assert
+        bannerState.Should().Be(BannerState.Hide);
+    }
+
     [Test]
     public void HidesBannerIfOnCookiePage()
     {
@@ -149,8 +165,8 @@ public class CookieServiceTests
         request.Path = "/cookies";
 
         // Act
-        var bannerState = CookieService.GetAndUpdateBannerState(request, response);
-        
+        var bannerState = cookieService.GetAndUpdateBannerState(request, response);
+
         // Assert
         bannerState.Should().Be(BannerState.Hide);
     }
@@ -163,13 +179,13 @@ public class CookieServiceTests
         var context = new DefaultHttpContext();
         var request = context.Request;
         var response = context.Response;
-        request.Headers.Cookie = $"{Key}={ConvertObjectToHttpHeaderSrting(value)}";
+        request.Headers.Cookie = $"{testKey}={ConvertObjectToHttpHeaderSrting(value)}";
 
         // Precondition: the only cases we are testing are 'Missing cookie' and 'Outdated version'
-        Assume.That(!CookieService.CookieSettingsAreUpToDate(request));
+        Assume.That(!cookieService.CookieSettingsAreUpToDate(request));
 
         // Act
-        var bannerState = CookieService.GetAndUpdateBannerState(request, response);
+        var bannerState = cookieService.GetAndUpdateBannerState(request, response);
 
         // Assert
         bannerState.Should().Be(BannerState.ShowBanner);
@@ -183,15 +199,15 @@ public class CookieServiceTests
         var context = new DefaultHttpContext();
         var request = context.Request;
         var response = context.Response;
-        request.Headers.Cookie = $"{Key}={ConvertObjectToHttpHeaderSrting(value)}";
+        request.Headers.Cookie = $"{testKey}={ConvertObjectToHttpHeaderSrting(value)}";
 
         // Precondition: the only cases we are testing are 'Accepted latest cookies' and 'Rejected analytics and
         // confirmation shown'
-        Assume.That(CookieService.CookieSettingsAreUpToDate(request));
+        Assume.That(cookieService.CookieSettingsAreUpToDate(request));
         Assume.That(value.ConfirmationShown);
 
         // Act
-        var bannerState = CookieService.GetAndUpdateBannerState(request, response);
+        var bannerState = cookieService.GetAndUpdateBannerState(request, response);
 
         // Assert
         bannerState.Should().Be(BannerState.Hide);
@@ -205,20 +221,20 @@ public class CookieServiceTests
         var context = new DefaultHttpContext();
         var request = context.Request;
         var response = context.Response;
-        request.Headers.Cookie = $"{Key}={ConvertObjectToHttpHeaderSrting(value)}";
+        request.Headers.Cookie = $"{testKey}={ConvertObjectToHttpHeaderSrting(value)}";
 
         // Precondition: the only case we are testing is 'Rejected analytics and confirmation not shown'
-        Assume.That(CookieService.CookieSettingsAreUpToDate(request));
+        Assume.That(cookieService.CookieSettingsAreUpToDate(request));
         Assume.That(!value.ConfirmationShown);
 
         // Act
-        var bannerState = CookieService.GetAndUpdateBannerState(request, response);
+        var bannerState = cookieService.GetAndUpdateBannerState(request, response);
 
         // Assert
         var expectedBannerState = value.GoogleAnalytics ? BannerState.ShowAccepted : BannerState.ShowRejected;
         bannerState.Should().Be(expectedBannerState);
         value.ConfirmationShown = true;
-        AssertResponseContainsCookie(response, Key, value);
+        AssertResponseContainsCookie(response, testKey, value);
     }
 
     private void AssertResponseContainsCookie(HttpResponse response, string key, object value)
@@ -230,11 +246,11 @@ public class CookieServiceTests
     {
         return Uri.EscapeDataString(JsonConvert.SerializeObject(o));
     }
-    
+
     public class CookieServiceTestCase
     {
-        public string Description;
         public CookieSettings CookieSettings;
+        public string Description;
 
         public CookieServiceTestCase(string description, CookieSettings cookieSettings)
         {
