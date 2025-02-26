@@ -6,13 +6,14 @@ DO LANGUAGE plpgsql $$
             RETURN;
         END IF;
 
-        TRUNCATE "AuditDownloads";
-        TRUNCATE "Consortia";
-        TRUNCATE "ConsortiumUser";
-        TRUNCATE "CsvFileDownloads";
-        TRUNCATE "DataProtectionKeys";
-        TRUNCATE "LocalAuthorities";
-        TRUNCATE "LocalAuthorityUser";
-        TRUNCATE "Users";
+        TRUNCATE 
+            "AuditDownloads", 
+            "Consortia",
+            "ConsortiumUser",
+            "CsvFileDownloads",
+            "DataProtectionKeys",
+            "LocalAuthorities",
+            "LocalAuthorityUser",
+            "Users";
     END;
 $$

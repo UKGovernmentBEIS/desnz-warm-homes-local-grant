@@ -6,10 +6,11 @@ DO LANGUAGE plpgsql $$
             RETURN;
         END IF;
         
-        TRUNCATE "NotificationDetails";
-        TRUNCATE "ReferralRequestFollowUps";
-        TRUNCATE "ReferralRequests";
-        TRUNCATE "sessioncache";
-        TRUNCATE "Sessions";
+        TRUNCATE 
+            "NotificationDetails",
+            "ReferralRequestFollowUps",
+            "ReferralRequests",
+            "sessioncache",
+            "Sessions";
     END;
 $$
