@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
@@ -54,8 +56,7 @@ public class CookieService
 
     public BannerState GetAndUpdateBannerState(HttpRequest request, HttpResponse response)
     {
-        // Cookie settings page doesn't display the banner
-        if (request.GetEncodedUrl().Contains("/cookies"))
+        if (UrlShouldHideCookieBanner(request))
         {
             return BannerState.Hide;
         }
@@ -97,5 +98,15 @@ public class CookieService
                 MaxAge = TimeSpan.FromDays(Configuration.DefaultDaysUntilExpiry),
                 HttpOnly = true
             });
+    }
+
+    private bool UrlShouldHideCookieBanner(HttpRequest request)
+    {
+        List<string> ignoredCookieUrlSections = [
+            "/cookies", // Cookie settings page doesn't display the banner
+            "/password" // Password page shouldn't display as requests to hide the cookie are also password protected
+        ];
+
+        return ignoredCookieUrlSections.Any(urlSection => request.GetEncodedUrl().Contains(urlSection));
     }
 }
