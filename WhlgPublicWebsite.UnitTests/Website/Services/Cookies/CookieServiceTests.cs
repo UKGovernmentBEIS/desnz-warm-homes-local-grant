@@ -139,6 +139,23 @@ public class CookieServiceTests
         success.Should().Be(analytics);
     }
     
+    [TestCase("/password")]
+    [TestCase("/password?returnPath=%2fquestionnaire%2fcountry")]
+    public void HidesBannerIfOnPasswordPage(string passwordUrl)
+    {
+        // Arrange
+        var context = new DefaultHttpContext();
+        var request = context.Request;
+        var response = context.Response;
+        request.Path = passwordUrl;
+
+        // Act
+        var bannerState = CookieService.GetAndUpdateBannerState(request, response);
+        
+        // Assert
+        bannerState.Should().Be(BannerState.Hide);
+    }
+    
     [Test]
     public void HidesBannerIfOnCookiePage()
     {
