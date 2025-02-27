@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using NUnit.Framework;
+using Tests.Helpers;
 using WhlgPublicWebsite.BusinessLogic.Models;
 using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 using WhlgPublicWebsite.BusinessLogic.Services.QuestionFlow;
@@ -17,11 +18,11 @@ public class QuestionFlowServiceTests
     }
 
     private IQuestionFlowService questionFlowService;
-    private const string LiveCustodianCode = "3810";
-    private const string NotTakingPartCustodianCode = "9051";
-    private const string NotParticipatingCustodianCode = "4205";
-    private const string PendingCustodianCode = "9053";
-    private const string TakingFutureReferralsCustodianCode = "9054";
+    private static readonly string LiveCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live);
+    private static readonly string NotTakingPartCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.NotTakingPart);
+    private static readonly string NotParticipatingCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.NotParticipating);
+    private static readonly string PendingCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
+    private static readonly string TakingFutureReferralsCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals);
 
     [TestCaseSource(nameof(BackTestCases))]
     public void RunBackLinkTestCases(QuestionFlowServiceTestCase testCase)
@@ -780,7 +781,7 @@ public class QuestionFlowServiceTests
             DateTime? epcExpiry = null,
             IncomeBand? incomeBand = IncomeBand.UnderOrEqualTo36000,
             bool localAuthorityIsCorrect = false,
-            string custodianCode = "3505", // Babergh has income threshold of £36,000 and is live
+            string custodianCode = null,
             QuestionFlowStep? entryPoint = null)
         {
             Page = page;
@@ -794,7 +795,7 @@ public class QuestionFlowServiceTests
                     epcRating == null ? null : new EpcDetails { EpcRating = epcRating, ExpiryDate = epcExpiry },
                 IncomeBand = incomeBand,
                 LocalAuthorityConfirmed = localAuthorityIsCorrect,
-                CustodianCode = custodianCode
+                CustodianCode = custodianCode ?? LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live)
             };
             EntryPoint = entryPoint;
         }
