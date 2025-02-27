@@ -201,7 +201,7 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
         var referralRequest6 = new ReferralRequestBuilder(6).WithWrittenToCsv(false).WithCustodianCode("9052").WithFollowUp(new ReferralRequestFollowUpBuilder(6).WithWasFollowedUp(false)).Build();
         var referralRequest7 = new ReferralRequestBuilder(7).WithWrittenToCsv(true).WithCustodianCode("9052").WithFollowUp(new ReferralRequestFollowUpBuilder(7).WithWasFollowedUp(true)).Build();
         var referralRequest8 = new ReferralRequestBuilder(8).WithWrittenToCsv(true).WithCustodianCode("9052").WithFollowUp(new ReferralRequestFollowUpBuilder(8).WithWasFollowedUp(false)).Build();
-        var referralRequest9 = new ReferralRequestBuilder(9).WithWrittenToCsv(true).WithCustodianCode("1505").WithFollowUp(new ReferralRequestFollowUpBuilder(9).WithWasFollowedUp(false)).Build();
+        var referralRequest9 = new ReferralRequestBuilder(9).WithWrittenToCsv(true).WithCustodianCode("2205").WithFollowUp(new ReferralRequestFollowUpBuilder(9).WithWasFollowedUp(false)).Build();
         
         var referralRequests = new List<ReferralRequest>() { referralRequest1, referralRequest2, referralRequest3, referralRequest4, referralRequest5, referralRequest6, referralRequest7, referralRequest8, referralRequest9 };
 
@@ -215,8 +215,8 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
             "SLA Report Date,Consortium,Consortium All Referrals Downloaded,Consortium Number of Referrals Not Downloaded,"+
             "Consortium Percentage of Referrals Not Downloaded,Consortium All Referrals Contacted,"+
             "Consortium Number of Referrals Not Contacted,Consortium Percentage of Referrals Not Contacted\r\n"+
-            $"{today},Bristol City Council,False,3,60,False,2,40\r\n" // Custodian codes 114 and 121 
-            ); // Stats for 9052 and 1505 with no Consortium name should not appear as LAs with no Consortium should not be included
+            $"{today},Bristol City Council,False,3,60,False,2,40\r\n" // Custodian codes 114 and 121"
+            ); // Stats for 9052 and 2205 with no Consortium name should not appear as LAs with no Consortium should not be included
         
     }
 

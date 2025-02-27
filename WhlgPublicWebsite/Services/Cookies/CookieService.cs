@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
@@ -8,16 +10,9 @@ using WhlgPublicWebsite.Models.Cookies;
 
 namespace WhlgPublicWebsite.Services.Cookies;
 
-public class CookieService
+public class CookieService(IOptions<CookieServiceConfiguration> options, ILogger<CookieService> logger)
 {
-    public readonly CookieServiceConfiguration Configuration;
-    private readonly ILogger<CookieService> logger;
-    
-    public CookieService(IOptions<CookieServiceConfiguration> options, ILogger<CookieService> logger)
-    {
-        Configuration = options.Value;
-        this.logger = logger;
-    }
+    public readonly CookieServiceConfiguration Configuration = options.Value;
 
     public bool TryGetCookie<T>(HttpRequest request, string cookieName, out T cookie)
     {
@@ -30,7 +25,8 @@ public class CookieService
             }
             catch (JsonException)
             {
-                logger.LogWarning("There was an error in deserializing the cookie string '{}' to the type '{}'", cookieString, nameof(T));
+                logger.LogWarning("There was an error in deserializing the cookie string '{}' to the type '{}'",
+                    cookieString, nameof(T));
                 // In case of failure, return false as if there was no cookie
             }
         }
@@ -38,24 +34,23 @@ public class CookieService
         cookie = default;
         return false;
     }
-    
+
     public bool CookieSettingsAreUpToDate(HttpRequest request)
     {
-        return TryGetCookie<CookieSettings>(request, Configuration.CookieSettingsCookieName, out var cookie) && 
+        return TryGetCookie<CookieSettings>(request, Configuration.CookieSettingsCookieName, out var cookie) &&
                cookie.Version == Configuration.CurrentCookieMessageVersion;
     }
 
     public bool HasAcceptedGoogleAnalytics(HttpRequest request)
     {
-        return CookieSettingsAreUpToDate(request) 
-               && TryGetCookie<CookieSettings>(request, Configuration.CookieSettingsCookieName, out var cookie) 
+        return CookieSettingsAreUpToDate(request)
+               && TryGetCookie<CookieSettings>(request, Configuration.CookieSettingsCookieName, out var cookie)
                && cookie.GoogleAnalytics;
     }
 
     public BannerState GetAndUpdateBannerState(HttpRequest request, HttpResponse response)
     {
-        // Cookie settings page doesn't display the banner
-        if (request.GetEncodedUrl().Contains("/cookies"))
+        if (UrlShouldHideCookieBanner(request))
         {
             return BannerState.Hide;
         }
@@ -65,7 +60,7 @@ public class CookieService
         {
             return BannerState.ShowBanner;
         }
-        
+
         if (TryGetCookie<CookieSettings>(request, Configuration.CookieSettingsCookieName, out var cookie))
         {
             // We don't need to show anything else after showing the confirmation
@@ -97,5 +92,16 @@ public class CookieService
                 MaxAge = TimeSpan.FromDays(Configuration.DefaultDaysUntilExpiry),
                 HttpOnly = true
             });
+    }
+
+    private bool UrlShouldHideCookieBanner(HttpRequest request)
+    {
+        List<string> ignoredCookieUrlSections =
+        [
+            "/cookies", // Cookie settings page doesn't display the banner
+            "/password" // Password page shouldn't display as requests to hide the cookie are also password protected
+        ];
+
+        return ignoredCookieUrlSections.Any(urlSection => request.GetEncodedUrl().Contains(urlSection));
     }
 }

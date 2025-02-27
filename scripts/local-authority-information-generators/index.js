@@ -27,9 +27,19 @@ function getLaStatus(localAuthority) {
         case "Live":
             return "Live";
         case "Not Taking Part":
+        case "NotTakingPart":
             return "NotTakingPart";
         case "Not Participating":
+        case "NotParticipating":
             return "NotParticipating"
+        case "Taking Future Referrals":
+        case "TakingFutureReferrals":
+            return "TakingFutureReferrals";
+        case "Pending":
+            return "Pending";
+        case "No Longer Participating":
+        case "NoLongerParticipating":
+            return "NoLongerParticipating";
         default:
             throw new Error(`LA in invalid state to determine status, ${JSON.stringify(localAuthority)}`);
     }
