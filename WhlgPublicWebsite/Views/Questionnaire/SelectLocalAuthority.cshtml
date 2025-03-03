@@ -71,18 +71,24 @@
                 
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-one-half">
-                            @foreach (var laDetails in orderedLaDetails.Take(linksInFirstColumn))
-                            {
-                                <a class="govuk-link govuk-!-font-size-19" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode, entryPoint = Model.EntryPoint })">@laDetails.Name</a>
-                                <br/>
-                            }
+                            <ul class="govuk-list">
+                                @foreach (var laDetails in orderedLaDetails.Take(linksInFirstColumn))
+                                {
+                                    <li>
+                                        <a class="govuk-link govuk-!-font-size-19" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode, entryPoint = Model.EntryPoint })">@laDetails.Name</a>
+                                    </li>
+                                }
+                            </ul>
                         </div>
                         <div class="govuk-grid-column-one-half">
-                            @foreach (var laDetails in orderedLaDetails.Skip(linksInFirstColumn))
-                            {
-                                <a class="govuk-link govuk-!-font-size-19" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode, entryPoint = Model.EntryPoint })">@laDetails.Name</a>
-                                <br/>
-                            }
+                            <ul class="govuk-list">
+                                @foreach (var laDetails in orderedLaDetails.Skip(linksInFirstColumn))
+                                {
+                                    <li>
+                                        <a class="govuk-link govuk-!-font-size-19" href="@Url.Action(nameof(QuestionnaireController.LocalAuthoritySelected_Get), "Questionnaire", new { custodianCode = laDetails.CustodianCode, entryPoint = Model.EntryPoint })">@laDetails.Name</a>
+                                    </li>
+                                }
+                            </ul>
                         </div>
                     </div>
                 </div> 
