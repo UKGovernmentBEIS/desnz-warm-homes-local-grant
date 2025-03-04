@@ -67,7 +67,7 @@
                 var orderedLaDetails = localAuthoritiesForInitial.Value.OrderBy(lad => lad.Name).ToList();
                 var linksInFirstColumn = Math.Max((orderedLaDetails.Count + 1) / 2, 8);
                 <div id="@localAuthoritiesForInitial.Key" class="her_local_authority_section">
-                    <h2 class="govuk-heading-s">@localAuthoritiesForInitial.Key<hr/></h2>
+                    <h2 class="govuk-heading-m">@localAuthoritiesForInitial.Key</h2>
                 
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-one-half">
