@@ -7,13 +7,11 @@
 }
 
 @section BeforeMain {
-    <nav>
-        @await Html.GovUkBackLink(new BackLinkViewModel
-        {
-            Text = "Back",
-            Href = Model.BackLink,
-        })
-    </nav>
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
 }
 
 <div class="govuk-grid-row">
