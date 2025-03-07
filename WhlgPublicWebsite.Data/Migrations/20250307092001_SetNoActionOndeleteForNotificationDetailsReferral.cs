@@ -9,7 +9,7 @@ namespace WhlgPublicWebsite.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_NotificationDetails_ReferralRequests_ReferralRequestId",
+                name: "FK_ContactDetails_ReferralRequests_ReferralRequestId",
                 table: "NotificationDetails");
 
             migrationBuilder.AddForeignKey(
@@ -27,7 +27,7 @@ namespace WhlgPublicWebsite.Data.Migrations
                 table: "NotificationDetails");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_NotificationDetails_ReferralRequests_ReferralRequestId",
+                name: "FK_ContactDetails_ReferralRequests_ReferralRequestId",
                 table: "NotificationDetails",
                 column: "ReferralRequestId",
                 principalTable: "ReferralRequests",

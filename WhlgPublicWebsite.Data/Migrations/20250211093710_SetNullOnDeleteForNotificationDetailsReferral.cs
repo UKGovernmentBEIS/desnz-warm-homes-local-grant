@@ -24,11 +24,11 @@ namespace WhlgPublicWebsite.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_ContactDetailsDetails_ReferralRequests_ReferralRequestId",
+                name: "FK_ContactDetails_ReferralRequests_ReferralRequestId",
                 table: "NotificationDetails");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ContactDetailsDetails_ReferralRequests_ReferralRequestId",
+                name: "FK_ContactDetails_ReferralRequests_ReferralRequestId",
                 table: "NotificationDetails",
                 column: "ReferralRequestId",
                 principalTable: "ReferralRequests",
