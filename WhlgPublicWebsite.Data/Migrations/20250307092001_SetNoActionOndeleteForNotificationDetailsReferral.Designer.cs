@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WhlgPublicWebsite.Data;
@@ -11,9 +12,10 @@ using WhlgPublicWebsite.Data;
 namespace WhlgPublicWebsite.Data.Migrations
 {
     [DbContext(typeof(WhlgDbContext))]
-    partial class WhlgDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250307092001_SetNoActionOndeleteForNotificationDetailsReferral")]
+    partial class SetNoActionOndeleteForNotificationDetailsReferral
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -218,7 +220,8 @@ namespace WhlgPublicWebsite.Data.Migrations
                 {
                     b.HasOne("WhlgPublicWebsite.BusinessLogic.Models.ReferralRequest", "ReferralRequest")
                         .WithMany()
-                        .HasForeignKey("ReferralRequestId");
+                        .HasForeignKey("ReferralRequestId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("ReferralRequest");
                 });
