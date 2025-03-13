@@ -45,19 +45,14 @@
                 Search for a Local Authority
             </h2>
 
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-three-quarters-from-desktop">
-                    @await Html.GovUkTextInputFor(m => m.SearchTerm)
-                </div>
-                <div class="govuk-grid-column-one-quarter-from-desktop">
-                    @(await Html.GovUkButton(new ButtonViewModel
-                    {
-                        Text = "Search",
-                    }))
-                </div>
-            </div>
+            @await Html.GovUkTextInputFor(m => m.SearchTerm, new LabelViewModel { Text = "Local Authority name" })
+
+            @(await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Search"
+            }))
         </form>
-        
+
         @if (Model.LocalAuthoritiesByInitial.Count > 0)
         {
             @foreach (var localAuthoritiesForInitial in Model.LocalAuthoritiesByInitial.ToList().OrderBy(k => k.Key))
