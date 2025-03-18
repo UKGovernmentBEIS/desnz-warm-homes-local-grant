@@ -15,6 +15,8 @@ public interface ICsvFileCreator
     public MemoryStream CreateLocalAuthorityReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests);
     public MemoryStream CreateConsortiumReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests);
     public MemoryStream CreatePendingReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests);
+    public MemoryStream CreatePerMonthLocalAuthorityReferralStatistics(IEnumerable<ReferralRequest> referralRequests);
+    public MemoryStream CreatePerMonthConsortiumReferralStatistics(IEnumerable<ReferralRequest> referralRequests);
 }
 
 public class CsvFileCreator : ICsvFileCreator
@@ -63,6 +65,108 @@ public class CsvFileCreator : ICsvFileCreator
 
         return GenerateCsvMemoryStreamFromFileRows(rows);
     }
+
+    public MemoryStream CreatePerMonthLocalAuthorityReferralStatistics(IEnumerable<ReferralRequest> requests)
+    {
+        var requestsByCustodianCode = requests.GroupBy(r => r.CustodianCode);
+        var rows = requestsByCustodianCode.Select(custodianCodeRequests =>
+        {
+            var localAuthorityDetails = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[custodianCodeRequests.Key];
+            return new CsvRowLaPerMonthStatistics(
+                name: localAuthorityDetails.Name,
+                consortiumName: localAuthorityDetails.Consortium ?? "N/A",
+                referralCount: custodianCodeRequests.Count(),
+                firstReferralDate: custodianCodeRequests.Min(x => x.RequestDate)
+            );
+        });
+
+        return GenerateCsvMemoryStreamFromFileRows(rows);
+    }
+
+    public MemoryStream CreatePerMonthConsortiumReferralStatistics(IEnumerable<ReferralRequest> requests)
+    {
+        var requestsByConsortium = requests.GroupBy(rr => LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Consortium);
+        var rows = requestsByConsortium.Select(consortiumRequests =>
+        {
+            return new CsvRowConsortiumPerMonthStatistics(
+                name: consortiumRequests.Key,
+                referralCount: consortiumRequests.Count(),
+                firstReferralDate: consortiumRequests.Min(x => x.RequestDate)
+            );
+        });
+        return GenerateCsvMemoryStreamFromFileRows(rows);
+    }
+
+    private class CsvRowConsortiumPerMonthStatistics
+    {
+        [Index(0)]
+        [Name("Consortium Name")]
+        public string Name { get; set; }
+        
+        [Index(1)]
+        [Name("Total WH:LG Referrals")]
+        public int ReferralCount { get; set; }
+        
+        [Index(2)]
+        [Name("Date of First Referral")]
+        public string FirstReferralDate { get; set; }
+
+        [Index(3)] 
+        [Name("Months Since First Referral")]
+        public int MonthsSinceFirstReferral { get; set; }
+
+        [Index(4)] [Name("Referrals Per Month")]
+        public string ReferralsPerMonth { get; set; }
+        
+        public CsvRowConsortiumPerMonthStatistics(string name, int referralCount, DateTime firstReferralDate)
+        {
+            Name = name;
+            ReferralCount = referralCount;
+            FirstReferralDate = firstReferralDate.ToString("d");
+            var monthTotal = (DateTime.Now.Year - firstReferralDate.Year) * 12
+                + DateTime.Now.Month - firstReferralDate.Month;
+            MonthsSinceFirstReferral = monthTotal < 1 ? 1 : monthTotal; 
+            ReferralsPerMonth = (ReferralCount / (float)MonthsSinceFirstReferral).ToString("0.##");
+        }    
+    }
+
+    private class CsvRowLaPerMonthStatistics
+    {
+        [Index(0)]
+        [Name("LA Name")]
+        public string Name { get; set; }
+
+        [Index(1)] 
+        [Name("Consortium Name")] 
+        public string ConsortiumName { get; set; }
+        
+        [Index(2)]
+        [Name("Total WH:LG Referrals")]
+        public int ReferralCount { get; set; }
+        
+        [Index(3)]
+        [Name("Date of First Referral")]
+        public string FirstReferralDate { get; set; }
+
+        [Index(4)] [Name("Months Since First Referral")]
+        public int MonthsSinceFirstReferral { get; set; }
+
+        [Index(5)] [Name("Referrals Per Month")]
+        public string ReferralsPerMonth { get; set; }
+        
+        public CsvRowLaPerMonthStatistics(string name, string consortiumName, int referralCount, DateTime firstReferralDate)
+        {
+            Name = name;
+            ConsortiumName = consortiumName;
+            ReferralCount = referralCount;
+            FirstReferralDate = firstReferralDate.ToString("d");
+            var monthTotal = (DateTime.Now.Year - firstReferralDate.Year) * 12
+                + DateTime.Now.Month - firstReferralDate.Month;
+            MonthsSinceFirstReferral = monthTotal < 1 ? 1 : monthTotal; 
+            ReferralsPerMonth = (ReferralCount / (float)MonthsSinceFirstReferral).ToString("0.##");
+        }    
+    }
+
 
     private class CsvRowReferralCodes
     {
@@ -351,7 +455,7 @@ public class CsvFileCreator : ICsvFileCreator
         };
 
         using var writeableMemoryStream = new MemoryStream();
-        using var streamWriter = new StreamWriter(writeableMemoryStream, Encoding.UTF8);
+        using var streamWriter = new StreamWriter(writeableMemoryStream, new UTF8Encoding(false));
         using var csvWriter = new CsvWriter(streamWriter, csvConfiguration);
         {
             csvWriter.WriteRecords(rows);

@@ -263,4 +263,88 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
             "Portsmouth City Council,Bedford Borough Council,2024-02-05 01:00:00,TEST0002,Test User 2,test2@example.com,,Live\r\n" +
             "Bristol City Council,North Somerset Council,2024-01-05 01:00:00,TEST0003,Test User 3,,333,Live\r\n");
     }
+    
+    [Test]
+    public void CreatePerMonthConsortiumReferralStatistics_CalledWithReferralRequest_GeneratesExpectedFileData()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var requestTime1 = DateTime.Now;
+        var referralRequest1 = new ReferralRequestBuilder(1)
+            .WithCustodianCode("114")
+            .WithRequestDate(new DateTime(requestTime1.Year, requestTime1.Month, 5))
+            .Build();
+        var requestTime2 = DateTime.Now.AddMonths(-3);
+        var referralRequest2 = new ReferralRequestBuilder(6)
+            .WithCustodianCode("235")
+            .WithRequestDate(new DateTime(requestTime2.Year, requestTime2.Month, 5))
+            .Build();
+        var requestTime3 = DateTime.Now.AddMonths(-3);
+        var referralRequest3 = new ReferralRequestBuilder(3)
+            .WithCustodianCode("121")
+            .WithRequestDate(new DateTime(requestTime3.Year, requestTime3.Month, 5))
+            .Build();
+        var requestTime4 = DateTime.Now.AddMonths(-3);
+        var referralRequest4 = new ReferralRequestBuilder(3)
+            .WithCustodianCode("121")
+            .WithRequestDate(new DateTime(requestTime4.Year, requestTime4.Month, 5))
+            .Build();
+
+        var referralRequests = new List<ReferralRequest> { referralRequest1, referralRequest2, referralRequest3, referralRequest4};
+
+        // Act
+        var data = underTest.CreatePerMonthConsortiumReferralStatistics(referralRequests);
+        
+        // Assert
+        var reader = new StreamReader(data, Encoding.UTF8);
+        reader.ReadToEnd().Should().Be(
+            "Consortium Name,Total WH:LG Referrals,Date of First Referral,Months Since First Referral,Referrals Per Month\r\n" + 
+            "Bristol City Council,3,05/12/2024,3,1\r\n" +
+            "Portsmouth City Council,1,05/12/2024,3,0.33\r\n");
+    }
+    
+    [Test]
+    public void CreatePerMonthLocalAuthorityReferralStatistics_CalledWithReferralRequest_GeneratesExpectedFileData()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var requestTime1 = DateTime.Now;
+        var referralRequest1 = new ReferralRequestBuilder(1)
+            .WithCustodianCode("114")
+            .WithRequestDate(new DateTime(requestTime1.Year, requestTime1.Month, 5))
+            .Build();
+        var requestTime2 = DateTime.Now.AddMonths(-3);
+        var referralRequest2 = new ReferralRequestBuilder(6)
+            .WithCustodianCode("235")
+            .WithRequestDate(new DateTime(requestTime2.Year, requestTime2.Month, 5))
+            .Build();
+        var requestTime3 = DateTime.Now.AddMonths(-3);
+        var referralRequest3 = new ReferralRequestBuilder(3)
+            .WithCustodianCode("121")
+            .WithRequestDate(new DateTime(requestTime3.Year, requestTime3.Month, 5))
+            .Build();
+        var requestTime4 = DateTime.Now.AddMonths(-3);
+        var referralRequest4 = new ReferralRequestBuilder(3)
+            .WithCustodianCode("121")
+            .WithRequestDate(new DateTime(requestTime4.Year, requestTime4.Month, 5))
+            .Build();
+        var requestTime5 = DateTime.Now.AddMonths(-3);
+        var referralRequest5 = new ReferralRequestBuilder(3)
+            .WithCustodianCode("121")
+            .WithRequestDate(new DateTime(requestTime5.Year, requestTime5.Month, 5))
+            .Build();
+
+        var referralRequests = new List<ReferralRequest> { referralRequest1, referralRequest2, referralRequest3, referralRequest4, referralRequest5 };
+
+        // Act
+        var data = underTest.CreatePerMonthLocalAuthorityReferralStatistics(referralRequests);
+        
+        // Assert
+        var reader = new StreamReader(data, Encoding.UTF8);
+        reader.ReadToEnd().Should().Be(
+            "LA Name,Consortium Name,Total WH:LG Referrals,Date of First Referral,Months Since First Referral,Referrals Per Month\r\n" + 
+            "Bath and North East Somerset Council,Bristol City Council,1,05/03/2025,1,1\r\n" +
+            "Bedford Borough Council,Portsmouth City Council,1,05/12/2024,3,0.33\r\n" +
+            "North Somerset Council,Bristol City Council,3,05/12/2024,3,1\r\n");
+    }
 }

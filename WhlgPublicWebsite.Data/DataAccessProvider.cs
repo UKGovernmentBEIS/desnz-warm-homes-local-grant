@@ -83,6 +83,13 @@ public class DataAccessProvider(WhlgDbContext context)
             .ToListAsync();
     }
 
+    public IList<ReferralRequest> GetReferralRequestsSubmittedAfterHug2Shutdown()
+    {
+        return context.ReferralRequests
+            .Where(rr => rr.RequestDate >= Hug2ShutdownDate)
+            .ToList();
+    }
+
     public async Task<IList<ReferralRequest>> GetWhlgReferralRequestsWithNoFollowUpBetweenDates(
         DateTime startDate,
         DateTime endDate)

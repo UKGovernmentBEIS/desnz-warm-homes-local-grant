@@ -1,19 +1,11 @@
 ﻿namespace WhlgPublicWebsite.ManagementShell;
 
-public class CommandHandler
+public class CommandHandler(
+    IDatabaseOperation databaseOperation,
+    IFakeReferralGenerator fakeReferralGenerator,
+    IOutputProvider outputProvider,
+    IStatisticProvider statisticProvider)
 {
-    private readonly IDatabaseOperation databaseOperation;
-    private readonly IFakeReferralGenerator fakeReferralGenerator;
-    private readonly IOutputProvider outputProvider;
-
-    public CommandHandler(IDatabaseOperation databaseOperation, IFakeReferralGenerator fakeReferralGenerator,
-        IOutputProvider outputProvider)
-    {
-        this.databaseOperation = databaseOperation;
-        this.fakeReferralGenerator = fakeReferralGenerator;
-        this.outputProvider = outputProvider;
-    }
-
     public void GenerateReferrals(string[] args)
     {
         if (args.Length == 0)
@@ -65,5 +57,19 @@ public class CommandHandler
         var referralsToAdd = fakeReferralGenerator.GenerateFakeReferralRequests(referralCount);
 
         databaseOperation.AddReferralRequests(referralsToAdd);
+    }
+    
+    public void GeneratePerMonthStatistics(string[] args)
+    {
+        outputProvider.Output("This function will output two CSV files to the terminal for you to copy into a local file.");
+        
+        if (new List<string>{"consortia", "consortium"}.Contains(args[0].Trim().ToLower()))
+            outputProvider.Output(statisticProvider.GenerateReferralPerConsortiumPerMonthStatistics());
+        else if (new List<string>{"localauthority", "la"}.Contains(args[0].Trim().ToLower()))
+            outputProvider.Output(statisticProvider.GenerateReferralPerLaPerMonthStatistics());
+        else
+        {
+            outputProvider.Output("Invalid argument. Usage: 'GeneratePerMonthStatistics <localauthority/consortia>");
+        }
     }
 }
