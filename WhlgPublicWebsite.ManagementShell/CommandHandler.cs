@@ -41,6 +41,7 @@ public class CommandHandler(
             outputProvider.Output($"Expecting to find this information in \"{environmentKey}\" environment variable.");
             outputProvider.Output("If this is no longer up to date please raise a ticket to fix this.");
         }
+
         outputProvider.Output("");
         outputProvider.Output("All users will have a FullName that begins \"FAKE USER\".");
         outputProvider.Output("To revert, connect to the database and run the following:");
@@ -58,14 +59,15 @@ public class CommandHandler(
 
         databaseOperation.AddReferralRequests(referralsToAdd);
     }
-    
+
     public void GeneratePerMonthStatistics(string[] args)
     {
-        outputProvider.Output("This function will output two CSV files to the terminal for you to copy into a local file.");
-        
-        if (new List<string>{"consortia", "consortium"}.Contains(args[0].Trim().ToLower()))
+        outputProvider.Output(
+            "This function will output two CSV files to the terminal for you to copy into a local file.");
+
+        if (new List<string> { "consortia", "consortium" }.Contains(args[0].Trim().ToLower()))
             outputProvider.Output(statisticProvider.GenerateReferralPerConsortiumPerMonthStatistics());
-        else if (new List<string>{"localauthority", "la"}.Contains(args[0].Trim().ToLower()))
+        else if (new List<string> { "localauthority", "la" }.Contains(args[0].Trim().ToLower()))
             outputProvider.Output(statisticProvider.GenerateReferralPerLaPerMonthStatistics());
         else
         {

@@ -20,7 +20,8 @@ public static class Program
         var dataAccessProvider = new DataAccessProvider(context);
         var fakeReferralGenerator = new FakeReferralGenerator();
         var statisticProvider = new StatisticProvider(dataAccessProvider, csvFileCreator);
-        var commandHandler = new CommandHandler(databaseOperation, fakeReferralGenerator, outputProvider, statisticProvider);
+        var commandHandler =
+            new CommandHandler(databaseOperation, fakeReferralGenerator, outputProvider, statisticProvider);
 
         Subcommand command;
         string[] subcommandArgs;

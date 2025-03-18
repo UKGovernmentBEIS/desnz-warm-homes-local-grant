@@ -12,7 +12,10 @@ public interface ICsvFileCreator
 {
     public MemoryStream CreateReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests);
     public MemoryStream CreateReferralRequestOverviewFileData(IEnumerable<ReferralRequest> referralRequests);
-    public MemoryStream CreateLocalAuthorityReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests);
+
+    public MemoryStream CreateLocalAuthorityReferralRequestFollowUpFileData(
+        IEnumerable<ReferralRequest> referralRequests);
+
     public MemoryStream CreateConsortiumReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests);
     public MemoryStream CreatePendingReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests);
     public MemoryStream CreatePerMonthLocalAuthorityReferralStatistics(IEnumerable<ReferralRequest> referralRequests);
@@ -71,12 +74,13 @@ public class CsvFileCreator : ICsvFileCreator
         var requestsByCustodianCode = requests.GroupBy(r => r.CustodianCode);
         var rows = requestsByCustodianCode.Select(custodianCodeRequests =>
         {
-            var localAuthorityDetails = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[custodianCodeRequests.Key];
+            var localAuthorityDetails =
+                LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[custodianCodeRequests.Key];
             return new CsvRowLaPerMonthStatistics(
-                name: localAuthorityDetails.Name,
-                consortiumName: localAuthorityDetails.Consortium ?? "N/A",
-                referralCount: custodianCodeRequests.Count(),
-                firstReferralDate: custodianCodeRequests.Min(x => x.RequestDate)
+                localAuthorityDetails.Name,
+                localAuthorityDetails.Consortium ?? "N/A",
+                custodianCodeRequests.Count(),
+                custodianCodeRequests.Min(x => x.RequestDate)
             );
         });
 
@@ -91,9 +95,9 @@ public class CsvFileCreator : ICsvFileCreator
         var rows = requestsByConsortium.Select(consortiumRequests =>
         {
             return new CsvRowConsortiumPerMonthStatistics(
-                name: consortiumRequests.Key,
-                referralCount: consortiumRequests.Count(),
-                firstReferralDate: consortiumRequests.Min(x => x.RequestDate)
+                consortiumRequests.Key,
+                consortiumRequests.Count(),
+                consortiumRequests.Min(x => x.RequestDate)
             );
         });
         return GenerateCsvMemoryStreamFromFileRows(rows);
@@ -101,25 +105,24 @@ public class CsvFileCreator : ICsvFileCreator
 
     private class CsvRowConsortiumPerMonthStatistics
     {
-        [Index(0)]
-        [Name("Consortium Name")]
-        public string Name { get; set; }
-        
+        [Index(0)] [Name("Consortium Name")] public string Name { get; set; }
+
         [Index(1)]
         [Name("Total WH:LG Referrals")]
-        public int ReferralCount { get; set; }
-        
+        public int ReferralCount { get; }
+
         [Index(2)]
         [Name("Date of First Referral")]
         public string FirstReferralDate { get; set; }
 
-        [Index(3)] 
+        [Index(3)]
         [Name("Months Since First Referral")]
-        public int MonthsSinceFirstReferral { get; set; }
+        public int MonthsSinceFirstReferral { get; }
 
-        [Index(4)] [Name("Referrals Per Month")]
+        [Index(4)]
+        [Name("Referrals Per Month")]
         public string ReferralsPerMonth { get; set; }
-        
+
         public CsvRowConsortiumPerMonthStatistics(string name, int referralCount, DateTime firstReferralDate)
         {
             Name = name;
@@ -127,36 +130,35 @@ public class CsvFileCreator : ICsvFileCreator
             FirstReferralDate = firstReferralDate.ToString("dd/MM/yyyy");
             var monthTotal = (DateTime.Now.Year - firstReferralDate.Year) * 12
                 + DateTime.Now.Month - firstReferralDate.Month;
-            MonthsSinceFirstReferral = monthTotal < 1 ? 1 : monthTotal; 
+            MonthsSinceFirstReferral = monthTotal < 1 ? 1 : monthTotal;
             ReferralsPerMonth = (ReferralCount / (float)MonthsSinceFirstReferral).ToString("0.##");
-        }    
+        }
     }
 
     private class CsvRowLaPerMonthStatistics
     {
-        [Index(0)]
-        [Name("LA Name")]
-        public string Name { get; set; }
+        [Index(0)] [Name("LA Name")] public string Name { get; set; }
 
-        [Index(1)] 
-        [Name("Consortium Name")] 
-        public string ConsortiumName { get; set; }
-        
+        [Index(1)] [Name("Consortium Name")] public string ConsortiumName { get; set; }
+
         [Index(2)]
         [Name("Total WH:LG Referrals")]
-        public int ReferralCount { get; set; }
-        
+        public int ReferralCount { get; }
+
         [Index(3)]
         [Name("Date of First Referral")]
         public string FirstReferralDate { get; set; }
 
-        [Index(4)] [Name("Months Since First Referral")]
-        public int MonthsSinceFirstReferral { get; set; }
+        [Index(4)]
+        [Name("Months Since First Referral")]
+        public int MonthsSinceFirstReferral { get; }
 
-        [Index(5)] [Name("Referrals Per Month")]
+        [Index(5)]
+        [Name("Referrals Per Month")]
         public string ReferralsPerMonth { get; set; }
-        
-        public CsvRowLaPerMonthStatistics(string name, string consortiumName, int referralCount, DateTime firstReferralDate)
+
+        public CsvRowLaPerMonthStatistics(string name, string consortiumName, int referralCount,
+            DateTime firstReferralDate)
         {
             Name = name;
             ConsortiumName = consortiumName;
@@ -164,9 +166,9 @@ public class CsvFileCreator : ICsvFileCreator
             FirstReferralDate = firstReferralDate.ToString("dd/MM/yyyy");
             var monthTotal = (DateTime.Now.Year - firstReferralDate.Year) * 12
                 + DateTime.Now.Month - firstReferralDate.Month;
-            MonthsSinceFirstReferral = monthTotal < 1 ? 1 : monthTotal; 
+            MonthsSinceFirstReferral = monthTotal < 1 ? 1 : monthTotal;
             ReferralsPerMonth = (ReferralCount / (float)MonthsSinceFirstReferral).ToString("0.##");
-        }    
+        }
     }
 
 

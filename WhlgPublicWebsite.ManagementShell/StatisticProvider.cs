@@ -10,8 +10,8 @@ public interface IStatisticProvider
     public string GenerateReferralPerConsortiumPerMonthStatistics();
 }
 
-
-public class StatisticProvider(IDataAccessProvider dataAccessProvider, ICsvFileCreator csvFileCreator) : IStatisticProvider
+public class StatisticProvider(IDataAccessProvider dataAccessProvider, ICsvFileCreator csvFileCreator)
+    : IStatisticProvider
 {
     public string GenerateReferralPerLaPerMonthStatistics()
     {
