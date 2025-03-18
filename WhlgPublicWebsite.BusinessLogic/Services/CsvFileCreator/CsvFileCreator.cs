@@ -85,7 +85,9 @@ public class CsvFileCreator : ICsvFileCreator
 
     public MemoryStream CreatePerMonthConsortiumReferralStatistics(IEnumerable<ReferralRequest> requests)
     {
-        var requestsByConsortium = requests.GroupBy(rr => LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Consortium);
+        var requestsByConsortium = requests.GroupBy(rr =>
+                LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Consortium)
+            .Where(group => group.Key != null);
         var rows = requestsByConsortium.Select(consortiumRequests =>
         {
             return new CsvRowConsortiumPerMonthStatistics(
