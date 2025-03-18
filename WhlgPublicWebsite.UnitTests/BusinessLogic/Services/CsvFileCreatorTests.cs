@@ -290,7 +290,8 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
             .WithRequestDate(new DateTime(requestTime4.Year, requestTime4.Month, 5))
             .Build();
 
-        var referralRequests = new List<ReferralRequest> { referralRequest1, referralRequest2, referralRequest3, referralRequest4};
+        var referralRequests = new List<ReferralRequest>
+            { referralRequest1, referralRequest2, referralRequest3, referralRequest4 };
 
         // Act
         var data = underTest.CreatePerMonthConsortiumReferralStatistics(referralRequests);
