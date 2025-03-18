@@ -7,17 +7,15 @@
 
 @model WhlgPublicWebsite.Models.Questionnaire.SelectAddressViewModel
 @{
-    ViewBag.Title = "Address";
+    ViewBag.Title = "Select your address";
 }
 
 @section BeforeMain {
-    <nav>
-        @await Html.GovUkBackLink(new BackLinkViewModel
-        {
-            Text = "Back",
-            Href = Model.BackLink,
-        })
-    </nav>
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
 }
 
 @{ var extraRouteValues = new{ entryPoint = Model.EntryPoint }; }
