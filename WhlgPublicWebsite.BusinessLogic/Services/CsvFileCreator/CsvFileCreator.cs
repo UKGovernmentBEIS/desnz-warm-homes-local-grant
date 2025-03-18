@@ -124,7 +124,7 @@ public class CsvFileCreator : ICsvFileCreator
         {
             Name = name;
             ReferralCount = referralCount;
-            FirstReferralDate = firstReferralDate.ToString("d");
+            FirstReferralDate = firstReferralDate.ToString("dd/MM/yyyy");
             var monthTotal = (DateTime.Now.Year - firstReferralDate.Year) * 12
                 + DateTime.Now.Month - firstReferralDate.Month;
             MonthsSinceFirstReferral = monthTotal < 1 ? 1 : monthTotal; 
@@ -161,7 +161,7 @@ public class CsvFileCreator : ICsvFileCreator
             Name = name;
             ConsortiumName = consortiumName;
             ReferralCount = referralCount;
-            FirstReferralDate = firstReferralDate.ToString("d");
+            FirstReferralDate = firstReferralDate.ToString("dd/MM/yyyy");
             var monthTotal = (DateTime.Now.Year - firstReferralDate.Year) * 12
                 + DateTime.Now.Month - firstReferralDate.Month;
             MonthsSinceFirstReferral = monthTotal < 1 ? 1 : monthTotal; 
