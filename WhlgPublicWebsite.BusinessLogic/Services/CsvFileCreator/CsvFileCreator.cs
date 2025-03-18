@@ -18,8 +18,8 @@ public interface ICsvFileCreator
 
     public MemoryStream CreateConsortiumReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests);
     public MemoryStream CreatePendingReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests);
-    public MemoryStream CreatePerMonthLocalAuthorityReferralStatistics(IEnumerable<ReferralRequest> referralRequests);
     public MemoryStream CreatePerMonthConsortiumReferralStatistics(IEnumerable<ReferralRequest> referralRequests);
+    public MemoryStream CreatePerMonthLocalAuthorityReferralStatistics(IEnumerable<ReferralRequest> referralRequests);
 }
 
 public class CsvFileCreator : ICsvFileCreator
@@ -70,6 +70,21 @@ public class CsvFileCreator : ICsvFileCreator
         return GenerateCsvMemoryStreamFromFileRows(rows);
     }
 
+    public MemoryStream CreatePerMonthConsortiumReferralStatistics(IEnumerable<ReferralRequest> requests)
+    {
+        var rows = requests
+            .GroupBy(rr =>
+                LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Consortium)
+            .Where(group => group.Key != null)
+            .Select(consortiumRequests => new CsvRowConsortiumPerMonthStatistics(
+                    consortiumRequests.Key,
+                    consortiumRequests.Count(),
+                    consortiumRequests.Min(rr => rr.RequestDate)
+                )
+            );
+        return GenerateCsvMemoryStreamFromFileRows(rows);
+    }
+
     public MemoryStream CreatePerMonthLocalAuthorityReferralStatistics(IEnumerable<ReferralRequest> requests)
     {
         var rows = requests
@@ -78,7 +93,7 @@ public class CsvFileCreator : ICsvFileCreator
             {
                 var localAuthorityDetails =
                     LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[custodianCodeRequests.Key];
-                return new CsvRowLaPerMonthStatistics(
+                return new CsvRowLocalAuthorityPerMonthStatistics(
                     localAuthorityDetails.Name,
                     localAuthorityDetails.Consortium ?? "N/A",
                     custodianCodeRequests.Count(),
@@ -86,23 +101,6 @@ public class CsvFileCreator : ICsvFileCreator
                 );
             });
 
-        return GenerateCsvMemoryStreamFromFileRows(rows);
-    }
-
-    public MemoryStream CreatePerMonthConsortiumReferralStatistics(IEnumerable<ReferralRequest> requests)
-    {
-        var rows = requests
-            .GroupBy(rr =>
-                LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Consortium)
-            .Where(group => group.Key != null)
-            .Select(consortiumRequests =>
-            {
-                return new CsvRowConsortiumPerMonthStatistics(
-                    consortiumRequests.Key,
-                    consortiumRequests.Count(),
-                    consortiumRequests.Min(rr => rr.RequestDate)
-                );
-            });
         return GenerateCsvMemoryStreamFromFileRows(rows);
     }
 
@@ -138,7 +136,7 @@ public class CsvFileCreator : ICsvFileCreator
         }
     }
 
-    private class CsvRowLaPerMonthStatistics
+    private class CsvRowLocalAuthorityPerMonthStatistics
     {
         [Index(0)] [Name("LA Name")] public string Name { get; set; }
 
@@ -160,7 +158,7 @@ public class CsvFileCreator : ICsvFileCreator
         [Name("Referrals Per Month")]
         public string ReferralsPerMonth { get; set; }
 
-        public CsvRowLaPerMonthStatistics(string name, string consortiumName, int referralCount,
+        public CsvRowLocalAuthorityPerMonthStatistics(string name, string consortiumName, int referralCount,
             DateTime firstReferralDate)
         {
             Name = name;

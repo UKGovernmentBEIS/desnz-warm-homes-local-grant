@@ -86,13 +86,13 @@ public class CommandHandler(
         MemoryStream referralStatistics = null;
         switch (statisticsType)
         {
-            case GenerateStatisticsPerMonthSubcommand.LocalAuthority:
-                outputProvider.Output("Generating referrals per Local Authority per month CSV.");
-                referralStatistics = csvFileCreator.CreatePerMonthLocalAuthorityReferralStatistics(referralRequests);
-                break;
             case GenerateStatisticsPerMonthSubcommand.Consortium:
                 outputProvider.Output("Generating referrals per Consortium per month CSV.");
                 referralStatistics = csvFileCreator.CreatePerMonthConsortiumReferralStatistics(referralRequests);
+                break;
+            case GenerateStatisticsPerMonthSubcommand.LocalAuthority:
+                outputProvider.Output("Generating referrals per Local Authority per month CSV.");
+                referralStatistics = csvFileCreator.CreatePerMonthLocalAuthorityReferralStatistics(referralRequests);
                 break;
         }
 

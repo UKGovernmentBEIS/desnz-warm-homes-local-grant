@@ -45,7 +45,7 @@ public class DatabaseOperation(WhlgDbContext dbContext, IOutputProvider outputPr
 
     public IList<ReferralRequest> GetAllWhlgReferralRequestsSubmittedAfterHug2Shutdown()
     {
-        outputProvider.Output("Retrieving all WHLG referrals submitted after HUG2 Shutdown.");
+        outputProvider.Output("Retrieving all WH:LG referrals submitted after HUG2 Shutdown.");
         var whlgReferrals = dbContext.ReferralRequests
             .Where(rr => rr.RequestDate >= Hug2ShutdownDate)
             .ToList();
