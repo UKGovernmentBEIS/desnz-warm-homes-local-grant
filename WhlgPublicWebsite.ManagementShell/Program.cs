@@ -17,11 +17,10 @@ public static class Program
         using var context = new WhlgDbContext(contextOptions);
         var csvFileCreator = new CsvFileCreator();
         var databaseOperation = new DatabaseOperation(context, outputProvider);
-        var dataAccessProvider = new DataAccessProvider(context);
         var fakeReferralGenerator = new FakeReferralGenerator();
-        var statisticProvider = new StatisticProvider(dataAccessProvider, csvFileCreator);
+        var streamHelper = new MemoryStreamHelper();
         var commandHandler =
-            new CommandHandler(databaseOperation, fakeReferralGenerator, outputProvider, statisticProvider);
+            new CommandHandler(databaseOperation, fakeReferralGenerator, outputProvider, streamHelper, csvFileCreator);
 
         Subcommand command;
         string[] subcommandArgs;

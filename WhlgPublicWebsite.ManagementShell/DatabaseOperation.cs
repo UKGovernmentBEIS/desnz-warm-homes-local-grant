@@ -6,18 +6,12 @@ namespace WhlgPublicWebsite.ManagementShell;
 public interface IDatabaseOperation
 {
     public void AddReferralRequests(IEnumerable<ReferralRequest> referralRequests);
+    public IList<ReferralRequest> GetAllWhlgReferralRequestsSubmittedAfterHug2Shutdown();
 }
 
-public class DatabaseOperation : IDatabaseOperation
+public class DatabaseOperation(WhlgDbContext dbContext, IOutputProvider outputProvider) : IDatabaseOperation
 {
-    private readonly WhlgDbContext dbContext;
-    private readonly IOutputProvider outputProvider;
-
-    public DatabaseOperation(WhlgDbContext dbContext, IOutputProvider outputProvider)
-    {
-        this.dbContext = dbContext;
-        this.outputProvider = outputProvider;
-    }
+    private static readonly DateTime Hug2ShutdownDate = new(2025, 02, 03);
 
     public void AddReferralRequests(IEnumerable<ReferralRequest> referralRequests)
     {
@@ -47,5 +41,15 @@ public class DatabaseOperation : IDatabaseOperation
             outputProvider.Output($"Rollback following error in transaction: {e.InnerException?.Message}");
             dbContextTransaction.Rollback();
         }
+    }
+
+    public IList<ReferralRequest> GetAllWhlgReferralRequestsSubmittedAfterHug2Shutdown()
+    {
+        outputProvider.Output("Retrieving all WHLG referrals submitted after HUG2 Shutdown.");
+        var whlgReferrals = dbContext.ReferralRequests
+            .Where(rr => rr.RequestDate >= Hug2ShutdownDate)
+            .ToList();
+        outputProvider.Output($"{whlgReferrals.Count} referrals found.");
+        return whlgReferrals;
     }
 }

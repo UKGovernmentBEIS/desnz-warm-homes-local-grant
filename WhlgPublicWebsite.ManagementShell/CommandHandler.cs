@@ -1,10 +1,13 @@
-﻿namespace WhlgPublicWebsite.ManagementShell;
+﻿using WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
+
+namespace WhlgPublicWebsite.ManagementShell;
 
 public class CommandHandler(
     IDatabaseOperation databaseOperation,
     IFakeReferralGenerator fakeReferralGenerator,
     IOutputProvider outputProvider,
-    IStatisticProvider statisticProvider)
+    IMemoryStreamHelper memoryStreamHelper,
+    ICsvFileCreator csvFileCreator)
 {
     public void GenerateReferrals(string[] args)
     {
@@ -63,15 +66,43 @@ public class CommandHandler(
     public void GeneratePerMonthStatistics(string[] args)
     {
         outputProvider.Output(
-            "This function will output two CSV files to the terminal for you to copy into a local file.");
+            "This function will output a CSV file to the terminal for you to copy into a local file.");
 
-        if (new List<string> { "consortia", "consortium" }.Contains(args[0].Trim().ToLower()))
-            outputProvider.Output(statisticProvider.GenerateReferralPerConsortiumPerMonthStatistics());
-        else if (new List<string> { "localauthority", "la" }.Contains(args[0].Trim().ToLower()))
-            outputProvider.Output(statisticProvider.GenerateReferralPerLaPerMonthStatistics());
-        else
+        GenerateStatisticsPerMonthSubcommand statisticsType;
+
+        try
         {
-            outputProvider.Output("Invalid argument. Usage: 'GeneratePerMonthStatistics <localauthority/consortia>");
+            statisticsType = Enum.Parse<GenerateStatisticsPerMonthSubcommand>(args[0].Trim(), true);
         }
+        catch (Exception)
+        {
+            var allSubcommands = string.Join("/", Enum.GetValues<GenerateStatisticsPerMonthSubcommand>());
+            outputProvider.Output(
+                $"Please specify a valid statistics type - Usage: GeneratePerMonthStatistics <{allSubcommands}>");
+            return;
+        }
+
+        var referralRequests = databaseOperation.GetAllWhlgReferralRequestsSubmittedAfterHug2Shutdown();
+        MemoryStream referralStatistics = null;
+        switch (statisticsType)
+        {
+            case GenerateStatisticsPerMonthSubcommand.LocalAuthority:
+                outputProvider.Output("Generating referrals per Local Authority per month CSV.");
+                referralStatistics = csvFileCreator.CreatePerMonthLocalAuthorityReferralStatistics(referralRequests);
+                break;
+            case GenerateStatisticsPerMonthSubcommand.Consortium:
+                outputProvider.Output("Generating referrals per Consortium per month CSV.");
+                referralStatistics = csvFileCreator.CreatePerMonthConsortiumReferralStatistics(referralRequests);
+                break;
+        }
+
+        outputProvider.Output("\n" + memoryStreamHelper.MemoryStreamToString(referralStatistics));
+        outputProvider.Output("Output Complete.");
+    }
+
+    private enum GenerateStatisticsPerMonthSubcommand
+    {
+        Consortium,
+        LocalAuthority
     }
 }

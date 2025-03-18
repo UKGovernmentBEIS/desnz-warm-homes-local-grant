@@ -11,7 +11,6 @@ public interface IDataAccessProvider
     Task<IList<ReferralRequest>> GetAllWhlgReferralRequests();
     Task<IList<ReferralRequest>> GetAllWhlgReferralRequestsForSlaComplianceReporting();
     Task<IList<ReferralRequest>> GetWhlgReferralRequestsBetweenDates(DateTime startDate, DateTime endDate);
-    IList<ReferralRequest> GetReferralRequestsSubmittedAfterHug2Shutdown();
 
     Task<IList<ReferralRequest>> GetWhlgReferralRequestsWithNoFollowUpBetweenDates(DateTime startDate,
         DateTime endDate);
