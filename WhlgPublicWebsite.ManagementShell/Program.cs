@@ -18,9 +18,8 @@ public static class Program
         var csvFileCreator = new CsvFileCreator();
         var databaseOperation = new DatabaseOperation(context, outputProvider);
         var fakeReferralGenerator = new FakeReferralGenerator();
-        var streamHelper = new MemoryStreamHelper();
         var commandHandler =
-            new CommandHandler(databaseOperation, fakeReferralGenerator, outputProvider, streamHelper, csvFileCreator);
+            new CommandHandler(databaseOperation, fakeReferralGenerator, outputProvider, csvFileCreator);
 
         Subcommand command;
         string[] subcommandArgs;

@@ -2,14 +2,9 @@
 
 namespace WhlgPublicWebsite.ManagementShell;
 
-public interface IMemoryStreamHelper
+public static class MemoryStreamHelper
 {
-    public string MemoryStreamToString(MemoryStream memoryStream);
-}
-
-public class MemoryStreamHelper : IMemoryStreamHelper
-{
-    public string MemoryStreamToString(MemoryStream memoryStream)
+    public static string MemoryStreamToString(MemoryStream memoryStream)
     {
         memoryStream.Seek(0, SeekOrigin.Begin);
         return Encoding.UTF8.GetString(memoryStream.ToArray());

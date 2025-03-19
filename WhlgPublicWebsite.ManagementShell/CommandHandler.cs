@@ -6,7 +6,6 @@ public class CommandHandler(
     IDatabaseOperation databaseOperation,
     IFakeReferralGenerator fakeReferralGenerator,
     IOutputProvider outputProvider,
-    IMemoryStreamHelper memoryStreamHelper,
     ICsvFileCreator csvFileCreator)
 {
     public void GenerateReferrals(string[] args)
@@ -96,7 +95,7 @@ public class CommandHandler(
                 break;
         }
 
-        outputProvider.Output("\n" + memoryStreamHelper.MemoryStreamToString(referralStatistics));
+        outputProvider.Output("\n" + MemoryStreamHelper.MemoryStreamToString(referralStatistics));
         outputProvider.Output("Output Complete.");
     }
 
