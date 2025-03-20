@@ -75,7 +75,7 @@ public class CommandHandler(
         }
         catch (ArgumentException)
         {
-            var allSubcommands = string.Join("/", Enum.GetValues<GenerateStatisticsPerMonthSubcommand>());
+            var allSubcommands = string.Join("/", Enum.GetValues<AuthorityTypeSubcommand>());
             outputProvider.Output(
                 $"Please specify a valid statistics type - Usage: GeneratePerMonthStatistics <{allSubcommands}>");
             return;
@@ -102,7 +102,7 @@ public class CommandHandler(
         outputProvider.Output("Output Complete.");
     }
 
-    private enum GenerateStatisticsPerMonthSubcommand
+    private enum AuthorityTypeSubcommand
     {
         LocalAuthority,
         Consortium
