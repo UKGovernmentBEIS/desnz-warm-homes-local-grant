@@ -8,11 +8,10 @@ namespace WhlgPublicWebsite.Data;
 public class DataAccessProvider(WhlgDbContext context)
     : IDataAccessProvider
 {
-    private static readonly DateTime Hug2ShutdownDate = new(2025, 02, 03);
     private static Expression<Func<ReferralRequest, bool>> IsExcludedFromSlaComplianceReporting => rr =>
         !(rr.WasSubmittedForFutureGrants
           || LocalAuthorityData.LiveWmcaCustodianCodes.Contains(rr.CustodianCode)
-          || rr.RequestDate <= Hug2ShutdownDate);
+          || rr.RequestDate <= DataConstants.Hug2ShutdownDate);
 
     public async Task<ReferralRequest> PersistNewReferralRequestAsync(ReferralRequest referralRequest)
     {

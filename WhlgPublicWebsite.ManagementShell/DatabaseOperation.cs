@@ -6,13 +6,11 @@ namespace WhlgPublicWebsite.ManagementShell;
 public interface IDatabaseOperation
 {
     public void AddReferralRequests(IEnumerable<ReferralRequest> referralRequests);
-    public IList<ReferralRequest> GetAllWhlgReferralRequestsSubmittedAfterHug2Shutdown();
+    public IEnumerable<ReferralRequest> GetAllWhlgReferralRequestsSubmittedAfterHug2Shutdown();
 }
 
 public class DatabaseOperation(WhlgDbContext dbContext, IOutputProvider outputProvider) : IDatabaseOperation
 {
-    private static readonly DateTime Hug2ShutdownDate = new(2025, 02, 03);
-
     public void AddReferralRequests(IEnumerable<ReferralRequest> referralRequests)
     {
         outputProvider.Output("(1/2) Adding fake referrals");
@@ -43,13 +41,10 @@ public class DatabaseOperation(WhlgDbContext dbContext, IOutputProvider outputPr
         }
     }
 
-    public IList<ReferralRequest> GetAllWhlgReferralRequestsSubmittedAfterHug2Shutdown()
+    public IEnumerable<ReferralRequest> GetAllWhlgReferralRequestsSubmittedAfterHug2Shutdown()
     {
-        outputProvider.Output("Retrieving all WH:LG referrals submitted after HUG2 Shutdown.");
         var whlgReferrals = dbContext.ReferralRequests
-            .Where(rr => rr.RequestDate >= Hug2ShutdownDate)
-            .ToList();
-        outputProvider.Output($"{whlgReferrals.Count} referrals found.");
+            .Where(rr => rr.RequestDate >= DataConstants.Hug2ShutdownDate);
         return whlgReferrals;
     }
 }

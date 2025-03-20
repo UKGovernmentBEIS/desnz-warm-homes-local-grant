@@ -67,29 +67,32 @@ public class CommandHandler(
         outputProvider.Output(
             "This function will output a CSV file to the terminal for you to copy into a local file.");
 
-        GenerateStatisticsPerMonthSubcommand statisticsType;
+        AuthorityTypeSubcommand statisticsTypeSubcommand;
 
         try
         {
-            statisticsType = Enum.Parse<GenerateStatisticsPerMonthSubcommand>(args[0].Trim(), true);
+            statisticsTypeSubcommand = Enum.Parse<AuthorityTypeSubcommand>(args[0].Trim(), true);
         }
-        catch (Exception)
+        catch (ArgumentException)
         {
             var allSubcommands = string.Join("/", Enum.GetValues<GenerateStatisticsPerMonthSubcommand>());
             outputProvider.Output(
                 $"Please specify a valid statistics type - Usage: GeneratePerMonthStatistics <{allSubcommands}>");
             return;
         }
-
+        
+        outputProvider.Output("Retrieving all WH:LG referrals submitted after HUG2 Shutdown.");
         var referralRequests = databaseOperation.GetAllWhlgReferralRequestsSubmittedAfterHug2Shutdown();
+        outputProvider.Output("WH:LG Referrals retrieved successfully");
+        
         MemoryStream referralStatistics = null;
-        switch (statisticsType)
+        switch (statisticsTypeSubcommand)
         {
-            case GenerateStatisticsPerMonthSubcommand.LocalAuthority:
+            case AuthorityTypeSubcommand.LocalAuthority:
                 outputProvider.Output("Generating referrals per Local Authority per month CSV.");
                 referralStatistics = csvFileCreator.CreatePerMonthLocalAuthorityReferralStatistics(referralRequests);
                 break;
-            case GenerateStatisticsPerMonthSubcommand.Consortium:
+            case AuthorityTypeSubcommand.Consortium:
                 outputProvider.Output("Generating referrals per Consortium per month CSV.");
                 referralStatistics = csvFileCreator.CreatePerMonthConsortiumReferralStatistics(referralRequests);
                 break;
