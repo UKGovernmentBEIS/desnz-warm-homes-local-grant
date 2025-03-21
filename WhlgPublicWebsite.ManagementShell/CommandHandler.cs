@@ -68,7 +68,7 @@ public class CommandHandler(
             "This function will output a CSV file to the terminal for you to copy into a local file.");
 
         AuthorityTypeSubcommand statisticsTypeSubcommand;
-        
+
         try
         {
             statisticsTypeSubcommand = Enum.Parse<AuthorityTypeSubcommand>(args[0].Trim(), true);
@@ -80,7 +80,7 @@ public class CommandHandler(
                 $"Please specify a valid statistics type - Usage: GeneratePerMonthStatistics <{allSubcommands}>");
             return;
         }
-        
+
         outputProvider.Output("Retrieving all WH:LG referrals submitted after HUG2 Shutdown.");
         var referralRequests = databaseOperation.GetAllWhlgReferralRequestsSubmittedAfterHug2Shutdown();
         outputProvider.Output("WH:LG Referrals retrieved successfully");
