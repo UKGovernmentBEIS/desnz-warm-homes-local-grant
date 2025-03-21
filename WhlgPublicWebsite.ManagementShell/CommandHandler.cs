@@ -73,14 +73,14 @@ public class CommandHandler(
         {
             statisticsTypeSubcommand = Enum.Parse<AuthorityTypeSubcommand>(args[0].Trim(), true);
         }
-        catch (ArgumentException)
+        catch (Exception e) when (e is ArgumentException or IndexOutOfRangeException)
         {
             var allSubcommands = string.Join("/", Enum.GetValues<AuthorityTypeSubcommand>());
             outputProvider.Output(
                 $"Please specify a valid statistics type - Usage: GeneratePerMonthStatistics <{allSubcommands}>");
             return;
         }
-        
+
         outputProvider.Output("Retrieving all WH:LG referrals submitted after HUG2 Shutdown.");
         var referralRequests = databaseOperation.GetAllWhlgReferralRequestsSubmittedAfterHug2Shutdown();
         outputProvider.Output("WH:LG Referrals retrieved successfully");
