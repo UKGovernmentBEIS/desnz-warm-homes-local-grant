@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using WhlgPublicWebsite.Data;
 
 namespace WhlgPublicWebsite.ManagementShell;
@@ -14,9 +15,11 @@ public static class Program
                 @"UserId=postgres;Password=postgres;Server=localhost;Port=5432;Database=whlgdev;Integrated Security=true;Include Error Detail=true;Pooling=true")
             .Options;
         using var context = new WhlgDbContext(contextOptions);
+        var csvFileCreator = new CsvFileCreator();
         var databaseOperation = new DatabaseOperation(context, outputProvider);
         var fakeReferralGenerator = new FakeReferralGenerator();
-        var commandHandler = new CommandHandler(databaseOperation, fakeReferralGenerator, outputProvider);
+        var commandHandler =
+            new CommandHandler(databaseOperation, fakeReferralGenerator, outputProvider, csvFileCreator);
 
         Subcommand command;
         string[] subcommandArgs;
@@ -39,6 +42,9 @@ public static class Program
             case Subcommand.GenerateReferrals:
                 commandHandler.GenerateReferrals(subcommandArgs);
                 return;
+            case Subcommand.GeneratePerMonthStatistics:
+                commandHandler.GeneratePerMonthStatistics(subcommandArgs);
+                return;
             default:
                 outputProvider.Output("Invalid terminal command entered. Please refer to the documentation");
                 return;
@@ -47,6 +53,7 @@ public static class Program
 
     private enum Subcommand
     {
-        GenerateReferrals
+        GenerateReferrals,
+        GeneratePerMonthStatistics
     }
 }

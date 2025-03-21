@@ -6,19 +6,11 @@ namespace WhlgPublicWebsite.ManagementShell;
 public interface IDatabaseOperation
 {
     public void AddReferralRequests(IEnumerable<ReferralRequest> referralRequests);
+    public IEnumerable<ReferralRequest> GetAllWhlgReferralRequestsSubmittedAfterHug2Shutdown();
 }
 
-public class DatabaseOperation : IDatabaseOperation
+public class DatabaseOperation(WhlgDbContext dbContext, IOutputProvider outputProvider) : IDatabaseOperation
 {
-    private readonly WhlgDbContext dbContext;
-    private readonly IOutputProvider outputProvider;
-
-    public DatabaseOperation(WhlgDbContext dbContext, IOutputProvider outputProvider)
-    {
-        this.dbContext = dbContext;
-        this.outputProvider = outputProvider;
-    }
-
     public void AddReferralRequests(IEnumerable<ReferralRequest> referralRequests)
     {
         outputProvider.Output("(1/2) Adding fake referrals");
@@ -47,5 +39,12 @@ public class DatabaseOperation : IDatabaseOperation
             outputProvider.Output($"Rollback following error in transaction: {e.InnerException?.Message}");
             dbContextTransaction.Rollback();
         }
+    }
+
+    public IEnumerable<ReferralRequest> GetAllWhlgReferralRequestsSubmittedAfterHug2Shutdown()
+    {
+        var whlgReferrals = dbContext.ReferralRequests
+            .Where(rr => rr.RequestDate >= DataConstants.Hug2ShutdownDate);
+        return whlgReferrals;
     }
 }

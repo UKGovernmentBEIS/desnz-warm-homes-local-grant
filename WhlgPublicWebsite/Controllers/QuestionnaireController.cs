@@ -72,7 +72,7 @@ public class QuestionnaireController : Controller
         var viewModel = new CountryViewModel
         {
             Country = questionnaire.Country,
-            BackLink = Constants.SERVICE_URL
+            BackLink = ServiceConstants.SERVICE_URL
         };
 
         return View("Country", viewModel);

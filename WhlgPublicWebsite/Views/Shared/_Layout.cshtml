@@ -31,7 +31,7 @@
         </script>
     }
     <meta charset="utf-8"/>
-    <title>@(ViewBag.Title != null ? ViewBag.Title + " -" : "") @Constants.SERVICE_NAME - Gov.UK</title>
+    <title>@(ViewBag.Title != null ? ViewBag.Title + " -" : "") @ServiceConstants.SERVICE_NAME - Gov.UK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#0b0c0c">
 
@@ -74,10 +74,10 @@
 
         @(await Html.GovUkHeader(new HeaderViewModel
         {
-            ServiceName = Constants.SERVICE_NAME,
+            ServiceName = ServiceConstants.SERVICE_NAME,
             AssetsPath = assetsPath,
             HomepageUrl = "https://www.gov.uk",
-            ServiceUrl = WebHostEnvironment.IsProduction() ? Constants.SERVICE_URL : Url.Action(nameof(StaticPagesController.Index), "StaticPages"),
+            ServiceUrl = WebHostEnvironment.IsProduction() ? ServiceConstants.SERVICE_URL : Url.Action(nameof(StaticPagesController.Index), "StaticPages"),
             Navigation = headerNavigationLinks
         }))
 
@@ -88,7 +88,7 @@
         @(await Html.GovUkPhaseBanner(new PhaseBannerViewModel
         {
             Phase = "Beta",
-            Html = @<text>This is a new service – your <a class="govuk-link" href="@Constants.FEEDBACK_URL_DEFAULT" target="_blank">feedback (opens in new tab)</a> will help us to improve it.</text>
+            Html = @<text>This is a new service – your <a class="govuk-link" href="@ServiceConstants.FEEDBACK_URL_DEFAULT" target="_blank">feedback (opens in new tab)</a> will help us to improve it.</text>
         }))
 
         @await RenderSectionAsync("BeforeMain", false)
@@ -108,7 +108,7 @@
                 new FooterLinksViewModel
                 {
                     Text = "Contact Us",
-                    Href = Constants.FEEDBACK_URL_DEFAULT
+                    Href = ServiceConstants.FEEDBACK_URL_DEFAULT
                 },
                 new FooterLinksViewModel
                 {
