@@ -68,20 +68,14 @@ public class CommandHandler(
             "This function will output a CSV file to the terminal for you to copy into a local file.");
 
         AuthorityTypeSubcommand statisticsTypeSubcommand;
-        var allSubcommands = string.Join("/", Enum.GetValues<AuthorityTypeSubcommand>());
-        
-        if (args.Length == 0)
-        {
-            outputProvider.Output($"Missing statistics type. Usage: GeneratePerMonthStatistics <{allSubcommands}>.");
-            return;
-        }
         
         try
         {
             statisticsTypeSubcommand = Enum.Parse<AuthorityTypeSubcommand>(args[0].Trim(), true);
         }
-        catch (ArgumentException)
+        catch (Exception e) when (e is ArgumentException or IndexOutOfRangeException)
         {
+            var allSubcommands = string.Join("/", Enum.GetValues<AuthorityTypeSubcommand>());
             outputProvider.Output(
                 $"Please specify a valid statistics type - Usage: GeneratePerMonthStatistics <{allSubcommands}>");
             return;
