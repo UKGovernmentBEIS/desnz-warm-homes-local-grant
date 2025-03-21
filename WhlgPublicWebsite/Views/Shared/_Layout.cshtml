@@ -88,7 +88,7 @@
         @(await Html.GovUkPhaseBanner(new PhaseBannerViewModel
         {
             Phase = "Beta",
-            Html = @<text>This is a new service – your <a class="govuk-link" href="@ServiceConstants.FEEDBACK_URL_DEFAULT" target="_blank">feedback (opens in new tab)</a> will help us to improve it.</text>
+            Html = @<text>This is a new service – your <a class="govuk-link" href="@ServiceConstants.FEEDBACK_URL_DEFAULT" target="_blank" rel="noreferrer noopener">feedback (opens in new tab)</a> will help us to improve it.</text>
         }))
 
         @await RenderSectionAsync("BeforeMain", false)
