@@ -25,7 +25,7 @@ public class StaticPagesController : Controller
         return Redirect("/questionnaire/");
 #endif
 #pragma warning disable CS0162 // Unreachable code detected
-        return Redirect(Constants.SERVICE_URL);
+        return Redirect(ServiceConstants.SERVICE_URL);
 #pragma warning restore CS0162
     }
 

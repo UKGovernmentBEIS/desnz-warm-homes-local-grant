@@ -1,19 +1,13 @@
-﻿namespace WhlgPublicWebsite.ManagementShell;
+﻿using WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 
-public class CommandHandler
+namespace WhlgPublicWebsite.ManagementShell;
+
+public class CommandHandler(
+    IDatabaseOperation databaseOperation,
+    IFakeReferralGenerator fakeReferralGenerator,
+    IOutputProvider outputProvider,
+    ICsvFileCreator csvFileCreator)
 {
-    private readonly IDatabaseOperation databaseOperation;
-    private readonly IFakeReferralGenerator fakeReferralGenerator;
-    private readonly IOutputProvider outputProvider;
-
-    public CommandHandler(IDatabaseOperation databaseOperation, IFakeReferralGenerator fakeReferralGenerator,
-        IOutputProvider outputProvider)
-    {
-        this.databaseOperation = databaseOperation;
-        this.fakeReferralGenerator = fakeReferralGenerator;
-        this.outputProvider = outputProvider;
-    }
-
     public void GenerateReferrals(string[] args)
     {
         if (args.Length == 0)
@@ -49,6 +43,7 @@ public class CommandHandler
             outputProvider.Output($"Expecting to find this information in \"{environmentKey}\" environment variable.");
             outputProvider.Output("If this is no longer up to date please raise a ticket to fix this.");
         }
+
         outputProvider.Output("");
         outputProvider.Output("All users will have a FullName that begins \"FAKE USER\".");
         outputProvider.Output("To revert, connect to the database and run the following:");
@@ -65,5 +60,51 @@ public class CommandHandler
         var referralsToAdd = fakeReferralGenerator.GenerateFakeReferralRequests(referralCount);
 
         databaseOperation.AddReferralRequests(referralsToAdd);
+    }
+
+    public void GeneratePerMonthStatistics(string[] args)
+    {
+        outputProvider.Output(
+            "This function will output a CSV file to the terminal for you to copy into a local file.");
+
+        AuthorityTypeSubcommand statisticsTypeSubcommand;
+
+        try
+        {
+            statisticsTypeSubcommand = Enum.Parse<AuthorityTypeSubcommand>(args[0].Trim(), true);
+        }
+        catch (Exception e) when (e is ArgumentException or IndexOutOfRangeException)
+        {
+            var allSubcommands = string.Join("/", Enum.GetValues<AuthorityTypeSubcommand>());
+            outputProvider.Output(
+                $"Please specify a valid statistics type - Usage: GeneratePerMonthStatistics <{allSubcommands}>");
+            return;
+        }
+
+        outputProvider.Output("Retrieving all WH:LG referrals submitted after HUG2 Shutdown.");
+        var referralRequests = databaseOperation.GetAllWhlgReferralRequestsSubmittedAfterHug2Shutdown();
+        outputProvider.Output("WH:LG Referrals retrieved successfully");
+        
+        MemoryStream referralStatistics = null;
+        switch (statisticsTypeSubcommand)
+        {
+            case AuthorityTypeSubcommand.LocalAuthority:
+                outputProvider.Output("Generating referrals per Local Authority per month CSV.");
+                referralStatistics = csvFileCreator.CreatePerMonthLocalAuthorityReferralStatistics(referralRequests);
+                break;
+            case AuthorityTypeSubcommand.Consortium:
+                outputProvider.Output("Generating referrals per Consortium per month CSV.");
+                referralStatistics = csvFileCreator.CreatePerMonthConsortiumReferralStatistics(referralRequests);
+                break;
+        }
+
+        outputProvider.Output("\n" + MemoryStreamHelper.MemoryStreamToString(referralStatistics));
+        outputProvider.Output("Output Complete.");
+    }
+
+    private enum AuthorityTypeSubcommand
+    {
+        LocalAuthority,
+        Consortium
     }
 }

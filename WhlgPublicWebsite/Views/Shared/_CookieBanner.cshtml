@@ -15,7 +15,7 @@
     @Html.AntiForgeryToken()
     @await Html.GovUkCookieBanner(new CookieBannerViewModel
     {
-        AriaLabel = $"Cookies on {Constants.SERVICE_NAME}",
+        AriaLabel = $"Cookies on {ServiceConstants.SERVICE_NAME}",
         Hidden = bannerState is BannerState.Hide,
         Messages = new List<CookieBannerMessageViewModel>
         {
