@@ -19,7 +19,6 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        
         <form action="@Url.Action(nameof(QuestionnaireController.HouseholdIncome_Post), "Questionnaire")" method="post" novalidate>
             @(Html.HiddenFor(m => m.EntryPoint))
             @Html.AntiForgeryToken()
@@ -41,10 +40,12 @@
 
                                 <ul class="govuk-list govuk-list--bullet">
                                     <li>
-                                        from every household member (over 18) combined
+                                        from every household member (over 18) combined, excluding those in full-time education and lodgers, combined
                                     </li>
                                     <li>
-                                        including all benefits except Personal Independence Payment, Attendance Allowance and Disability Living Allowance
+                                        including all benefits except Attendance Allowance; Disability Living Allowance; Personal Independence Payment;
+                                        Armed Forces Independence Payment; Exceptionally Severe Disablement Allowance; Constant Attendance Allowance;
+                                        Industrial Injuries Disablement Benefit
                                     </li>
                                 </ul>
 
