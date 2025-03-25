@@ -1,0 +1,37 @@
+﻿@page
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using WhlgPublicWebsite.Controllers
+@model WhlgPublicWebsite.Models.Auth.AuthViewModel
+
+@{
+    ViewBag.Title = "Input Password";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">This is a prototype used for research</h1>
+
+        <p class="govuk-body">
+            It is not a real service. You should only continue if you have been invited to test this prototype.
+        </p>
+
+        <form action="@Url.Action(nameof(AuthController.Index_Post), "Auth")" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.ReturnPath)
+            
+            @await Html.GovUkTextInputFor(
+                m => m.Password,
+                new LabelViewModel
+                {
+                    Text = "Password"
+                },
+                type: "password")
+
+            @(await Html.GovUkButton(new ButtonViewModel
+            {
+                Text = "Submit"
+            }))
+        </form>
+    </div>
+</div>

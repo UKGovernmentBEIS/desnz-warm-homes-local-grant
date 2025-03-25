@@ -1,0 +1,28 @@
+﻿@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+
+@model WhlgPublicWebsite.Models.Questionnaire.IneligibleNorthernIrelandViewModel
+@{
+    ViewBag.Title = "Sorry, this service isn't for you";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink,
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <h1 class="govuk-heading-l">This service is for homes in England</h1>
+
+        <h2 class="govuk-heading-m">You might be able to get help from the Northern Ireland government</h2>
+        <p class="govuk-body">
+            Check what available funding and support there is in your area on the
+            <a target="_blank" href="https://www.nidirect.gov.uk/">NI direct website</a>.
+        </p>
+    </div>
+</div>
