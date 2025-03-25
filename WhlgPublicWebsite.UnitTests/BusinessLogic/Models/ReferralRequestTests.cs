@@ -37,7 +37,7 @@ public class ReferralRequestTests
         act.Should().Throw<InvalidOperationException>();
     }
     
-    [TestCase(LocalAuthorityData.LocalAuthorityStatus.Live, false)]
+    [TestCase(LocalAuthorityData.LocalAuthorityStatus.Live, false, Ignore = "PC-1828: Reinstate test after Live LA added")]
     [TestCase(LocalAuthorityData.LocalAuthorityStatus.Pending, true)]
     public void WasSubmittedToPendingFlag_IfLocalAuthorityIsPending_WasSubmittedToPendingIsTrueOtherwiseFalse(LocalAuthorityData.LocalAuthorityStatus localAuthorityStatus, bool expectedWasSubmittedToPendingLocalAuthorityValue)
     {

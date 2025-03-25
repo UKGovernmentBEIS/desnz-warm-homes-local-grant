@@ -287,9 +287,9 @@ public class CsvFileCreatorTests
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
             "Consortium,Local Authority,Referral Date,Referral Code,Name,Email,Telephone,Local Authority Status\r\n" +
-            "Bristol City Council,Bath and North East Somerset Council,2024-03-05 01:00:00,TEST0001,Test User 1,test1@example.com,111,Live\r\n" +
-            "Portsmouth City Council,Bedford Borough Council,2024-02-05 01:00:00,TEST0002,Test User 2,test2@example.com,,Live\r\n" +
-            "Bristol City Council,North Somerset Council,2024-01-05 01:00:00,TEST0003,Test User 3,,333,Live\r\n");
+            "Bristol City Council,Bath and North East Somerset Council,2024-03-05 01:00:00,TEST0001,Test User 1,test1@example.com,111,Pending\r\n" +
+            "Portsmouth City Council,Bedford Borough Council,2024-02-05 01:00:00,TEST0002,Test User 2,test2@example.com,,Pending\r\n" +
+            "Bristol City Council,North Somerset Council,2024-01-05 01:00:00,TEST0003,Test User 3,,333,Pending\r\n");
     }
 
     [Test]
