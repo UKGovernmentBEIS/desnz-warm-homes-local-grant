@@ -8,6 +8,7 @@ using WhlgPublicWebsite.BusinessLogic.Services.QuestionFlow;
 
 namespace Tests.BusinessLogic.Services;
 
+[Ignore("PC-1828: No Live LAs at launch")]
 [TestFixture]
 public class QuestionFlowServiceTests
 {

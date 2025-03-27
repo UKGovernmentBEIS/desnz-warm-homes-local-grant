@@ -151,6 +151,7 @@ public class GovUkNotifyApiTests
     [TestCase(1, 10, 2022, "01/10/2022")]
     [TestCase(11, 1, 2023, "11/01/2023")]
     [TestCase(11, 12, 2023, "11/12/2023")]
+    [Ignore("PC-1828: No Live LAs at launch")]
     public void SendFollowUpEmail_WhenCalled_SendsEmailWithUkDateFormat(int day, int month, int year, string expectedDateString)
     {
         // Arrange

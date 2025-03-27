@@ -64,28 +64,31 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
-        <h1 class="govuk-heading-l">We do not think you are eligible</h1>
-
-        <p class="govuk-body">
-            @{
-                switch (Model.EpcIsTooHigh, Model.IncomeIsTooHigh)
-                {
-                    case (true, false):
-                        <text>
-                            We do not think you are eligible for the Warm Homes: Local Grant because your
-                            EPC rating is A, B, or C but you may be able to get other help for your energy needs.
-                        </text>
-                        break;
-                    default:
-                        <text>
-                            We do not think you are eligible for the Warm Homes: Local Grant because your
-                            income is more than £36,000 but you may be able to get other help for your energy needs.
-                        </text>
-                        break;
-                }
+        @{
+            switch (Model.EpcIsTooHigh, Model.IncomeIsTooHigh)
+            {
+                case (true, false):
+                    <h1 class="govuk-heading-l">We do not think you are eligible</h1>
+                    <p class="govuk-body">
+                        We do not think you are eligible for the Warm Homes: Local Grant because your
+                        EPC rating is A, B, or C but you may be able to get other help for your energy needs.
+                    </p>
+                    break;
+                default:
+                    <h1 class="govuk-heading-l">We cannot auto-refer you, but you may still be eligible</h1>
+                    <p class="govuk-body">
+                        Based on information you have provided we are unable to automatically refer you to your Local Authority
+                        at this time. If you think you might qualify through another eligibility route, please contact
+                        your Local Authority directly.
+                    </p>
+                    <p class="govuk-body">Other eligibility routes may include:</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>Receiving a specified means-tested benefit</li>
+                        <li>Having a household income above £36,000 but falling below the after housing costs threshold due to high housing expenses</li>
+                    </ul>
+                    break;
             }
-        </p>
+        }
 
         @if (incomeHighButEpcLow)
         {

@@ -33,13 +33,14 @@ public class QuestionnaireUpdaterTests
     [SetUp]
     public void Setup()
     {
-        liveCustodianCode =
-            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live);
+        // TODO: PC-1828: Reinstate test after Live LA added
+        // liveCustodianCode =
+        //     LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live);
         pendingCustodianCode =
             LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
-        takingFutureReferralsCustodianCode =
-            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
-                .TakingFutureReferrals);
+        // takingFutureReferralsCustodianCode =
+        //     LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
+        //         .TakingFutureReferrals);
         mockEpcApi = new Mock<IEpcApi>();
         mockPostCodeService = new Mock<IEligiblePostcodeService>();
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
@@ -215,6 +216,7 @@ public class QuestionnaireUpdaterTests
     }
 
     [Test]
+    [Ignore("PC-1828: No Live LAs at launch")]
     public async Task
         GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsLive_SendOneEmailWithReferralCodeWithLiveTemplate()
     {
@@ -323,6 +325,7 @@ public class QuestionnaireUpdaterTests
     }
 
     [Test]
+    [Ignore("PC-1828: No Live LAs at launch")]
     public async Task
         GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsTakingFutureReferrals_SendOneEmailWithReferralCodeWithTakingFutureReferralTemplate()
     {
@@ -331,7 +334,7 @@ public class QuestionnaireUpdaterTests
         const int testReferralId = 12;
         const string testName = "Example Person";
         const string testEmailAddress = "test@example.com";
-
+    
         var questionnaire = new Questionnaire
         {
             CustodianCode = testCustodianCode,
@@ -339,12 +342,12 @@ public class QuestionnaireUpdaterTests
             IncomeBand = IncomeBand.UnderOrEqualTo36000
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
-
+    
         var referral = new ReferralRequestBuilder(testReferralId);
         referral.WithCustodianCode(testCustodianCode);
         referral.WithRequestDate(creationDate);
         var testReferralRequest = referral.Build();
-
+    
         mockDataAccessProvider.Setup(dap =>
             dap.PersistNewReferralRequestAsync
             (
@@ -356,7 +359,7 @@ public class QuestionnaireUpdaterTests
                 testName,
                 testReferralRequest)
         );
-
+    
         // Act
         var result = await underTest.GenerateReferralAsync
         (
@@ -365,7 +368,7 @@ public class QuestionnaireUpdaterTests
             testEmailAddress,
             ""
         );
-
+    
         // Assert
         mockEmailSender.Verify(es => es.SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority
         (
@@ -477,6 +480,7 @@ public class QuestionnaireUpdaterTests
 
     [TestCase(true, "test@example.com")]
     [TestCase(false, "")]
+    [Ignore("PC-1828: No Live LAs at launch")]
     public async Task
         RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentGrantedAndEmailGivenAndLocalAuthorityIsLive_SendsOneLiveTemplateEmailWithReferralCode
         (

@@ -34,7 +34,7 @@ public class ReferralFilterServiceTests
     [TestCase(true, true, false)]
     [TestCase(true, true, true)]
     // If LA is not now pending but referral was submitted in the last month to a then pending LA, include.
-    [TestCase(false, true, true)]
+    [TestCase(false, true, true, Ignore = "PC-1828: Reinstate test after Live LA added")]
     public void FilterForPendingReferralReport_WhenCalledWithEmailPendingReferral_IncludesInFilter(
         bool localAuthorityIsNowPending,
         bool localAuthorityWasPending,
@@ -51,10 +51,10 @@ public class ReferralFilterServiceTests
         // Assert
         outputReferralRequests.Should().Contain(inputReferralRequest);
     }
-
-    [TestCase(false, false, false)]
-    [TestCase(false, false, true)]
-    [TestCase(false, true, false)]
+    
+    [TestCase(false, false, false, Ignore = "PC-1828: Reinstate test after Live LA added")]
+    [TestCase(false, false, true, Ignore = "PC-1828: Reinstate test after Live LA added")]
+    [TestCase(false, true, false, Ignore = "PC-1828: Reinstate test after Live LA added")]
     public void FilterForPendingReferralReport_WhenCalledWithNotEmailPendingReferral_DoesNotIncludeInFilter(
         bool localAuthorityIsNowPending,
         bool localAuthorityWasPending,
