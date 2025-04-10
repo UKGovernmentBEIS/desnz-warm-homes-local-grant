@@ -33,11 +33,11 @@ public class QuestionnaireUpdaterTests
     [SetUp]
     public void Setup()
     {
-        // TODO: PC-1828: Reinstate test after Live LA added
-        // liveCustodianCode =
-        //     LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live);
+        liveCustodianCode =
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live);
         pendingCustodianCode =
             LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
+        // PC-1849: Reinstate when an LA of takingFutureReferrals is added
         // takingFutureReferralsCustodianCode =
         //     LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
         //         .TakingFutureReferrals);
@@ -216,7 +216,6 @@ public class QuestionnaireUpdaterTests
     }
 
     [Test]
-    [Ignore("PC-1828: No Live LAs at launch")]
     public async Task
         GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsLive_SendOneEmailWithReferralCodeWithLiveTemplate()
     {
@@ -325,7 +324,7 @@ public class QuestionnaireUpdaterTests
     }
 
     [Test]
-    [Ignore("PC-1828: No Live LAs at launch")]
+    [Ignore("PC-1849: Reinstate when an LA of takingFutureReferrals is added")]
     public async Task
         GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsTakingFutureReferrals_SendOneEmailWithReferralCodeWithTakingFutureReferralTemplate()
     {
@@ -480,7 +479,6 @@ public class QuestionnaireUpdaterTests
 
     [TestCase(true, "test@example.com")]
     [TestCase(false, "")]
-    [Ignore("PC-1828: No Live LAs at launch")]
     public async Task
         RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentGrantedAndEmailGivenAndLocalAuthorityIsLive_SendsOneLiveTemplateEmailWithReferralCode
         (
