@@ -540,6 +540,7 @@ public class QuestionFlowServiceTests
                 custodianCode: PendingCustodianCode
             ),
             QuestionFlowStep.Pending),
+        // PC-1849: Reinstate when an LA of takingFutureReferrals is added
         // new(
         //     "Check answers continues to taking future referrals if LA is taking future referrals",
         //     new Input(
