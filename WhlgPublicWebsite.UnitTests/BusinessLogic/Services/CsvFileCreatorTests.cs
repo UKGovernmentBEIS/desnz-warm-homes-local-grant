@@ -297,30 +297,36 @@ public class CsvFileCreatorTests
     {
         // Arrange
         var underTest = new CsvFileCreator();
-        var requestTime1 = DateTime.Now;
+        var today = DateTime.Now;
+        var requestTime1 = today;
+        var requestDate1 = new DateTime(requestTime1.Year, requestTime1.Month, 5);
         var referralRequest1 = new ReferralRequestBuilder(1)
             .WithCustodianCode("114")
-            .WithRequestDate(new DateTime(requestTime1.Year, requestTime1.Month, 5))
+            .WithRequestDate(requestDate1)
             .Build();
-        var requestTime2 = DateTime.Now.AddMonths(-3);
+        var requestTime2 = today.AddMonths(-3);
+        var requestDate2 = new DateTime(requestTime2.Year, requestTime2.Month, 5);
         var referralRequest2 = new ReferralRequestBuilder(6)
             .WithCustodianCode("235")
-            .WithRequestDate(new DateTime(requestTime2.Year, requestTime2.Month, 5))
+            .WithRequestDate(requestDate2)
             .Build();
-        var requestTime3 = DateTime.Now.AddMonths(-3);
+        var requestTime3 = today.AddMonths(-3);
+        var requestDate3 = new DateTime(requestTime3.Year, requestTime3.Month, 5);
         var referralRequest3 = new ReferralRequestBuilder(3)
             .WithCustodianCode("121")
-            .WithRequestDate(new DateTime(requestTime3.Year, requestTime3.Month, 5))
+            .WithRequestDate(requestDate3)
             .Build();
-        var requestTime4 = DateTime.Now.AddMonths(-3);
+        var requestTime4 = today.AddMonths(-3);
+        var requestDate4 = new DateTime(requestTime4.Year, requestTime4.Month, 5);
         var referralRequest4 = new ReferralRequestBuilder(3)
             .WithCustodianCode("121")
-            .WithRequestDate(new DateTime(requestTime4.Year, requestTime4.Month, 5))
+            .WithRequestDate(requestDate4)
             .Build();
-        var requestTime5 = DateTime.Now.AddMonths(-3);
+        var requestTime5 = today.AddMonths(-3);
+        var requestDate5 = new DateTime(requestTime5.Year, requestTime5.Month, 5);
         var referralRequest5 = new ReferralRequestBuilder(3)
             .WithCustodianCode("121")
-            .WithRequestDate(new DateTime(requestTime5.Year, requestTime5.Month, 5))
+            .WithRequestDate(requestDate5)
             .Build();
 
         var referralRequests = new List<ReferralRequest>
@@ -333,9 +339,9 @@ public class CsvFileCreatorTests
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
             "LA Name,Consortium Name,Total WH:LG Referrals,Date of First Referral,Months Since First Referral,Referrals Per Month\r\n" +
-            "Bath and North East Somerset Council,Bristol City Council,1,05/03/2025,1,1\r\n" +
-            "Bedford Borough Council,Portsmouth City Council,1,05/12/2024,3,0.33\r\n" +
-            "North Somerset Council,Bristol City Council,3,05/12/2024,3,1\r\n");
+            $"Bath and North East Somerset Council,Bristol City Council,1,{requestDate1:dd/MM/yyyy},1,1\r\n" +
+            $"Bedford Borough Council,Portsmouth City Council,1,{requestDate2:dd/MM/yyyy},3,0.33\r\n" +
+            $"North Somerset Council,Bristol City Council,3,{requestDate3:dd/MM/yyyy},3,1\r\n");
     }
 
     [Test]
@@ -344,24 +350,28 @@ public class CsvFileCreatorTests
         // Arrange
         var underTest = new CsvFileCreator();
         var requestTime1 = DateTime.Now;
+        var requestDate1 = new DateTime(requestTime1.Year, requestTime1.Month, 5);
         var referralRequest1 = new ReferralRequestBuilder(1)
             .WithCustodianCode("114")
-            .WithRequestDate(new DateTime(requestTime1.Year, requestTime1.Month, 5))
+            .WithRequestDate(requestDate1)
             .Build();
         var requestTime2 = DateTime.Now.AddMonths(-3);
+        var requestDate2 = new DateTime(requestTime2.Year, requestTime2.Month, 5);
         var referralRequest2 = new ReferralRequestBuilder(6)
             .WithCustodianCode("235")
-            .WithRequestDate(new DateTime(requestTime2.Year, requestTime2.Month, 5))
+            .WithRequestDate(requestDate2)
             .Build();
         var requestTime3 = DateTime.Now.AddMonths(-3);
+        var requestDate3 = new DateTime(requestTime3.Year, requestTime3.Month, 5);
         var referralRequest3 = new ReferralRequestBuilder(3)
             .WithCustodianCode("121")
-            .WithRequestDate(new DateTime(requestTime3.Year, requestTime3.Month, 5))
+            .WithRequestDate(requestDate3)
             .Build();
         var requestTime4 = DateTime.Now.AddMonths(-3);
+        var requestDate4 = new DateTime(requestTime4.Year, requestTime4.Month, 5);
         var referralRequest4 = new ReferralRequestBuilder(3)
             .WithCustodianCode("121")
-            .WithRequestDate(new DateTime(requestTime4.Year, requestTime4.Month, 5))
+            .WithRequestDate(requestDate4)
             .Build();
 
         var referralRequests = new List<ReferralRequest>
@@ -374,8 +384,8 @@ public class CsvFileCreatorTests
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
             "Consortium Name,Total WH:LG Referrals,Date of First Referral,Months Since First Referral,Referrals Per Month\r\n" +
-            "Bristol City Council,3,05/12/2024,3,1\r\n" +
-            "Portsmouth City Council,1,05/12/2024,3,0.33\r\n");
+            $"Bristol City Council,3,{requestDate2:dd/MM/yyyy},3,1\r\n" +
+            $"Portsmouth City Council,1,{requestDate3:dd/MM/yyyy},3,0.33\r\n");
     }
     
         [Test]

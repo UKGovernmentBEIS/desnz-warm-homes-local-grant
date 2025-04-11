@@ -8,7 +8,6 @@ using WhlgPublicWebsite.BusinessLogic.Services.QuestionFlow;
 
 namespace Tests.BusinessLogic.Services;
 
-[Ignore("PC-1828: No Live LAs at launch")]
 [TestFixture]
 public class QuestionFlowServiceTests
 {
@@ -23,7 +22,8 @@ public class QuestionFlowServiceTests
     private static readonly string NotTakingPartCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.NotTakingPart);
     private static readonly string NotParticipatingCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.NotParticipating);
     private static readonly string PendingCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
-    private static readonly string TakingFutureReferralsCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals);
+    // PC-1849: Reinstate when an LA of takingFutureReferrals is added
+    // private static readonly string TakingFutureReferralsCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals);
 
     [TestCaseSource(nameof(BackTestCases))]
     public void RunBackLinkTestCases(QuestionFlowServiceTestCase testCase)
@@ -540,13 +540,14 @@ public class QuestionFlowServiceTests
                 custodianCode: PendingCustodianCode
             ),
             QuestionFlowStep.Pending),
-        new(
-            "Check answers continues to taking future referrals if LA is taking future referrals",
-            new Input(
-                QuestionFlowStep.CheckAnswers,
-                custodianCode: TakingFutureReferralsCustodianCode
-            ),
-            QuestionFlowStep.TakingFutureReferrals),
+        // PC-1849: Reinstate when an LA of takingFutureReferrals is added
+        // new(
+        //     "Check answers continues to taking future referrals if LA is taking future referrals",
+        //     new Input(
+        //         QuestionFlowStep.CheckAnswers,
+        //         custodianCode: TakingFutureReferralsCustodianCode
+        //     ),
+        //     QuestionFlowStep.TakingFutureReferrals),
         new(
             "Pending continues to eligible",
             new Input(
