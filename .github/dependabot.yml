@@ -1,0 +1,39 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    # we may not be able to respond to pull requests immediately
+    # prioritise showing them all
+    open-pull-requests-limit: 100
+    # group together minor & patch updates. major ones get a PR per change
+    groups:
+      non-major:
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # ensure FluentAssertions doesn't update to 8.x as its new license prohibit commercial use
+      - dependency-name: "FluentAssertions"
+        versions: ["8.*.*"]
+      # Dependencies that cannot update to 9.x until we update to .NET 9
+      - dependency-name: "Microsoft.EntityFrameworkCore.Design"
+        versions: ["9.*.*"]
+
+  - package-ecosystem: "npm"
+    directory: "WhlgPublicWebsite"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 100
+    # group all npm updates
+    groups:
+      npm:
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
+    ignore:
+      # ensure govuk-frontend doesn't update to 5.x until we're ready
+      - dependency-name: "govuk-frontend"
+        versions: [">=4.x"]
