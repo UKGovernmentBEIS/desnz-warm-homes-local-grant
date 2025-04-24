@@ -73,7 +73,7 @@ public class SessionRecorderServiceTests
                 await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, true));
 
         // Assert
-        Assert.NotNull(exception);
+        Assert.That(exception, Is.Not.Null);
         Assert.That(exception.Message, Is.EqualTo("Session ID is null at journey completion"));
     }
 }
