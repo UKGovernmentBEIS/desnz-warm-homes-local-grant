@@ -67,7 +67,7 @@ public class GovUkNotifyApiTests
             recipient,
             config.PendingReferralReportTemplate.Id,
             It.IsAny<Dictionary<string, object>>(),
-            null, null));
+            null, null, null));
     }
 
     [Test]
@@ -100,7 +100,7 @@ public class GovUkNotifyApiTests
             It.IsAny<string>(),
             config.PendingReferralReportTemplate.Id,
             It.IsAny<Dictionary<string, object>>(),
-            null, null),
+            null, null, null),
             Times.Exactly(recipients.Length));
         
         foreach (var recipient in recipients)
@@ -109,7 +109,7 @@ public class GovUkNotifyApiTests
                 recipient,
                 config.PendingReferralReportTemplate.Id,
                 It.IsAny<Dictionary<string, object>>(),
-                null, null));
+                null, null, null));
         }
     }
 
@@ -128,7 +128,7 @@ public class GovUkNotifyApiTests
             It.IsAny<string>(),
             It.IsAny<string>(),
             It.IsAny<Dictionary<string, dynamic>>(),
-            null, null), Times.Never);
+            null, null, null), Times.Never);
     }
 
     [Test]
@@ -145,7 +145,7 @@ public class GovUkNotifyApiTests
             It.IsAny<string>(),
             It.IsAny<string>(),
             It.IsAny<Dictionary<string, dynamic>>(),
-            null, null), Times.Never);
+            null, null, null), Times.Never);
     }
     
     [TestCase(1, 10, 2022, "01/10/2022")]
@@ -169,6 +169,6 @@ public class GovUkNotifyApiTests
             It.IsAny<string>(),
             It.IsAny<string>(),
             It.Is<Dictionary<string, dynamic>>(contents => contents.Contains(expectedKeyValuePair)),
-            null, null), Times.Once);
+            null, null, null), Times.Once);
     }
 }
