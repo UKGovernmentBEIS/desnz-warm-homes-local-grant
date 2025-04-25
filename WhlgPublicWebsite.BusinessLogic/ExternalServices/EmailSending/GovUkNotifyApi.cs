@@ -130,11 +130,11 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             var template = govUkNotifyConfig.ComplianceReportTemplate;
             var personalisation = new Dictionary<string, dynamic>
             {
-                { "OverviewFileLink", PrepareCsvUpload(recentReferralRequestOverviewFileData) },
-                { "RecentLocalAuthorityFollowUpFileLink", PrepareCsvUpload(recentLocalAuthorityReferralRequestFollowUpFileData) },
-                { "RecentConsortiumFollowUpFileLink", PrepareCsvUpload(recentConsortiumReferralRequestFollowUpFileData) },
-                { "HistoricLocalAuthorityFollowUpFileLink", PrepareCsvUpload(historicLocalAuthorityReferralRequestFollowUpFileData) },
-                { "HistoricConsortiumFollowUpFileLink", PrepareCsvUpload(historicConsortiumReferralRequestFollowUpFileData) } 
+                { "OverviewFileLink", PrepareCsvUpload(recentReferralRequestOverviewFileData, "overview.csv") },
+                { "RecentLocalAuthorityFollowUpFileLink", PrepareCsvUpload(recentLocalAuthorityReferralRequestFollowUpFileData, "recent-local-authority-follow-up.csv") },
+                { "RecentConsortiumFollowUpFileLink", PrepareCsvUpload(recentConsortiumReferralRequestFollowUpFileData, "recent-consortium-follow-up.csv") },
+                { "HistoricLocalAuthorityFollowUpFileLink", PrepareCsvUpload(historicLocalAuthorityReferralRequestFollowUpFileData, "historic-local-authority-follow-up.csv") },
+                { "HistoricConsortiumFollowUpFileLink", PrepareCsvUpload(historicConsortiumReferralRequestFollowUpFileData, "historic-consortium-follow-up.csv") }, 
             };
             SendEmailToRecipients(recipientList, template.Id, personalisation);
         }
@@ -145,7 +145,7 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             var template = govUkNotifyConfig.PendingReferralReportTemplate;
             var personalisation = new Dictionary<string, dynamic>
             {
-                { template.LinkPlaceholder, PrepareCsvUpload(pendingReferralRequestsFileData) },
+                { template.LinkPlaceholder, PrepareCsvUpload(pendingReferralRequestsFileData, "pending-referral-requests.csv") },
             };
             SendEmailToRecipients(recipientList, template.Id, personalisation);
         }
@@ -192,9 +192,10 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             SendEmail(emailModel);
         }
 
-        private static JObject PrepareCsvUpload(MemoryStream csvData)
+        private static JObject PrepareCsvUpload(MemoryStream csvData, string name)
         {
-            return NotificationClient.PrepareUpload(csvData.ToArray(), true);
+            var datePrefix = DateTime.Now.ToString("yyyyMMdd");
+            return NotificationClient.PrepareUpload(csvData.ToArray(), $"{datePrefix}-{name}");
         }
 
         private void SendEmailToRecipients(
