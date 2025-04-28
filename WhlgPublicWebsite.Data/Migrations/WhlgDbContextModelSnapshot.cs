@@ -17,7 +17,7 @@ namespace WhlgPublicWebsite.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.16")
+                .HasAnnotation("ProductVersion", "8.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -58,10 +58,11 @@ namespace WhlgPublicWebsite.Data.Migrations
                     b.Property<int?>("ReferralRequestId")
                         .HasColumnType("integer");
 
-                    b.Property<uint>("xmin")
+                    b.Property<uint>("Version")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid");
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
@@ -135,16 +136,17 @@ namespace WhlgPublicWebsite.Data.Migrations
                     b.Property<string>("Uprn")
                         .HasColumnType("text");
 
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<bool>("WasSubmittedForFutureGrants")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("WasSubmittedToPendingLocalAuthority")
                         .HasColumnType("boolean");
-
-                    b.Property<uint>("xmin")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid");
 
                     b.HasKey("Id");
 
@@ -168,13 +170,14 @@ namespace WhlgPublicWebsite.Data.Migrations
                     b.Property<string>("Token")
                         .HasColumnType("text");
 
-                    b.Property<bool?>("WasFollowedUp")
-                        .HasColumnType("boolean");
-
-                    b.Property<uint>("xmin")
+                    b.Property<uint>("Version")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid");
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<bool?>("WasFollowedUp")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -204,10 +207,11 @@ namespace WhlgPublicWebsite.Data.Migrations
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<uint>("xmin")
+                    b.Property<uint>("Version")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid");
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 
