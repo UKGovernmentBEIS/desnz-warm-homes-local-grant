@@ -48,7 +48,7 @@ jobs:
         if: ${{ always() }}
 
       - name: Generate detailed code coverage report
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.23
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.4.5
         with:
           reports: TestResults/*/coverage.cobertura.xml
           targetdir: TestResults/CoverageReport
