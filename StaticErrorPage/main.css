@@ -1,0 +1,52 @@
+#i-dot-ai .space-warning {
+    float: right;
+    background-color: #d4351c;
+    padding: 0.5rem 1rem;
+}
+
+#i-dot-ai .flex-justify-end {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#i-dot-ai .govuk-cookie-banner.hidden {
+  display: none;
+}
+#i-dot-ai .govuk-cookie-banner.visible {
+  display: block;
+}
+
+.govuk-main-wrapper {
+  position: relative;
+}
+
+.gbis-language-select {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.gbis-language-select__list {
+  list-style: none;
+}
+
+.gbis-language-select__list-item {
+  display: inline-block;
+  border-right: 1px solid grey;
+  padding: 0 0.25em;
+}
+
+.gbis-language-select__list-item button {
+  font-size: unset;
+  background: none;
+  border: none;
+}
+
+.gbis-language-select__list-item:last-child {
+  border-right: none;
+}
+
+.gbis-language-select__button-text {
+    font-weight: normal;
+    color: #0b0c0c;
+}
