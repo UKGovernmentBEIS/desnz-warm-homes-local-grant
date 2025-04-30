@@ -30,7 +30,7 @@ public class GovUkNotifyApiTests
     {
         logger = new NullLogger<GovUkNotifyApi>();
         mockNotificationClient = new Mock<INotificationClient>();
-
+        
         config = new GovUkNotifyConfiguration
         {
             PendingReferralReportTemplate = new PendingReferralReportConfiguration
@@ -58,16 +58,16 @@ public class GovUkNotifyApiTests
         // Arrange
         const string recipient = "email1@example.com";
         config.PendingReferralEmailRecipients = recipient;
-
+        
         // Act
         govUkNotifyApi.SendPendingReferralReportEmail(memoryStream);
-
+        
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(
             recipient,
             config.PendingReferralReportTemplate.Id,
             It.IsAny<Dictionary<string, object>>(),
-            null, null, null));
+            null, null));
     }
 
     [Test]
@@ -76,10 +76,10 @@ public class GovUkNotifyApiTests
         // Arrange
         const string recipient = "email1@example.com";
         config.PendingReferralEmailRecipients = recipient;
-
+        
         // Act
         govUkNotifyApi.SendPendingReferralReportEmail(memoryStream);
-
+        
         // Assert
         var personalisation = (Dictionary<string, object>)mockNotificationClient.Invocations[0].Arguments[2];
         personalisation.Should().ContainKey("link");
@@ -91,25 +91,25 @@ public class GovUkNotifyApiTests
         // Arrange
         var recipients = new[] { "email1@example.com", "email2@example.com", "email3@example.com" };
         config.PendingReferralEmailRecipients = string.Join(",", recipients);
-
+        
         // Act
         govUkNotifyApi.SendPendingReferralReportEmail(memoryStream);
-
+        
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(
-                It.IsAny<string>(),
-                config.PendingReferralReportTemplate.Id,
-                It.IsAny<Dictionary<string, object>>(),
-                null, null, null),
+            It.IsAny<string>(),
+            config.PendingReferralReportTemplate.Id,
+            It.IsAny<Dictionary<string, object>>(),
+            null, null),
             Times.Exactly(recipients.Length));
-
+        
         foreach (var recipient in recipients)
         {
             mockNotificationClient.Verify(nc => nc.SendEmail(
                 recipient,
                 config.PendingReferralReportTemplate.Id,
                 It.IsAny<Dictionary<string, object>>(),
-                null, null, null));
+                null, null));
         }
     }
 
@@ -119,16 +119,16 @@ public class GovUkNotifyApiTests
         // Arrange
         const string recipient = "";
         config.PendingReferralEmailRecipients = recipient;
-
+        
         // Act
         govUkNotifyApi.SendPendingReferralReportEmail(memoryStream);
-
+        
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(
             It.IsAny<string>(),
             It.IsAny<string>(),
             It.IsAny<Dictionary<string, dynamic>>(),
-            null, null, null), Times.Never);
+            null, null), Times.Never);
     }
 
     [Test]
@@ -136,42 +136,39 @@ public class GovUkNotifyApiTests
     {
         // Arrange
         config.PendingReferralEmailRecipients = null;
-
+        
         // Act
         govUkNotifyApi.SendPendingReferralReportEmail(memoryStream);
-
+        
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(
             It.IsAny<string>(),
             It.IsAny<string>(),
             It.IsAny<Dictionary<string, dynamic>>(),
-            null, null, null), Times.Never);
+            null, null), Times.Never);
     }
-
+    
     [TestCase(1, 10, 2022, "01/10/2022")]
     [TestCase(11, 1, 2023, "11/01/2023")]
     [TestCase(11, 12, 2023, "11/12/2023")]
-    public void SendFollowUpEmail_WhenCalled_SendsEmailWithUkDateFormat(int day, int month, int year,
-        string expectedDateString)
+    public void SendFollowUpEmail_WhenCalled_SendsEmailWithUkDateFormat(int day, int month, int year, string expectedDateString)
     {
         // Arrange
         var referralRequestBuilder = new ReferralRequestBuilder(1)
             .WithRequestDate(new DateTime(year, month, day))
-            .WithCustodianCode(
-                LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
-                    .Live));
+            .WithCustodianCode(LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live));
         var testReferralRequest = referralRequestBuilder.Build();
         var expectedKeyValuePair =
             new KeyValuePair<string, object>("TestReferralDate", expectedDateString);
-
+        
         // Act
         govUkNotifyApi.SendFollowUpEmail(testReferralRequest, "example");
-
+        
         // Assert
         mockNotificationClient.Verify(nc => nc.SendEmail(
             It.IsAny<string>(),
             It.IsAny<string>(),
             It.Is<Dictionary<string, dynamic>>(contents => contents.Contains(expectedKeyValuePair)),
-            null, null, null), Times.Once);
+            null, null), Times.Once);
     }
 }

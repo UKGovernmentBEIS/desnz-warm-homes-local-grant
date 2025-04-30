@@ -3,7 +3,7 @@
 namespace WhlgPublicWebsite.BusinessLogic.Models;
 
 [Table("Sessions")]
-public class Session : IEntityWithRowVersioning
+public class Session
 {
     public int Id { get; set; }
 
@@ -16,6 +16,4 @@ public class Session : IEntityWithRowVersioning
      * If IsJourneyComplete is true, the user's LA is Not Participating/Not Taking Part, so eligibility was not calculated
      */
     public bool? IsEligible { get; set; }
-
-    public uint Version { get; set; }
 }
