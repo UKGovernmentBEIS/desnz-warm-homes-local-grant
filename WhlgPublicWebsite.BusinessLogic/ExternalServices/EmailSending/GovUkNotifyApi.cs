@@ -8,21 +8,13 @@ using WhlgPublicWebsite.BusinessLogic.Models;
 
 namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
 {
-    public class GovUkNotifyApi : IEmailSender
+    public class GovUkNotifyApi(
+        INotificationClient client,
+        IOptions<GovUkNotifyConfiguration> config,
+        ILogger<GovUkNotifyApi> logger)
+        : IEmailSender
     {
-        private readonly INotificationClient client;
-        private readonly GovUkNotifyConfiguration govUkNotifyConfig;
-        private readonly ILogger<GovUkNotifyApi> logger;
-        
-        public GovUkNotifyApi(
-            INotificationClient client,
-            IOptions<GovUkNotifyConfiguration> config,
-            ILogger<GovUkNotifyApi> logger)
-        {
-            this.client = client;
-            govUkNotifyConfig = config.Value;
-            this.logger = logger;
-        }
+        private readonly GovUkNotifyConfiguration govUkNotifyConfig = config.Value;
 
         private void SendEmail(GovUkNotifyEmailModel emailModel)
         {
@@ -33,7 +25,8 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                     emailModel.TemplateId,
                     emailModel.Personalisation,
                     emailModel.Reference,
-                    emailModel.EmailReplyToId);
+                    emailModel.EmailReplyToId,
+                    emailModel.OneClickUnsubscribeUrl);
             }
             catch (NotifyClientException e)
             {
@@ -52,44 +45,49 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 }
             }
         }
-        
+
         public void SendReferenceCodeEmailForLiveLocalAuthority
         (
             string emailAddress,
-            string recipientName, 
+            string recipientName,
             ReferralRequest referralRequest)
         {
-            SendReferenceCodeEmail(emailAddress, recipientName, referralRequest, govUkNotifyConfig.ReferenceCodeForLiveLocalAuthorityTemplate);
+            SendReferenceCodeEmail(emailAddress, recipientName, referralRequest,
+                govUkNotifyConfig.ReferenceCodeForLiveLocalAuthorityTemplate);
         }
-        
+
         public void SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority
         (
             string emailAddress,
             string recipientName,
             ReferralRequest referralRequest)
         {
-            SendReferenceCodeEmail(emailAddress, recipientName, referralRequest, govUkNotifyConfig.ReferenceCodeForTakingFutureReferralsLocalAuthorityTemplate);
+            SendReferenceCodeEmail(emailAddress, recipientName, referralRequest,
+                govUkNotifyConfig.ReferenceCodeForTakingFutureReferralsLocalAuthorityTemplate);
         }
-        
+
         public void SendReferenceCodeEmailForPendingLocalAuthority
         (
             string emailAddress,
             string recipientName,
             ReferralRequest referralRequest)
         {
-            SendReferenceCodeEmail(emailAddress, recipientName, referralRequest, govUkNotifyConfig.ReferenceCodeForPendingLocalAuthorityTemplate);
+            SendReferenceCodeEmail(emailAddress, recipientName, referralRequest,
+                govUkNotifyConfig.ReferenceCodeForPendingLocalAuthorityTemplate);
         }
 
         public void SendFollowUpEmail
         (
             ReferralRequest referralRequest,
             string followUpLink
-        ) {
+        )
+        {
             var template = govUkNotifyConfig.ReferralFollowUpTemplate;
             LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
             try
             {
-                localAuthorityDetails = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referralRequest.CustodianCode];
+                localAuthorityDetails =
+                    LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referralRequest.CustodianCode];
 
                 var personalisation = new Dictionary<string, dynamic>
                 {
@@ -117,8 +115,7 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 );
             }
         }
-        
-        
+
         public void SendComplianceEmail(
             MemoryStream recentReferralRequestOverviewFileData,
             MemoryStream recentLocalAuthorityReferralRequestFollowUpFileData,
@@ -130,11 +127,26 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             var template = govUkNotifyConfig.ComplianceReportTemplate;
             var personalisation = new Dictionary<string, dynamic>
             {
-                { "OverviewFileLink", PrepareCsvUpload(recentReferralRequestOverviewFileData) },
-                { "RecentLocalAuthorityFollowUpFileLink", PrepareCsvUpload(recentLocalAuthorityReferralRequestFollowUpFileData) },
-                { "RecentConsortiumFollowUpFileLink", PrepareCsvUpload(recentConsortiumReferralRequestFollowUpFileData) },
-                { "HistoricLocalAuthorityFollowUpFileLink", PrepareCsvUpload(historicLocalAuthorityReferralRequestFollowUpFileData) },
-                { "HistoricConsortiumFollowUpFileLink", PrepareCsvUpload(historicConsortiumReferralRequestFollowUpFileData) } 
+                { "OverviewFileLink", PrepareCsvUpload(recentReferralRequestOverviewFileData, "overview.csv") },
+                {
+                    "RecentLocalAuthorityFollowUpFileLink",
+                    PrepareCsvUpload(recentLocalAuthorityReferralRequestFollowUpFileData,
+                        "recent-local-authority-follow-up.csv")
+                },
+                {
+                    "RecentConsortiumFollowUpFileLink",
+                    PrepareCsvUpload(recentConsortiumReferralRequestFollowUpFileData, "recent-consortium-follow-up.csv")
+                },
+                {
+                    "HistoricLocalAuthorityFollowUpFileLink",
+                    PrepareCsvUpload(historicLocalAuthorityReferralRequestFollowUpFileData,
+                        "historic-local-authority-follow-up.csv")
+                },
+                {
+                    "HistoricConsortiumFollowUpFileLink",
+                    PrepareCsvUpload(historicConsortiumReferralRequestFollowUpFileData,
+                        "historic-consortium-follow-up.csv")
+                },
             };
             SendEmailToRecipients(recipientList, template.Id, personalisation);
         }
@@ -145,7 +157,10 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             var template = govUkNotifyConfig.PendingReferralReportTemplate;
             var personalisation = new Dictionary<string, dynamic>
             {
-                { template.LinkPlaceholder, PrepareCsvUpload(pendingReferralRequestsFileData) },
+                {
+                    template.LinkPlaceholder,
+                    PrepareCsvUpload(pendingReferralRequestsFileData, "pending-referral-requests.csv")
+                },
             };
             SendEmailToRecipients(recipientList, template.Id, personalisation);
         }
@@ -160,7 +175,8 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
             try
             {
-                localAuthorityDetails = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referralRequest.CustodianCode];
+                localAuthorityDetails =
+                    LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referralRequest.CustodianCode];
             }
             catch (KeyNotFoundException ex)
             {
@@ -176,6 +192,7 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                     ex
                 );
             }
+
             var personalisation = new Dictionary<string, dynamic>
             {
                 { template.RecipientNamePlaceholder, recipientName },
@@ -192,13 +209,14 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             SendEmail(emailModel);
         }
 
-        private static JObject PrepareCsvUpload(MemoryStream csvData)
+        private static JObject PrepareCsvUpload(MemoryStream csvData, string name)
         {
-            return NotificationClient.PrepareUpload(csvData.ToArray(), true);
+            var datePrefix = DateTime.Now.ToString("yyyyMMdd");
+            return NotificationClient.PrepareUpload(csvData.ToArray(), $"{datePrefix}-{name}");
         }
 
         private void SendEmailToRecipients(
-            string recipientList, 
+            string recipientList,
             string templateId,
             Dictionary<string, dynamic> personalisation)
         {
@@ -206,6 +224,7 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             {
                 return;
             }
+
             var emailAddresses = recipientList.Split(",").Select(emailAddress => emailAddress.Trim());
             foreach (var emailAddress in emailAddresses)
             {
@@ -219,13 +238,14 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             }
         }
     }
-    
+
     internal class GovUkNotifyEmailModel
     {
-        public string EmailAddress { get; set; }
-        public string TemplateId { get; set; }
-        public Dictionary<string, dynamic> Personalisation { get; set; }
+        public string EmailAddress { get; init; }
+        public string TemplateId { get; init; }
+        public Dictionary<string, dynamic> Personalisation { get; init; }
         public string Reference { get; set; }
         public string EmailReplyToId { get; set; }
+        public string OneClickUnsubscribeUrl { get; set; }
     }
 }
