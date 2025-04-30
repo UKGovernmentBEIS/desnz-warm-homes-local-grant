@@ -2,7 +2,7 @@
 
 namespace WhlgPublicWebsite.BusinessLogic.Models;
 
-public class ReferralRequest
+public class ReferralRequest : IEntityWithRowVersioning
 {
     public ReferralRequest()
     {
@@ -67,6 +67,8 @@ public class ReferralRequest
     public ReferralRequestFollowUp? FollowUp { get; set; }
 
     public string ReferralCode { get; set; }
+    
+    public uint Version { get; set; }
 
     public void UpdateReferralCode()
     {

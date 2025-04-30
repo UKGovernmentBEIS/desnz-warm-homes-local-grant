@@ -90,9 +90,12 @@ public class WhlgDbContext(DbContextOptions<WhlgDbContext> options) : DbContext(
         AddRowVersionColumn(modelBuilder.Entity<Session>());
     }
 
-    private void AddRowVersionColumn<T>(EntityTypeBuilder<T> builder) where T : class
+    private void AddRowVersionColumn<T>(EntityTypeBuilder<T> builder) where T : class, IEntityWithRowVersioning
     {
-        // This is a PostgreSQL specific implementation of row versioning
-        builder.UseXminAsConcurrencyToken();
+        // Instruct EF to use Postgres specific implementation of row versioning
+        // See https://www.npgsql.org/efcore/modeling/concurrency.html
+        builder
+            .Property(b => b.Version)
+            .IsRowVersion();
     }
 }
