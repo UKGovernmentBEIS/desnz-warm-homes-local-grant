@@ -17,9 +17,13 @@ updates:
       # ensure FluentAssertions doesn't update to 8.x as its new license prohibit commercial use
       - dependency-name: "FluentAssertions"
         versions: ["8.x.x"]
+
       # Dependencies that cannot update to 9.x until we update to .NET 9
       - dependency-name: "Microsoft.EntityFrameworkCore.Design"
         versions: ["9.x.x"]
+      - dependency-name: "Community.Microsoft.Extensions.Caching.PostgreSql"
+        # 5.0.0 targets .NET 9
+        versions: ["5.x.x"]
 
   - package-ecosystem: "npm"
     directory: "WhlgPublicWebsite"
