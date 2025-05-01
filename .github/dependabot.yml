@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "nuget"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     # we may not be able to respond to pull requests immediately
     # prioritise showing them all
     open-pull-requests-limit: 100
@@ -28,7 +28,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "WhlgPublicWebsite"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     open-pull-requests-limit: 100
     # group all npm updates
     groups:
