@@ -51,7 +51,7 @@ namespace WhlgPublicWebsite
             recurringJobManager.AddOrUpdate<UnsubmittedReferralRequestsService>(
                 "Write unsubmitted referral requests to csv",
                 service => service.WriteUnsubmittedReferralRequestsToCsv(),
-                "45 0 * * *"); // at 00:45 every day
+                "* * * * *"); // at 00:45 every day
             
             recurringJobManager.AddOrUpdate<PolicyTeamUpdateService>(
                 "Send policy team update email",
