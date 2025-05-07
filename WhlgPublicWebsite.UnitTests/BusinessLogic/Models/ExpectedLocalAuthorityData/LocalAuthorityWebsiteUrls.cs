@@ -366,7 +366,7 @@ internal static class LocalAuthorityWebsiteUrls
             { "3835", "https://www.adur-worthing.gov.uk/" },
             { "6955", "https://www.wrexham.gov.uk/" },
             { "1840", "https://www.wychavon.gov.uk/" },
-            { "2370", "https://www.wychavon.gov.uk/" },
+            { "2370", "https://www.wyre.gov.uk/" },
             { "1845", "https://www.wyreforestdc.gov.uk/" },
         };
     }
