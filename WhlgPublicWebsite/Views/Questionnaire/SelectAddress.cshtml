@@ -1,6 +1,5 @@
 ﻿@using GovUkDesignSystem
 @using GovUkDesignSystem.GovUkDesignSystemComponents
-@using WhlgPublicWebsite.BusinessLogic.Models.Enums
 @using WhlgPublicWebsite.Models.Enums;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using WhlgPublicWebsite.Controllers
@@ -22,7 +21,6 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        
         @if (Model.IsMultipleAddresses)
         {
             <form action="@Url.Action(nameof(QuestionnaireController.SelectAddress_Post), "Questionnaire")" method="post" novalidate>
@@ -30,29 +28,16 @@
                 @(Html.HiddenFor(m => m.IsMultipleAddresses))
                 @Html.AntiForgeryToken()
 
+                <h1 class="govuk-heading-l">
+                    Select your address
+                </h1>
 
-                @await Html.GovUkRadiosFromStringsFor(m => m.SelectedAddressIndex,
-                           radioOptions: new Dictionary<string, LabelViewModel>(
+                @await Html.GovUkSelectFromStringsFor(m => m.SelectedAddressIndex,
+                           selectOptions: new Dictionary<string, string>(
                                Model.Addresses.Select(
-                                   (result, i) => new KeyValuePair<string, LabelViewModel>(
-                                       i.ToString(),
-                                       new LabelViewModel
-                                       {
-                                           Text = result.DisplayAddress,
-                                       }
-                                       )
-                                   )
-                               ),
-                           fieldsetOptions: new FieldsetViewModel()
-                           {
-                               Legend = new LegendViewModel()
-                               {
-                                   Text = "Select your address",
-                                   Classes = "govuk-fieldset__legend--l",
-                                   IsPageHeading = true
-                               }
-                           }
-                           )
+                                   (result, i) => new KeyValuePair<string, string>(
+                                       i.ToString(), result.DisplayAddress))),
+                            placeHolder: Model.AddressInputPlaceholder)
 
                 <p class="govuk-body">
                     <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.ManualAddress_Get), "Questionnaire", extraRouteValues)">Address not listed</a>
