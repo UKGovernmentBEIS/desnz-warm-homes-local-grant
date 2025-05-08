@@ -10,7 +10,7 @@ namespace WhlgPublicWebsite.Models.Questionnaire;
 public class SelectAddressViewModel : QuestionFlowViewModel
 {
     public List<Address> Addresses { get; set; }
-    [GovUkValidateRequiredIf(IsRequiredPropertyName = nameof(IsMultipleAddresses), ErrorMessageIfMissing = "Select your address or click \"Address not listed above\"")]
+    [GovUkValidateRequiredIf(IsRequiredPropertyName = nameof(IsMultipleAddresses), ErrorMessageIfMissing = "Select your address or click \"Address not listed\"")]
     [ModelBinder(typeof(GovUkSelectBinder))] // ensure the placeholder is interpreted as null
     public string SelectedAddressIndex { get; set; }
 
