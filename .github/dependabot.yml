@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "nuget"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     # we may not be able to respond to pull requests immediately
     # prioritise showing them all
     open-pull-requests-limit: 100
@@ -16,15 +16,19 @@ updates:
     ignore:
       # ensure FluentAssertions doesn't update to 8.x as its new license prohibit commercial use
       - dependency-name: "FluentAssertions"
-        versions: ["8.*.*"]
+        versions: ["8.x.x"]
+
       # Dependencies that cannot update to 9.x until we update to .NET 9
       - dependency-name: "Microsoft.EntityFrameworkCore.Design"
-        versions: ["9.*.*"]
+        versions: ["9.x.x"]
+      - dependency-name: "Community.Microsoft.Extensions.Caching.PostgreSql"
+        # 5.0.0 targets .NET 9
+        versions: ["5.x.x"]
 
   - package-ecosystem: "npm"
     directory: "WhlgPublicWebsite"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     open-pull-requests-limit: 100
     # group all npm updates
     groups:
