@@ -29,6 +29,9 @@ RUN dotnet build WhlgPublicWebsite.ManagementShell/ --use-current-runtime --self
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+USER appuser
+
 WORKDIR /app
 COPY --from=build /app .
 COPY --from=build /cli ./cli
