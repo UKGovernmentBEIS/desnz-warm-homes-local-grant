@@ -3,6 +3,7 @@
 @using WhlgPublicWebsite.Models.Enums;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using WhlgPublicWebsite.Controllers
+@using WhlgPublicWebsite.Models.Questionnaire
 
 @model WhlgPublicWebsite.Models.Questionnaire.SelectAddressViewModel
 @{
@@ -37,7 +38,11 @@
                                Model.Addresses.Select(
                                    (result, i) => new KeyValuePair<string, string>(
                                        i.ToString(), result.DisplayAddress))),
-                            placeHolder: Model.AddressInputPlaceholder)
+                            placeHolderOptions: new PlaceholderViewModel
+                            {
+                                Value = SelectAddressViewModel.AddressInputPlaceholderValue,
+                                Text = Model.AddressInputPlaceholderText
+                            })
 
                 <p class="govuk-body">
                     <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.ManualAddress_Get), "Questionnaire", extraRouteValues)">Address not listed</a>
