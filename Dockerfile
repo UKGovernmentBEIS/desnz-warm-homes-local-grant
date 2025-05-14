@@ -35,4 +35,9 @@ USER appuser
 WORKDIR /app
 COPY --from=build /app .
 COPY --from=build /cli ./cli
+
+# this ensures psql is available on the container
+# we may use this in support when connecting to EC2 container & we need to query the database
+RUN apt-get update && apt-get install -y postgresql-client
+
 ENTRYPOINT ["dotnet", "WhlgPublicWebsite.dll"]
