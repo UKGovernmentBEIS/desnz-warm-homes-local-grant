@@ -122,6 +122,21 @@ public class CsvFileCreatorTests
             "Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Household income band,Is eligible postcode,Tenure\r\n" +
             $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,,2023-01-01 15:00:01,\"£36,000 or less\",no,Owner\r\n");
     }
+    
+    [Test]
+    public void CreateReferralRequestFileData_CalledWithReferralRequest_IncludesBOMInTheMemoryStream()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).Build();
+        var referralRequests = new List<ReferralRequest> { referralRequest };
+
+        // Act
+        var data = underTest.CreateReferralRequestFileData(referralRequests);
+        
+        // Assert
+        ContainsBom(data).Should().BeTrue();
+    }
 
     [Test]
     public void CreateReferralRequestOverviewFileData_CalledWithReferralRequest_GeneratesExpectedFileData()
@@ -159,6 +174,21 @@ public class CsvFileCreatorTests
         reader.ReadToEnd().Should().Be(
             "Consortium,Local Authority,Referral Code\r\n" +
             ",Aberdeenshire Council,DummyCode00001\r\n");
+    }
+    
+    [Test]
+    public void CreateReferralRequestOverviewFileData_CalledWithReferralRequest_IncludesBOMInTheMemoryStream()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).Build();
+        var referralRequests = new List<ReferralRequest> { referralRequest };
+
+        // Act
+        var data = underTest.CreateReferralRequestOverviewFileData(referralRequests);
+        
+        // Assert
+        ContainsBom(data).Should().BeTrue();
     }
 
     [Test]
@@ -202,6 +232,21 @@ public class CsvFileCreatorTests
             $"{today},North Somerset Council,1,33.333333333333336,1,33.333333333333336,3,100\r\n" + // Custodian Code 121
             $"{today},Aberdeenshire Council,1,33.333333333333336,2,66.66666666666667,3,100\r\n" // Custodian Code 9052
         );
+    }
+    
+    [Test]
+    public void CreateLocalAuthorityReferralRequestFollowUpFileData_CalledWithReferralRequest_IncludesBOMInTheMemoryStream()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).Build();
+        var referralRequests = new List<ReferralRequest> { referralRequest };
+
+        // Act
+        var data = underTest.CreateLocalAuthorityReferralRequestFollowUpFileData(referralRequests);
+        
+        // Assert
+        ContainsBom(data).Should().BeTrue();
     }
 
     [Test]
@@ -247,6 +292,21 @@ public class CsvFileCreatorTests
             $"{today},Bristol City Council,False,3,60,False,2,40\r\n" // Custodian codes 114 and 121"
         ); // Stats for 9052 and 2205 with no Consortium name should not appear as LAs with no Consortium should not be included
     }
+    
+    [Test]
+    public void CreateConsortiumReferralRequestFollowUpFileData_CalledWithReferralRequest_IncludesBOMInTheMemoryStream()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).Build();
+        var referralRequests = new List<ReferralRequest> { referralRequest };
+
+        // Act
+        var data = underTest.CreateConsortiumReferralRequestFollowUpFileData(referralRequests);
+        
+        // Assert
+        ContainsBom(data).Should().BeTrue();
+    }
 
     [Test]
     public void CreatePendingReferralRequestFileData_CalledWithReferralRequest_GeneratesExpectedFileData()
@@ -290,6 +350,21 @@ public class CsvFileCreatorTests
             "Bristol City Council,Bath and North East Somerset Council,2024-03-05 01:00:00,TEST0001,Test User 1,test1@example.com,111,Pending\r\n" +
             "Portsmouth City Council,Bedford Borough Council,2024-02-05 01:00:00,TEST0002,Test User 2,test2@example.com,,Live\r\n" +
             "Bristol City Council,North Somerset Council,2024-01-05 01:00:00,TEST0003,Test User 3,,333,Pending\r\n");
+    }
+    
+    [Test]
+    public void CreatePendingReferralRequestFileData_CalledWithReferralRequest_IncludesBOMInTheMemoryStream()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).Build();
+        var referralRequests = new List<ReferralRequest> { referralRequest };
+
+        // Act
+        var data = underTest.CreatePendingReferralRequestFileData(referralRequests);
+        
+        // Assert
+        ContainsBom(data).Should().BeTrue();
     }
 
     [Test]
@@ -342,6 +417,21 @@ public class CsvFileCreatorTests
             $"Bath and North East Somerset Council,Bristol City Council,1,{requestDate1:dd/MM/yyyy},1,1\r\n" +
             $"Bedford Borough Council,Portsmouth City Council,1,{requestDate2:dd/MM/yyyy},3,0.33\r\n" +
             $"North Somerset Council,Bristol City Council,3,{requestDate3:dd/MM/yyyy},3,1\r\n");
+    }
+    
+    [Test]
+    public void CreatePerMonthLocalAuthorityReferralStatistics_CalledWithReferralRequest_DoesNotIncludeBOMInTheMemoryStream()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).Build();
+        var referralRequests = new List<ReferralRequest> { referralRequest };
+
+        // Act
+        var data = underTest.CreatePerMonthLocalAuthorityReferralStatistics(referralRequests);
+        
+        // Assert
+        ContainsBom(data).Should().BeFalse();
     }
 
     [Test]
@@ -409,5 +499,30 @@ public class CsvFileCreatorTests
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
             "Consortium Name,Total WH:LG Referrals,Date of First Referral,Months Since First Referral,Referrals Per Month\r\n");
+    }
+    
+    [Test]
+    public void CreatePerMonthConsortiumReferralStatistics_CalledWithReferralRequest_DoesNotIncludeBOMInTheMemoryStream()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).Build();
+        var referralRequests = new List<ReferralRequest> { referralRequest };
+
+        // Act
+        var data = underTest.CreatePerMonthConsortiumReferralStatistics(referralRequests);
+        
+        // Assert
+        ContainsBom(data).Should().BeFalse();
+    }
+
+    private static bool ContainsBom(MemoryStream stream)
+    {
+        var utf8NoBom = new UTF8Encoding(false);
+        using var reader = new StreamReader(stream, utf8NoBom);
+        // if there is a BOM in the stream, the encoding will change to a BOM including encoding when its read 
+        reader.Read();
+        // this will make it no longer equal to this encoding where BOM is set to false
+        return !Equals(reader.CurrentEncoding, utf8NoBom);
     }
 }
