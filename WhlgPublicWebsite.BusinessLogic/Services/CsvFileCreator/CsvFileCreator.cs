@@ -27,13 +27,13 @@ public class CsvFileCreator : ICsvFileCreator
     public MemoryStream CreateReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests)
     {
         var rows = referralRequests.Select(rr => new CsvRowReferralRequest(rr));
-        return GenerateCsvMemoryStreamFromFileRows(rows);
+        return GenerateCsvMemoryStreamFromFileRows(rows, true);
     }
 
     public MemoryStream CreateReferralRequestOverviewFileData(IEnumerable<ReferralRequest> referralRequests)
     {
         var rows = referralRequests.Select(rr => new CsvRowReferralCodes(rr));
-        return GenerateCsvMemoryStreamFromFileRows(rows);
+        return GenerateCsvMemoryStreamFromFileRows(rows, true);
     }
 
     public MemoryStream CreateLocalAuthorityReferralRequestFollowUpFileData(
@@ -42,7 +42,7 @@ public class CsvFileCreator : ICsvFileCreator
         var rows = referralRequests
             .GroupBy(rr => rr.CustodianCode)
             .Select(groupingByLa => new CsvRowLaDownloadInformation(groupingByLa));
-        return GenerateCsvMemoryStreamFromFileRows(rows);
+        return GenerateCsvMemoryStreamFromFileRows(rows, true);
     }
 
     public MemoryStream CreateConsortiumReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests)
@@ -59,7 +59,7 @@ public class CsvFileCreator : ICsvFileCreator
                     return new CsvRowConsortiumDownloadInformationRow(groupingByConsortium.Key, consortiumStatistics);
                 }
             );
-        return GenerateCsvMemoryStreamFromFileRows(rows);
+        return GenerateCsvMemoryStreamFromFileRows(rows, true);
     }
 
     public MemoryStream CreatePendingReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests)
@@ -67,7 +67,7 @@ public class CsvFileCreator : ICsvFileCreator
         var rows = referralRequests
             .Select(rr => new CsvRowPendingReferralRequest(rr));
 
-        return GenerateCsvMemoryStreamFromFileRows(rows);
+        return GenerateCsvMemoryStreamFromFileRows(rows, true);
     }
 
     public MemoryStream CreatePerMonthLocalAuthorityReferralStatistics(IEnumerable<ReferralRequest> requests)
@@ -76,7 +76,7 @@ public class CsvFileCreator : ICsvFileCreator
             .GroupBy(r => r.CustodianCode)
             .Select(custodianCodeRequests => new CsvRowLocalAuthorityPerMonthStatistics(custodianCodeRequests));
 
-        return GenerateCsvMemoryStreamFromFileRows(rows);
+        return GenerateCsvMemoryStreamFromFileRows(rows, false);
     }
 
     public MemoryStream CreatePerMonthConsortiumReferralStatistics(IEnumerable<ReferralRequest> requests)
@@ -87,7 +87,7 @@ public class CsvFileCreator : ICsvFileCreator
             .Where(group => group.Key != null)
             .Select(consortiumRequests => new CsvRowConsortiumPerMonthStatistics(consortiumRequests)
             );
-        return GenerateCsvMemoryStreamFromFileRows(rows);
+        return GenerateCsvMemoryStreamFromFileRows(rows, false);
     }
 
     private class CsvRowLocalAuthorityPerMonthStatistics
@@ -416,7 +416,22 @@ public class CsvFileCreator : ICsvFileCreator
         }
     }
 
-    private MemoryStream GenerateCsvMemoryStreamFromFileRows<T>(IEnumerable<T> rows)
+    /// <summary>
+    /// Converts a properly configured CSV object into a memory stream containing the CSV data text
+    /// </summary>
+    /// <param name="rows">List of rows to include in the CSV</param>
+    /// <param name="includeBom">
+    /// Whether to include the BOM or not.
+    /// <br/>
+    /// - If the CSV is to be written to a file, do include the BOM.
+    /// This means external editors will be able to read the file correctly and avoid encoding errors.
+    /// <br/>
+    /// - If the CSV is to be written to the console, do not include the BOM.
+    /// The BOM is written to the console as '?' which is unwanted.
+    /// </param>
+    /// <typeparam name="T">Type that can be serialized and written to a CSV</typeparam>
+    /// <returns>Text stream of the CSV data</returns>
+    private MemoryStream GenerateCsvMemoryStreamFromFileRows<T>(IEnumerable<T> rows, bool includeBom)
     {
         var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
@@ -424,7 +439,7 @@ public class CsvFileCreator : ICsvFileCreator
         };
 
         using var writeableMemoryStream = new MemoryStream();
-        using var streamWriter = new StreamWriter(writeableMemoryStream, new UTF8Encoding(false));
+        using var streamWriter = new StreamWriter(writeableMemoryStream, new UTF8Encoding(includeBom));
         using var csvWriter = new CsvWriter(streamWriter, csvConfiguration);
         {
             csvWriter.WriteRecords(rows);
