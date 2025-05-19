@@ -10,33 +10,39 @@ namespace WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 
 public interface ICsvFileCreator
 {
-    public MemoryStream CreateReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests);
-    public MemoryStream CreateReferralRequestOverviewFileData(IEnumerable<ReferralRequest> referralRequests);
+    public MemoryStream CreateReferralRequestFileDataForS3(IEnumerable<ReferralRequest> referralRequests);
+    public MemoryStream CreateReferralRequestOverviewFileDataForS3(IEnumerable<ReferralRequest> referralRequests);
 
-    public MemoryStream CreateLocalAuthorityReferralRequestFollowUpFileData(
+    public MemoryStream CreateLocalAuthorityReferralRequestFollowUpFileDataForS3(
         IEnumerable<ReferralRequest> referralRequests);
 
-    public MemoryStream CreateConsortiumReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests);
-    public MemoryStream CreatePendingReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests);
-    public MemoryStream CreatePerMonthLocalAuthorityReferralStatistics(IEnumerable<ReferralRequest> referralRequests);
-    public MemoryStream CreatePerMonthConsortiumReferralStatistics(IEnumerable<ReferralRequest> referralRequests);
+    public MemoryStream CreateConsortiumReferralRequestFollowUpFileDataForS3(
+        IEnumerable<ReferralRequest> referralRequests);
+
+    public MemoryStream CreatePendingReferralRequestFileDataForS3(IEnumerable<ReferralRequest> referralRequests);
+
+    public MemoryStream CreatePerMonthLocalAuthorityReferralStatisticsForConsole(
+        IEnumerable<ReferralRequest> referralRequests);
+
+    public MemoryStream CreatePerMonthConsortiumReferralStatisticsForConsole(
+        IEnumerable<ReferralRequest> referralRequests);
 }
 
 public class CsvFileCreator : ICsvFileCreator
 {
-    public MemoryStream CreateReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests)
+    public MemoryStream CreateReferralRequestFileDataForS3(IEnumerable<ReferralRequest> referralRequests)
     {
         var rows = referralRequests.Select(rr => new CsvRowReferralRequest(rr));
         return GenerateCsvMemoryStreamFromFileRows(rows, true);
     }
 
-    public MemoryStream CreateReferralRequestOverviewFileData(IEnumerable<ReferralRequest> referralRequests)
+    public MemoryStream CreateReferralRequestOverviewFileDataForS3(IEnumerable<ReferralRequest> referralRequests)
     {
         var rows = referralRequests.Select(rr => new CsvRowReferralCodes(rr));
         return GenerateCsvMemoryStreamFromFileRows(rows, true);
     }
 
-    public MemoryStream CreateLocalAuthorityReferralRequestFollowUpFileData(
+    public MemoryStream CreateLocalAuthorityReferralRequestFollowUpFileDataForS3(
         IEnumerable<ReferralRequest> referralRequests)
     {
         var rows = referralRequests
@@ -45,7 +51,8 @@ public class CsvFileCreator : ICsvFileCreator
         return GenerateCsvMemoryStreamFromFileRows(rows, true);
     }
 
-    public MemoryStream CreateConsortiumReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests)
+    public MemoryStream CreateConsortiumReferralRequestFollowUpFileDataForS3(
+        IEnumerable<ReferralRequest> referralRequests)
     {
         var rows = referralRequests
             .GroupBy(rr => rr.CustodianCode)
@@ -62,7 +69,7 @@ public class CsvFileCreator : ICsvFileCreator
         return GenerateCsvMemoryStreamFromFileRows(rows, true);
     }
 
-    public MemoryStream CreatePendingReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests)
+    public MemoryStream CreatePendingReferralRequestFileDataForS3(IEnumerable<ReferralRequest> referralRequests)
     {
         var rows = referralRequests
             .Select(rr => new CsvRowPendingReferralRequest(rr));
@@ -70,7 +77,7 @@ public class CsvFileCreator : ICsvFileCreator
         return GenerateCsvMemoryStreamFromFileRows(rows, true);
     }
 
-    public MemoryStream CreatePerMonthLocalAuthorityReferralStatistics(IEnumerable<ReferralRequest> requests)
+    public MemoryStream CreatePerMonthLocalAuthorityReferralStatisticsForConsole(IEnumerable<ReferralRequest> requests)
     {
         var rows = requests
             .GroupBy(r => r.CustodianCode)
@@ -79,7 +86,7 @@ public class CsvFileCreator : ICsvFileCreator
         return GenerateCsvMemoryStreamFromFileRows(rows, false);
     }
 
-    public MemoryStream CreatePerMonthConsortiumReferralStatistics(IEnumerable<ReferralRequest> requests)
+    public MemoryStream CreatePerMonthConsortiumReferralStatisticsForConsole(IEnumerable<ReferralRequest> requests)
     {
         var rows = requests
             .GroupBy(rr =>
