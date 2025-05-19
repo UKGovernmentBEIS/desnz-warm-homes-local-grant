@@ -32,4 +32,5 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app .
 COPY --from=build /cli ./cli
+
 ENTRYPOINT ["dotnet", "WhlgPublicWebsite.dll"]

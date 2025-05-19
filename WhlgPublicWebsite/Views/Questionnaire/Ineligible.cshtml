@@ -106,7 +106,7 @@
                 {
                     Type = "success",
                     TitleText = "Success",
-                    Text = "Your contact details have been submitted.",
+                    Text = Model.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes ? "Your contact details have been submitted." : "Your contact details have not been submitted.",
                     Role = "alert"
                 }
             )
