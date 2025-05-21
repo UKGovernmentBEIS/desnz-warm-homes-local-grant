@@ -84,17 +84,19 @@ public class CommandHandler(
         outputProvider.Output("Retrieving all WH:LG referrals submitted after HUG2 Shutdown.");
         var referralRequests = databaseOperation.GetAllWhlgReferralRequestsSubmittedAfterHug2Shutdown();
         outputProvider.Output("WH:LG Referrals retrieved successfully");
-        
+
         MemoryStream referralStatistics = null;
         switch (statisticsTypeSubcommand)
         {
             case AuthorityTypeSubcommand.LocalAuthority:
                 outputProvider.Output("Generating referrals per Local Authority per month CSV.");
-                referralStatistics = csvFileCreator.CreatePerMonthLocalAuthorityReferralStatistics(referralRequests);
+                referralStatistics =
+                    csvFileCreator.CreatePerMonthLocalAuthorityReferralStatisticsForConsole(referralRequests);
                 break;
             case AuthorityTypeSubcommand.Consortium:
                 outputProvider.Output("Generating referrals per Consortium per month CSV.");
-                referralStatistics = csvFileCreator.CreatePerMonthConsortiumReferralStatistics(referralRequests);
+                referralStatistics =
+                    csvFileCreator.CreatePerMonthConsortiumReferralStatisticsForConsole(referralRequests);
                 break;
         }
 

@@ -52,7 +52,7 @@ public class PendingReferralNotificationServiceTests
         var bytes = new byte[] { 0x0, 0x1, 0x2, 0x3 };
         var memoryStream = new MemoryStream(bytes);
         mockCsvFileCreator
-            .Setup(cfc => cfc.CreatePendingReferralRequestFileData(filteredReferralRequests))
+            .Setup(cfc => cfc.CreatePendingReferralRequestFileDataForS3(filteredReferralRequests))
             .Returns(memoryStream);
 
         // Act
