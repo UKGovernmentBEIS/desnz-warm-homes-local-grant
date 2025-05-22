@@ -29,6 +29,15 @@ RUN dotnet build WhlgPublicWebsite.ManagementShell/ --use-current-runtime --self
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
+
+# this ensures psql is available on the container
+# we may use this in support when connecting to EC2 container & we need to query the database
+RUN apt-get update && apt-get install -y postgresql-client
+
+# switch to a non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+USER appuser
+
 WORKDIR /app
 COPY --from=build /app .
 COPY --from=build /cli ./cli
