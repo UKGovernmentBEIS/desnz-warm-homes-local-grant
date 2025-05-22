@@ -76,11 +76,11 @@ public class PolicyTeamUpdateServiceTests
         await policyTeamUpdateService.SendPolicyTeamUpdate();
 
         // Assert
-        mockCsvFileCreator.Verify(cfc => cfc.CreateReferralRequestOverviewFileData(
+        mockCsvFileCreator.Verify(cfc => cfc.CreateReferralRequestOverviewFileDataForS3(
             filteredReferrals), Times.Once);
-        mockCsvFileCreator.Verify(cfc => cfc.CreateLocalAuthorityReferralRequestFollowUpFileData(
+        mockCsvFileCreator.Verify(cfc => cfc.CreateLocalAuthorityReferralRequestFollowUpFileDataForS3(
             filteredReferrals), Times.Exactly(2));
-        mockCsvFileCreator.Verify(cfc => cfc.CreateConsortiumReferralRequestFollowUpFileData(
+        mockCsvFileCreator.Verify(cfc => cfc.CreateConsortiumReferralRequestFollowUpFileDataForS3(
             filteredReferrals), Times.Exactly(2));
         mockCsvFileCreator.VerifyNoOtherCalls();
     }

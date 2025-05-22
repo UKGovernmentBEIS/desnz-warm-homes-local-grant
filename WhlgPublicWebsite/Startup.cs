@@ -106,6 +106,7 @@ public class Startup
                 options.Filters.Add<ErrorHandlingFilter>();
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 options.ModelMetadataDetailsProviders.Add(new GovUkDataBindingErrorTextProvider());
+                options.ModelMetadataDetailsProviders.Add(new GovUkDataBindingExpectPlaceholderProvider());
             })
             .AddSessionStateTempDataProvider();
 

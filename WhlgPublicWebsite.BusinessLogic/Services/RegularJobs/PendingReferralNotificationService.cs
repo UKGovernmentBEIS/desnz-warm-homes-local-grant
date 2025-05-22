@@ -32,6 +32,6 @@ public class PendingReferralNotificationService
     {
         var referralRequests = await dataProvider.GetAllWhlgReferralRequests();
         var pendingReferralRequests = referralFilterService.FilterForPendingReferralReport(referralRequests);
-        return csvFileCreator.CreatePendingReferralRequestFileData(pendingReferralRequests);
+        return csvFileCreator.CreatePendingReferralRequestFileDataForS3(pendingReferralRequests);
     }
 }

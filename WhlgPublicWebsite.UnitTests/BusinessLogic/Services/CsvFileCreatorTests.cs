@@ -17,7 +17,7 @@ namespace Tests.BusinessLogic.Services;
 public class CsvFileCreatorTests
 {
     [Test]
-    public void CreateReferralRequestFileData_CalledWithReferralRequest_GeneratesExpectedFileData()
+    public void CreateReferralRequestFileDataForS3_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
         // Arrange
         var underTest = new CsvFileCreator();
@@ -25,7 +25,7 @@ public class CsvFileCreatorTests
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
         // Act
-        var data = underTest.CreateReferralRequestFileData(referralRequests);
+        var data = underTest.CreateReferralRequestFileDataForS3(referralRequests);
 
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -43,8 +43,9 @@ public class CsvFileCreatorTests
 #pragma warning restore CS0618
     [TestCase(IncomeBand.GreaterThan36000, "\"More than £36,000\"")]
     [TestCase(IncomeBand.UnderOrEqualTo36000, "\"£36,000 or less\"")]
-    public void CreateReferralRequestFileData_CalledWithReferralRequestWithIncomeAbove31k_GeneratesExpectedFileData(
-        IncomeBand incomeBand, string expectedValue)
+    public void
+        CreateReferralRequestFileDataForS3_CalledWithReferralRequestWithIncomeAbove31k_GeneratesExpectedFileData(
+            IncomeBand incomeBand, string expectedValue)
     {
         // Arrange
         var underTest = new CsvFileCreator();
@@ -52,7 +53,7 @@ public class CsvFileCreatorTests
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
         // Act
-        var data = underTest.CreateReferralRequestFileData(referralRequests);
+        var data = underTest.CreateReferralRequestFileDataForS3(referralRequests);
 
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -62,7 +63,7 @@ public class CsvFileCreatorTests
     }
 
     [Test]
-    public void CreateReferralRequestFileData_CalledWithReferralRequestWithUnsureEpc_GeneratesExpectedFileData()
+    public void CreateReferralRequestFileDataForS3_CalledWithReferralRequestWithUnsureEpc_GeneratesExpectedFileData()
     {
         // Arrange
         var underTest = new CsvFileCreator();
@@ -70,7 +71,7 @@ public class CsvFileCreatorTests
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
         // Act
-        var data = underTest.CreateReferralRequestFileData(referralRequests);
+        var data = underTest.CreateReferralRequestFileDataForS3(referralRequests);
 
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -80,7 +81,7 @@ public class CsvFileCreatorTests
     }
 
     [Test]
-    public void CreateReferralRequestFileData_CalledWithMultipleReferralRequests_GeneratesExpectedFileData()
+    public void CreateReferralRequestFileDataForS3_CalledWithMultipleReferralRequests_GeneratesExpectedFileData()
     {
         // Arrange
         var underTest = new CsvFileCreator();
@@ -90,7 +91,7 @@ public class CsvFileCreatorTests
         var referralRequests = new List<ReferralRequest> { referralRequest1, referralRequest2, referralRequest3 };
 
         // Act
-        var data = underTest.CreateReferralRequestFileData(referralRequests);
+        var data = underTest.CreateReferralRequestFileDataForS3(referralRequests);
 
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -105,7 +106,8 @@ public class CsvFileCreatorTests
     [TestCase("double\"quotes", "\"double\"\"quotes\"")]
     [TestCase("=Formula()", "Formula()")]
     [TestCase("+441234567890", "441234567890")]
-    public void CreateReferralRequestFileData_CalledWithSpecialCharacters_GeneratesEscapedFileData(string nameInput,
+    public void CreateReferralRequestFileDataForS3_CalledWithSpecialCharacters_GeneratesEscapedFileData(
+        string nameInput,
         string expectedOutput)
     {
         // Arrange
@@ -114,7 +116,7 @@ public class CsvFileCreatorTests
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
         // Act
-        var data = underTest.CreateReferralRequestFileData(referralRequests);
+        var data = underTest.CreateReferralRequestFileDataForS3(referralRequests);
 
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -124,7 +126,22 @@ public class CsvFileCreatorTests
     }
 
     [Test]
-    public void CreateReferralRequestOverviewFileData_CalledWithReferralRequest_GeneratesExpectedFileData()
+    public void CreateReferralRequestFileDataForS3_CalledWithReferralRequest_IncludesBOMInTheMemoryStream()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).Build();
+        var referralRequests = new List<ReferralRequest> { referralRequest };
+
+        // Act
+        var data = underTest.CreateReferralRequestFileDataForS3(referralRequests);
+
+        // Assert
+        ContainsBom(data).Should().BeTrue();
+    }
+
+    [Test]
+    public void CreateReferralRequestOverviewFileDataForS3_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
         // Arrange
         var underTest = new CsvFileCreator();
@@ -132,7 +149,7 @@ public class CsvFileCreatorTests
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
         // Act
-        var data = underTest.CreateReferralRequestOverviewFileData(referralRequests);
+        var data = underTest.CreateReferralRequestOverviewFileDataForS3(referralRequests);
 
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -143,7 +160,7 @@ public class CsvFileCreatorTests
 
     [Test]
     public void
-        CreateReferralRequestOverviewFileData_CalledWithReferralRequestFromNullConsortium_GeneratesExpectedFileData()
+        CreateReferralRequestOverviewFileDataForS3_CalledWithReferralRequestFromNullConsortium_GeneratesExpectedFileData()
     {
         // Arrange
         var underTest = new CsvFileCreator();
@@ -152,7 +169,7 @@ public class CsvFileCreatorTests
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
         // Act
-        var data = underTest.CreateReferralRequestOverviewFileData(referralRequests);
+        var data = underTest.CreateReferralRequestOverviewFileDataForS3(referralRequests);
 
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -162,7 +179,23 @@ public class CsvFileCreatorTests
     }
 
     [Test]
-    public void CreateLocalAuthorityReferralRequestFollowUpData_CalledWithReferralRequest_GeneratesExpectedFileData()
+    public void CreateReferralRequestOverviewFileDataForS3_CalledWithReferralRequest_IncludesBOMInTheMemoryStream()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).Build();
+        var referralRequests = new List<ReferralRequest> { referralRequest };
+
+        // Act
+        var data = underTest.CreateReferralRequestOverviewFileDataForS3(referralRequests);
+
+        // Assert
+        ContainsBom(data).Should().BeTrue();
+    }
+
+    [Test]
+    public void
+        CreateLocalAuthorityReferralRequestFollowUpFileDataForS3_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
         // Arrange
         var underTest = new CsvFileCreator();
@@ -191,7 +224,7 @@ public class CsvFileCreatorTests
         var today = DateTime.Today.ToString("dd-MMM");
 
         // Act
-        var data = underTest.CreateLocalAuthorityReferralRequestFollowUpFileData(referralRequests);
+        var data = underTest.CreateLocalAuthorityReferralRequestFollowUpFileDataForS3(referralRequests);
 
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -205,7 +238,24 @@ public class CsvFileCreatorTests
     }
 
     [Test]
-    public void CreateConsortiumReferralRequestFollowUpData_CalledWithReferralRequest_GeneratesExpectedFileData()
+    public void
+        CreateLocalAuthorityReferralRequestFollowUpFileDataForS3_CalledWithReferralRequest_IncludesBOMInTheMemoryStream()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).Build();
+        var referralRequests = new List<ReferralRequest> { referralRequest };
+
+        // Act
+        var data = underTest.CreateLocalAuthorityReferralRequestFollowUpFileDataForS3(referralRequests);
+
+        // Assert
+        ContainsBom(data).Should().BeTrue();
+    }
+
+    [Test]
+    public void
+        CreateConsortiumReferralRequestFollowUpFileDataForS3_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
         // Arrange
         var underTest = new CsvFileCreator();
@@ -236,7 +286,7 @@ public class CsvFileCreatorTests
 
         var today = DateTime.Today.ToString("dd-MMM");
         // Act
-        var data = underTest.CreateConsortiumReferralRequestFollowUpFileData(referralRequests);
+        var data = underTest.CreateConsortiumReferralRequestFollowUpFileDataForS3(referralRequests);
 
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -249,7 +299,23 @@ public class CsvFileCreatorTests
     }
 
     [Test]
-    public void CreatePendingReferralRequestFileData_CalledWithReferralRequest_GeneratesExpectedFileData()
+    public void
+        CreateConsortiumReferralRequestFollowUpFileDataForS3_CalledWithReferralRequest_IncludesBOMInTheMemoryStream()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).Build();
+        var referralRequests = new List<ReferralRequest> { referralRequest };
+
+        // Act
+        var data = underTest.CreateConsortiumReferralRequestFollowUpFileDataForS3(referralRequests);
+
+        // Assert
+        ContainsBom(data).Should().BeTrue();
+    }
+
+    [Test]
+    public void CreatePendingReferralRequestFileDataForS3_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
         // Arrange
         var underTest = new CsvFileCreator();
@@ -281,7 +347,7 @@ public class CsvFileCreatorTests
         var referralRequests = new List<ReferralRequest> { referralRequest1, referralRequest2, referralRequest3 };
 
         // Act
-        var data = underTest.CreatePendingReferralRequestFileData(referralRequests);
+        var data = underTest.CreatePendingReferralRequestFileDataForS3(referralRequests);
 
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -293,7 +359,23 @@ public class CsvFileCreatorTests
     }
 
     [Test]
-    public void CreatePerMonthLocalAuthorityReferralStatistics_CalledWithReferralRequest_GeneratesExpectedFileData()
+    public void CreatePendingReferralRequestFileDataForS3_CalledWithReferralRequest_IncludesBOMInTheMemoryStream()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).Build();
+        var referralRequests = new List<ReferralRequest> { referralRequest };
+
+        // Act
+        var data = underTest.CreatePendingReferralRequestFileDataForS3(referralRequests);
+
+        // Assert
+        ContainsBom(data).Should().BeTrue();
+    }
+
+    [Test]
+    public void
+        CreatePerMonthLocalAuthorityReferralStatisticsForConsole_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
         // Arrange
         var underTest = new CsvFileCreator();
@@ -333,7 +415,7 @@ public class CsvFileCreatorTests
             { referralRequest1, referralRequest2, referralRequest3, referralRequest4, referralRequest5 };
 
         // Act
-        var data = underTest.CreatePerMonthLocalAuthorityReferralStatistics(referralRequests);
+        var data = underTest.CreatePerMonthLocalAuthorityReferralStatisticsForConsole(referralRequests);
 
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -345,7 +427,24 @@ public class CsvFileCreatorTests
     }
 
     [Test]
-    public void CreatePerMonthConsortiumReferralStatistics_CalledWithReferralRequest_GeneratesExpectedFileData()
+    public void
+        CreatePerMonthLocalAuthorityReferralStatisticsForConsole_CalledWithReferralRequest_DoesNotIncludeBOMInTheMemoryStream()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).Build();
+        var referralRequests = new List<ReferralRequest> { referralRequest };
+
+        // Act
+        var data = underTest.CreatePerMonthLocalAuthorityReferralStatisticsForConsole(referralRequests);
+
+        // Assert
+        ContainsBom(data).Should().BeFalse();
+    }
+
+    [Test]
+    public void
+        CreatePerMonthConsortiumReferralStatisticsForConsole_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
         // Arrange
         var underTest = new CsvFileCreator();
@@ -378,7 +477,7 @@ public class CsvFileCreatorTests
             { referralRequest1, referralRequest2, referralRequest3, referralRequest4 };
 
         // Act
-        var data = underTest.CreatePerMonthConsortiumReferralStatistics(referralRequests);
+        var data = underTest.CreatePerMonthConsortiumReferralStatisticsForConsole(referralRequests);
 
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -387,9 +486,10 @@ public class CsvFileCreatorTests
             $"Bristol City Council,3,{requestDate2:dd/MM/yyyy},3,1\r\n" +
             $"Portsmouth City Council,1,{requestDate3:dd/MM/yyyy},3,0.33\r\n");
     }
-    
-        [Test]
-    public void CreatePerMonthConsortiumReferralStatistics_CalledWithNonConsortiumReferralRequest_GeneratesFileDataWithoutNonConsortiumRequests()
+
+    [Test]
+    public void
+        CreatePerMonthConsortiumReferralStatisticsForConsole_CalledWithNonConsortiumReferralRequest_GeneratesFileDataWithoutNonConsortiumRequests()
     {
         // Arrange
         var underTest = new CsvFileCreator();
@@ -403,11 +503,37 @@ public class CsvFileCreatorTests
             { referralRequest1 };
 
         // Act
-        var data = underTest.CreatePerMonthConsortiumReferralStatistics(referralRequests);
+        var data = underTest.CreatePerMonthConsortiumReferralStatisticsForConsole(referralRequests);
 
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
             "Consortium Name,Total WH:LG Referrals,Date of First Referral,Months Since First Referral,Referrals Per Month\r\n");
+    }
+
+    [Test]
+    public void
+        CreatePerMonthConsortiumReferralStatisticsForConsole_CalledWithReferralRequest_DoesNotIncludeBOMInTheMemoryStream()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).Build();
+        var referralRequests = new List<ReferralRequest> { referralRequest };
+
+        // Act
+        var data = underTest.CreatePerMonthConsortiumReferralStatisticsForConsole(referralRequests);
+
+        // Assert
+        ContainsBom(data).Should().BeFalse();
+    }
+
+    private static bool ContainsBom(MemoryStream stream)
+    {
+        var utf8NoBom = new UTF8Encoding(false);
+        using var reader = new StreamReader(stream, utf8NoBom);
+        // if there is a BOM in the stream, the encoding will change to a BOM including encoding when its read 
+        reader.Read();
+        // this will make it no longer equal to this encoding where BOM is set to false
+        return !Equals(reader.CurrentEncoding, utf8NoBom);
     }
 }
