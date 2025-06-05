@@ -1,14 +1,14 @@
 ﻿Script to generate lines of code with valid LA & Consortia information, to be used throughout the project, on both main & portal repos.
 
 # Usage
-1. Setup node and this package
+1. Setup node and install dependencies
    - If you have node already installed:
-     1. Open a terminal in the `local-authority-information-generators`
+     1. Open a terminal in the `local-authority-information-generators` directory
      2. Run `npm install`
-   - If you do not have node installed or don't want to:
-     1. or open this folder in the provided dev container
-     2. Reopen this folder in vscode, for instance with `code scripts\scottish-epc-formatter`
-     3. Reopen this folder in dev container
+   - If you do not have node installed:
+     1. Reopen this folder in vscode, for instance with `code scripts\local-authority-information-generators`
+     2. Reopen this folder in dev container
+     3. Dependencies are automatically installed
 2. Generate two CSV files, `local-authorities.csv` and `consortia.csv`.
    - See `local-authorities.csv.example` and `consortia.csv.example` for examples of how we expect the data to be structured.
    - For information of where to source this information, see our internal documentation page headered *DESNZ WH:LG Source of truth for LAs & Consortia*.
