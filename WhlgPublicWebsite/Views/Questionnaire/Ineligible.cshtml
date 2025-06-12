@@ -50,8 +50,6 @@
                  If this does not look right, you can <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your local council here</a>.
              </p>
     </text>;
-
-    var incomeHighButEpcLow = !Model.EpcIsTooHigh && Model.IncomeIsTooHigh;
 }
 
 @section BeforeMain {
@@ -65,38 +63,37 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         @{
-            switch (Model.EpcIsTooHigh, Model.IncomeIsTooHigh)
+            if (Model.EpcIsTooHigh)
             {
-                case (true, false):
-                    <h1 class="govuk-heading-l">We do not think you are eligible</h1>
-                    <p class="govuk-body">
-                        We do not think you are eligible for the Warm Homes: Local Grant because your
-                        EPC rating is A, B, or C but you may be able to get other help for your energy needs.
-                    </p>
-                    break;
-                default:
-                    <h1 class="govuk-heading-l">We cannot auto-refer you, but you may still be eligible</h1>
-                    <p class="govuk-body">
-                        Based on information you have provided we are unable to automatically refer you to your Local Authority
-                        at this time. If you think you might qualify through another eligibility route, please contact
-                        your Local Authority directly.
-                    </p>
-                    <p class="govuk-body">Other eligibility routes may include:</p>
-                    <ul class="govuk-list govuk-list--bullet">
-                        <li>Receiving a specified means-tested benefit</li>
-                        <li>Having a household income above £36,000 but falling below the after housing costs threshold due to high housing expenses</li>
-                    </ul>
-                    break;
+                <h1 class="govuk-heading-l">We do not think you are eligible</h1>
+                <p class="govuk-body">
+                    We do not think you are eligible for the Warm Homes: Local Grant because your
+                    EPC rating is A, B, or C but you may be able to get other help for your energy needs.
+                </p>
+            }
+            else
+            {
+                <h1 class="govuk-heading-l">We cannot auto-refer you, but you may still be eligible</h1>
+                <p class="govuk-body">
+                    Based on information you have provided we are unable to automatically refer you to your Local Authority
+                    at this time. If you think you might qualify through another eligibility route, please contact
+                    your Local Authority directly.
+                </p>
+                <p class="govuk-body">Other eligibility routes may include:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>Receiving a specified means-tested benefit</li>
+                    <li>Having a household income above £36,000 but falling below the after housing costs threshold due to high housing expenses</li>
+                </ul>
             }
         }
 
-        @if (incomeHighButEpcLow)
+        @if (Model.EpcIsTooHigh)
         {
-            @yourLaMayBeAbleToHelpSection(new object())
+            @otherGovernmentSchemesSection(new object())
         }
         else
         {
-            @otherGovernmentSchemesSection(new object())
+            @yourLaMayBeAbleToHelpSection(new object())
         }
 
         @if (Model.Submitted)
@@ -157,13 +154,13 @@
             </form>
         }
 
-        @if (incomeHighButEpcLow)
+        @if (Model.EpcIsTooHigh)
         {
-            @otherGovernmentSchemesSection(new object())
+            @contactYourLaSection(new object())
         }
         else
         {
-            @contactYourLaSection(new object())
+            @otherGovernmentSchemesSection(new object())
         }
 
         <h2 class="govuk-heading-m">Find further support</h2>

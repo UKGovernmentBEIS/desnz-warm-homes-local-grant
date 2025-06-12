@@ -18,8 +18,6 @@ public class IneligibleViewModel : QuestionFlowViewModel
 
     public bool EpcIsTooHigh { get; set; }
 
-    public bool IncomeIsTooHigh { get; set; }
-
     public string LocalAuthorityName { get; set; }
 
     public string LocalAuthorityWebsite { get; set; }
