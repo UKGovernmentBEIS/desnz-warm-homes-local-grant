@@ -757,7 +757,6 @@ public class QuestionnaireController : Controller
         var viewModel = new IneligibleViewModel
         {
             EpcIsTooHigh = questionnaire.EpcIsTooHigh,
-            IncomeIsTooHigh = questionnaire.IncomeIsTooHigh,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
             EmailAddress = questionnaire.NotificationEmailAddress,
