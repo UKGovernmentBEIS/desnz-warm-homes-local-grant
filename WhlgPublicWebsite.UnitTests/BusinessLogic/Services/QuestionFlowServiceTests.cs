@@ -18,10 +18,19 @@ public class QuestionFlowServiceTests
     }
 
     private IQuestionFlowService questionFlowService;
-    private static readonly string LiveCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live);
-    private static readonly string NoFundingCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.NoFunding);
-    private static readonly string NotParticipatingCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.NotParticipating);
-    private static readonly string PendingCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
+
+    private static readonly string LiveCustodianCode =
+        LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live);
+
+    private static readonly string NoFundingCustodianCode =
+        LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.NoFunding);
+
+    private static readonly string NotParticipatingCustodianCode =
+        LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
+            .NotParticipating);
+
+    private static readonly string PendingCustodianCode =
+        LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
     // PC-1849: Reinstate when an LA of takingFutureReferrals is added
     // private static readonly string TakingFutureReferralsCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals);
 
@@ -797,7 +806,9 @@ public class QuestionFlowServiceTests
                     epcRating == null ? null : new EpcDetails { EpcRating = epcRating, ExpiryDate = epcExpiry },
                 IncomeBand = incomeBand,
                 LocalAuthorityConfirmed = localAuthorityIsCorrect,
-                CustodianCode = custodianCode ?? LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live)
+                CustodianCode = custodianCode ??
+                                LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData
+                                    .LocalAuthorityStatus.Live)
             };
             EntryPoint = entryPoint;
         }
