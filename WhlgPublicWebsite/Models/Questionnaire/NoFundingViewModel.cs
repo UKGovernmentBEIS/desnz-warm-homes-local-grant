@@ -4,7 +4,7 @@ using WhlgPublicWebsite.Models.Enums;
 
 namespace WhlgPublicWebsite.Models.Questionnaire;
 
-public class NotTakingPartViewModel : QuestionFlowViewModel
+public class NoFundingViewModel : QuestionFlowViewModel
 {
     public string LocalAuthorityName { get; set; }
 

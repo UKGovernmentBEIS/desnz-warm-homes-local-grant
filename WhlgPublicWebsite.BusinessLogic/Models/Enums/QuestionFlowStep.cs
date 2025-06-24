@@ -18,7 +18,7 @@ public enum QuestionFlowStep
     ManualAddress,
     SelectLocalAuthority,
     ConfirmLocalAuthority,
-    NotTakingPart,
+    NoFunding,
     NotParticipating,
     NoLongerParticipating,
     TakingFutureReferrals,
