@@ -189,7 +189,7 @@ internal static class LocalAuthorityConsortiums
             { "5780", "Greater London Authority" },
             { "5810", "Greater London Authority" },
             { "5870", "Greater London Authority" },
-            { "5930", "Greater London Authority" },
+            { "5930", null },
             { "230", "Portsmouth City Council" },
             { "2235", null },
             { "1545", "Essex County Council" },
