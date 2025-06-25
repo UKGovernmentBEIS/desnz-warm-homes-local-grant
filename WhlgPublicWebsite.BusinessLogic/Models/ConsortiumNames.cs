@@ -1,7 +1,8 @@
 namespace WhlgPublicWebsite.BusinessLogic.Models;
 
-public class ConsortiumNames
+public static class ConsortiumNames
 {
-    public static readonly string GreaterManchesterCombinedAuthority = "Greater Manchester Combined Authority";
-    public static readonly string WestMidlandsCombinedAuthority = "West Midlands Combined Authority";
+    public const string GreaterManchesterCombinedAuthority = "Greater Manchester Combined Authority";
+    public const string WestMidlandsCombinedAuthority = "West Midlands Combined Authority";
+    public const string BroadlandDistrictCouncil = "Broadland District Council";
 }
