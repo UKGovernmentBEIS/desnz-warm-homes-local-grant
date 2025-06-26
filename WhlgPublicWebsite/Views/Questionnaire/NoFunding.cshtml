@@ -2,8 +2,7 @@
 @using GovUkDesignSystem.GovUkDesignSystemComponents
 @using WhlgPublicWebsite.Controllers
 @using WhlgPublicWebsite.Models.Enums
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model WhlgPublicWebsite.Models.Questionnaire.NotTakingPartViewModel
+@model WhlgPublicWebsite.Models.Questionnaire.NoFundingViewModel
 
 @{
     ViewBag.Title = "Your Local Authority is not taking part";
@@ -46,7 +45,7 @@
         }
         else
         {
-            <form action="@Url.Action(nameof(QuestionnaireController.NotTakingPart_Post), "Questionnaire")" method="post" novalidate>
+            <form action="@Url.Action(nameof(QuestionnaireController.NoFunding_Post), "Questionnaire")" method="post" novalidate>
                 @(Html.HiddenFor(m => m.EntryPoint))
                 @Html.AntiForgeryToken()
 

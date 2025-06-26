@@ -26,9 +26,10 @@ function getLaStatus(localAuthority) {
     switch (localAuthority["WHLG Status"]) {
         case "Live":
             return "Live";
-        case "Not Taking Part":
+        case "Not Taking Part": // legacy name
         case "NotTakingPart":
-            return "NotTakingPart";
+        case "LA has no funding":
+            return "NoFunding";
         case "Not Participating":
         case "NotParticipating":
             return "NotParticipating"

@@ -393,30 +393,32 @@ public class QuestionnaireController : Controller
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
 
+    // NoFunding used to be named NotTakingPart, which was renamed to avoid confusion with NotParticipating.
+    // The old name is still used in the URL to avoid breaking existing links.
     [HttpGet("not-taking-part")]
-    public async Task<IActionResult> NotTakingPart_Get(QuestionFlowStep? entryPoint,
+    public async Task<IActionResult> NoFunding_Get(QuestionFlowStep? entryPoint,
         bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, null);
 
-        var viewModel = new NotTakingPartViewModel
+        var viewModel = new NoFundingViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             Submitted = emailPreferenceSubmitted,
             EmailAddress = questionnaire.NotificationEmailAddress,
             CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
             EntryPoint = entryPoint,
-            BackLink = GetBackUrl(QuestionFlowStep.NotTakingPart, questionnaire, entryPoint)
+            BackLink = GetBackUrl(QuestionFlowStep.NoFunding, questionnaire, entryPoint)
         };
 
-        return View("NotTakingPart", viewModel);
+        return View("NoFunding", viewModel);
     }
 
     [HttpPost("not-taking-part")]
-    public async Task<IActionResult> NotTakingPart_Post(IneligibleViewModel viewModel)
+    public async Task<IActionResult> NoFunding_Post(IneligibleViewModel viewModel)
     {
-        if (!ModelState.IsValid) return await NotTakingPart_Get(viewModel.EntryPoint);
+        if (!ModelState.IsValid) return await NoFunding_Get(viewModel.EntryPoint);
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
@@ -424,7 +426,7 @@ public class QuestionnaireController : Controller
         );
 
         var nextStep =
-            questionFlowService.NextStep(QuestionFlowStep.NotTakingPart, questionnaire, viewModel.EntryPoint);
+            questionFlowService.NextStep(QuestionFlowStep.NoFunding, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
             nextStep,
             viewModel.EntryPoint,
@@ -452,7 +454,7 @@ public class QuestionnaireController : Controller
                 GetLocalAuthorityNotParticipatingMessagePartialViewPath(questionnaire),
             CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
             EntryPoint = entryPoint,
-            BackLink = GetBackUrl(QuestionFlowStep.NotTakingPart, questionnaire, entryPoint)
+            BackLink = GetBackUrl(QuestionFlowStep.NoFunding, questionnaire, entryPoint)
         };
 
         return View("NotParticipating", viewModel);
@@ -494,7 +496,7 @@ public class QuestionnaireController : Controller
                 GetLocalAuthorityNoLongerParticipatingMessagePartialViewPath(questionnaire),
             CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
             EntryPoint = entryPoint,
-            BackLink = GetBackUrl(QuestionFlowStep.NotTakingPart, questionnaire, entryPoint)
+            BackLink = GetBackUrl(QuestionFlowStep.NoFunding, questionnaire, entryPoint)
         };
 
         return View("NoLongerParticipating", viewModel);
@@ -853,7 +855,7 @@ public class QuestionnaireController : Controller
                 "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.NotParticipating => new PathByActionArguments(nameof(NotParticipating_Get),
                 "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
-            QuestionFlowStep.NotTakingPart => new PathByActionArguments(nameof(NotTakingPart_Get), "Questionnaire",
+            QuestionFlowStep.NoFunding => new PathByActionArguments(nameof(NoFunding_Get), "Questionnaire",
                 GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.NoLongerParticipating => new PathByActionArguments(nameof(NoLongerParticipating_Get),
                 "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),

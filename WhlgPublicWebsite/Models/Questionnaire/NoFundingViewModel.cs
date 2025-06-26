@@ -4,12 +4,13 @@ using WhlgPublicWebsite.Models.Enums;
 
 namespace WhlgPublicWebsite.Models.Questionnaire;
 
-public class NotTakingPartViewModel : QuestionFlowViewModel
+public class NoFundingViewModel : QuestionFlowViewModel
 {
     public string LocalAuthorityName { get; set; }
 
     [EmailAddress(ErrorMessage = "Enter an email address in the correct format, like name@example.com")]
-    [GovUkValidateRequiredIf(ErrorMessageIfMissing = "Enter your email address", IsRequiredPropertyName = nameof(IsEmailAddressRequired))]
+    [GovUkValidateRequiredIf(ErrorMessageIfMissing = "Enter your email address",
+        IsRequiredPropertyName = nameof(IsEmailAddressRequired))]
     public string EmailAddress { get; set; }
 
     [GovUkValidateRequired(ErrorMessageIfMissing = "Select whether you would like to be contacted about future grants")]
