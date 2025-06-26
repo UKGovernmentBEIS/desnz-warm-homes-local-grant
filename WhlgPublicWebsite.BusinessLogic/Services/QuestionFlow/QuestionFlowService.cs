@@ -31,7 +31,7 @@ public class QuestionFlowService : IQuestionFlowService
             QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
             QuestionFlowStep.ReviewEpc => ReviewEpcBackDestination(),
             QuestionFlowStep.NotParticipating => NotParticipatingBackDestination(questionnaire),
-            QuestionFlowStep.NotTakingPart => NotTakingPartBackDestination(questionnaire),
+            QuestionFlowStep.NoFunding => NoFundingBackDestination(questionnaire),
             QuestionFlowStep.NoLongerParticipating => NoLongerParticipatingBackDestination(questionnaire),
             QuestionFlowStep.TakingFutureReferrals => TakingFutureReferralsBackDestination(),
             QuestionFlowStep.Pending => PendingBackDestination(),
@@ -63,7 +63,7 @@ public class QuestionFlowService : IQuestionFlowService
             QuestionFlowStep.ConfirmLocalAuthority =>
                 ConfirmLocalAuthorityForwardDestination(questionnaire, entryPoint),
             QuestionFlowStep.NotParticipating => NotParticipatingForwardDestination(),
-            QuestionFlowStep.NotTakingPart => NotTakingPartForwardDestination(),
+            QuestionFlowStep.NoFunding => NoFundingForwardDestination(),
             QuestionFlowStep.NoLongerParticipating => NoLongerParticipatingForwardDestination(),
             QuestionFlowStep.TakingFutureReferrals =>
                 TakingFutureReferralsForwardDestination(),
@@ -156,7 +156,7 @@ public class QuestionFlowService : IQuestionFlowService
         return QuestionFlowStep.Address;
     }
 
-    private QuestionFlowStep NotTakingPartBackDestination(Questionnaire questionnaire)
+    private QuestionFlowStep NoFundingBackDestination(Questionnaire questionnaire)
     {
         return LaStatusSwitchBackDestionation(questionnaire);
     }
@@ -251,8 +251,8 @@ public class QuestionFlowService : IQuestionFlowService
 
     private QuestionFlowStep LaStatusSwitchForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
     {
-        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NotTakingPart)
-            return QuestionFlowStep.NotTakingPart;
+        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NoFunding)
+            return QuestionFlowStep.NoFunding;
 #pragma warning disable CS0618 // Type or member is obsolete
         if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NotParticipating)
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -295,9 +295,9 @@ public class QuestionFlowService : IQuestionFlowService
         return LaStatusSwitchForwardDestination(questionnaire, entryPoint);
     }
 
-    private QuestionFlowStep NotTakingPartForwardDestination()
+    private QuestionFlowStep NoFundingForwardDestination()
     {
-        return QuestionFlowStep.NotTakingPart;
+        return QuestionFlowStep.NoFunding;
     }
 
     private QuestionFlowStep NotParticipatingForwardDestination()

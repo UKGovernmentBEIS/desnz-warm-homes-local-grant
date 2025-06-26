@@ -18,10 +18,19 @@ public class QuestionFlowServiceTests
     }
 
     private IQuestionFlowService questionFlowService;
-    private static readonly string LiveCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live);
-    private static readonly string NotTakingPartCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.NotTakingPart);
-    private static readonly string NotParticipatingCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.NotParticipating);
-    private static readonly string PendingCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
+
+    private static readonly string LiveCustodianCode =
+        LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live);
+
+    private static readonly string NoFundingCustodianCode =
+        LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.NoFunding);
+
+    private static readonly string NotParticipatingCustodianCode =
+        LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
+            .NotParticipating);
+
+    private static readonly string PendingCustodianCode =
+        LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
     // PC-1849: Reinstate when an LA of takingFutureReferrals is added
     // private static readonly string TakingFutureReferralsCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals);
 
@@ -126,15 +135,15 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectLocalAuthority),
         new(
-            "Not taking part goes back to Address if UPRN found",
+            "No funding goes back to Address if UPRN found",
             new Input(
-                QuestionFlowStep.NotTakingPart, uprn: "100023336956"
+                QuestionFlowStep.NoFunding, uprn: "100023336956"
             ),
             QuestionFlowStep.Address),
         new(
-            "Not taking part goes back to confirm local authority if no UPRN found",
+            "No funding goes back to confirm local authority if no UPRN found",
             new Input(
-                QuestionFlowStep.NotTakingPart, uprn: null
+                QuestionFlowStep.NoFunding, uprn: null
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
         new(
@@ -297,14 +306,14 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectLocalAuthority),
         new(
-            "Not taking part goes back to Address if UPRN found if was changing answer",
+            "No funding goes back to Address if UPRN found if was changing answer",
             new Input(
-                QuestionFlowStep.NotTakingPart, uprn: "100023336956",
+                QuestionFlowStep.NoFunding, uprn: "100023336956",
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.Address),
         new(
-            "Not taking part goes back to confirm local authority if no UPRN found if was changing answer",
+            "No funding goes back to confirm local authority if no UPRN found if was changing answer",
             new Input(
                 QuestionFlowStep.NotParticipating, uprn: null,
                 entryPoint: QuestionFlowStep.Address
@@ -320,7 +329,7 @@ public class QuestionFlowServiceTests
         new(
             "Not participating goes back to confirm local authority if no UPRN found if was changing answer",
             new Input(
-                QuestionFlowStep.NotTakingPart, uprn: null,
+                QuestionFlowStep.NoFunding, uprn: null,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
@@ -497,13 +506,13 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
-            "Confirm local authority continues to not taking part if authority is not taking part",
+            "Confirm local authority continues to no funding if authority is no funding",
             new Input(
                 QuestionFlowStep.ConfirmLocalAuthority,
                 localAuthorityIsCorrect: true,
-                custodianCode: NotTakingPartCustodianCode
+                custodianCode: NoFundingCustodianCode
             ),
-            QuestionFlowStep.NotTakingPart),
+            QuestionFlowStep.NoFunding),
         new(
             "Confirm local authority continues to not participating if authority is participating",
             new Input(
@@ -797,7 +806,9 @@ public class QuestionFlowServiceTests
                     epcRating == null ? null : new EpcDetails { EpcRating = epcRating, ExpiryDate = epcExpiry },
                 IncomeBand = incomeBand,
                 LocalAuthorityConfirmed = localAuthorityIsCorrect,
-                CustodianCode = custodianCode ?? LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live)
+                CustodianCode = custodianCode ??
+                                LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData
+                                    .LocalAuthorityStatus.Live)
             };
             EntryPoint = entryPoint;
         }
