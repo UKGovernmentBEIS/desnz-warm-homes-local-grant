@@ -899,6 +899,9 @@ public class QuestionnaireController : Controller
             var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(custodianCode,
                     ConsortiumNames.WestMidlandsCombinedAuthority) =>
                 "WestMidlandsCombinedAuthority",
+            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(
+                    custodianCode, ConsortiumNames.BroadlandDistrictCouncil) =>
+                "BroadlandDistrictCouncil",
             _ => "Default"
         };
 
