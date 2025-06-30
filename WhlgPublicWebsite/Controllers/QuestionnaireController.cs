@@ -702,7 +702,8 @@ public class QuestionnaireController : Controller
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityMessagePartialViewPath = GetLocalAuthorityConfirmationMessagePartialViewPath(questionnaire),
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
-            LocalAuthorityIsInBroadland = LocalAuthorityData.CustodianCodeIsInConsortium(questionnaire.CustodianCode, ConsortiumNames.BroadlandDistrictCouncil),
+            LocalAuthorityIsInBroadland = LocalAuthorityData.CustodianCodeIsInConsortium(questionnaire.CustodianCode,
+                ConsortiumNames.BroadlandDistrictCouncil),
             LocalAuthorityIsLive = questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Live,
             ConfirmationSentToEmailAddress =
                 questionnaire.LaContactEmailAddress ?? questionnaire.ConfirmationEmailAddress,
