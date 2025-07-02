@@ -10,6 +10,7 @@ public class ConfirmationViewModel : QuestionFlowViewModel
     public string LocalAuthorityName { get; set; }
     public string LocalAuthorityMessagePartialViewPath { get; set; }
     public string LocalAuthorityWebsite { get; set; }
+    public bool LocalAuthorityIsInBroadland { get; set; }
     public bool LocalAuthorityIsLive { get; set; }
     public bool RequestEmailAddress { get; set; }
     public string ConfirmationSentToEmailAddress { get; set; }
