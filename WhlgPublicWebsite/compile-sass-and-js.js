@@ -68,7 +68,7 @@ function compileSass(inputFile, outputFileNamePrefix, options) {
     // So our only other option is to use a load path so that we can also use
     // the Quiet Deps option.
     var renderResult = sass.compile(inputFile, {
-        loadPaths: [ 'node_modules/govuk-frontend' ],
+        loadPaths: [ 'node_modules/govuk-frontend/dist' ],
         quietDeps: true
     });
 
