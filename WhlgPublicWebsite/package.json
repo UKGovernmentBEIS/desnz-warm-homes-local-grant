@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "The public-facing website of the Warm Homes: Local Grant service",
   "dependencies": {
-    "govuk-frontend": "4.8.0",
+    "govuk-frontend": "5.10.2",
     "html5shiv": "^3.7.3",
     "readline": "^1.3.0",
     "sass": "^1.87.0",
@@ -14,9 +14,11 @@
     "build": "node compile-sass-and-js.js",
     "watch": "node compile-sass-and-js.js --watch",
 
-    "update-govuk-images": "shx cp -r ./node_modules/govuk-frontend/govuk/assets/images/* ./wwwroot/assets/images/",
-    "update-govuk-fonts": "shx cp -r ./node_modules/govuk-frontend/govuk/assets/fonts/* ./wwwroot/assets/fonts/",
-    "update-govuk-js": "shx cp -r ./node_modules/govuk-frontend/govuk/all.js ./wwwroot/js/bundle/gov_uk_front_end.js && shx cp -r ./node_modules/html5shiv/dist/html5shiv.js ./wwwroot/js/html5shiv.js",
-    "update-govuk-assets": "npm run update-govuk-images && npm run update-govuk-fonts && npm run update-govuk-js"
+    "update-govuk-images": "shx cp -r ./node_modules/govuk-frontend/dist/govuk/assets/images/* ./wwwroot/assets/images/",
+    "update-govuk-fonts": "shx cp -r ./node_modules/govuk-frontend/dist/govuk/assets/fonts/* ./wwwroot/assets/fonts/",
+    "update-govuk-rebrand": "shx cp -r ./node_modules/govuk-frontend/dist/govuk/assets/rebrand/* ./wwwroot/assets/rebrand/",
+    "update-govuk-manifest": "shx cp -r ./node_modules/govuk-frontend/dist/govuk/assets/manifest.json ./wwwroot/assets/manifest.json",
+    "update-govuk-js": "shx cp -r ./node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.js ./wwwroot/js/bundle/gov_uk_front_end.js && shx cp -r ./node_modules/html5shiv/dist/html5shiv.js ./wwwroot/js/html5shiv.js",
+    "update-govuk-assets": "npm run update-govuk-images && npm run update-govuk-fonts && npm run update-govuk-manifest && npm run update-govuk-rebrand && npm run update-govuk-js"
   }
 }
