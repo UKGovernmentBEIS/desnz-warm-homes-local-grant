@@ -45,6 +45,9 @@ public static class Program
             case Subcommand.GeneratePerMonthStatistics:
                 commandHandler.GeneratePerMonthStatistics(subcommandArgs);
                 return;
+            case Subcommand.ExportNewReferralRequestsToPortal:
+                _ = commandHandler.ExportNewReferralRequestsToPortal(context);
+                return;
             default:
                 outputProvider.Output("Invalid terminal command entered. Please refer to the documentation");
                 return;
@@ -54,6 +57,7 @@ public static class Program
     private enum Subcommand
     {
         GenerateReferrals,
-        GeneratePerMonthStatistics
+        GeneratePerMonthStatistics,
+        ExportNewReferralRequestsToPortal
     }
 }
