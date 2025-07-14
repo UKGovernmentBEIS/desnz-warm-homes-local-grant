@@ -6,7 +6,7 @@ namespace WhlgPublicWebsite.ManagementShell;
 
 public static class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var outputProvider = new OutputProvider();
         var contextOptions = new DbContextOptionsBuilder<WhlgDbContext>()
@@ -46,7 +46,7 @@ public static class Program
                 commandHandler.GeneratePerMonthStatistics(subcommandArgs);
                 return;
             case Subcommand.ExportNewReferralRequestsToPortal:
-                _ = commandHandler.ExportNewReferralRequestsToPortal(context);
+                await commandHandler.ExportNewReferralRequestsToPortal(context);
                 return;
             default:
                 outputProvider.Output("Invalid terminal command entered. Please refer to the documentation");
