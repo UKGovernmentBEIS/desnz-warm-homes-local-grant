@@ -29,10 +29,12 @@
         </Content>
         <None Include="wwwroot\**\*">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
         </None>
         <ProjectReference Include="..\WhlgPublicWebsite.Data\WhlgPublicWebsite.Data.csproj" />
         <None Update="manifest.yml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
         </None>
     </ItemGroup>
 </Project>
