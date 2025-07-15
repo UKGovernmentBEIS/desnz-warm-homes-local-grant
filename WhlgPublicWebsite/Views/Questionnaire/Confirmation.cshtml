@@ -36,11 +36,11 @@
 
         @if (Model.LocalAuthorityIsInBroadland)
         {
-            <p class="govuk-body">To enquire about your application visit the <a href="@Model.LocalAuthorityWebsite">Norfolk Warm Homes</a> website.</p>
+            <p class="govuk-body">To enquire about your application visit the <a class="govuk-link" ref="@Model.LocalAuthorityWebsite">Norfolk Warm Homes</a> website.</p>
         }
         else
         {
-            <p class="govuk-body">To enquire about your application visit <a href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName's website</a>.</p>
+            <p class="govuk-body">To enquire about your application visit <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName's website</a>.</p>
         }
 
         @if (Model.EmailPreferenceSubmitted)
@@ -173,17 +173,17 @@
         <p class="govuk-body">Your feedback can help us shape how the service develops so that it can best serve the needs of the public.</p>
 
         <p class="govuk-body">
-            <a href="@ServiceConstants.FEEDBACK_URL_DEFAULT">Leave some feedback for this service</a>
+            <a class="govuk-link" href="@ServiceConstants.FEEDBACK_URL_DEFAULT">Leave some feedback for this service</a>
         </p>
 
         <p class="govuk-body">The Department of Energy Security and Net Zero is committed to advancing equality through our work.</p>
 
-        <p class="govuk-body">To help us improve our public services and ensure we meet our <a href="https://www.gov.uk/government/publications/public-sector-equality-duty" target="_blank" rel="noreferrer noopener">Public Sector Equality Duty requirements (opens in new tab)</a>, we invite you to complete the anonymised Equality, Diversity, and Inclusion questionnaire.</p>
+        <p class="govuk-body">To help us improve our public services and ensure we meet our <a class="govuk-link" href="https://www.gov.uk/government/publications/public-sector-equality-duty">Public Sector Equality Duty requirements</a>, we invite you to complete the anonymised Equality, Diversity, and Inclusion questionnaire.</p>
 
         <p class="govuk-body">Your participation will help us better serve the community and uphold our commitment to equality.</p>
 
         <p class="govuk-body">
-            <a href="@ServiceConstants.EDI_QUESTIONNAIRE_URL">Equality, Diversity, and Inclusion questionnaire</a>
+            <a class="govuk-link" href="@ServiceConstants.EDI_QUESTIONNAIRE_URL">Equality, Diversity, and Inclusion questionnaire</a>
         </p>
     </div>
 </div>
