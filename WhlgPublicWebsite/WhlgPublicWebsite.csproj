@@ -37,4 +37,9 @@
             <CopyToPublishDirectory>Always</CopyToPublishDirectory>
         </None>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\assets\rebrand\" />
+    </ItemGroup>
+
 </Project>
