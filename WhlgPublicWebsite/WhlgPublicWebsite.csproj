@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CabinetOffice.GovUkDesignSystem" Version="1.0.0-7debdf30" />
+        <PackageReference Include="CabinetOffice.GovUkDesignSystem" Version="1.0.0-d9624ec0" />
         <PackageReference Include="Community.Microsoft.Extensions.Caching.PostgreSql" Version="4.0.6" />
         <PackageReference Include="libphonenumber-csharp" Version="9.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="8.0.15" />
@@ -35,5 +35,4 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
-
 </Project>
