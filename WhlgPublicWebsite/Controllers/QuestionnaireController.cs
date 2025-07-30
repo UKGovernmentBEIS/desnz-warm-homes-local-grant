@@ -906,6 +906,8 @@ public class QuestionnaireController : Controller
             var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(
                     custodianCode, ConsortiumNames.PortsmouthCityCouncil) =>
                 "PortsmouthCityCouncil",
+            var custodianCode when LocalAuthorityData.CustodianCodeIsManagedByLcrca(custodianCode) =>
+                "LiverpoolCityRegionCombinedAuthority",
             _ => "Default"
         };
 
