@@ -426,4 +426,16 @@ public class LocalAuthorityData
         return LocalAuthorityDetailsByCustodianCode.TryGetValue(custodianCode, out var localAuthority) &&
                localAuthority.Consortium == consortium;
     }
+
+    public static bool CustodianCodeIsManagedByLcrca(string custodianCode)
+    {
+        return 
+            CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.LiverpoolCityRegionCombinedAuthority) 
+            // not all LAs in the LCRCA are managed by the LCRCA, so we must filter further to
+            // Halton
+            // Knowsley
+            // St Helens
+            // Wirral
+            && custodianCode is "650" or "4305" or "4315" or "4325";
+    }
 }
