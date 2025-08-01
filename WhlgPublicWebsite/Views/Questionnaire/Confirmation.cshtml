@@ -33,16 +33,6 @@
 
         @await Html.PartialAsync(Model.LocalAuthorityMessagePartialViewPath)
 
-
-        @if (Model.LocalAuthorityIsInBroadland)
-        {
-            <p class="govuk-body">To enquire about your application visit the <a class="govuk-link" href="@Model.LocalAuthorityWebsite">Norfolk Warm Homes</a> website.</p>
-        }
-        else
-        {
-            <p class="govuk-body">To enquire about your application visit <a class="govuk-link" href="@Model.LocalAuthorityWebsite">@Model.LocalAuthorityName's website</a>.</p>
-        }
-
         @if (Model.EmailPreferenceSubmitted)
         {
             @await Html.GovUkNotificationBanner(new NotificationBannerViewModel
