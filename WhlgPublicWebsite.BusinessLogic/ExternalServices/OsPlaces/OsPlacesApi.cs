@@ -18,7 +18,7 @@ public class OsPlacesApi(IOptions<OsPlacesConfiguration> options, ILogger<OsPlac
     {
         if (!postcode.IsValidUkPostcodeFormat())
         {
-            return new List<Address>();
+            return [];
         }
 
         var parameters = GetRequestParameters(postcode);
@@ -27,7 +27,7 @@ public class OsPlacesApi(IOptions<OsPlacesConfiguration> options, ILogger<OsPlac
         {
             var response = await HttpRequestHelper.SendGetRequestAsync<OsPlacesPostcodeResponseDto>(parameters);
 
-            var results = response.Results ?? new List<OsPlacesPostcodeResultDto>();
+            var results = response.Results ?? [];
 
             var totalNumberOfResultsFound = response.Header.TotalResults;
 
@@ -43,23 +43,19 @@ public class OsPlacesApi(IOptions<OsPlacesConfiguration> options, ILogger<OsPlac
                 }
             }
 
-            // Filter out addresses that aren't residential properties from the LPI dataset
-            var lpiAddresses = results
+            var addresses = results
+                // Filter out addresses that aren't residential properties from the LPI dataset
                 .Where(r => r.Lpi is not null && r.Lpi.IsCurrentResidential())
                 .Select(r => r.Lpi)
-                .ToList();
-
-            // Sort LPI addresses
-            lpiAddresses.Sort();
-
-            var joinedAddresses = lpiAddresses
+                .Order()
+                // Replace LPI address entries with DPA addresses where the UPRN matches. LPI address format is preferred for sorting. DPA address format is preferred for displaying to the user.
                 .Select(lpiAddress =>
                 {
-                    var matchingResult = results.FirstOrDefault(r => r.Dpa != null && r.Dpa.Uprn == lpiAddress.Uprn);
-                    return matchingResult != null ? matchingResult.Dpa.Parse() : lpiAddress.Parse();
+                    var matchingDpaAddress =
+                        results.FirstOrDefault(r => r.Dpa != null && r.Dpa.Uprn == lpiAddress.Uprn);
+                    return matchingDpaAddress != null ? matchingDpaAddress.Dpa.Parse() : lpiAddress.Parse();
                 })
                 .ToList();
-
 
             // Filter by the building name or number the user provided.
             // Some users may fill in the full street address (e.g. 45 High Street), we'd like to match that if possible
@@ -68,17 +64,17 @@ public class OsPlacesApi(IOptions<OsPlacesConfiguration> options, ILogger<OsPlac
                 .Split(' ');
 
             var filteredResults = userFilterParts.Length == 0
-                ? joinedAddresses
-                : joinedAddresses.Where(a =>
+                ? addresses
+                : addresses.Where(a =>
                         userFilterParts.All(userFilterPart =>
                             a.AddressLine1.Contains(userFilterPart, StringComparison.CurrentCultureIgnoreCase) ||
                             a.AddressLine2.Contains(userFilterPart, StringComparison.CurrentCultureIgnoreCase)))
                     .ToList();
 
             // If the filter doesn't match then show all the results we found.
-            if (!filteredResults.Any())
+            if (filteredResults.Count == 0)
             {
-                filteredResults = joinedAddresses;
+                filteredResults = addresses;
             }
 
             return filteredResults;
