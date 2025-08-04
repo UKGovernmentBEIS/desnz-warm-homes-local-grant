@@ -5,6 +5,7 @@
         <LangVersion>12</LangVersion>
         <IsPackable>false</IsPackable>
         <RootNamespace>Tests</RootNamespace>
+        <PreserveCompilationContext>true</PreserveCompilationContext>
     </PropertyGroup>
 
     <ItemGroup>

@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhlgPublicWebsite.BusinessL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhlgPublicWebsite.ManagementShell", "WhlgPublicWebsite.ManagementShell\WhlgPublicWebsite.ManagementShell.csproj", "{9CB8268E-F5D4-4678-8E28-58080B2CD971}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhlgPublicWebsite.IntegrationTests", "WhlgPublicWebsite.IntegrationTests\WhlgPublicWebsite.IntegrationTests.csproj", "{0143BA4F-39E3-4AD7-8902-211E7755936D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{9CB8268E-F5D4-4678-8E28-58080B2CD971}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CB8268E-F5D4-4678-8E28-58080B2CD971}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CB8268E-F5D4-4678-8E28-58080B2CD971}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0143BA4F-39E3-4AD7-8902-211E7755936D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0143BA4F-39E3-4AD7-8902-211E7755936D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0143BA4F-39E3-4AD7-8902-211E7755936D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0143BA4F-39E3-4AD7-8902-211E7755936D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
