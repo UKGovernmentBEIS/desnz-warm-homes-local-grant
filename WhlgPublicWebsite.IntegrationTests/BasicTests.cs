@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Tests;
@@ -8,16 +9,25 @@ public class BasicTests
     private CustomWebApplicationFactory<WhlgPublicWebsite.Program>
         factory;
 
-    [SetUp]
-    public void SetUp()
+    private MockDatabase mockDatabase;
+
+    [OneTimeSetUp]
+    public async Task GlobalSetUp()
     {
-        factory = new CustomWebApplicationFactory<WhlgPublicWebsite.Program>();
+        mockDatabase = new MockDatabase();
+        await mockDatabase.CreateDatabaseAsync();
     }
 
-    [TearDown]
-    public void TearDown()
+    [SetUp]
+    public void Setup()
     {
-        factory.Dispose();
+        factory = new CustomWebApplicationFactory<WhlgPublicWebsite.Program>(mockDatabase);
+    }
+
+    [OneTimeTearDown]
+    public async Task GlobalTearDown()
+    {
+        await mockDatabase.DisposeAsync();
     }
 
     [DatapointSource]
@@ -30,7 +40,7 @@ public class BasicTests
         var client = factory.CreateClient();
 
         // Act
-        var response = await client.GetAsync(url);
+        var response = await client.GetAsync(new Uri($"https://localhost/"));
 
         // Assert
         response.EnsureSuccessStatusCode(); // Status Code 200-299

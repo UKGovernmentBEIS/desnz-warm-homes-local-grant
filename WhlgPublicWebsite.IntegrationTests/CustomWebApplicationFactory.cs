@@ -1,17 +1,40 @@
-﻿using System.Data.Common;
+﻿using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WhlgPublicWebsite.Data;
 
 namespace Tests;
 
-public class CustomWebApplicationFactory<TProgram>
-    : WebApplicationFactory<TProgram> where TProgram : class
+public class CustomWebApplicationFactory<TProgram>(MockDatabase mockDatabase) : WebApplicationFactory<TProgram>
+    where TProgram : class
 {
+    // public async Task StartPostgresContainerAsync()
+    // {
+    //     _postgresContainer = new TestcontainersBuilder<PostgreSqlTestcontainer>()
+    //         .WithDatabase(new PostgreSqlTestcontainerConfiguration
+    //         {
+    //             Database = "testdb",
+    //             Username = "postgres",
+    //             Password = "postgres"
+    //         })
+    //         .WithImage("postgres:15")
+    //         .WithCleanUp(true)
+    //         .WithName("test-postgres")
+    //         .Build();
+    //
+    //     await _postgresContainer.StartAsync();
+    // }
+    //
+    // public new async Task DisposeAsync()
+    // {
+    //     // await _postgresContainer.DisposeAsync();
+    // }
+    
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureServices(services =>
@@ -27,23 +50,22 @@ public class CustomWebApplicationFactory<TProgram>
                      typeof(DbConnection));
 
             services.Remove(dbConnectionDescriptor);
-
-            // Create open SqliteConnection so EF won't automatically close it.
-            services.AddSingleton<DbConnection>(container =>
+            
+            services.AddDbContext<WhlgDbContext>(options =>
             {
-                var connection = new SqliteConnection("DataSource=:memory:");
-                connection.Open();
-
-                return connection;
-            });
-
-            services.AddDbContext<WhlgDbContext>((container, options) =>
-            {
-                var connection = container.GetRequiredService<DbConnection>();
-                options.UseSqlite(connection);
+                options.UseNpgsql(mockDatabase.GetConnectionString());
             });
         });
 
         builder.UseEnvironment("Development");
+        
+        builder.ConfigureAppConfiguration((context, config) =>
+        {
+            var settings = new Dictionary<string, string>
+            {
+                { "ConnectionStrings:PostgreSQLConnection", mockDatabase.GetConnectionString() }
+            };
+            config.AddInMemoryCollection(settings);
+        });
     }
 }

@@ -47,6 +47,7 @@ public class Startup
     private readonly IConfiguration configuration;
     private readonly AuthService authService;
     private readonly IWebHostEnvironment webHostEnvironment;
+    private readonly bool isTestEnvironment;
 
     public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
     {
