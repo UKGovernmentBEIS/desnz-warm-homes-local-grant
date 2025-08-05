@@ -903,6 +903,11 @@ public class QuestionnaireController : Controller
             var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(
                     custodianCode, ConsortiumNames.BroadlandDistrictCouncil) =>
                 "BroadlandDistrictCouncil",
+            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(
+                    custodianCode, ConsortiumNames.PortsmouthCityCouncil) =>
+                "PortsmouthCityCouncil",
+            var custodianCode when LocalAuthorityData.CustodianCodeIsManagedByLcrca(custodianCode) =>
+                "LiverpoolCityRegionCombinedAuthority",
             _ => "Default"
         };
 
@@ -944,6 +949,12 @@ public class QuestionnaireController : Controller
                 (LocalAuthorityData.LocalAuthorityStatus.Live, var custodianCode) when LocalAuthorityData
                         .CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.WestMidlandsCombinedAuthority) =>
                     "WestMidlandsCombinedAuthority",
+                (LocalAuthorityData.LocalAuthorityStatus.Live, var custodianCode) when LocalAuthorityData
+                        .CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.BroadlandDistrictCouncil) =>
+                    "BroadlandDistrictCouncil",
+                (LocalAuthorityData.LocalAuthorityStatus.Live, var custodianCode) when LocalAuthorityData
+                        .CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.PortsmouthCityCouncil) =>
+                    "PortsmouthCityCouncil",
                 _ => "Default"
             };
         return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";
