@@ -7,32 +7,27 @@ using WhlgPublicWebsite.BusinessLogic.Models;
 
 namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 
-public class OsPlacesApi : IOsPlacesApi
+public class OsPlacesApi(IOptions<OsPlacesConfiguration> options, ILogger<OsPlacesApi> logger)
+    : IOsPlacesApi
 {
-    private readonly OsPlacesConfiguration config;
-    private readonly ILogger<OsPlacesApi> logger;
+    private readonly OsPlacesConfiguration config = options.Value;
     private const int MaxResults = 100;
-    private readonly Regex NonAlphanumericCharacters = new Regex(@"[^a-zA-Z0-9]", RegexOptions.Compiled);
+    private readonly Regex nonAlphanumericCharacters = new(@"[^a-zA-Z0-9]", RegexOptions.Compiled);
 
-    public OsPlacesApi(IOptions<OsPlacesConfiguration> options, ILogger<OsPlacesApi> logger)
-    {
-        this.config = options.Value;
-        this.logger = logger;
-    }
-    
     public async Task<List<Address>> GetAddressesAsync(string postcode, string buildingNameOrNumber)
     {
         if (!postcode.IsValidUkPostcodeFormat())
         {
-            return new List<Address>();
+            return [];
         }
-        
+
         var parameters = GetRequestParameters(postcode);
 
-        try {
+        try
+        {
             var response = await HttpRequestHelper.SendGetRequestAsync<OsPlacesPostcodeResponseDto>(parameters);
 
-            var results = response.Results ?? new List<OsPlacesPostcodeResultDto>();
+            var results = response.Results ?? [];
 
             var totalNumberOfResultsFound = response.Header.TotalResults;
 
@@ -47,52 +42,47 @@ public class OsPlacesApi : IOsPlacesApi
                     resultsRequested += MaxResults;
                 }
             }
-            
-            // Filter out addresses that aren't residential properties from the LPI dataset
-            var lpiAddresses = results
+
+            var addresses = results
+                // Filter out addresses that aren't residential properties from the LPI dataset
                 .Where(r => r.Lpi is not null && r.Lpi.IsCurrentResidential())
-                .Select(r => r.Lpi.Parse())
+                .Select(r => r.Lpi)
+                .Order()
+                // Replace LPI address entries with DPA addresses where the UPRN matches. LPI address format is preferred for sorting. DPA address format is preferred for displaying to the user.
+                .Select(lpiAddress =>
+                {
+                    var matchingDpaAddress =
+                        results.FirstOrDefault(r => r.Dpa != null && r.Dpa.Uprn == lpiAddress.Uprn);
+                    return matchingDpaAddress != null ? matchingDpaAddress.Dpa.Parse() : lpiAddress.Parse();
+                })
                 .ToList();
-
-            // We use LPI as the best source for which addresses exist, but use the DPA data for a property if it has
-            // a DPA entry.
-            var uprnsToUse = lpiAddresses.Select(la => la.Uprn).ToList();
-            
-            // Parse and filter DPA addresses
-            var dpaAddresses = results
-                .Where(r => r.Dpa is not null && uprnsToUse.Contains(r.Dpa.Uprn))
-                .Select(r => r.Dpa.Parse())
-                .ToList();
-
-            var dpaUprns = dpaAddresses.Select(da => da.Uprn).ToList();
-
-            var joinedAddresses = dpaAddresses.Concat(lpiAddresses.Where(la => !dpaUprns.Contains(la.Uprn))).ToList();
 
             // Filter by the building name or number the user provided.
             // Some users may fill in the full street address (e.g. 45 High Street), we'd like to match that if possible
-            var userFilterParts = NonAlphanumericCharacters
+            var userFilterParts = nonAlphanumericCharacters
                 .Replace((buildingNameOrNumber ?? "").ToLower(), " ")
                 .Split(' ');
 
             var filteredResults = userFilterParts.Length == 0
-                ? joinedAddresses
-                : joinedAddresses.Where(a => 
+                ? addresses
+                : addresses.Where(a =>
                         userFilterParts.All(userFilterPart =>
-                            a.AddressLine1.ToLower().Contains(userFilterPart) ||
-                            a.AddressLine2.ToLower().Contains(userFilterPart)))
+                            a.AddressLine1.Contains(userFilterPart, StringComparison.CurrentCultureIgnoreCase) ||
+                            a.AddressLine2.Contains(userFilterPart, StringComparison.CurrentCultureIgnoreCase)))
                     .ToList();
 
             // If the filter doesn't match then show all the results we found.
-            if (!filteredResults.Any())
+            if (filteredResults.Count == 0)
             {
-                filteredResults = joinedAddresses;
+                filteredResults = addresses;
             }
-            
-            return filteredResults.OrderBy(a => a.AddressLine1).ToList();
+
+            return filteredResults;
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             logger.LogError("OS Places postcode request failed: {}", e.Message);
-            return new List<Address>();
+            return [];
         }
     }
 
@@ -103,7 +93,7 @@ public class OsPlacesApi : IOsPlacesApi
         {
             path += $"&offset={offset}";
         }
-        
+
         return new RequestParameters
         {
             BaseAddress = config.BaseUrl,

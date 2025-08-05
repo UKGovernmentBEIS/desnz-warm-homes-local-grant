@@ -159,6 +159,18 @@ For critical bug fixes on production
 - If the PR is accepted, merge the branch into `main`
 - Then also merge the branch into `develop`
 
+### Trivy
+
+On each push to develop, we run a Trivy scan on the Docker image to check for vulnerabilities.
+If the scan fails, we should look into the new vulnerability and either:
+- Fix it
+- Add to .trivyignore if the issue is a false positive.
+
+### Auto-Formatter
+
+When using Rider to format the code, ensure you are using the DESNZ profile, and check the documentation:
+[JetBrains Reformat & Rearrange Code](https://www.jetbrains.com/help/idea/reformat-and-rearrange-code.html)
+
 ## Deployment
 
 The site is deployed using github actions.

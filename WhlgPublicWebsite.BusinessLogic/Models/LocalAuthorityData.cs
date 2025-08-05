@@ -180,7 +180,7 @@ public class LocalAuthorityData
         { "2250", new LocalAuthorityDetails("Folkestone and Hythe District Council", LocalAuthorityStatus.NoFunding, "https://www.folkestone-hythe.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1615", new LocalAuthorityDetails("Forest of Dean District Council", LocalAuthorityStatus.Live, "https://www.fdean.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Stroud District Council") },
         { "2325", new LocalAuthorityDetails("Fylde Borough Council", LocalAuthorityStatus.NoFunding, "https://new.fylde.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
-        { "4505", new LocalAuthorityDetails("Gateshead Council", LocalAuthorityStatus.Pending, "https://www.gateshead.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "4505", new LocalAuthorityDetails("Gateshead Council", LocalAuthorityStatus.Live, "https://www.gateshead.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "3020", new LocalAuthorityDetails("Gedling Borough Council", LocalAuthorityStatus.Pending, "https://www.gedling.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Nottingham City Council") },
         { "9067", new LocalAuthorityDetails("Glasgow City Council", LocalAuthorityStatus.NoFunding, "https://www.glasgow.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1620", new LocalAuthorityDetails("Gloucester City Council", LocalAuthorityStatus.Live, "https://www.gloucester.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Stroud District Council") },
