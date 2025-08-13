@@ -8,7 +8,6 @@ public class LocalAuthorityData
     {
         NoFunding,
         NotParticipating,
-        [Obsolete("Now handled by TakingFutureReferrals")]
         NoLongerParticipating,
         Pending,
         TakingFutureReferrals,
@@ -371,7 +370,7 @@ public class LocalAuthorityData
         { "9071", new LocalAuthorityDetails("The Moray Council", LocalAuthorityStatus.NoFunding, "http://www.moray.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1940", new LocalAuthorityDetails("Three Rivers District Council", LocalAuthorityStatus.Live, "https://www.threerivers.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Watford Borough Council") },
         { "1595", new LocalAuthorityDetails("Thurrock Council", LocalAuthorityStatus.Live, "https://www.thurrock.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Essex County Council") },
-        { "2265", new LocalAuthorityDetails("Tonbridge and Malling Borough Council", LocalAuthorityStatus.Pending, "https://www.tmbc.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "2265", new LocalAuthorityDetails("Tonbridge and Malling Borough Council", LocalAuthorityStatus.NoLongerParticipating, "https://www.tmbc.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1165", new LocalAuthorityDetails("Torbay Council", LocalAuthorityStatus.Live, "https://www.torbay.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Devon County Council") },
         { "6945", new LocalAuthorityDetails("Torfaen County Borough Council", LocalAuthorityStatus.NoFunding, "https://www.torfaen.gov.uk/intro-splash.aspx", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1145", new LocalAuthorityDetails("Torridge District Council", LocalAuthorityStatus.Live, "https://www.torridge.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Devon County Council") },
