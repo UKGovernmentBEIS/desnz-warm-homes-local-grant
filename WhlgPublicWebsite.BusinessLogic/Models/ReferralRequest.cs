@@ -20,7 +20,7 @@ public class ReferralRequest : IEntityWithRowVersioning
         EpcRating = questionnaire.DisplayEpcRating;
         EpcConfirmation = questionnaire.EpcDetailsAreCorrect;
         EpcLodgementDate = questionnaire.EpcDetails?.LodgementDate;
-        IsLsoaProperty = questionnaire.IsLsoaProperty!.Value;
+        IsLsoaProperty = questionnaire.IsImdPostcode!.Value;
         IncomeBand = questionnaire.IncomeBand!.Value;
         FullName = questionnaire.LaContactName;
         ContactEmailAddress = questionnaire.LaContactEmailAddress;
