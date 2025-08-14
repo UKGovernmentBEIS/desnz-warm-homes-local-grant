@@ -342,7 +342,7 @@ internal static class LocalAuthorityConsortiums
             { "3725", "Nottingham City Council" },
             { "1945", "Watford Borough Council" },
             { "3650", "Surrey County Council" },
-            { "1435", "Lewes District Council" },
+            { "1435", null },
             { "1950", null },
             { "340", "Portsmouth City Council" },
             { "1150", "West Devon Borough Council" },
