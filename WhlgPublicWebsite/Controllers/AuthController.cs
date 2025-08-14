@@ -45,11 +45,12 @@ public class AuthController(PasswordService passwordService, AuthService authSer
             HttpOnly = true
         });
 
+        // ensure both that the link starts with a slash (is relative) but not starts with //
         // links starting with // are protocol-relative URLs which can be used to redirect to other domains
         // send to index if this is the case
-        var returnPath = viewModel.ReturnPath.StartsWith("//")
-            ? "/"
-            : viewModel.ReturnPath;
+        var isRelativePath = viewModel.ReturnPath.StartsWith('/') && !viewModel.ReturnPath.StartsWith("//");
+
+        var returnPath = isRelativePath ? viewModel.ReturnPath : "/";
 
         return Redirect(returnPath);
     }
