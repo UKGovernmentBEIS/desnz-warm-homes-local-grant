@@ -111,7 +111,7 @@ public class QuestionnaireUpdaterTests
 
     [TestCase(true)]
     [TestCase(false)]
-    public async Task UpdateAddressAsync_WhenCalled_SetsLsoaStatusToMatchEligibility(bool isEligible)
+    public async Task UpdateAddressAsync_WhenCalled_SetsImdStatusToMatchEligibility(bool isEligible)
     {
         // Arrange
         var postcode = "ab1 2cd";
@@ -128,7 +128,7 @@ public class QuestionnaireUpdaterTests
         var result = await underTest.UpdateAddressAsync(questionnaire, address, null);
 
         // Assert
-        result.IsLsoaProperty.Should().Be(isEligible);
+        result.IsImdPostcode.Should().Be(isEligible);
     }
 
     [Test]
@@ -155,7 +155,7 @@ public class QuestionnaireUpdaterTests
         // Arrange
         var questionnaire = new Questionnaire
         {
-            IsLsoaProperty = false,
+            IsImdPostcode = false,
             IncomeBand = IncomeBand.UnderOrEqualTo36000
         };
         mockDataAccessProvider.Setup(dap =>
@@ -174,7 +174,7 @@ public class QuestionnaireUpdaterTests
         // Arrange
         var questionnaire = new Questionnaire
         {
-            IsLsoaProperty = false,
+            IsImdPostcode = false,
             IncomeBand = IncomeBand.UnderOrEqualTo36000
         };
         mockDataAccessProvider.Setup(dap =>
@@ -195,7 +195,7 @@ public class QuestionnaireUpdaterTests
         // Arrange
         var questionnaire = new Questionnaire
         {
-            IsLsoaProperty = false,
+            IsImdPostcode = false,
             IncomeBand = IncomeBand.UnderOrEqualTo36000
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
@@ -228,7 +228,7 @@ public class QuestionnaireUpdaterTests
         var questionnaire = new Questionnaire
         {
             CustodianCode = testCustodianCode,
-            IsLsoaProperty = false,
+            IsImdPostcode = false,
             IncomeBand = IncomeBand.UnderOrEqualTo36000
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
@@ -283,7 +283,7 @@ public class QuestionnaireUpdaterTests
         var questionnaire = new Questionnaire
         {
             CustodianCode = testCustodianCode,
-            IsLsoaProperty = false,
+            IsImdPostcode = false,
             IncomeBand = IncomeBand.UnderOrEqualTo36000
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
@@ -337,7 +337,7 @@ public class QuestionnaireUpdaterTests
         var questionnaire = new Questionnaire
         {
             CustodianCode = testCustodianCode,
-            IsLsoaProperty = false,
+            IsImdPostcode = false,
             IncomeBand = IncomeBand.UnderOrEqualTo36000
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
@@ -385,7 +385,7 @@ public class QuestionnaireUpdaterTests
         const string testName = "Example Person";
         var questionnaire = new Questionnaire
         {
-            IsLsoaProperty = false,
+            IsImdPostcode = false,
             IncomeBand = IncomeBand.UnderOrEqualTo36000
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
@@ -498,7 +498,7 @@ public class QuestionnaireUpdaterTests
             LaContactEmailAddress = testEmailAddress,
             ReferralCode = testReferralCode,
             CustodianCode = testCustodianCode,
-            IsLsoaProperty = false,
+            IsImdPostcode = false,
             IncomeBand = IncomeBand.UnderOrEqualTo36000
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
@@ -553,7 +553,7 @@ public class QuestionnaireUpdaterTests
             LaContactEmailAddress = testEmailAddress,
             ReferralCode = testReferralCode,
             CustodianCode = testCustodianCode,
-            IsLsoaProperty = false,
+            IsImdPostcode = false,
             IncomeBand = IncomeBand.UnderOrEqualTo36000
         };
         var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);

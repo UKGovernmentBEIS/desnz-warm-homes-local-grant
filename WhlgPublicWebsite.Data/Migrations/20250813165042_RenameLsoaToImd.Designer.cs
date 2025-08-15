@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WhlgPublicWebsite.Data;
@@ -11,9 +12,11 @@ using WhlgPublicWebsite.Data;
 namespace WhlgPublicWebsite.Data.Migrations
 {
     [DbContext(typeof(WhlgDbContext))]
-    partial class WhlgDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250813165042_RenameLsoaToImd")]
+    partial class RenameLsoaToImd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
