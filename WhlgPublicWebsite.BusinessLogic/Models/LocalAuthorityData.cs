@@ -387,7 +387,7 @@ public class LocalAuthorityData
         { "3725", new LocalAuthorityDetails("Warwick District Council", LocalAuthorityStatus.Pending, "https://www.warwickdc.gov.uk/site/", IncomeBandOptions[IncomeThreshold._36000], "Nottingham City Council") },
         { "1945", new LocalAuthorityDetails("Watford Borough Council", LocalAuthorityStatus.Live, "https://www.watford.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Watford Borough Council") },
         { "3650", new LocalAuthorityDetails("Waverley Borough Council", LocalAuthorityStatus.Live, "https://www.waverley.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Surrey County Council") },
-        { "1435", new LocalAuthorityDetails("Wealden District Council", LocalAuthorityStatus.Live, "https://www.wealden.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Lewes District Council") },
+        { "1435", new LocalAuthorityDetails("Wealden District Council", LocalAuthorityStatus.Live, "https://www.wealden.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1950", new LocalAuthorityDetails("Welwyn Hatfield Borough Council", LocalAuthorityStatus.Live, "https://www.welhat.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "340", new LocalAuthorityDetails("West Berkshire Council", LocalAuthorityStatus.Live, "https://www.warmerhomes.org.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
         { "1150", new LocalAuthorityDetails("West Devon Borough Council", LocalAuthorityStatus.Pending, "https://www.westdevon.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "West Devon Borough Council") },
