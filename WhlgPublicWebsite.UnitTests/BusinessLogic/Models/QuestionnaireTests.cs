@@ -249,7 +249,7 @@ public class QuestionnaireTests
     [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, null, null, false, IncomeBand.UnderOrEqualTo36000, true)] // Eligible no EPC found
     [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.No, EpcRating.A, false, IncomeBand.UnderOrEqualTo36000, true)] // Eligible wrong EPC found
     [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Unknown, EpcRating.A, false, IncomeBand.UnderOrEqualTo36000, true)] // Eligible unsure EPC found
-    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, true, IncomeBand.GreaterThan36000, true)] // Eligible high income but LSOA
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, true, IncomeBand.GreaterThan36000, true)] // Eligible high income but IMD postcode
     [TestCase(Country.Scotland, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible country
     [TestCase(Country.Wales, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible country
     [TestCase(Country.NorthernIreland, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible country
@@ -264,7 +264,7 @@ public class QuestionnaireTests
         OwnershipStatus ownershipStatus,
         EpcConfirmation? epcDetailsAreCorrect,
         EpcRating? epcRating,
-        bool isLsoaPostCode,
+        bool isImdPostcode,
         IncomeBand incomeBand,
         bool isEligible)
     {
@@ -274,7 +274,7 @@ public class QuestionnaireTests
             Country = country,
             OwnershipStatus = ownershipStatus,
             EpcDetailsAreCorrect = epcDetailsAreCorrect,
-            IsLsoaProperty = isLsoaPostCode,
+            IsImdPostcode = isImdPostcode,
             IncomeBand = incomeBand,
         };
         if (epcRating is not null)
@@ -380,13 +380,13 @@ public class QuestionnaireTests
     [TestCase(IncomeBand.GreaterThan34500)]
 #pragma warning restore CS0618 
     [TestCase(IncomeBand.GreaterThan36000)]
-    public void IncomeIsTooHigh_ForHighIncomeBandAndNonLsoa_ReturnsTrue(IncomeBand incomeBand)
+    public void IncomeIsTooHigh_ForHighIncomeBandAndNonImd_ReturnsTrue(IncomeBand incomeBand)
     {
         // Arrange
         var questionnaire = new Questionnaire()
         {
             IncomeBand = incomeBand,
-            IsLsoaProperty = false
+            IsImdPostcode = false
         };
         
         // Act
@@ -401,13 +401,13 @@ public class QuestionnaireTests
     [TestCase(IncomeBand.GreaterThan34500)] 
 #pragma warning restore CS0618
     [TestCase(IncomeBand.GreaterThan36000)]
-    public void IncomeIsTooHigh_ForHighIncomeBandAndLsoa_ReturnsFalse(IncomeBand incomeBand)
+    public void IncomeIsTooHigh_ForHighIncomeBandAndImd_ReturnsFalse(IncomeBand incomeBand)
     {
         // Arrange
         var questionnaire = new Questionnaire()
         {
             IncomeBand = incomeBand,
-            IsLsoaProperty = true
+            IsImdPostcode = true
         };
         
         // Act
@@ -425,13 +425,13 @@ public class QuestionnaireTests
 #pragma warning restore CS0618 
     [TestCase(IncomeBand.UnderOrEqualTo36000, true)]
     [TestCase(IncomeBand.UnderOrEqualTo36000, false)]
-    public void IncomeIsTooHigh_ForLowIncomeBand_ReturnsFalse(IncomeBand incomeBand, bool isLsoa)
+    public void IncomeIsTooHigh_ForLowIncomeBand_ReturnsFalse(IncomeBand incomeBand, bool isImd)
     {
         // Arrange
         var questionnaire = new Questionnaire()
         {
             IncomeBand = incomeBand,
-            IsLsoaProperty = isLsoa
+            IsImdPostcode = isImd
         };
         
         // Act

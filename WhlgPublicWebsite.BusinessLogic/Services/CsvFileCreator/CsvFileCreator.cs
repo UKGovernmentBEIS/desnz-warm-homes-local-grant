@@ -384,7 +384,7 @@ public class CsvFileCreator : ICsvFileCreator
                 _ => throw new ArgumentOutOfRangeException("request.IncomeBand",
                     "Unrecognised IncomeBand value: " + request.IncomeBand)
             };
-            EligiblePostcode = request.IsLsoaProperty;
+            EligiblePostcode = request.IsImdPostcode;
             Tenure = "Owner";
         }
     }

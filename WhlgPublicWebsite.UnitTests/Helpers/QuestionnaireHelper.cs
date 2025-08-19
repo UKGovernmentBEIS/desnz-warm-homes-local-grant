@@ -23,7 +23,7 @@ public static class QuestionnaireHelper
             Uprn = "123456789123",
             EpcDetails = new EpcDetails(),
             EpcDetailsAreCorrect = EpcConfirmation.Yes,
-            IsLsoaProperty = true,
+            IsImdPostcode = true,
             IncomeBand = IncomeBand.UnderOrEqualTo36000,
             ReferralCreated = default,
             ReferralCode = "WHLG1023",

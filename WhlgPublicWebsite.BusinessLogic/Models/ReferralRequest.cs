@@ -20,7 +20,7 @@ public class ReferralRequest : IEntityWithRowVersioning
         EpcRating = questionnaire.DisplayEpcRating;
         EpcConfirmation = questionnaire.EpcDetailsAreCorrect;
         EpcLodgementDate = questionnaire.EpcDetails?.LodgementDate;
-        IsLsoaProperty = questionnaire.IsLsoaProperty!.Value;
+        IsImdPostcode = questionnaire.IsImdPostcode!.Value;
         IncomeBand = questionnaire.IncomeBand!.Value;
         FullName = questionnaire.LaContactName;
         ContactEmailAddress = questionnaire.LaContactEmailAddress;
@@ -49,7 +49,7 @@ public class ReferralRequest : IEntityWithRowVersioning
     public EpcConfirmation? EpcConfirmation { get; set; }
 
     public DateTime? EpcLodgementDate { get; set; }
-    public bool IsLsoaProperty { get; set; }
+    public bool IsImdPostcode { get; set; }
     public IncomeBand IncomeBand { get; set; }
 
     public string FullName { get; set; }

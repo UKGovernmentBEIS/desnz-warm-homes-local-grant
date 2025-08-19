@@ -70,8 +70,8 @@ public class QuestionnaireUpdater
 
                 q.EpcDetailsAreCorrect = null;
 
-                // Check LSOA eligibility
-                q.IsLsoaProperty = eligiblePostcodeService.IsEligiblePostcode(address.Postcode);
+                // Check if IMD postcode
+                q.IsImdPostcode = eligiblePostcodeService.IsEligiblePostcode(address.Postcode);
             }, questionnaire, currentPage, entryPoint
         );
     }

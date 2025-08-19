@@ -28,7 +28,7 @@ public class ReferralRequestBuilder
             ReferralWrittenToCsv = false,
             FollowUpEmailSent = false,
             RequestDate = new DateTime(2023, 01, 01, 13, 00, id),
-            IsLsoaProperty = false,
+            IsImdPostcode = false,
             ContactEmailAddress = $"contact{id}@example.com",
             FullName = $"Full Name{id}",
             ContactTelephone = $"{id:D5} 123456"

@@ -25,7 +25,13 @@ public record Questionnaire
 
     public EpcDetails EpcDetails { get; set; }
     public EpcConfirmation? EpcDetailsAreCorrect { get; set; }
-    public bool? IsLsoaProperty { get; set; }
+
+    /// <summary>
+    /// Whether the postcode is in IMD postcode deciles 1-2.
+    /// If so, the income band is not used to determine eligibility.
+    /// See <seealso cref="WhlgPublicWebsite.BusinessLogic.Services.EligiblePostcode.EligiblePostcodeService"/>
+    /// </summary>
+    public bool? IsImdPostcode { get; set; }
     public bool? AcknowledgedPending { get; set; }
     public bool? AcknowledgedFutureReferral { get; set; }
     public IncomeBand? IncomeBand { get; set; }
@@ -161,7 +167,7 @@ public record Questionnaire
 #pragma warning disable CS0618 // Obsolete Income Bands used to preserve backwards-compatibility
     public bool IncomeIsTooHigh =>
         IncomeBand is (Enums.IncomeBand.GreaterThan31000 or Enums.IncomeBand.GreaterThan34500
-            or Enums.IncomeBand.GreaterThan36000) && IsLsoaProperty is not true;
+            or Enums.IncomeBand.GreaterThan36000) && IsImdPostcode is not true;
 #pragma warning restore CS0618
 
 
