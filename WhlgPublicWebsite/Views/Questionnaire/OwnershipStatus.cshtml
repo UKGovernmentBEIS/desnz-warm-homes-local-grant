@@ -34,15 +34,18 @@
                         Classes = "govuk-fieldset__legend--l",
                         IsPageHeading = true
                     }
-                },
-                hintOptions: new HintViewModel
-                {
-                    Html = @<text>
-                                <p class="govuk-body">
-                                    If you have a <a class="govuk-link" href="https://www.gov.uk/shared-ownership-scheme">shared ownership property</a>, please select "@Model.SharedOwnershipAnswerLabel".
-                                </p>
-                            </text>
                 })
+            
+            @await Html.GovUkDetails(new DetailsViewModel
+            {
+                SummaryText = "I live in a shared ownership property",
+                Html = 
+                    @<text>
+                        <p class="govuk-body">
+                            If you have a <a class="govuk-link" href="https://www.gov.uk/shared-ownership-scheme">shared ownership property</a>, please select "@Model.SharedOwnershipAnswerLabel".
+                        </p>
+                    </text>
+            })
 
             @(await Html.GovUkButton(new ButtonViewModel
             {
