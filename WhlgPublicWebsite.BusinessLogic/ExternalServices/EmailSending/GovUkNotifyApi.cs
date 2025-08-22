@@ -52,6 +52,13 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             string recipientName,
             ReferralRequest referralRequest)
         {
+            if (LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
+                    ConsortiumNames.WestMidlandsCombinedAuthority))
+            {
+                SendReferenceCodeEmail(emailAddress, recipientName, referralRequest,
+                    govUkNotifyConfig.ReferenceCodeForLiveWmcaLocalAuthorityTemplate);
+            }
+
             SendReferenceCodeEmail(emailAddress, recipientName, referralRequest,
                 govUkNotifyConfig.ReferenceCodeForLiveLocalAuthorityTemplate);
         }
