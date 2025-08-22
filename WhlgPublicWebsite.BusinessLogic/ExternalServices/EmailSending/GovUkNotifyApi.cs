@@ -52,15 +52,12 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             string recipientName,
             ReferralRequest referralRequest)
         {
-            if (LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
-                    ConsortiumNames.WestMidlandsCombinedAuthority))
-            {
-                SendReferenceCodeEmail(emailAddress, recipientName, referralRequest,
-                    govUkNotifyConfig.ReferenceCodeForLiveWmcaLocalAuthorityTemplate);
-            }
-
+            // Live LAs in WMCA are not required to meet SLA requirements and thus have a different email template
             SendReferenceCodeEmail(emailAddress, recipientName, referralRequest,
-                govUkNotifyConfig.ReferenceCodeForLiveLocalAuthorityTemplate);
+                LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
+                    ConsortiumNames.WestMidlandsCombinedAuthority)
+                    ? govUkNotifyConfig.ReferenceCodeForLiveWmcaLocalAuthorityTemplate
+                    : govUkNotifyConfig.ReferenceCodeForLiveLocalAuthorityTemplate);
         }
 
         public void SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority
