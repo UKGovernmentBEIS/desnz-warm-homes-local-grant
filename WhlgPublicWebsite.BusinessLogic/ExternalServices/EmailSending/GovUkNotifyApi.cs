@@ -52,8 +52,12 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             string recipientName,
             ReferralRequest referralRequest)
         {
+            // Live LAs in WMCA are not required to meet SLA requirements and thus have a different email template
             SendReferenceCodeEmail(emailAddress, recipientName, referralRequest,
-                govUkNotifyConfig.ReferenceCodeForLiveLocalAuthorityTemplate);
+                LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
+                    ConsortiumNames.WestMidlandsCombinedAuthority)
+                    ? govUkNotifyConfig.ReferenceCodeForLiveWmcaLocalAuthorityTemplate
+                    : govUkNotifyConfig.ReferenceCodeForLiveLocalAuthorityTemplate);
         }
 
         public void SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority
