@@ -1,4 +1,4 @@
-# Warm Homes: Local Grants BETA
+# Warm Homes: Local Grant BETA
 
 This repository was cloned from [HUG2](https://github.com/UKGovernmentBEIS/desnz-home-energy-retrofit-beta) in December 2024, keeping all previous commits.
 
@@ -161,7 +161,7 @@ Migrations will be run automatically on deployment. If a migration needs to be r
 
 ## Environments
 
-This app is deployed to BEIS AWS platform
+This app is deployed to ICS AWS platform
 
 ### Configuration
 
