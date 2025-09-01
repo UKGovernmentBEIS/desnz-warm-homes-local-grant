@@ -1,4 +1,4 @@
-# Warm Home: Local Grants BETA
+# Warm Homes: Local Grants BETA
 
 This repository was cloned from [HUG2](https://github.com/UKGovernmentBEIS/desnz-home-energy-retrofit-beta) in December 2024, keeping all previous commits.
 
@@ -24,8 +24,7 @@ In WhlgPublicWebsite run `npm install`
 
 ### Minio
 
-The portal site lists files hosted in an S3 bucket. For local development we need a fake S3 bucket to connect to.
-To use [Minio](https://min.io/) to provide a local S3 bucket follow these steps:
+The database of referrals is copied nightly from postgres to an S3 bucket. For local development we need a fake S3 bucket to connect to. To use [Minio](https://min.io/) to provide a local S3 bucket follow these steps:
 1. Download minio
     * [Windows](https://min.io/download#/windows)
     * [Mac](https://min.io/docs/minio/macos/index.html#procedure)
@@ -48,7 +47,7 @@ To use [Minio](https://min.io/) to provide a local S3 bucket follow these steps:
 
 The app communicates with a number of APIs. You will need to obtain and configure credentials for these APIs in your user secrets file.
 
-You can find the values for these secrets in the BEIS folder in [Keeper](https://keepersecurity.eu/vault/).
+You can find the values for these secrets in the DESNZ Support folder in [Keeper](https://keepersecurity.eu/vault/).
 
 In Rider:
 - Right-click on the `WhlgPublicWebsite` project
@@ -115,7 +114,7 @@ For further information on interacting with the database and using migrations, p
 - In Rider build the solution
 - In `WhlgPublicWebsite` run `npm run watch`
 - In Rider run the `WhlgPublicWebsite` project
-- In a browser, visit https://localhost:5001/questionnaire/
+- In a browser, visit https://localhost:5001/questionnaire/country
 
 ### Running tests
 
@@ -126,46 +125,6 @@ For further information on interacting with the database and using migrations, p
 
 For instructions on making changes to the frontend, see [here](Documentation/making-frontend-changes.md).
 
-## Development process
-
-We follow a process similar to git-flow, with 3 branches corresponding to each of the environments:
-- `develop` - [Dev](https://dev.apply-warm-homes-local-grant.service.gov.uk)
-- `staging` - [UAT](https://uat.apply-warm-homes-local-grant.service.gov.uk)
-- `main` - [Production](https://www.apply-warm-homes-local-grant.service.gov.uk)
-
-For normal development:
-- Create a branch from `develop` with the following name format - `PC-XXXX-short-description-of-ticket` (with `PC-XXXX` to be replaced by your ticket number).
-- Make changes on the branch, e.g. `feat/add-new-widget`
-- Raise a PR back to `develop` once the feature is complete
-- If the PR is accepted merge the branch into `develop`
-
-Doing a release to staging:
-- Merge `develop` into `staging`
-- Deploy this branch into the UAT environment
-- Run manual tests against this environment and gain sign-off to deploy
-
-Doing a release to production:
-- Ensure all sign-offs are in place
-- Merge `staging` into `main`
-    - To merge to main, the `production release` label must be applied to your pull request
-- Deploy this branch into the production environment
-- Perform any post go-live checks
-
-For critical bug fixes on production
-- Create a hotfix branch from `main`, e.g. `hotfix/update-service-name`
-- Make changes on the branch
-- Raise a PR back to `main` once the bug is fixed
-    - To merge to main, the `production release` label must be applied to your pull request
-- If the PR is accepted, merge the branch into `main`
-- Then also merge the branch into `develop`
-
-### Trivy
-
-On each push to develop, we run a Trivy scan on the Docker image to check for vulnerabilities.
-If the scan fails, we should look into the new vulnerability and either:
-- Fix it
-- Add to .trivyignore if the issue is a false positive.
-
 ### Auto-Formatter
 
 When using Rider to format the code, ensure you are using the DESNZ profile, and check the documentation:
@@ -174,6 +133,20 @@ When using Rider to format the code, ensure you are using the DESNZ profile, and
 ## Deployment
 
 The site is deployed using github actions.
+
+### Deployed environments
+
+We follow a process similar to git-flow, with 3 branches corresponding to each of the environments:
+- `develop` - [Dev](https://dev.apply-warm-homes-local-grant.service.gov.uk)
+- `staging` - [UAT](https://uat.apply-warm-homes-local-grant.service.gov.uk)
+- `main` - [Production](https://www.apply-warm-homes-local-grant.service.gov.uk)
+
+### Trivy
+
+On each push to `develop`, we run a Trivy scan on the Docker image to check for vulnerabilities.
+If the scan fails, we should look into the new vulnerability and either:
+- Fix it
+- Add to .trivyignore if the issue is a false positive.
 
 ### Database migrations
 
