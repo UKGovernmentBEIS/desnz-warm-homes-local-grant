@@ -127,8 +127,12 @@ For instructions on making changes to the frontend, see [here](Documentation/mak
 
 ### Auto-Formatter
 
-When using Rider to format the code, ensure you are using the DESNZ profile, and check the documentation:
-[JetBrains Reformat & Rearrange Code](https://www.jetbrains.com/help/idea/reformat-and-rearrange-code.html)
+We use the standard Rider code cleanup tool for this project. Before committing, make sure to run the code cleanup on edited files.
+See [Rider docs](https://www.jetbrains.com/help/rider/2024.3/Code_Cleanup__Index.html#running) for information on running the formatter. Use the 'DESNZ' profile when running code format.
+
+Historically, we did not always use this formatter, so some files will be non-compliant.
+Run the formatter on all files edited in a PR. There may be additional formatting changes made.
+Commit these in a separate commit to your other changes.
 
 ## Deployment
 
@@ -158,6 +162,12 @@ Migrations will be run automatically on deployment. If a migration needs to be r
     3. Generate a rollback script using `dotnet ef migrations script 2022010112345678_BadMigration 2022010112345678_LastGoodMigration -o revert.sql` from the `WhlgPublicWebsite` directory
     4. Review the script
     5. Connect to the database and run the script
+
+### Deployments
+
+When code is merged to the dev, staging or main branch, the corresponding CodeDeploy pipeline is started.
+
+You can look at the Deployment history [here](https://eu-west-2.console.aws.amazon.com/codesuite/codedeploy/deployments?region=eu-west-2). It should show you all the successful, failed and in-progress deployments for your current role.
 
 ## Environments
 
