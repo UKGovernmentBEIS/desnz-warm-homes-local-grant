@@ -114,7 +114,7 @@ For further information on interacting with the database and using migrations, p
 - In Rider build the solution
 - In `WhlgPublicWebsite` run `npm run watch`
 - In Rider run the `WhlgPublicWebsite` project
-- In a browser, visit https://localhost:5001/questionnaire/country
+- In a browser, visit https://localhost:5001/questionnaire/
 
 ### Running tests
 
