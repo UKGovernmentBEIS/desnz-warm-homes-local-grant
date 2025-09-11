@@ -136,7 +136,7 @@ Commit these in a separate commit to your other changes.
 
 ## Deployment
 
-The site is deployed using github actions.
+The site is deployed using AWS CodePipeline.
 
 ### Deployed environments
 
