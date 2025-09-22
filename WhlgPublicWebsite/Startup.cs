@@ -300,6 +300,8 @@ public class Startup
             ConfigureAuth(app);
         }
 
+        ConfigureEmergencyMaintenance(app);
+
         app.UseMiddleware<SecurityHeadersMiddleware>();
 
         app.UseSession();
@@ -312,5 +314,11 @@ public class Startup
         // Add password authentication in our non-local-development and non-production environments
         // to make sure people don't accidentally stumble across the site
         app.UseMiddleware<AuthMiddleware>();
+    }
+
+    private void ConfigureEmergencyMaintenance(IApplicationBuilder app)
+    {
+        // Add emergency maintenance middleware to return 503 Service Unavailable if required
+        app.UseMiddleware<EmergencyMaintenanceMiddleware>();
     }
 }
