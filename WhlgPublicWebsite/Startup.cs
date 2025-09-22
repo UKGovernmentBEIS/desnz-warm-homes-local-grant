@@ -26,6 +26,7 @@ using WhlgPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using WhlgPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
 using WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using WhlgPublicWebsite.BusinessLogic.Services.EligiblePostcode;
+using WhlgPublicWebsite.BusinessLogic.Services.EmergencyMaintenance;
 using WhlgPublicWebsite.BusinessLogic.Services.Password;
 using WhlgPublicWebsite.BusinessLogic.Services.QuestionFlow;
 using WhlgPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
@@ -83,6 +84,7 @@ public class Startup
         services.AddScoped<IReferralFilterService, ReferralFilterService>();
         services.AddScoped<ISessionRecorderService, SessionRecorderService>();
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+        services.AddScoped<EmergencyMaintenanceService>();
 
         services.AddMemoryCache();
         services.AddSingleton<StaticAssetsVersioningService>();
