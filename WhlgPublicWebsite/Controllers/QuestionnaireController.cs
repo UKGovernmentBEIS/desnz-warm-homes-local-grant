@@ -420,9 +420,11 @@ public class QuestionnaireController : Controller
     {
         if (!ModelState.IsValid) return await NoFunding_Get(viewModel.EntryPoint);
 
+        var emailAddress = viewModel.EmailAddress.Trim();
+
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
-            viewModel.EmailAddress
+            emailAddress
         );
 
         var nextStep =
@@ -464,10 +466,12 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> NotParticipating_Post(IneligibleViewModel viewModel)
     {
         if (!ModelState.IsValid) return await NotParticipating_Get(viewModel.EntryPoint);
+        
+        var emailAddress = viewModel.EmailAddress.Trim();
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
-            viewModel.EmailAddress
+            emailAddress
         );
 
         var nextStep =
@@ -506,10 +510,12 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> NoLongerParticipating_Post(IneligibleViewModel viewModel)
     {
         if (!ModelState.IsValid) return NoLongerParticipating_Get(viewModel.EntryPoint);
+        
+        var emailAddress = viewModel.EmailAddress.Trim();
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
-            viewModel.EmailAddress
+            emailAddress
         );
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.NoLongerParticipating, questionnaire,
@@ -679,10 +685,12 @@ public class QuestionnaireController : Controller
             ModelState.AddModelError(string.Empty, "Select at least one method to be contacted by");
 
         if (!ModelState.IsValid) return await Eligible_Get();
+        
+        var emailAddress = viewModel.EmailAddress.Trim();
 
         var questionnaire = await questionnaireService.GenerateReferralAsync(
             viewModel.Name,
-            viewModel.CanContactByEmail is YesOrNo.Yes ? viewModel.EmailAddress : null,
+            viewModel.CanContactByEmail is YesOrNo.Yes ? emailAddress : null,
             viewModel.CanContactByPhone is YesOrNo.Yes ? viewModel.Telephone : null);
 
         await googleAnalyticsService.SendReferralGeneratedEventAsync(Request);
@@ -726,15 +734,18 @@ public class QuestionnaireController : Controller
 
         var questionnaire = questionnaireService.GetQuestionnaire();
 
+        var notificationEmailAddress = viewModel.NotificationEmailAddress?.Trim();
+        var confirmationEmailAddress = viewModel.ConfirmationEmailAddress?.Trim();
+
         if (questionnaire.LaCanContactByEmail is true)
             questionnaire = await questionnaireService.RecordNotificationConsentAsync(
                 viewModel.CanNotifyAboutFutureSchemes is YesOrNo.Yes);
         else
             questionnaire = await questionnaireService.RecordConfirmationAndNotificationConsentAsync(
                 viewModel.CanNotifyAboutFutureSchemes is YesOrNo.Yes,
-                viewModel.NotificationEmailAddress,
+                notificationEmailAddress,
                 viewModel.SendConfirmationDetails is YesOrNo.Yes,
-                viewModel.ConfirmationEmailAddress);
+                confirmationEmailAddress);
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Confirmation, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
@@ -776,10 +787,12 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> Ineligible_Post(IneligibleViewModel viewModel)
     {
         if (!ModelState.IsValid) return await Ineligible_Get();
+        
+        var emailAddress = viewModel.EmailAddress.Trim();
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
-            viewModel.EmailAddress
+            emailAddress
         );
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Ineligible, questionnaire, viewModel.EntryPoint);
