@@ -416,7 +416,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("not-taking-part")]
-    public async Task<IActionResult> NoFunding_Post(IneligibleViewModel viewModel)
+    public async Task<IActionResult> NoFunding_Post(NoFundingViewModel viewModel)
     {
         if (!ModelState.IsValid) return await NoFunding_Get(viewModel.EntryPoint);
 
@@ -463,7 +463,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("not-participating")]
-    public async Task<IActionResult> NotParticipating_Post(IneligibleViewModel viewModel)
+    public async Task<IActionResult> NotParticipating_Post(NotParticipatingViewModel viewModel)
     {
         if (!ModelState.IsValid) return await NotParticipating_Get(viewModel.EntryPoint);
         
@@ -507,7 +507,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost("no-longer-participating")]
-    public async Task<IActionResult> NoLongerParticipating_Post(IneligibleViewModel viewModel)
+    public async Task<IActionResult> NoLongerParticipating_Post(NoLongerParticipatingViewModel viewModel)
     {
         if (!ModelState.IsValid) return NoLongerParticipating_Get(viewModel.EntryPoint);
         
