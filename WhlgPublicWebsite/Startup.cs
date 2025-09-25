@@ -160,7 +160,7 @@ public class Startup
         {
             options.Cookie.Name = "Antiforgery";
             options.Cookie.HttpOnly = true;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
         });
         services.AddScoped<CookieService, CookieService>();
     }
@@ -266,10 +266,6 @@ public class Startup
         }
 
         app.UseStatusCodePagesWithReExecute("/error/{0}");
-
-        if (webHostEnvironment.IsDevelopment())
-            // In production we terminate TLS at the load balancer and redirect there
-            app.UseHttpsRedirection();
 
         app.Use(async (context, next) =>
         {
