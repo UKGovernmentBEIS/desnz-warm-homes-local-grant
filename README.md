@@ -12,7 +12,12 @@ Note, the WH:LG project is split across 2 repositories:
 
 ### Pre-requisites
 
+For quick setup (running with docker compose):
+- Docker Desktop (https://www.docker.com/products/docker-desktop/)
 - .Net 8 (https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+
+### Optional requirements
+Recommended if you want to run the project in Rider with access to local tools, such as the debugger and EF migrations:
 - Install EF Core CLI tools (https://docs.microsoft.com/en-us/ef/core/cli/dotnet)
 - Node v14+ (https://nodejs.org/en/)
 - If you're using Rider then you will need to install the ".net core user secrets" plugin
@@ -23,6 +28,8 @@ Note, the WH:LG project is split across 2 repositories:
 In WhlgPublicWebsite run `npm install`
 
 ### Minio
+
+If using docker minio will be configured automatically.
 
 The database of referrals is copied nightly from postgres to an S3 bucket. For local development we need a fake S3 bucket to connect to. To use [Minio](https://min.io/) to provide a local S3 bucket follow these steps:
 1. Download minio
@@ -84,6 +91,8 @@ cat secrets.json | dotnet user-secrets set
 
 ### Local database setup
 
+If using docker the database will be configured automatically.
+
 #### Windows
 - Download the installer and PostgreSQL 15 [here](https://www.postgresql.org/download/windows/)
 - Follow default installation steps (no additional software is required from Stack Builder upon completion)
@@ -105,6 +114,12 @@ For further information on interacting with the database and using migrations, p
 
 ### Running the service locally
 
+#### Docker
+
+If using docker, run `docker compose up --build`, then visit http://localhost:5000/questionnaire/
+
+#### Without Docker
+
 - Ensure Minio is running:
   * Windows
       * In your Minio folder un `.\minio.exe server <path to data folder> --console-address :9090`
@@ -114,9 +129,15 @@ For further information on interacting with the database and using migrations, p
 - In Rider build the solution
 - In `WhlgPublicWebsite` run `npm run watch`
 - In Rider run the `WhlgPublicWebsite` project
-- In a browser, visit https://localhost:5001/questionnaire/
+- In a browser, visit http://localhost:5000/questionnaire/
 
 ### Running tests
+
+#### Docker
+
+If using docker, run `docker compose -f docker-compose.test.yml run --rm --build tests`.
+
+#### Without Docker
 
 - In the project explorer on the left, right click on `WhlgPublicWebsite.UnitTests` and select `Run Unit Tests`
 - Note, if you've previously run `npm run watch` you'll have to terminate this (`ctrl`/`cmd` + `c`) before running the tests.
@@ -210,3 +231,5 @@ This is likely because the CSS hasn't been built. To fix this:
 - Navigate to the `WhlgPublicWebsite` directory
 - Run `npm install` to install any new dependencies
 - Run `npm run build` to build the CSS
+
+Note that running with docker compose will do this automatically.
