@@ -18,7 +18,7 @@ public class OutputProvider : IOutputProvider
 
     public bool Confirm(string outputString)
     {
-        return GetString(outputString) == "y";
+        return GetString(outputString).ToLower() == "y";
     }
 
     public string GetString(string outputString)
