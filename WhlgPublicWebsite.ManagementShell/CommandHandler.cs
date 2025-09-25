@@ -1,4 +1,5 @@
-﻿using WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
+﻿using WhlgPublicWebsite.BusinessLogic.Models;
+using WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using WhlgPublicWebsite.Data;
 
 namespace WhlgPublicWebsite.ManagementShell;
@@ -135,6 +136,95 @@ public class CommandHandler(
         await unsubmittedReferralRequestsService.WriteUnsubmittedReferralRequestsToCsv();
         outputProvider.Output("Unsubmitted referral requests written to AWS bucket successfully.");
         outputProvider.Output("They should now be available to view in the Portal.");
+    }
+
+    public async Task SetEmergencyMaintenanceState(string[] args, WhlgDbContext context)
+    {
+        outputProvider.Output("!!!!!!!!!!!!!!!!!!!!!!");
+        outputProvider.Output("This is a dangerous operation! Read the following before proceeding:");
+        outputProvider.Output("This function will enable or disable emergency maintenance mode.");
+        outputProvider.Output(
+            "In emergency maintenance mode, all requests to this portal will be blocked with a 503 response.");
+        outputProvider.Output(
+            "This should only be used in accordance with our disaster response plan when usage of the site by members of the public needs to be blocked.");
+        outputProvider.Output("If unsure, quit and consult the documentation.");
+        outputProvider.Output("!!!!!!!!!!!!!!!!!!!!!!");
+
+        var commandLineEmergencyMaintenanceService = new CommandLineEmergencyMaintenanceService(context);
+
+        EmergencyMaintenanceState argEmergencyMaintenanceState;
+        var liveEmergencyMaintenanceState = await commandLineEmergencyMaintenanceService.GetEmergencyMaintenanceState();
+
+        try
+        {
+            argEmergencyMaintenanceState = Enum.Parse<EmergencyMaintenanceState>(args[0].Trim(), true);
+        }
+        catch (Exception e) when (e is ArgumentException or IndexOutOfRangeException)
+        {
+            var allSubcommands = string.Join("/", Enum.GetValues<EmergencyMaintenanceState>());
+            outputProvider.Output(
+                $"Please specify whether to enable or disable emergency mode - Usage: SetEmergencyMaintenanceState <{allSubcommands}>");
+            outputProvider.Output("Exiting without changes...");
+            return;
+        }
+
+        outputProvider.Output("Details:");
+        switch (argEmergencyMaintenanceState)
+        {
+            case EmergencyMaintenanceState.Enabled:
+                outputProvider.Output("Request is to ENABLE emergency maintenance mode.");
+                break;
+            case EmergencyMaintenanceState.Disabled:
+                outputProvider.Output("Request is to DISABLE emergency maintenance mode.");
+                break;
+        }
+
+        switch (liveEmergencyMaintenanceState)
+        {
+            case EmergencyMaintenanceState.Enabled:
+                outputProvider.Output(
+                    "Portal is currently in emergency maintenance mode. Referrals cannot be submitted.");
+                break;
+            case EmergencyMaintenanceState.Disabled:
+                outputProvider.Output(
+                    "Portal is currently NOT in emergency maintenance mode. Referrals can be submitted.");
+                break;
+        }
+
+        if (argEmergencyMaintenanceState == liveEmergencyMaintenanceState)
+        {
+            outputProvider.Output("The requested state is the same as the current state.");
+            outputProvider.Output("Exiting without changes...");
+            return;
+        }
+
+        var emergencyMaintenanceVerb =
+            argEmergencyMaintenanceState == EmergencyMaintenanceState.Enabled ? "ENABLE" : "DISABLE";
+
+        outputProvider.Output("!!!!!!!!!!!!!!!!!!!!!!");
+        outputProvider.Output(
+            $"Please confirm you would like to {emergencyMaintenanceVerb} emergency maintenance mode.");
+        var confirmation = outputProvider.Confirm("Would you like to continue? (Y/N)");
+
+        if (!confirmation)
+        {
+            outputProvider.Output("Exiting without changes...");
+            return;
+        }
+
+        var authorEmail = outputProvider.GetString("Please enter your email address for the audit record:");
+
+        if (string.IsNullOrWhiteSpace(authorEmail))
+        {
+            outputProvider.Output("No email address entered.");
+            outputProvider.Output("Exiting without changes...");
+            return;
+        }
+
+        await commandLineEmergencyMaintenanceService.SetEmergencyMaintenanceState(argEmergencyMaintenanceState,
+            authorEmail);
+
+        outputProvider.Output("Output Complete.");
     }
 
     private string GetEnvironment()

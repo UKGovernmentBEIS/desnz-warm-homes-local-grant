@@ -146,4 +146,20 @@ public class DataAccessProvider(WhlgDbContext context)
         referralRequest.IsEligible = isEligible;
         await context.SaveChangesAsync();
     }
+
+    public async Task<EmergencyMaintenanceHistory> GetLatestEmergencyMaintenanceHistoryAsync()
+    {
+        if (!await context.EmergencyMaintenanceHistories.AnyAsync())
+        {
+            return null;
+        }
+
+        return await context.EmergencyMaintenanceHistories.OrderByDescending(emh => emh.ChangeDate).FirstAsync();
+    }
+
+    public async Task AddEmergencyMaintenanceHistory(EmergencyMaintenanceHistory history)
+    {
+        context.EmergencyMaintenanceHistories.Add(history);
+        await context.SaveChangesAsync();
+    }
 }
