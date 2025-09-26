@@ -48,9 +48,6 @@ public static class Program
             case Subcommand.ExportNewReferralRequestsToPortal:
                 await commandHandler.ExportNewReferralRequestsToPortal(context);
                 return;
-            case Subcommand.SetEmergencyMaintenanceState:
-                await commandHandler.SetEmergencyMaintenanceState(subcommandArgs, context);
-                return;
             default:
                 outputProvider.Output("Invalid terminal command entered. Please refer to the documentation");
                 return;
@@ -61,7 +58,6 @@ public static class Program
     {
         GenerateReferrals,
         GeneratePerMonthStatistics,
-        ExportNewReferralRequestsToPortal,
-        SetEmergencyMaintenanceState
+        ExportNewReferralRequestsToPortal
     }
 }

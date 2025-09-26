@@ -41,36 +41,6 @@ namespace WhlgPublicWebsite.Data.Migrations
                     b.ToTable("DataProtectionKeys");
                 });
 
-            modelBuilder.Entity("WhlgPublicWebsite.BusinessLogic.Models.EmergencyMaintenanceHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AuthorEmail")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("ChangeDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("State")
-                        .HasColumnType("integer");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChangeDate");
-
-                    b.ToTable("EmergencyMaintenanceHistories");
-                });
-
             modelBuilder.Entity("WhlgPublicWebsite.BusinessLogic.Models.NotificationDetails", b =>
                 {
                     b.Property<int>("Id")
