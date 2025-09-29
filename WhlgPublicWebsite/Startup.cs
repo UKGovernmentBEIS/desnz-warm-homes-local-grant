@@ -160,7 +160,9 @@ public class Startup
         {
             options.Cookie.Name = "Antiforgery";
             options.Cookie.HttpOnly = true;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+            options.Cookie.SecurePolicy = webHostEnvironment.IsDevelopment()
+                ? CookieSecurePolicy.SameAsRequest
+                : CookieSecurePolicy.Always;
         });
         services.AddScoped<CookieService, CookieService>();
     }
