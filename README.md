@@ -10,24 +10,27 @@ Note, the WH:LG project is split across 2 repositories:
 
 ## Local setup
 
-### Pre-requisites
+### Quick setup
 
 For quick setup (running with docker compose):
 - Docker Desktop (https://www.docker.com/products/docker-desktop/)
 - .Net 8 (https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- If you're using Rider then you will need to install the ".net core user secrets" plugin
 
-### Optional requirements
-Recommended if you want to run the project in Rider with access to local tools, such as the debugger and EF migrations:
+
+### Manual setup (optional)
+
+If you want to run the project in Rider with access to local tools, such as the debugger and EF migrations, follow these steps:
+
 - Install EF Core CLI tools (https://docs.microsoft.com/en-us/ef/core/cli/dotnet)
 - Node v14+ (https://nodejs.org/en/)
-- If you're using Rider then you will need to install the ".net core user secrets" plugin
 - If you need to work on the S3 file writing code, download and configure Minio (see below)
     - [Windows](https://min.io/download#/windows)
     - [Mac](https://min.io/docs/minio/macos/index.html#procedure)
 
 In WhlgPublicWebsite run `npm install`
 
-### Minio
+#### Minio
 
 If using docker minio will be configured automatically.
 
@@ -49,6 +52,21 @@ The database of referrals is copied nightly from postgres to an S3 bucket. For l
     1. Visit http://localhost:9090
     2. Login (default is minioadmin/minioadmin)
     3. Create a new bucket called `desnz-whlg-portal-referrals`
+
+#### Local database setup
+
+##### Windows
+- Download the installer and PostgreSQL 15 [here](https://www.postgresql.org/download/windows/)
+- Follow default installation steps (no additional software is required from Stack Builder upon completion)
+    - You may be prompted for a password for the postgres user and a port (good defaults are "postgres" and "5432", respectively). If you choose your own, you will have to update the connection string in appsettings.json
+
+##### Mac
+- Select a download option from [here](https://www.postgresql.org/download/macosx/) and download PostgreSQL 15
+    - The [Postgres.app](https://postgresapp.com/) option works well
+- Initialise a server with the following configuration (or update `PostgreSQLConnection` in `appsettings.json` to match your own):
+    - Port: `5432`
+    - User: `postgres`
+    - Password: `postgres`
 
 ### APIs
 
@@ -88,23 +106,6 @@ You can also add secrets with `dotnet user-secrets`, just pipe the JSON you want
 ```
 cat secrets.json | dotnet user-secrets set
 ```
-
-### Local database setup
-
-If using docker the database will be configured automatically.
-
-#### Windows
-- Download the installer and PostgreSQL 15 [here](https://www.postgresql.org/download/windows/)
-- Follow default installation steps (no additional software is required from Stack Builder upon completion)
-    - You may be prompted for a password for the postgres user and a port (good defaults are "postgres" and "5432", respectively). If you choose your own, you will have to update the connection string in appsettings.json
-
-#### Mac
-- Select a download option from [here](https://www.postgresql.org/download/macosx/) and download PostgreSQL 15
-    - The [Postgres.app](https://postgresapp.com/) option works well
-- Initialise a server with the following configuration (or update `PostgreSQLConnection` in `appsettings.json` to match your own):
-    - Port: `5432`
-    - User: `postgres`
-    - Password: `postgres`
 
 Once the server is running, you should be able to run the project locally.
 
