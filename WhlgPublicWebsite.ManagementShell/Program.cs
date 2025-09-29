@@ -12,7 +12,7 @@ public static class Program
         var contextOptions = new DbContextOptionsBuilder<WhlgDbContext>()
             .UseNpgsql(
                 Environment.GetEnvironmentVariable("ConnectionStrings__PostgreSQLConnection") ??
-                @"UserId=postgres;Password=postgres;Server=localhost;Port=5432;Database=whlgdev;Include Error Detail=true;Pooling=true")
+                @"UserId=postgres;Password=postgres;Server=db;Port=5432;Database=whlgdev;Include Error Detail=true;Pooling=true")
             .Options;
         using var context = new WhlgDbContext(contextOptions);
         var csvFileCreator = new CsvFileCreator();
