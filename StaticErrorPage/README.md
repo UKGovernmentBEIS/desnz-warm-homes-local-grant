@@ -10,9 +10,7 @@ Version 5.10.2 of GDS is included here. To update GDS library for the new versio
 - Copy paste the assets files into static-assets
 - Make changes to the unavailable.html file as necessary
 - Apply the following changes to unavailable.html and unavailable.css:
-    - All path references are made relative
     - All assets references are replaced with static-assets
-    - (/assets/... -> ./static-assets/...).
+    - (/assets/... -> /static-assets/...).
     - These changes are required to ensure that the assets are found successfully when served from S3. The path
-      ./static-assets/ prevents these files from being prioritised on the main site over ./assets.
-
+      /static-assets/ prevents these files from being prioritised on the main site over /assets.
