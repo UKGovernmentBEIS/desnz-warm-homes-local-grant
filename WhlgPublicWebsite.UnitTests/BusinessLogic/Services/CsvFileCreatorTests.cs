@@ -139,6 +139,24 @@ public class CsvFileCreatorTests
         // Assert
         ContainsBom(data).Should().BeTrue();
     }
+    
+    [Test]
+    public void CreateReferralRequestFileDataForS3_CalledWithReferralRequestWithEpcConfirmedYes_GeneratesExpectedFileData()
+    {
+        // Arrange
+        var underTest = new CsvFileCreator();
+        var referralRequest = new ReferralRequestBuilder(1).WithEpcConfirmation(EpcConfirmation.Yes).Build();
+        var referralRequests = new List<ReferralRequest> { referralRequest };
+
+        // Act
+        var data = underTest.CreateReferralRequestFileDataForS3(referralRequests);
+
+        // Assert
+        var reader = new StreamReader(data, Encoding.UTF8);
+        reader.ReadToEnd().Should().Be(
+            "Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Household income band,Is eligible postcode,Tenure\r\n" +
+            "2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,Homeowner agrees with rating,2023-01-01 15:00:01,\"£36,000 or less\",no,Owner\r\n");
+    }
 
     [Test]
     public void CreateReferralRequestOverviewFileDataForS3_CalledWithReferralRequest_GeneratesExpectedFileData()
