@@ -363,9 +363,11 @@ public class CsvFileCreator : ICsvFileCreator
             EpcBand = request.EpcRating;
             EpcConfirmed = request.EpcConfirmation switch
             {
-                // Yes not included here as users can't be referred if they've confirmed a high EPC
                 EpcConfirmation.No => "Homeowner disagrees with rating",
                 EpcConfirmation.Unknown => "Homeowner unsure",
+                // Yes not included here as a failsafe, we don't expect this to be coming up normally,
+                // users shouldn't be referred if they've confirmed a high EPC
+                EpcConfirmation.Yes => "Homeowner agrees with rating",
                 null => "",
                 _ => throw new ArgumentOutOfRangeException("request.EpcConfirmation",
                     "Unrecognised EpcConfirmation value: " + request.EpcConfirmation)
