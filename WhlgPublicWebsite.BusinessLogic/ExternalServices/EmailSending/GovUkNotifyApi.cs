@@ -220,6 +220,20 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 { template.WebsiteUrlPlaceholder, localAuthorityDetails.WebsiteUrl }
             };
 
+            // LA specific overrides
+            if (LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
+                    ConsortiumNames.PortsmouthCityCouncil))
+            {
+                personalisation[template.TitleDeliveryPartnerPlaceholder] = localAuthorityDetails.Name +
+                                                                            "'s official delivery partner: Warmer Homes";
+                personalisation[template.TitleDeliveryPartnerOrContractorPlaceholder] =
+                    localAuthorityDetails.Name + "'s official delivery partner: Warmer Homes";
+                personalisation[template.YourDeliveryPartnerOrContractorPlaceholder] = localAuthorityDetails.Name +
+                    "'s official delivery partner: Warmer Homes";
+                personalisation[template.WebsiteNamePlaceholder] = "Warmer Homes website";
+                personalisation[template.WebsiteUrlPlaceholder] = "https://www.warmerhomes.org.uk";
+            }
+
             var emailModel = new GovUkNotifyEmailModel
             {
                 EmailAddress = emailAddress,
