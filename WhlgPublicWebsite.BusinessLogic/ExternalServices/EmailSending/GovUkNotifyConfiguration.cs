@@ -8,7 +8,7 @@ public class GovUkNotifyConfiguration
     public string ComplianceEmailRecipients { get; set; }
     public string PendingReferralEmailRecipients { get; set; }
     public LiveReferenceCodeConfiguration ReferenceCodeForLiveLocalAuthorityTemplate { get; set; }
-    public LiveReferenceCodeConfiguration ReferenceCodeForLiveNo10DayLocalAuthorityTemplate { get; set; }
+    public LiveReferenceCodeConfiguration ReferenceCodeForLiveNo10DaySlaLocalAuthorityTemplate { get; set; }
     public ReferenceCodeConfiguration ReferenceCodeForTakingFutureReferralsLocalAuthorityTemplate { get; set; }
     public ReferenceCodeConfiguration ReferenceCodeForPendingLocalAuthorityTemplate { get; set; }
     public ReferralFollowUpConfiguration ReferralFollowUpTemplate { get; set; }

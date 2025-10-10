@@ -56,7 +56,7 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             SendLiveReferenceCodeEmail(emailAddress, recipientName, referralRequest,
                 LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
                     ConsortiumNames.WestMidlandsCombinedAuthority)
-                    ? govUkNotifyConfig.ReferenceCodeForLiveNo10DayLocalAuthorityTemplate
+                    ? govUkNotifyConfig.ReferenceCodeForLiveNo10DaySlaLocalAuthorityTemplate
                     : govUkNotifyConfig.ReferenceCodeForLiveLocalAuthorityTemplate);
         }
 
