@@ -7,13 +7,25 @@ public class GovUkNotifyConfiguration
     public string ApiKey { get; set; }
     public string ComplianceEmailRecipients { get; set; }
     public string PendingReferralEmailRecipients { get; set; }
-    public ReferenceCodeConfiguration ReferenceCodeForLiveLocalAuthorityTemplate { get; set; }
-    public ReferenceCodeConfiguration ReferenceCodeForLiveWmcaLocalAuthorityTemplate { get; set; }
+    public LiveReferenceCodeConfiguration ReferenceCodeForLiveLocalAuthorityTemplate { get; set; }
+    public LiveReferenceCodeConfiguration ReferenceCodeForLiveNo10DaySlaLocalAuthorityTemplate { get; set; }
     public ReferenceCodeConfiguration ReferenceCodeForTakingFutureReferralsLocalAuthorityTemplate { get; set; }
     public ReferenceCodeConfiguration ReferenceCodeForPendingLocalAuthorityTemplate { get; set; }
     public ReferralFollowUpConfiguration ReferralFollowUpTemplate { get; set; }
     public ComplianceReportConfiguration ComplianceReportTemplate { get; set; }
     public PendingReferralReportConfiguration PendingReferralReportTemplate { get; set; }
+}
+
+public class LiveReferenceCodeConfiguration
+{
+    public string Id { get ; set; }
+    public string RecipientNamePlaceholder { get; set; }
+    public string ReferenceCodePlaceholder { get; set; }
+    public string TitleDeliveryPartnerPlaceholder { get; set; }
+    public string TitleDeliveryPartnerOrContractorPlaceholder { get; set; }
+    public string YourDeliveryPartnerOrContractorPlaceholder { get; set; }
+    public string WebsiteNamePlaceholder { get; set; }
+    public string WebsiteUrlPlaceholder { get; set; }
 }
 
 public class ReferenceCodeConfiguration
