@@ -53,10 +53,10 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             ReferralRequest referralRequest)
         {
             // Live LAs in WMCA are not required to meet SLA requirements and thus have a different email template
-            SendReferenceCodeEmail(emailAddress, recipientName, referralRequest,
+            SendLiveReferenceCodeEmail(emailAddress, recipientName, referralRequest,
                 LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
                     ConsortiumNames.WestMidlandsCombinedAuthority)
-                    ? govUkNotifyConfig.ReferenceCodeForLiveWmcaLocalAuthorityTemplate
+                    ? govUkNotifyConfig.ReferenceCodeForLiveNo10DaySlaLocalAuthorityTemplate
                     : govUkNotifyConfig.ReferenceCodeForLiveLocalAuthorityTemplate);
         }
 
@@ -176,6 +176,75 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             ReferralRequest referralRequest,
             ReferenceCodeConfiguration template)
         {
+            var localAuthorityDetails = GetLocalAuthorityDetails(referralRequest);
+
+            var personalisation = new Dictionary<string, dynamic>
+            {
+                { template.RecipientNamePlaceholder, recipientName },
+                { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
+                { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
+                { template.LocalAuthorityWebsiteUrlPlaceholder, localAuthorityDetails.WebsiteUrl }
+            };
+            var emailModel = new GovUkNotifyEmailModel
+            {
+                EmailAddress = emailAddress,
+                TemplateId = template.Id,
+                Personalisation = personalisation
+            };
+            SendEmail(emailModel);
+        }
+
+        private void SendLiveReferenceCodeEmail
+        (
+            string emailAddress,
+            string recipientName,
+            ReferralRequest referralRequest,
+            LiveReferenceCodeConfiguration template)
+        {
+            var localAuthorityDetails = GetLocalAuthorityDetails(referralRequest);
+
+            var personalisation = new Dictionary<string, dynamic>
+            {
+                { template.RecipientNamePlaceholder, recipientName },
+                { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
+                { template.TitleDeliveryPartnerPlaceholder, localAuthorityDetails.Name },
+                {
+                    template.TitleDeliveryPartnerOrContractorPlaceholder,
+                    localAuthorityDetails.Name + " or their official contractor"
+                },
+                {
+                    template.YourDeliveryPartnerOrContractorPlaceholder,
+                    "Your Local Authority or their official contractor"
+                },
+                { template.WebsiteNamePlaceholder, localAuthorityDetails.Name + " website" },
+                { template.WebsiteUrlPlaceholder, localAuthorityDetails.WebsiteUrl }
+            };
+
+            // LA specific overrides
+            if (LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
+                    ConsortiumNames.PortsmouthCityCouncil))
+            {
+                personalisation[template.TitleDeliveryPartnerPlaceholder] = localAuthorityDetails.Name +
+                                                                            "'s official delivery partner: Warmer Homes";
+                personalisation[template.TitleDeliveryPartnerOrContractorPlaceholder] =
+                    localAuthorityDetails.Name + "'s official delivery partner: Warmer Homes";
+                personalisation[template.YourDeliveryPartnerOrContractorPlaceholder] = localAuthorityDetails.Name +
+                    "'s official delivery partner: Warmer Homes";
+                personalisation[template.WebsiteNamePlaceholder] = "Warmer Homes website";
+                personalisation[template.WebsiteUrlPlaceholder] = "https://www.warmerhomes.org.uk";
+            }
+
+            var emailModel = new GovUkNotifyEmailModel
+            {
+                EmailAddress = emailAddress,
+                TemplateId = template.Id,
+                Personalisation = personalisation
+            };
+            SendEmail(emailModel);
+        }
+
+        private LocalAuthorityData.LocalAuthorityDetails GetLocalAuthorityDetails(ReferralRequest referralRequest)
+        {
             LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
             try
             {
@@ -197,20 +266,7 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 );
             }
 
-            var personalisation = new Dictionary<string, dynamic>
-            {
-                { template.RecipientNamePlaceholder, recipientName },
-                { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
-                { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
-                { template.LocalAuthorityWebsiteUrlPlaceholder, localAuthorityDetails.WebsiteUrl },
-            };
-            var emailModel = new GovUkNotifyEmailModel
-            {
-                EmailAddress = emailAddress,
-                TemplateId = template.Id,
-                Personalisation = personalisation
-            };
-            SendEmail(emailModel);
+            return localAuthorityDetails;
         }
 
         private static JObject PrepareCsvUpload(MemoryStream csvData, string name)
