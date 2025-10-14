@@ -62,6 +62,12 @@ namespace WhlgPublicWebsite
                 "Send monthly pending referral report",
                 service => service.SendPendingReferralNotifications(),
                 "15 7 1 * *"); // at 07:15 on 1st of the month
+            
+            // TODO PC-2089: This code should not be releasing to Staging or Production
+            recurringJobManager.AddOrUpdate<FailingJobService>(
+                "Test failing job",
+                service => service.Run(),
+                "*/30 * * * *"); // every 30 minutes for testing purposes
 
             app.Run();
         }
