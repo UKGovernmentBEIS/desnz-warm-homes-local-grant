@@ -10,19 +10,29 @@ Note, the WH:LG project is split across 2 repositories:
 
 ## Local setup
 
-### Pre-requisites
+### Quick setup
 
+For quick setup (running with docker compose):
+- Docker Desktop (https://www.docker.com/products/docker-desktop/)
 - .Net 8 (https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- If you're using Rider then you will need to install the ".net core user secrets" plugin
+
+
+### Manual setup (optional)
+
+If you want to run the project in Rider with access to local tools, such as the debugger and EF migrations, follow these steps:
+
 - Install EF Core CLI tools (https://docs.microsoft.com/en-us/ef/core/cli/dotnet)
 - Node v14+ (https://nodejs.org/en/)
-- If you're using Rider then you will need to install the ".net core user secrets" plugin
 - If you need to work on the S3 file writing code, download and configure Minio (see below)
     - [Windows](https://min.io/download#/windows)
     - [Mac](https://min.io/docs/minio/macos/index.html#procedure)
 
 In WhlgPublicWebsite run `npm install`
 
-### Minio
+#### Minio
+
+If using docker minio will be configured automatically.
 
 The database of referrals is copied nightly from postgres to an S3 bucket. For local development we need a fake S3 bucket to connect to. To use [Minio](https://min.io/) to provide a local S3 bucket follow these steps:
 1. Download minio
@@ -42,6 +52,21 @@ The database of referrals is copied nightly from postgres to an S3 bucket. For l
     1. Visit http://localhost:9090
     2. Login (default is minioadmin/minioadmin)
     3. Create a new bucket called `desnz-whlg-portal-referrals`
+
+#### Local database setup
+
+##### Windows
+- Download the installer and PostgreSQL 15 [here](https://www.postgresql.org/download/windows/)
+- Follow default installation steps (no additional software is required from Stack Builder upon completion)
+    - You may be prompted for a password for the postgres user and a port (good defaults are "postgres" and "5432", respectively). If you choose your own, you will have to update the connection string in appsettings.json
+
+##### Mac
+- Select a download option from [here](https://www.postgresql.org/download/macosx/) and download PostgreSQL 15
+    - The [Postgres.app](https://postgresapp.com/) option works well
+- Initialise a server with the following configuration (or update `PostgreSQLConnection` in `appsettings.json` to match your own):
+    - Port: `5432`
+    - User: `postgres`
+    - Password: `postgres`
 
 ### APIs
 
@@ -82,21 +107,6 @@ You can also add secrets with `dotnet user-secrets`, just pipe the JSON you want
 cat secrets.json | dotnet user-secrets set
 ```
 
-### Local database setup
-
-#### Windows
-- Download the installer and PostgreSQL 15 [here](https://www.postgresql.org/download/windows/)
-- Follow default installation steps (no additional software is required from Stack Builder upon completion)
-    - You may be prompted for a password for the postgres user and a port (good defaults are "postgres" and "5432", respectively). If you choose your own, you will have to update the connection string in appsettings.json
-
-#### Mac
-- Select a download option from [here](https://www.postgresql.org/download/macosx/) and download PostgreSQL 15
-    - The [Postgres.app](https://postgresapp.com/) option works well
-- Initialise a server with the following configuration (or update `PostgreSQLConnection` in `appsettings.json` to match your own):
-    - Port: `5432`
-    - User: `postgres`
-    - Password: `postgres`
-
 Once the server is running, you should be able to run the project locally.
 
 If you are having issues the first time you run the project after initialising the server, you may need to manually create the `whlgdev` database first.
@@ -104,6 +114,12 @@ If you are having issues the first time you run the project after initialising t
 For further information on interacting with the database and using migrations, please see [here](Documentation/database.md).
 
 ### Running the service locally
+
+#### Docker
+
+If using docker, run `docker compose up --build`, then visit http://localhost:5000/questionnaire/
+
+#### Without Docker
 
 - Ensure Minio is running:
   * Windows
@@ -114,9 +130,15 @@ For further information on interacting with the database and using migrations, p
 - In Rider build the solution
 - In `WhlgPublicWebsite` run `npm run watch`
 - In Rider run the `WhlgPublicWebsite` project
-- In a browser, visit https://localhost:5001/questionnaire/
+- In a browser, visit http://localhost:5000/questionnaire/
 
 ### Running tests
+
+#### Docker
+
+If using docker, run `docker compose -f docker-compose.test.yml run --rm --build tests`.
+
+#### Without Docker
 
 - In the project explorer on the left, right click on `WhlgPublicWebsite.UnitTests` and select `Run Unit Tests`
 - Note, if you've previously run `npm run watch` you'll have to terminate this (`ctrl`/`cmd` + `c`) before running the tests.
@@ -210,3 +232,5 @@ This is likely because the CSS hasn't been built. To fix this:
 - Navigate to the `WhlgPublicWebsite` directory
 - Run `npm install` to install any new dependencies
 - Run `npm run build` to build the CSS
+
+Note that running with docker compose will do this automatically.
