@@ -226,7 +226,7 @@ public class QuestionnaireController : Controller
             TempData["PostcodeSearched"] = postcode;
             return RedirectToNextStep(QuestionFlowStep.ManualAddress, entryPoint);
         }
-        
+
         var viewModel = new SelectAddressViewModel
         {
             Addresses = addresses,
@@ -474,7 +474,7 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> NotParticipating_Post(NotParticipatingViewModel viewModel)
     {
         if (!ModelState.IsValid) return await NotParticipating_Get(viewModel.EntryPoint);
-        
+
         var emailAddress = viewModel.EmailAddress?.Trim();
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
@@ -518,7 +518,7 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> NoLongerParticipating_Post(NoLongerParticipatingViewModel viewModel)
     {
         if (!ModelState.IsValid) return NoLongerParticipating_Get(viewModel.EntryPoint);
-        
+
         var emailAddress = viewModel.EmailAddress?.Trim();
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
@@ -693,7 +693,7 @@ public class QuestionnaireController : Controller
             ModelState.AddModelError(string.Empty, "Select at least one method to be contacted by");
 
         if (!ModelState.IsValid) return await Eligible_Get();
-        
+
         var emailAddress = viewModel.EmailAddress?.Trim();
 
         var questionnaire = await questionnaireService.GenerateReferralAsync(
@@ -795,7 +795,7 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> Ineligible_Post(IneligibleViewModel viewModel)
     {
         if (!ModelState.IsValid) return await Ineligible_Get();
-        
+
         var emailAddress = viewModel.EmailAddress?.Trim();
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
