@@ -219,6 +219,13 @@ public class QuestionnaireController : Controller
         var questionnaire = questionnaireService.GetQuestionnaire();
 
         var addresses = await osPlaces.GetAddressesAsync(postcode, buildingNameOrNumber);
+
+        // 100 addresses is too many to show to user, ask for manual entry instead
+        if (addresses.Count > 100)
+        {
+            return RedirectToNextStep(QuestionFlowStep.ManualAddress, entryPoint);
+        }
+        
         var viewModel = new SelectAddressViewModel
         {
             Addresses = addresses,
