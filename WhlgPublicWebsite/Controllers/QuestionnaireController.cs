@@ -223,6 +223,7 @@ public class QuestionnaireController : Controller
         // 100 addresses is too many to show to user, ask for manual entry instead
         if (addresses.Count > 100)
         {
+            TempData["PostcodeSearched"] = postcode;
             return RedirectToNextStep(QuestionFlowStep.ManualAddress, entryPoint);
         }
         
@@ -311,7 +312,7 @@ public class QuestionnaireController : Controller
             AddressLine2 = questionnaire.AddressLine2,
             Town = questionnaire.AddressTown,
             County = questionnaire.AddressCounty,
-            Postcode = questionnaire.AddressPostcode,
+            Postcode = questionnaire.AddressPostcode ?? TempData["PostcodeSearched"]?.ToString(),
             BackLink = GetBackUrl(QuestionFlowStep.ManualAddress, questionnaire, entryPoint)
         };
 
