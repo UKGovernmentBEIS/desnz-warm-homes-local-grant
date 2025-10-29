@@ -19,6 +19,7 @@ public record Questionnaire
     public string AddressPostcode { get; set; }
 
     public string CustodianCode { get; set; }
+    public bool LocalAuthorityAutomaticallyMatched { get; set; }
     public bool? LocalAuthorityConfirmed { get; set; }
 
     public string Uprn { get; set; } // Should be populated for most questionnaires, but not 100% guaranteed

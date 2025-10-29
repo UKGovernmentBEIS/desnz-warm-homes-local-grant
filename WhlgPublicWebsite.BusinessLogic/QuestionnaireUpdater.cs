@@ -63,8 +63,20 @@ public class QuestionnaireUpdater
                 q.AddressLine2 = address.AddressLine2;
                 q.AddressTown = address.Town;
                 q.AddressCounty = address.County;
-                q.CustodianCode = address.LocalCustodianCode;
-                q.LocalAuthorityConfirmed = string.IsNullOrEmpty(address.LocalCustodianCode) ? null : true;
+
+                if (!string.IsNullOrWhiteSpace(address.LocalCustodianCode) &&
+                    LocalAuthorityData.LocalAuthorityDetailsByCustodianCode.ContainsKey(address.LocalCustodianCode))
+                {
+                    q.CustodianCode = address.LocalCustodianCode;
+                    q.LocalAuthorityConfirmed = true;
+                    q.LocalAuthorityAutomaticallyMatched = true;
+                }
+                else // if the custodian code is not found, or user entered address manually
+                {
+                    q.LocalAuthorityConfirmed = null;
+                    q.LocalAuthorityAutomaticallyMatched = false;
+                }
+
 
                 q.EpcDetails = epcDetails;
 
