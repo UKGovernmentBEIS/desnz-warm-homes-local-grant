@@ -135,39 +135,39 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectLocalAuthority),
         new(
-            "No funding goes back to Address if UPRN found",
+            "No funding goes back to Address if LA matched",
             new Input(
-                QuestionFlowStep.NoFunding, uprn: "100023336956"
+                QuestionFlowStep.NoFunding, localAuthorityAutomaticallyMatched: true
             ),
             QuestionFlowStep.Address),
         new(
-            "No funding goes back to confirm local authority if no UPRN found",
+            "No funding goes back to confirm local authority if no LA matched",
             new Input(
-                QuestionFlowStep.NoFunding, uprn: null
+                QuestionFlowStep.NoFunding, localAuthorityAutomaticallyMatched: false
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
         new(
-            "Not participating goes back to Address if UPRN found",
+            "Not participating goes back to Address if LA matched",
             new Input(
-                QuestionFlowStep.NotParticipating, uprn: "100023336956"
+                QuestionFlowStep.NotParticipating, localAuthorityAutomaticallyMatched: true
             ),
             QuestionFlowStep.Address),
         new(
-            "Not participating goes back to confirm local authority if no UPRN found",
+            "Not participating goes back to confirm local authority if no LA matched",
             new Input(
-                QuestionFlowStep.NotParticipating, uprn: null
+                QuestionFlowStep.NotParticipating, localAuthorityAutomaticallyMatched: false
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
         new(
-            "Household income goes back to Address if UPRN found",
+            "Household income goes back to Address if LA matched",
             new Input(
-                QuestionFlowStep.HouseholdIncome, uprn: "100023336956"
+                QuestionFlowStep.HouseholdIncome, localAuthorityAutomaticallyMatched: true
             ),
             QuestionFlowStep.Address),
         new(
-            "Household income goes back to confirm local authority if no UPRN found",
+            "Household income goes back to confirm local authority if no LA matched",
             new Input(
-                QuestionFlowStep.HouseholdIncome, uprn: null
+                QuestionFlowStep.HouseholdIncome, localAuthorityAutomaticallyMatched: false
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
         new(
@@ -179,7 +179,7 @@ public class QuestionFlowServiceTests
         new(
             "Household income goes back to address if EPC is too high, but expired",
             new Input(
-                QuestionFlowStep.HouseholdIncome, uprn: "100023336956", epcRating: EpcRating.B,
+                QuestionFlowStep.HouseholdIncome, localAuthorityAutomaticallyMatched: true, epcRating: EpcRating.B,
                 epcExpiry: DateTime.MinValue
             ),
             QuestionFlowStep.Address),
@@ -306,30 +306,30 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectLocalAuthority),
         new(
-            "No funding goes back to Address if UPRN found if was changing answer",
+            "No funding goes back to Address if LA matched if was changing answer",
             new Input(
-                QuestionFlowStep.NoFunding, uprn: "100023336956",
+                QuestionFlowStep.NoFunding, localAuthorityAutomaticallyMatched: true,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.Address),
         new(
-            "No funding goes back to confirm local authority if no UPRN found if was changing answer",
+            "No funding goes back to confirm local authority if no LA matched if was changing answer",
             new Input(
-                QuestionFlowStep.NotParticipating, uprn: null,
+                QuestionFlowStep.NotParticipating, localAuthorityAutomaticallyMatched: false,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
         new(
-            "Not participating goes back to Address if UPRN found if was changing answer",
+            "Not participating goes back to Address if LA matched if was changing answer",
             new Input(
-                QuestionFlowStep.NotParticipating, uprn: "100023336956",
+                QuestionFlowStep.NotParticipating, localAuthorityAutomaticallyMatched: true,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.Address),
         new(
-            "Not participating goes back to confirm local authority if no UPRN found if was changing answer",
+            "Not participating goes back to confirm local authority if no LA matched if was changing answer",
             new Input(
-                QuestionFlowStep.NoFunding, uprn: null,
+                QuestionFlowStep.NoFunding, localAuthorityAutomaticallyMatched: false,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
@@ -410,25 +410,35 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectAddress),
         new(
-            "Address selection continues to household income if EPC is low",
+            "Address selection continues to select Local Authority if no LA matched",
             new Input(
                 QuestionFlowStep.SelectAddress,
-                epcRating: EpcRating.D
+                localAuthorityAutomaticallyMatched: false
+            ),
+            QuestionFlowStep.SelectLocalAuthority),
+        new(
+            "Address selection continues to household income if LA matched if EPC is low",
+            new Input(
+                QuestionFlowStep.SelectAddress,
+                epcRating: EpcRating.D,
+                localAuthorityAutomaticallyMatched: true
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
-            "Address selection continues to review EPC if EPC is high",
-            new Input(
-                QuestionFlowStep.SelectAddress,
-                epcRating: EpcRating.C
-            ),
-            QuestionFlowStep.ReviewEpc),
-        new(
-            "Address selection continues to household income if EPC is high, but expired",
+            "Address selection continues to review EPC if LA matched if EPC is high",
             new Input(
                 QuestionFlowStep.SelectAddress,
                 epcRating: EpcRating.C,
-                epcExpiry: DateTime.MinValue
+                localAuthorityAutomaticallyMatched: true
+            ),
+            QuestionFlowStep.ReviewEpc),
+        new(
+            "Address selection continues to household income if LA matched if EPC is high, but expired",
+            new Input(
+                QuestionFlowStep.SelectAddress,
+                epcRating: EpcRating.C,
+                epcExpiry: DateTime.MinValue,
+                localAuthorityAutomaticallyMatched: true
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
@@ -645,18 +655,28 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectAddress),
         new(
-            "Address selection returns to check answers income if EPC is low and was changing answer",
+            "Address selection continues to select Local Authority if no LA matched and was changing answer",
+            new Input(
+                QuestionFlowStep.SelectAddress,
+                localAuthorityAutomaticallyMatched: false,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.SelectLocalAuthority),
+        new(
+            "Address selection returns to check answers income if LA matched if EPC is low and was changing answer",
             new Input(
                 QuestionFlowStep.SelectAddress,
                 epcRating: EpcRating.D,
+                localAuthorityAutomaticallyMatched: true,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.CheckAnswers),
         new(
-            "Address selection continues to review EPC if EPC is high and was changing answer",
+            "Address selection continues to review EPC if LA matched if EPC is high and was changing answer",
             new Input(
                 QuestionFlowStep.SelectAddress,
                 epcRating: EpcRating.C,
+                localAuthorityAutomaticallyMatched: true,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.ReviewEpc),
@@ -793,7 +813,8 @@ public class QuestionFlowServiceTests
             IncomeBand? incomeBand = IncomeBand.UnderOrEqualTo36000,
             bool localAuthorityIsCorrect = false,
             string custodianCode = null,
-            QuestionFlowStep? entryPoint = null)
+            QuestionFlowStep? entryPoint = null,
+            bool localAuthorityAutomaticallyMatched = false)
         {
             Page = page;
             Questionnaire = new Questionnaire
@@ -808,7 +829,8 @@ public class QuestionFlowServiceTests
                 LocalAuthorityConfirmed = localAuthorityIsCorrect,
                 CustodianCode = custodianCode ??
                                 LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData
-                                    .LocalAuthorityStatus.Live)
+                                    .LocalAuthorityStatus.Live),
+                LocalAuthorityAutomaticallyMatched = localAuthorityAutomaticallyMatched
             };
             EntryPoint = entryPoint;
         }
