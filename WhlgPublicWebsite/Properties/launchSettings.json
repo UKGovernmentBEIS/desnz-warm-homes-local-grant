@@ -23,7 +23,8 @@
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
+        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation",
+        "ConnectionStrings__PostgreSQLConnection": "UserId=postgres;Password=postgres;Server=localhost;Port=5432;Database=whlgdev;Include Error Detail=true;Pooling=true"
       }
     }
   }
