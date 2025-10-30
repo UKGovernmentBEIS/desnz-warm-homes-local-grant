@@ -291,7 +291,7 @@ internal static class LocalAuthorityStatuses
             { "3115", Live },
             { "2360", Live },
             { "3430", Pending },
-            { "4520", Pending },
+            { "4520", Live },
             { "1780", Live },
             { "1590", Live },
             { "5840", Live },
