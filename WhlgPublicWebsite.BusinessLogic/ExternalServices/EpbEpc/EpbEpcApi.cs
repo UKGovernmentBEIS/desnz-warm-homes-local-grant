@@ -9,6 +9,11 @@ using WhlgPublicWebsite.BusinessLogic.Models;
 
 namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
 {
+    /**
+     * Documented at <see href="https://api-docs.epcregisters.net/#/Home%20Energy%20Retrofit%20Funding/"/>
+     * There is a dropdown at the top left where you can select live/staging API. Select the staging API.
+     * Credentials to use can be found in keeper. Select the retrofit-funding:assessment:fetch scope when authorizing.
+     */
     public class EpbEpcApi : IEpcApi
     {
         private readonly EpbEpcConfiguration config;
