@@ -15,13 +15,13 @@ namespace WhlgPublicWebsite
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            
+
             // Hide that we are using Kestrel for security reasons
             builder.WebHost.ConfigureKestrel(serverOptions => serverOptions.AddServerHeader = false);
-            
+
             var startup = new Startup(builder.Configuration, builder.Environment);
             startup.ConfigureServices(builder.Services);
-            
+
             CultureInfo.CurrentCulture = new CultureInfo("en-GB", false);
 
             var app = builder.Build();
@@ -42,22 +42,24 @@ namespace WhlgPublicWebsite
 
             // Remove deprecated nightly tasks service
             recurringJobManager.RemoveIfExists("Nightly tasks");
-            
+            // Remove testing failing job
+            recurringJobManager.RemoveIfExists("Test failing job");
+
             recurringJobManager.AddOrUpdate<ReferralFollowUpNotificationService>(
                 "Get referrals passed ten day working threshold with no follow up",
                 service => service.SendReferralFollowUpNotifications(),
                 "30 0 * * *"); // at 00:30 every day
-            
+
             recurringJobManager.AddOrUpdate<UnsubmittedReferralRequestsService>(
                 "Write unsubmitted referral requests to csv",
                 service => service.WriteUnsubmittedReferralRequestsToCsv(),
                 "45 0 * * *"); // at 00:45 every day
-            
+
             recurringJobManager.AddOrUpdate<PolicyTeamUpdateService>(
                 "Send policy team update email",
                 service => service.SendPolicyTeamUpdate(),
                 "0 7 * * 1"); // at 07:00 on Monday
-                
+
             recurringJobManager.AddOrUpdate<PendingReferralNotificationService>(
                 "Send monthly pending referral report",
                 service => service.SendPendingReferralNotifications(),

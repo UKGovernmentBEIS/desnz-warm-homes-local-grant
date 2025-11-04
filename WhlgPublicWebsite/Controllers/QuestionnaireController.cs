@@ -420,7 +420,7 @@ public class QuestionnaireController : Controller
     {
         if (!ModelState.IsValid) return await NoFunding_Get(viewModel.EntryPoint);
 
-        var emailAddress = viewModel.EmailAddress.Trim();
+        var emailAddress = viewModel.EmailAddress?.Trim();
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
@@ -467,7 +467,7 @@ public class QuestionnaireController : Controller
     {
         if (!ModelState.IsValid) return await NotParticipating_Get(viewModel.EntryPoint);
         
-        var emailAddress = viewModel.EmailAddress.Trim();
+        var emailAddress = viewModel.EmailAddress?.Trim();
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
@@ -511,7 +511,7 @@ public class QuestionnaireController : Controller
     {
         if (!ModelState.IsValid) return NoLongerParticipating_Get(viewModel.EntryPoint);
         
-        var emailAddress = viewModel.EmailAddress.Trim();
+        var emailAddress = viewModel.EmailAddress?.Trim();
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
@@ -686,7 +686,7 @@ public class QuestionnaireController : Controller
 
         if (!ModelState.IsValid) return await Eligible_Get();
         
-        var emailAddress = viewModel.EmailAddress.Trim();
+        var emailAddress = viewModel.EmailAddress?.Trim();
 
         var questionnaire = await questionnaireService.GenerateReferralAsync(
             viewModel.Name,
@@ -788,7 +788,7 @@ public class QuestionnaireController : Controller
     {
         if (!ModelState.IsValid) return await Ineligible_Get();
         
-        var emailAddress = viewModel.EmailAddress.Trim();
+        var emailAddress = viewModel.EmailAddress?.Trim();
 
         var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
             viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
