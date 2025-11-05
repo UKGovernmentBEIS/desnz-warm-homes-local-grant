@@ -216,14 +216,14 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> SelectAddress_Get(string postcode, string buildingNameOrNumber,
         QuestionFlowStep? entryPoint)
     {
-        var questionnaire = questionnaireService.GetQuestionnaire();
-
         var addresses = await osPlaces.GetAddressesAsync(postcode, buildingNameOrNumber);
+
+        // autofill the postcode if the users presses manual entry, or if the below redirect happens
+        var questionnaire = await questionnaireService.UpdatePostcodeSearched(postcode, entryPoint);
 
         // 100 addresses is too many to show to user, ask for manual entry instead
         if (addresses.Count > 100)
         {
-            TempData["PostcodeSearched"] = postcode;
             return RedirectToNextStep(QuestionFlowStep.ManualAddress, entryPoint);
         }
 
@@ -312,7 +312,7 @@ public class QuestionnaireController : Controller
             AddressLine2 = questionnaire.AddressLine2,
             Town = questionnaire.AddressTown,
             County = questionnaire.AddressCounty,
-            Postcode = questionnaire.AddressPostcode ?? TempData["PostcodeSearched"]?.ToString(),
+            Postcode = questionnaire.AddressPostcode ?? questionnaire.PostcodeSearched,
             BackLink = GetBackUrl(QuestionFlowStep.ManualAddress, questionnaire, entryPoint)
         };
 

@@ -12,6 +12,7 @@ public record Questionnaire
     public Country? Country { get; set; }
     public OwnershipStatus? OwnershipStatus { get; set; }
 
+    public string PostcodeSearched { get; set; }
     public string AddressLine1 { get; set; }
     public string AddressLine2 { get; set; }
     public string AddressTown { get; set; }
