@@ -35,7 +35,7 @@ public class QuestionFlowServiceTests
 
     private static readonly string PendingCustodianCode =
         LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
-    // PC-1849: Reinstate when an LA of takingFutureReferrals is added
+    // DESNZ-1849: Reinstate when an LA of takingFutureReferrals is added
     // private static readonly string TakingFutureReferralsCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals);
 
     [TestCaseSource(nameof(BackTestCases))]
@@ -69,7 +69,7 @@ public class QuestionFlowServiceTests
     {
         // If this test starts failing, this is because we have written tests to cover LAs of this status but couldn't turn them on yet
         // Do the following:
-        // 1. Search the project for "PC-1849" and uncomment the snippets
+        // 1. Search the project for "DESNZ-1849" and uncomment the snippets
         // 2. Change this test to .Should().NotThrow()
         // If in the future we lose all LAs of this status, this test will start failing again. To fix, do the reverse of the above.
         Action act = () =>
@@ -604,7 +604,7 @@ public class QuestionFlowServiceTests
                 custodianCode: PendingCustodianCode
             ),
             QuestionFlowStep.Pending),
-        // PC-1849: Reinstate when an LA of takingFutureReferrals is added
+        // DESNZ-1849: Reinstate when an LA of takingFutureReferrals is added
         // new(
         //     "Check answers continues to taking future referrals if LA is taking future referrals",
         //     new Input(
