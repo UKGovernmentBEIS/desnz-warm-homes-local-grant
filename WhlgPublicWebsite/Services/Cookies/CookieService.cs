@@ -99,7 +99,8 @@ public class CookieService(IOptions<CookieServiceConfiguration> options, ILogger
         List<string> ignoredCookieUrlSections =
         [
             "/cookies", // Cookie settings page doesn't display the banner
-            "/password" // Password page shouldn't display as requests to hide the cookie are also password protected
+            "/password", // Password page shouldn't display as requests to hide the cookie are also password protected
+            "/health-check" // Health check can't use cookie form as CSRF cookies are disabled & the cookie form requires them
         ];
 
         return ignoredCookieUrlSections.Any(urlSection => request.GetEncodedUrl().Contains(urlSection));

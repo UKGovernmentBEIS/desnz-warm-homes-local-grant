@@ -171,6 +171,22 @@ public class CookieServiceTests
         bannerState.Should().Be(BannerState.Hide);
     }
 
+    [Test]
+    public void HidesBannerIfOnHealthCheckPage()
+    {
+        // Arrange
+        var context = new DefaultHttpContext();
+        var request = context.Request;
+        var response = context.Response;
+        request.Path = "/health-check";
+
+        // Act
+        var bannerState = cookieService.GetAndUpdateBannerState(request, response);
+
+        // Assert
+        bannerState.Should().Be(BannerState.Hide);
+    }
+
     [TestCaseSource(nameof(CookieServiceTestCases))]
     public void ShowsBannerIfSettingsAreOutdatedOrMissing(CookieServiceTestCase testCase)
     {
