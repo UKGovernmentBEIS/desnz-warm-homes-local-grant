@@ -67,7 +67,10 @@ public class QuestionnaireService
             questionnaire.AddressCounty != address.County ||
             questionnaire.AddressTown != address.Town ||
             questionnaire.AddressPostcode != address.Postcode)
+        {
             questionnaire = questionnaireUpdater.UpdateAcknowledgedPending(questionnaire, false, entryPoint);
+        }
+
         questionnaire = await questionnaireUpdater.UpdateAddressAsync(questionnaire, address, entryPoint);
         await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;

@@ -146,7 +146,9 @@ public class QuestionFlowService : IQuestionFlowService
 
     private QuestionFlowStep LaStatusSwitchBackDestionation(Questionnaire questionnaire)
     {
-        return questionnaire.Uprn == null ? QuestionFlowStep.ConfirmLocalAuthority : QuestionFlowStep.Address;
+        return questionnaire.LocalAuthorityAutomaticallyMatched == true
+            ? QuestionFlowStep.Address
+            : QuestionFlowStep.ConfirmLocalAuthority;
     }
 
     private QuestionFlowStep ReviewEpcBackDestination()
@@ -273,7 +275,9 @@ public class QuestionFlowService : IQuestionFlowService
 
     private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
     {
-        return LaStatusSwitchForwardDestination(questionnaire, entryPoint);
+        return questionnaire.LocalAuthorityAutomaticallyMatched
+            ? LaStatusSwitchForwardDestination(questionnaire, entryPoint)
+            : QuestionFlowStep.SelectLocalAuthority;
     }
 
     private QuestionFlowStep ManualAddressForwardDestination()
