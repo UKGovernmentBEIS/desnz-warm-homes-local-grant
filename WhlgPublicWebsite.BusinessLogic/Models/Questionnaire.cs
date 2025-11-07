@@ -12,6 +12,7 @@ public record Questionnaire
     public Country? Country { get; set; }
     public OwnershipStatus? OwnershipStatus { get; set; }
 
+    public string PostcodeSearched { get; set; }
     public string AddressLine1 { get; set; }
     public string AddressLine2 { get; set; }
     public string AddressTown { get; set; }
@@ -19,6 +20,7 @@ public record Questionnaire
     public string AddressPostcode { get; set; }
 
     public string CustodianCode { get; set; }
+    public bool LocalAuthorityAutomaticallyMatched { get; set; }
     public bool? LocalAuthorityConfirmed { get; set; }
 
     public string Uprn { get; set; } // Should be populated for most questionnaires, but not 100% guaranteed

@@ -11,6 +11,7 @@ public static class QuestionnaireHelper
         {
             Country = Country.England,
             OwnershipStatus = OwnershipStatus.OwnerOccupancy,
+            PostcodeSearched = "PST C0D",
             AddressLine1 = "Address Line 1",
             AddressLine2 = "Address Line 2",
             AddressTown = "A Town",

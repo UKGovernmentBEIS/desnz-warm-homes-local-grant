@@ -59,6 +59,14 @@ public class QuestionnaireService
         return questionnaire;
     }
 
+    public async Task<Questionnaire> UpdatePostcodeSearched(string postcodeSearched, QuestionFlowStep? entryPoint)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdatePostcodeSearched(questionnaire, postcodeSearched, entryPoint);
+        await SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+
     public async Task<Questionnaire> UpdateAddressAsync(Address address, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();
@@ -67,7 +75,10 @@ public class QuestionnaireService
             questionnaire.AddressCounty != address.County ||
             questionnaire.AddressTown != address.Town ||
             questionnaire.AddressPostcode != address.Postcode)
+        {
             questionnaire = questionnaireUpdater.UpdateAcknowledgedPending(questionnaire, false, entryPoint);
+        }
+
         questionnaire = await questionnaireUpdater.UpdateAddressAsync(questionnaire, address, entryPoint);
         await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;
