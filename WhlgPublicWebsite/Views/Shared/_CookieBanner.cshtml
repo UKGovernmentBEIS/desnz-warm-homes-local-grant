@@ -28,6 +28,7 @@
                                <p class="govuk-body">We use some essential cookies to make this service work.</p>
                                <p class="govuk-body">We'd also like to use analytics cookies so we can understand how you use the service and make improvements.</p>
                             </text>,
+                    Hidden = bannerState is not BannerState.ShowBanner,
                     Actions = new List<CookieBannerMessageActionViewModel>
                     {
                         new()
@@ -62,6 +63,7 @@
                                    at any time.
                                </p>
                             </text>,
+                    Hidden = bannerState is not BannerState.ShowAccepted and not BannerState.ShowRejected,
                     Actions = new List<CookieBannerMessageActionViewModel>
                     {
                         new()
