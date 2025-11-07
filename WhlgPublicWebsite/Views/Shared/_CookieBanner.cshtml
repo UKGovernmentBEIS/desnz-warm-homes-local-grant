@@ -63,7 +63,7 @@
                                    at any time.
                                </p>
                             </text>,
-                    Hidden = bannerState is not BannerState.ShowAccepted and not BannerState.ShowRejected,
+                    Hidden = bannerState is (not BannerState.ShowAccepted and not BannerState.ShowRejected),
                     Actions = new List<CookieBannerMessageActionViewModel>
                     {
                         new()
