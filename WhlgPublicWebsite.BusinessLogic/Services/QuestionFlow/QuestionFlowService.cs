@@ -33,6 +33,7 @@ public class QuestionFlowService : IQuestionFlowService
             QuestionFlowStep.NotParticipating => NotParticipatingBackDestination(questionnaire),
             QuestionFlowStep.NoFunding => NoFundingBackDestination(questionnaire),
             QuestionFlowStep.NoLongerParticipating => NoLongerParticipatingBackDestination(questionnaire),
+            QuestionFlowStep.ReferralsPaused => ReferralsPausedBackDestination(questionnaire),
             QuestionFlowStep.TakingFutureReferrals => TakingFutureReferralsBackDestination(),
             QuestionFlowStep.Pending => PendingBackDestination(),
             QuestionFlowStep.ManualAddress => ManualAddressBackDestination(),
@@ -65,6 +66,7 @@ public class QuestionFlowService : IQuestionFlowService
             QuestionFlowStep.NotParticipating => NotParticipatingForwardDestination(),
             QuestionFlowStep.NoFunding => NoFundingForwardDestination(),
             QuestionFlowStep.NoLongerParticipating => NoLongerParticipatingForwardDestination(),
+            QuestionFlowStep.ReferralsPaused => ReferralsPausedForwardDestination(),
             QuestionFlowStep.TakingFutureReferrals =>
                 TakingFutureReferralsForwardDestination(),
             QuestionFlowStep.Pending => PendingForwardDestination(),
@@ -173,6 +175,11 @@ public class QuestionFlowService : IQuestionFlowService
         return LaStatusSwitchBackDestionation(questionnaire);
     }
 
+    private QuestionFlowStep ReferralsPausedBackDestination(Questionnaire questionnaire)
+    {
+        return LaStatusSwitchBackDestionation(questionnaire);
+    }
+
     private QuestionFlowStep HouseholdIncomeBackDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
     {
         if (entryPoint is QuestionFlowStep.HouseholdIncome)
@@ -253,16 +260,18 @@ public class QuestionFlowService : IQuestionFlowService
 
     private QuestionFlowStep LaStatusSwitchForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
     {
-        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NoFunding)
-            return QuestionFlowStep.NoFunding;
-#pragma warning disable CS0618 // Type or member is obsolete
-        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NotParticipating)
-#pragma warning restore CS0618 // Type or member is obsolete
-            return QuestionFlowStep.NotParticipating;
-#pragma warning disable CS0618 // Type or member is obsolete
-        if (questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.NoLongerParticipating)
-#pragma warning restore CS0618 // Type or member is obsolete
-            return QuestionFlowStep.NoLongerParticipating;
+        switch (questionnaire.LocalAuthorityStatus)
+        {
+            case LocalAuthorityData.LocalAuthorityStatus.NoFunding:
+                return QuestionFlowStep.NoFunding;
+            case LocalAuthorityData.LocalAuthorityStatus.NotParticipating:
+                return QuestionFlowStep.NotParticipating;
+            case LocalAuthorityData.LocalAuthorityStatus.NoLongerParticipating:
+                return QuestionFlowStep.NoLongerParticipating;
+            case LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused:
+                return QuestionFlowStep.ReferralsPaused;
+        }
+
         if (questionnaire.FoundEpcBandIsTooHigh)
             return QuestionFlowStep.ReviewEpc;
         // If the LA has changed and the income band the user selected previously is no longer valid then we don't
@@ -312,6 +321,11 @@ public class QuestionFlowService : IQuestionFlowService
     private QuestionFlowStep NoLongerParticipatingForwardDestination()
     {
         return QuestionFlowStep.NoLongerParticipating;
+    }
+
+    private QuestionFlowStep ReferralsPausedForwardDestination()
+    {
+        return QuestionFlowStep.ReferralsPaused;
     }
 
     private QuestionFlowStep ReviewEpcForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)

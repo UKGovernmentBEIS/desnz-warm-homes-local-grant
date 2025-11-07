@@ -21,6 +21,7 @@ public enum QuestionFlowStep
     NoFunding,
     NotParticipating,
     NoLongerParticipating,
+    ReferralsPaused,
     TakingFutureReferrals,
     Pending,
     HouseholdIncome,

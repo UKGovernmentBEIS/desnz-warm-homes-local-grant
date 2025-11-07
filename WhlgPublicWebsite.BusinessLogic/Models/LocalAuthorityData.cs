@@ -9,6 +9,7 @@ public class LocalAuthorityData
         NoFunding,
         NotParticipating,
         NoLongerParticipating,
+        ReferralsPaused,
         Pending,
         TakingFutureReferrals,
         Live
