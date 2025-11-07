@@ -59,6 +59,14 @@ public class QuestionnaireService
         return questionnaire;
     }
 
+    public async Task<Questionnaire> UpdatePostcodeSearched(string postcodeSearched, QuestionFlowStep? entryPoint)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdatePostcodeSearched(questionnaire, postcodeSearched, entryPoint);
+        await SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+
     public async Task<Questionnaire> UpdateAddressAsync(Address address, QuestionFlowStep? entryPoint)
     {
         var questionnaire = GetQuestionnaire();

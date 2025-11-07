@@ -47,6 +47,13 @@ public class QuestionnaireUpdater
             QuestionFlowStep.OwnershipStatus, entryPoint);
     }
 
+    public Questionnaire UpdatePostcodeSearched(Questionnaire questionnaire, string postcodeSearched,
+        QuestionFlowStep? entryPoint)
+    {
+        return UpdateQuestionnaire(q => q.PostcodeSearched = postcodeSearched, questionnaire,
+            QuestionFlowStep.Address, entryPoint);
+    }
+
     public async Task<Questionnaire> UpdateAddressAsync(Questionnaire questionnaire, Address address,
         QuestionFlowStep? entryPoint)
     {
