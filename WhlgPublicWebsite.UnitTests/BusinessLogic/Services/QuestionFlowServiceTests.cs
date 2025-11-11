@@ -191,6 +191,18 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
         new(
+            "Referrals paused goes back to Address if LA matched",
+            new Input(
+                QuestionFlowStep.ReferralsPaused, localAuthorityAutomaticallyMatched: true
+            ),
+            QuestionFlowStep.Address),
+        new(
+            "Referrals paused goes back to confirm local authority if no LA matched",
+            new Input(
+                QuestionFlowStep.ReferralsPaused, localAuthorityAutomaticallyMatched: false
+            ),
+            QuestionFlowStep.ConfirmLocalAuthority),
+        new(
             "Household income goes back to Address if LA matched",
             new Input(
                 QuestionFlowStep.HouseholdIncome, localAuthorityAutomaticallyMatched: true
@@ -366,16 +378,16 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
         new(
-            "Referrals paused goes back to Address if UPRN found if was changing answer",
+            "Referrals paused goes back to Address if LA matched if was changing answer",
             new Input(
-                QuestionFlowStep.ReferralsPaused, uprn: "100023336956",
+                QuestionFlowStep.ReferralsPaused, localAuthorityAutomaticallyMatched: true,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.Address),
         new(
-            "Referrals paused goes back to confirm local authority if no UPRN found if was changing answer",
+            "Referrals paused goes back to confirm local authority if no LA matched if was changing answer",
             new Input(
-                QuestionFlowStep.ReferralsPaused, uprn: null,
+                QuestionFlowStep.ReferralsPaused, localAuthorityAutomaticallyMatched: false,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
