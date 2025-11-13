@@ -41,6 +41,7 @@ function getLaStatus(localAuthority) {
         case "No Longer Participating":
         case "NoLongerParticipating":
             return "NoLongerParticipating";
+        case "Referrals Paused":
         case "ReferralsPaused":
             return "ReferralsPaused";
         default:
