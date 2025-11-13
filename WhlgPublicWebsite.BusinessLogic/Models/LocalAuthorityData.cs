@@ -102,7 +102,7 @@ public class LocalAuthorityData
         { "4210", new LocalAuthorityDetails("Bury Metropolitan Borough Council", LocalAuthorityStatus.NotParticipating, "https://www.bury.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater Manchester Combined Authority") },
         { "6920", new LocalAuthorityDetails("Caerphilly County Borough Council", LocalAuthorityStatus.NoFunding, "https://www.caerphilly.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "4710", new LocalAuthorityDetails("Calderdale Council", LocalAuthorityStatus.Live, "https://new.calderdale.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
-        { "505", new LocalAuthorityDetails("Cambridge City Council", LocalAuthorityStatus.ReferralsPaused, "https://www.cambridge.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cambridge City Council") },
+        { "505", new LocalAuthorityDetails("Cambridge City Council", LocalAuthorityStatus.Live, "https://www.cambridge.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cambridge City Council") },
         { "5210", new LocalAuthorityDetails("Camden Council", LocalAuthorityStatus.Live, "https://www.camden.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
         { "3405", new LocalAuthorityDetails("Cannock Chase District Council", LocalAuthorityStatus.Pending, "https://www.cannockchasedc.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Nottingham City Council") },
         { "2210", new LocalAuthorityDetails("Canterbury City Council", LocalAuthorityStatus.Live, "https://www.canterbury.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
