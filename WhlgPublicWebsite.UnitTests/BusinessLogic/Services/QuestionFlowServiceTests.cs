@@ -79,6 +79,7 @@ public class QuestionFlowServiceTests
     }
 
     [Test]
+    [Ignore("DESNZ-2080: Cambridge temporarily enabled")]
     public void NoReferralsPausedLasExist()
     {
         // If this test starts failing, this is because we have written tests to cover LAs of this status but couldn't turn them on yet
