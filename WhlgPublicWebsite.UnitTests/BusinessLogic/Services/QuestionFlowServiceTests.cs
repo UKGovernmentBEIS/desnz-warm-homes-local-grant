@@ -29,9 +29,14 @@ public class QuestionFlowServiceTests
         LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
             .NotParticipating);
 
+    // DESNZ-2080: Comment out when all LAs of ReferralsPaused are removed
+    private static readonly string ReferralsPausedCustodianCode =
+        LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
+            .ReferralsPaused);
+
     private static readonly string PendingCustodianCode =
         LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
-    // PC-1849: Reinstate when an LA of takingFutureReferrals is added
+    // DESNZ-1849: Reinstate when an LA of takingFutureReferrals is added
     // private static readonly string TakingFutureReferralsCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals);
 
     [TestCaseSource(nameof(BackTestCases))]
@@ -58,6 +63,34 @@ public class QuestionFlowServiceTests
 
         // Assert
         output.Should().Be(testCase.ExpectedOutput);
+    }
+
+    [Test]
+    public void NoTakingFutureReferralsLasExist()
+    {
+        // If this test starts failing, this is because we have written tests to cover LAs of this status but couldn't turn them on yet
+        // Do the following:
+        // 1. Search the project for "DESNZ-1849" and uncomment the snippets
+        // 2. Change this test to .Should().NotThrow()
+        // If in the future we lose all LAs of this status, this test will start failing again. To fix, do the reverse of the above.
+        Action act = () =>
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
+                .TakingFutureReferrals);
+        act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Test]
+    public void NoReferralsPausedLasExist()
+    {
+        // If this test starts failing, this is because we have written tests to cover LAs of this status but couldn't turn them on yet
+        // Do the following:
+        // 1. Search the project for "DESNZ-2080" and uncomment the snippets
+        // 2. Change this test to .Should().NotThrow()
+        // If in the future we lose all LAs of this status, this test will start failing again. To fix, do the reverse of the above.
+        Action act = () =>
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
+                .ReferralsPaused);
+        act.Should().NotThrow<InvalidOperationException>();
     }
 
     private static QuestionFlowServiceTestCase[] BackTestCases =
@@ -156,6 +189,18 @@ public class QuestionFlowServiceTests
             "Not participating goes back to confirm local authority if no LA matched",
             new Input(
                 QuestionFlowStep.NotParticipating, localAuthorityAutomaticallyMatched: false
+            ),
+            QuestionFlowStep.ConfirmLocalAuthority),
+        new(
+            "Referrals paused goes back to Address if LA matched",
+            new Input(
+                QuestionFlowStep.ReferralsPaused, localAuthorityAutomaticallyMatched: true
+            ),
+            QuestionFlowStep.Address),
+        new(
+            "Referrals paused goes back to confirm local authority if no LA matched",
+            new Input(
+                QuestionFlowStep.ReferralsPaused, localAuthorityAutomaticallyMatched: false
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
         new(
@@ -330,6 +375,20 @@ public class QuestionFlowServiceTests
             "Not participating goes back to confirm local authority if no LA matched if was changing answer",
             new Input(
                 QuestionFlowStep.NoFunding, localAuthorityAutomaticallyMatched: false,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.ConfirmLocalAuthority),
+        new(
+            "Referrals paused goes back to Address if LA matched if was changing answer",
+            new Input(
+                QuestionFlowStep.ReferralsPaused, localAuthorityAutomaticallyMatched: true,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.Address),
+        new(
+            "Referrals paused goes back to confirm local authority if no LA matched if was changing answer",
+            new Input(
+                QuestionFlowStep.ReferralsPaused, localAuthorityAutomaticallyMatched: false,
                 entryPoint: QuestionFlowStep.Address
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
@@ -523,6 +582,15 @@ public class QuestionFlowServiceTests
                 custodianCode: NoFundingCustodianCode
             ),
             QuestionFlowStep.NoFunding),
+        // DESNZ-2080: Comment out when all LAs of ReferralsPaused are removed
+        new(
+            "Confirm local authority continues to referrals paused if authority is paused",
+            new Input(
+                QuestionFlowStep.ConfirmLocalAuthority,
+                localAuthorityIsCorrect: true,
+                custodianCode: ReferralsPausedCustodianCode
+            ),
+            QuestionFlowStep.ReferralsPaused),
         new(
             "Confirm local authority continues to not participating if authority is participating",
             new Input(
@@ -559,7 +627,7 @@ public class QuestionFlowServiceTests
                 custodianCode: PendingCustodianCode
             ),
             QuestionFlowStep.Pending),
-        // PC-1849: Reinstate when an LA of takingFutureReferrals is added
+        // DESNZ-1849: Reinstate when an LA of takingFutureReferrals is added
         // new(
         //     "Check answers continues to taking future referrals if LA is taking future referrals",
         //     new Input(

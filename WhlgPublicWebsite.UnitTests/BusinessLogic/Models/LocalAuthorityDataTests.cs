@@ -25,7 +25,7 @@ namespace Tests.BusinessLogic.Models;
  * The longer term ideal state would be to move this data into the database, but these tests provide a defensive
  * mitigation until that is possible.
  *
- * For full details, see the report attached to: https://beisdigital.atlassian.net/browse/PC-851
+ * For full details, see the report attached to: https://beisdigital.atlassian.net/browse/DESNZ-851
  */
 [TestFixture]
 public class LocalAuthorityDataTests

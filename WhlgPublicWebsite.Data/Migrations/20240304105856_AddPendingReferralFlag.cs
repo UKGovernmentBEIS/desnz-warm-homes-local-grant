@@ -18,8 +18,8 @@ namespace WhlgPublicWebsite.Data.Migrations
                 UPDATE ""ReferralRequests"" 
                 SET ""WasSubmittedToPendingLocalAuthority"" = TRUE 
                 -- It became possible for users to submit referral requests to pending local authorities with the 
-                -- release of PC-775 on 2024-02-27, so we only consider referral requests since then.
-                -- See: https://beisdigital.atlassian.net/browse/PC-775
+                -- release of DESNZ-775 on 2024-02-27, so we only consider referral requests since then.
+                -- See: https://softwiretech.atlassian.net/browse/DESNZ-775
                 WHERE ""RequestDate"" >= '2024-02-27' 
                 -- This is a list of custodian codes for local authorities that were pending on 2024-02-27. 
                 AND ""CustodianCode"" IN (
