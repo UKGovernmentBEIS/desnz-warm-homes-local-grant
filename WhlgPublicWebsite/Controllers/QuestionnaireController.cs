@@ -539,6 +539,51 @@ public class QuestionnaireController : Controller
         return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
 
+    [HttpGet("referrals-paused")]
+    public async Task<IActionResult> ReferralsPaused_Get(QuestionFlowStep? entryPoint,
+        bool emailPreferenceSubmitted = false)
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, null);
+
+        var viewModel = new ReferralsPausedViewModel
+        {
+            LocalAuthorityName = questionnaire.LocalAuthorityName,
+            Submitted = emailPreferenceSubmitted,
+            EmailAddress = questionnaire.NotificationEmailAddress,
+            CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
+            EntryPoint = entryPoint,
+            BackLink = GetBackUrl(QuestionFlowStep.NoFunding, questionnaire, entryPoint)
+        };
+
+        return View("ReferralsPaused", viewModel);
+    }
+
+    [HttpPost("referrals-paused")]
+    public async Task<IActionResult> ReferralsPaused_Post(ReferralsPausedViewModel viewModel)
+    {
+        if (!ModelState.IsValid) return await NoFunding_Get(viewModel.EntryPoint);
+
+        var emailAddress = viewModel.EmailAddress?.Trim();
+
+        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
+            viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
+            emailAddress
+        );
+
+        var nextStep =
+            questionFlowService.NextStep(QuestionFlowStep.ReferralsPaused, questionnaire, viewModel.EntryPoint);
+        var forwardArgs = GetActionArgumentsForQuestion(
+            nextStep,
+            viewModel.EntryPoint,
+            new Dictionary<string, object>
+            {
+                { "emailPreferenceSubmitted", true }
+            }
+        );
+        return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
+    }
+
     [HttpGet("pending")]
     public IActionResult Pending_Get(QuestionFlowStep? entryPoint)
     {
@@ -882,6 +927,8 @@ public class QuestionnaireController : Controller
                 GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.NoLongerParticipating => new PathByActionArguments(nameof(NoLongerParticipating_Get),
                 "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.ReferralsPaused => new PathByActionArguments(nameof(ReferralsPaused_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.TakingFutureReferrals => new PathByActionArguments(nameof(TakingFutureReferrals_Get),
                 "Questionnaire", GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.Pending => new PathByActionArguments(nameof(Pending_Get), "Questionnaire",

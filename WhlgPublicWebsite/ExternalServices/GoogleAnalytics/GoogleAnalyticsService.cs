@@ -16,7 +16,7 @@ public class GoogleAnalyticsService
     private readonly ILogger<GoogleAnalyticsService> logger;
 
     // If these strings are ever updated you will need to update the Google Analytics custom events on the GA site to match.
-    // TODO: PC-1564 - Rename boiler_question_viewed event once Google Analytics is set up
+    // TODO: DESNZ-1564 - Rename boiler_question_viewed event once Google Analytics is set up
     private const string EventNameFirstQuestionViewed = "boiler_question_viewed";
     private const string EventNameQuestionnaireCompleted = "questionnaire_completed";
     private const string EventNameReferralGenerated = "referral_generated";
