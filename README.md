@@ -1,4 +1,4 @@
-# Warm Homes: Local Grant BETA 
+# Warm Homes: Local Grant BETA
 
 This repository was cloned from [HUG2](https://github.com/UKGovernmentBEIS/desnz-home-energy-retrofit-beta) in December 2024, keeping all previous commits.
 
