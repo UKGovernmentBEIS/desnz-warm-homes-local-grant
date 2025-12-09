@@ -4,7 +4,7 @@
 1. Setup node and install dependencies
    - If you have node already installed:
      1. Open a terminal in the `local-authority-information-generators` directory
-     2. Run `npm install`
+     2. Run `yarn`
    - If you do not have node installed:
      1. Reopen this folder in vscode, for instance with `code scripts\local-authority-information-generators`
      2. Reopen this folder in dev container
