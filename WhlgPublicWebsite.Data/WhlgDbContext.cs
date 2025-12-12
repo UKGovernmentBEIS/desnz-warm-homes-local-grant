@@ -12,6 +12,7 @@ public class WhlgDbContext(DbContextOptions<WhlgDbContext> options) : DbContext(
     public DbSet<ReferralRequestFollowUp> ReferralRequestFollowUps { get; set; }
     public DbSet<Session> Sessions { get; set; }
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
+    public DbSet<EmergencyMaintenanceHistory> EmergencyMaintenanceHistories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -19,6 +20,7 @@ public class WhlgDbContext(DbContextOptions<WhlgDbContext> options) : DbContext(
         SetupContactDetails(modelBuilder);
         SetupReferralRequestFollowUps(modelBuilder);
         SetupSession(modelBuilder);
+        SetupEmergencyMaintenanceHistory(modelBuilder);
     }
 
     private void SetupReferralRequests(ModelBuilder modelBuilder)
@@ -88,6 +90,22 @@ public class WhlgDbContext(DbContextOptions<WhlgDbContext> options) : DbContext(
 
         // Session row versioning
         AddRowVersionColumn(modelBuilder.Entity<Session>());
+    }
+
+    private void SetupEmergencyMaintenanceHistory(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<EmergencyMaintenanceHistory>()
+            .Property(emh => emh.Id)
+            .ValueGeneratedOnAdd();
+        modelBuilder.Entity<EmergencyMaintenanceHistory>()
+            .HasKey("Id");
+        modelBuilder.Entity<EmergencyMaintenanceHistory>()
+            .Property(emh => emh.ChangeDate)
+            .HasColumnType("timestamp with time zone");
+        modelBuilder.Entity<EmergencyMaintenanceHistory>()
+            .HasIndex(emh => emh.ChangeDate);
+
+        AddRowVersionColumn(modelBuilder.Entity<EmergencyMaintenanceHistory>());
     }
 
     private void AddRowVersionColumn<T>(EntityTypeBuilder<T> builder) where T : class, IEntityWithRowVersioning
