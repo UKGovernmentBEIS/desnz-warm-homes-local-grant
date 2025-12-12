@@ -34,6 +34,7 @@ public record Questionnaire
     /// See <seealso cref="WhlgPublicWebsite.BusinessLogic.Services.EligiblePostcode.EligiblePostcodeService"/>
     /// </summary>
     public bool? IsImdPostcode { get; set; }
+
     public bool? AcknowledgedPending { get; set; }
     public bool? AcknowledgedFutureReferral { get; set; }
     public IncomeBand? IncomeBand { get; set; }
@@ -55,10 +56,6 @@ public record Questionnaire
     public string ConfirmationEmailAddress { get; set; }
 
     public Questionnaire UneditedData { get; set; }
-
-    public bool IsEligibleForWhlg =>
-        (IncomeIsTooHigh, EpcIsTooHigh, Country, OwnershipStatus) is
-        (false, false, Enums.Country.England, Enums.OwnershipStatus.OwnerOccupancy);
 
     public string LocalAuthorityName
     {
@@ -179,6 +176,94 @@ public record Questionnaire
         && LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[CustodianCode].IncomeBandOptions
             .Contains(IncomeBand.Value);
 
+    /**
+     * This function is used as a check of last resort. We normally expect the routing to send to ineligible pages where needed
+     * We check this at some key points in the flow to be sure that ineligible referrals aren't submitted
+     * e.g. by the user editing the URL
+     */
+    public QuestionnaireStatus QuestionnaireStatus
+    {
+        get
+        {
+            List<RequiredQuestion> unansweredQuestions = [];
+
+            // If the following questions were not answered, we should not let the user submit the form as we cannot determine their eligibility
+            if (Country is null)
+            {
+                unansweredQuestions.Add(RequiredQuestion.Country);
+            }
+
+            if (OwnershipStatus is null)
+            {
+                unansweredQuestions.Add(RequiredQuestion.OwnershipStatus);
+            }
+
+            if (AddressLine1 is null)
+            {
+                unansweredQuestions.Add(RequiredQuestion.Address);
+            }
+
+            if (CustodianCode is null || LocalAuthorityConfirmed is null)
+            {
+                unansweredQuestions.Add(RequiredQuestion.LocalAuthority);
+            }
+
+            if (EpcIsTooHigh && EpcDetailsAreCorrect is null)
+            {
+                unansweredQuestions.Add(RequiredQuestion.Epc);
+            }
+
+            if (IncomeBand is null)
+            {
+                unansweredQuestions.Add(RequiredQuestion.Income);
+            }
+
+            if (unansweredQuestions.Count > 0)
+            {
+                return new IncompleteQuestionnaireStatus
+                    { UnansweredQuestions = unansweredQuestions };
+            }
+
+            // Answers that mean the user is ineligible and should be returned to the relevant question page
+            switch (Country)
+            {
+                case CountryEnum.Wales:
+                    return new IneligibleQuestionnaireStatus { IneligibleFlowStep = QuestionFlowStep.IneligibleWales };
+                case CountryEnum.Scotland:
+                    return new IneligibleQuestionnaireStatus
+                        { IneligibleFlowStep = QuestionFlowStep.IneligibleScotland };
+                case CountryEnum.NorthernIreland:
+                    return new IneligibleQuestionnaireStatus
+                        { IneligibleFlowStep = QuestionFlowStep.IneligibleNorthernIreland };
+            }
+
+            if (OwnershipStatus is OwnershipStatusEnum.Landlord or OwnershipStatusEnum.PrivateTenancy)
+            {
+                return new IneligibleQuestionnaireStatus { IneligibleFlowStep = QuestionFlowStep.IneligibleTenure };
+            }
+
+            switch (LocalAuthorityStatus)
+            {
+                case LocalAuthorityData.LocalAuthorityStatus.NoFunding:
+                    return new IneligibleQuestionnaireStatus { IneligibleFlowStep = QuestionFlowStep.NoFunding };
+                case LocalAuthorityData.LocalAuthorityStatus.NotParticipating:
+                    return new IneligibleQuestionnaireStatus { IneligibleFlowStep = QuestionFlowStep.NotParticipating };
+                case LocalAuthorityData.LocalAuthorityStatus.NoLongerParticipating:
+                    return new IneligibleQuestionnaireStatus
+                        { IneligibleFlowStep = QuestionFlowStep.NoLongerParticipating };
+                case LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused:
+                    return new IneligibleQuestionnaireStatus { IneligibleFlowStep = QuestionFlowStep.ReferralsPaused };
+            }
+
+            if (EpcIsTooHigh || IncomeIsTooHigh)
+            {
+                return new IneligibleQuestionnaireStatus { IneligibleFlowStep = QuestionFlowStep.Ineligible };
+            }
+
+            return new EligibleQuestionnaireStatus();
+        }
+    }
+
     public void CreateUneditedData()
     {
         UneditedData = new Questionnaire();
@@ -215,5 +300,46 @@ public record Questionnaire
                 propertyInfo.SetValue(other, propertyInfo.GetValue(this));
             }
         }
+    }
+}
+
+public abstract class QuestionnaireStatus;
+
+public class IncompleteQuestionnaireStatus : QuestionnaireStatus
+{
+    public IEnumerable<RequiredQuestion> UnansweredQuestions { get; init; }
+}
+
+public class IneligibleQuestionnaireStatus : QuestionnaireStatus
+{
+    public QuestionFlowStep IneligibleFlowStep { get; init; }
+}
+
+public class EligibleQuestionnaireStatus : QuestionnaireStatus;
+
+public enum RequiredQuestion
+{
+    Country,
+    OwnershipStatus,
+    Address,
+    LocalAuthority,
+    Epc,
+    Income
+}
+
+public static class QuestionnaireStatusHelper
+{
+    public static string ToErrorMessage(this RequiredQuestion requiredQuestion)
+    {
+        return requiredQuestion switch
+        {
+            RequiredQuestion.Country => "Select which country the property is located in",
+            RequiredQuestion.OwnershipStatus => "Select your ownership status of the property",
+            RequiredQuestion.Address => "Select the address of your property",
+            RequiredQuestion.LocalAuthority => "Select the Local Authority the property is located in",
+            RequiredQuestion.Epc => "Select whether the EPC is correct for the property",
+            RequiredQuestion.Income => "Select your household income",
+            _ => throw new ArgumentOutOfRangeException(nameof(requiredQuestion))
+        };
     }
 }
