@@ -33,20 +33,20 @@ public class QuestionnaireTests
             propertyInfo.GetValue(questionnaire.UneditedData).Should().NotBeNull();
         }
     }
-    
+
     [Test]
     public void UneditedData_WhenCommitEdits_UneditedDataIsNull()
     {
         // Arrange
         var questionnaire = QuestionnaireHelper.InitializeQuestionnaire();
-        
+
         // Act
         questionnaire.CommitEdits();
-        
+
         // Assert
         questionnaire.UneditedData.Should().BeNull();
     }
-    
+
     [Test]
     public void EffectiveEpcBand_WithNoEpcDetails_ReturnsUnknown()
     {
@@ -56,14 +56,14 @@ public class QuestionnaireTests
             EpcDetailsAreCorrect = null,
             EpcDetails = null
         };
-        
+
         // Act
         var result = questionnaire.EffectiveEpcBand;
-        
+
         // Assert
         result.Should().Be(EpcRating.Unknown);
     }
-    
+
     [Test]
     public void EffectiveEpcBand_ForIncorrectEpcDetails_IgnoresEpcDetails()
     {
@@ -76,10 +76,10 @@ public class QuestionnaireTests
                 EpcRating = EpcRating.A
             }
         };
-        
+
         // Act
         var result = questionnaire.EffectiveEpcBand;
-        
+
         // Assert
         result.Should().Be(EpcRating.Unknown);
     }
@@ -96,14 +96,14 @@ public class QuestionnaireTests
                 EpcRating = EpcRating.A
             }
         };
-        
+
         // Act
         var result = questionnaire.EffectiveEpcBand;
-        
+
         // Assert
         result.Should().Be(EpcRating.Unknown);
     }
-    
+
     [Test]
     public void EffectiveEpcBand_ForCorrectEpcDetails_UsesEpcDetailsBand()
     {
@@ -116,14 +116,14 @@ public class QuestionnaireTests
                 EpcRating = EpcRating.A
             }
         };
-        
+
         // Act
         var result = questionnaire.EffectiveEpcBand;
-        
+
         // Assert
         result.Should().Be(EpcRating.A);
     }
-    
+
     [Test]
     public void EffectiveEpcBand_ForExpiredEpcDetails_ReturnsExpired()
     {
@@ -137,14 +137,14 @@ public class QuestionnaireTests
                 ExpiryDate = new DateTime(2010, 01, 01)
             }
         };
-        
+
         // Act
         var result = questionnaire.EffectiveEpcBand;
-        
+
         // Assert
         result.Should().Be(EpcRating.Expired);
     }
-    
+
     [Test]
     public void EffectiveEpcBand_ForEpcDetailsWithNullRating_ReturnsUnknown()
     {
@@ -157,14 +157,14 @@ public class QuestionnaireTests
                 EpcRating = null
             }
         };
-        
+
         // Act
         var result = questionnaire.EffectiveEpcBand;
-        
+
         // Assert
         result.Should().Be(EpcRating.Unknown);
     }
-    
+
     [TestCase(EpcRating.A, true)]
     [TestCase(EpcRating.B, true)]
     [TestCase(EpcRating.C, true)]
@@ -182,14 +182,14 @@ public class QuestionnaireTests
                 EpcRating = rating
             }
         };
-        
+
         // Act
         var result = questionnaire.FoundEpcBandIsTooHigh;
-        
+
         // Assert
         result.Should().Be(expectedTooHighValue);
     }
-    
+
     [Test]
     public void FoundEpcBandIsTooHigh_ForMissingEpcDetails_ReturnsFalse()
     {
@@ -198,14 +198,14 @@ public class QuestionnaireTests
         {
             EpcDetails = null
         };
-        
+
         // Act
         var result = questionnaire.FoundEpcBandIsTooHigh;
-        
+
         // Assert
         result.Should().Be(false);
     }
-    
+
     [Test]
     public void FoundEpcBandIsTooHigh_ForMissingEpcBand_ReturnsFalse()
     {
@@ -217,14 +217,14 @@ public class QuestionnaireTests
                 EpcRating = null
             }
         };
-        
+
         // Act
         var result = questionnaire.FoundEpcBandIsTooHigh;
-        
+
         // Assert
         result.Should().Be(false);
     }
-    
+
     [Test]
     public void FoundEpcBandIsTooHigh_ForExpiredEpc_ReturnsFalse()
     {
@@ -237,36 +237,31 @@ public class QuestionnaireTests
                 ExpiryDate = DateTime.MinValue
             }
         };
-        
+
         // Act
         var result = questionnaire.FoundEpcBandIsTooHigh;
-        
+
         // Assert
         result.Should().Be(false);
     }
 
-    [TestCase( Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, true)] // Eligible low income
-    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, null, null, false, IncomeBand.UnderOrEqualTo36000, true)] // Eligible no EPC found
-    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.No, EpcRating.A, false, IncomeBand.UnderOrEqualTo36000, true)] // Eligible wrong EPC found
-    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Unknown, EpcRating.A, false, IncomeBand.UnderOrEqualTo36000, true)] // Eligible unsure EPC found
-    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, true, IncomeBand.GreaterThan36000, true)] // Eligible high income but IMD postcode
-    [TestCase(Country.Scotland, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible country
-    [TestCase(Country.Wales, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible country
-    [TestCase(Country.NorthernIreland, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible country
-    [TestCase(Country.England, OwnershipStatus.Landlord, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible ownership
-    [TestCase(Country.England, OwnershipStatus.PrivateTenancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible ownership
-    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.A, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible EPC rating
-    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.B, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible EPC rating
-    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.C, false, IncomeBand.UnderOrEqualTo36000, false)] // Ineligible EPC rating
-    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false, IncomeBand.GreaterThan36000, false)] // Ineligible high income
-    public void IsEligibleForWhlg_ForVariousAnswers_IsCorrect(
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false,
+        IncomeBand.UnderOrEqualTo36000)] // Eligible low income
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, null, null, false,
+        IncomeBand.UnderOrEqualTo36000)] // Eligible no EPC found
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.No, EpcRating.A, false,
+        IncomeBand.UnderOrEqualTo36000)] // Eligible wrong EPC found
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Unknown, EpcRating.A, false,
+        IncomeBand.UnderOrEqualTo36000)] // Eligible unsure EPC found
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, true,
+        IncomeBand.GreaterThan36000)] // Eligible high income but IMD postcode
+    public void QuestionnaireStatus_ForVariousAnswers_ReturnsEligibleWhenEligibleAnswersAreGiven(
         Country country,
         OwnershipStatus ownershipStatus,
         EpcConfirmation? epcDetailsAreCorrect,
         EpcRating? epcRating,
         bool isImdPostcode,
-        IncomeBand incomeBand,
-        bool isEligible)
+        IncomeBand incomeBand)
     {
         // Arrange
         var underTest = new Questionnaire
@@ -276,6 +271,10 @@ public class QuestionnaireTests
             EpcDetailsAreCorrect = epcDetailsAreCorrect,
             IsImdPostcode = isImdPostcode,
             IncomeBand = incomeBand,
+            AddressLine1 = "address line 1",
+            CustodianCode =
+                LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live),
+            LocalAuthorityConfirmed = true
         };
         if (epcRating is not null)
         {
@@ -284,12 +283,177 @@ public class QuestionnaireTests
                 EpcRating = epcRating
             };
         }
-        
+
         // Act
-        var result = underTest.IsEligibleForWhlg;
-        
+        var result = underTest.QuestionnaireStatus;
+
+        var resultIsEligible = result is EligibleQuestionnaireStatus;
+
         // Assert
-        result.Should().Be(isEligible);
+        resultIsEligible.Should().BeTrue();
+    }
+
+    [TestCase(Country.Scotland, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false,
+        IncomeBand.UnderOrEqualTo36000, LocalAuthorityData.LocalAuthorityStatus.Live,
+        QuestionFlowStep.IneligibleScotland)] // Ineligible country
+    [TestCase(Country.Wales, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false,
+        IncomeBand.UnderOrEqualTo36000, LocalAuthorityData.LocalAuthorityStatus.Live,
+        QuestionFlowStep.IneligibleWales)] // Ineligible country
+    [TestCase(Country.NorthernIreland, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false,
+        IncomeBand.UnderOrEqualTo36000, LocalAuthorityData.LocalAuthorityStatus.Live,
+        QuestionFlowStep.IneligibleNorthernIreland)] // Ineligible country
+    [TestCase(Country.England, OwnershipStatus.Landlord, EpcConfirmation.Yes, EpcRating.D, false,
+        IncomeBand.UnderOrEqualTo36000, LocalAuthorityData.LocalAuthorityStatus.Live,
+        QuestionFlowStep.IneligibleTenure)] // Ineligible ownership
+    [TestCase(Country.England, OwnershipStatus.PrivateTenancy, EpcConfirmation.Yes, EpcRating.D, false,
+        IncomeBand.UnderOrEqualTo36000, LocalAuthorityData.LocalAuthorityStatus.Live,
+        QuestionFlowStep.IneligibleTenure)] // Ineligible ownership
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.A, false,
+        IncomeBand.UnderOrEqualTo36000, LocalAuthorityData.LocalAuthorityStatus.Live,
+        QuestionFlowStep.Ineligible)] // Ineligible EPC rating
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.B, false,
+        IncomeBand.UnderOrEqualTo36000, LocalAuthorityData.LocalAuthorityStatus.Live,
+        QuestionFlowStep.Ineligible)] // Ineligible EPC rating
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.C, false,
+        IncomeBand.UnderOrEqualTo36000, LocalAuthorityData.LocalAuthorityStatus.Live,
+        QuestionFlowStep.Ineligible)] // Ineligible EPC rating
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false,
+        IncomeBand.GreaterThan36000, LocalAuthorityData.LocalAuthorityStatus.Live,
+        QuestionFlowStep.Ineligible)] // Ineligible high income
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false,
+        IncomeBand.UnderOrEqualTo36000, LocalAuthorityData.LocalAuthorityStatus.NoFunding,
+        QuestionFlowStep.NoFunding)] // Ineligible no funding LA
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false,
+        IncomeBand.UnderOrEqualTo36000, LocalAuthorityData.LocalAuthorityStatus.NotParticipating,
+        QuestionFlowStep.NotParticipating)] // Ineligible not participating LA
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false,
+        IncomeBand.UnderOrEqualTo36000, LocalAuthorityData.LocalAuthorityStatus.NoLongerParticipating,
+        QuestionFlowStep.NoLongerParticipating)] // Ineligible no longer LA
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false,
+        IncomeBand.UnderOrEqualTo36000, LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused,
+        QuestionFlowStep.ReferralsPaused)] // Ineligible referrals paused LA
+    public void QuestionnaireStatus_ForVariousAnswers_ReturnsIneligibleWhenIneligibleAnswersAreGiven(
+        Country country,
+        OwnershipStatus ownershipStatus,
+        EpcConfirmation? epcDetailsAreCorrect,
+        EpcRating? epcRating,
+        bool isImdPostcode,
+        IncomeBand incomeBand,
+        LocalAuthorityData.LocalAuthorityStatus localAuthorityStatus,
+        QuestionFlowStep expectedIneligibleQuestion)
+    {
+        // Arrange
+        var underTest = new Questionnaire
+        {
+            Country = country,
+            OwnershipStatus = ownershipStatus,
+            EpcDetailsAreCorrect = epcDetailsAreCorrect,
+            IsImdPostcode = isImdPostcode,
+            IncomeBand = incomeBand,
+            AddressLine1 = "address line 1",
+            CustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(localAuthorityStatus),
+            LocalAuthorityConfirmed = true
+        };
+        if (epcRating is not null)
+        {
+            underTest.EpcDetails = new EpcDetails
+            {
+                EpcRating = epcRating
+            };
+        }
+
+        // Act
+        var result = underTest.QuestionnaireStatus;
+
+        var resultIsIneligible = result is IneligibleQuestionnaireStatus;
+
+        // Assert
+        resultIsIneligible.Should().BeTrue();
+        ((IneligibleQuestionnaireStatus)result).IneligibleFlowStep.Should().Be(expectedIneligibleQuestion);
+    }
+
+    [TestCase(null, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, IncomeBand.UnderOrEqualTo36000,
+        "address line 1", "5210", true, RequiredQuestion.Country)]
+    [TestCase(Country.England, null, EpcConfirmation.Yes, IncomeBand.UnderOrEqualTo36000,
+        "address line 1", "5210", true, RequiredQuestion.OwnershipStatus)]
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, null, IncomeBand.UnderOrEqualTo36000,
+        "address line 1", "5210", true, RequiredQuestion.Epc)]
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, null,
+        "address line 1", "5210", true, RequiredQuestion.Income)]
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, IncomeBand.UnderOrEqualTo36000,
+        null, "5210", true, RequiredQuestion.Address)]
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, IncomeBand.UnderOrEqualTo36000,
+        "address line 1", null, true, RequiredQuestion.LocalAuthority)]
+    [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, IncomeBand.UnderOrEqualTo36000,
+        "address line 1", "5210", null, RequiredQuestion.LocalAuthority)]
+    public void QuestionnaireStatus_ForVariousAnswers_ReturnsIncompleteWhenAnswersAreNotGiven(
+        Country? country,
+        OwnershipStatus? ownershipStatus,
+        EpcConfirmation? epcDetailsAreCorrect,
+        IncomeBand? incomeBand,
+        string addressLine1,
+        string custodianCode,
+        bool? localAuthorityConfirmed,
+        RequiredQuestion expectedRequiredQuestion)
+    {
+        // Arrange
+        var underTest = new Questionnaire
+        {
+            Country = country,
+            OwnershipStatus = ownershipStatus,
+            EpcDetailsAreCorrect = epcDetailsAreCorrect,
+            IncomeBand = incomeBand,
+            AddressLine1 = addressLine1,
+            CustodianCode = custodianCode,
+            LocalAuthorityConfirmed = localAuthorityConfirmed
+        };
+        // if address entered assume an EPC was found that the user must answer
+        if (addressLine1 is not null)
+        {
+            underTest.EpcDetails = new EpcDetails
+            {
+                EpcRating = EpcRating.A
+            };
+        }
+
+        // Act
+        var result = underTest.QuestionnaireStatus;
+
+        var resultIsIncomplete = result is IncompleteQuestionnaireStatus;
+
+        // Assert
+        resultIsIncomplete.Should().BeTrue();
+        ((IncompleteQuestionnaireStatus)result).UnansweredQuestions.Should().Contain(expectedRequiredQuestion);
+    }
+
+    public void QuestionnaireStatus_ForVariousAnswers_ReturnsCompleteWhenAnswersAreNotGivenButNotRequired(
+        Country country,
+        OwnershipStatus ownershipStatus,
+        EpcConfirmation? epcDetailsAreCorrect,
+        IncomeBand incomeBand,
+        string addressLine1,
+        string custodianCode,
+        bool localAuthorityConfirmed)
+    {
+        // Arrange
+        var underTest = new Questionnaire
+        {
+            Country = country,
+            OwnershipStatus = ownershipStatus,
+            EpcDetailsAreCorrect = epcDetailsAreCorrect,
+            IncomeBand = incomeBand,
+            AddressLine1 = addressLine1,
+            CustodianCode = custodianCode,
+            LocalAuthorityConfirmed = localAuthorityConfirmed
+        };
+
+        // Act
+        var result = underTest.QuestionnaireStatus;
+
+        var resultIsEligible = result is EligibleQuestionnaireStatus;
+
+        // Assert
+        resultIsEligible.Should().BeTrue();
     }
 
     [Test]
@@ -300,15 +464,14 @@ public class QuestionnaireTests
         {
             CustodianCode = "bad_code"
         };
-        
+
         // Act
         var result = underTest.LocalAuthorityName;
-        
+
         // Assert
         result.Should().Be("unrecognised Local Authority");
     }
-    
-    
+
     [Test]
     public void LocalAuthorityName_ForGoodCustodianCode_ReturnsLaName()
     {
@@ -317,14 +480,14 @@ public class QuestionnaireTests
         {
             CustodianCode = "9052"
         };
-        
+
         // Act
         var result = underTest.LocalAuthorityName;
-        
+
         // Assert
         result.Should().Be("Aberdeenshire Council");
     }
-    
+
     [Test]
     public void LocalAuthorityWebsite_ForBadCustodianCode_ReturnsUnknown()
     {
@@ -333,15 +496,14 @@ public class QuestionnaireTests
         {
             CustodianCode = "bad_code"
         };
-        
+
         // Act
         var result = underTest.LocalAuthorityWebsite;
-        
+
         // Assert
         result.Should().Be("unrecognised Local Authority");
     }
-    
-    
+
     [Test]
     public void LocalAuthorityWebsite_ForGoodCustodianCode_ReturnsLaName()
     {
@@ -350,14 +512,14 @@ public class QuestionnaireTests
         {
             CustodianCode = "9052"
         };
-        
+
         // Act
         var result = underTest.LocalAuthorityWebsite;
-        
+
         // Assert
         result.Should().Be("https://www.aberdeenshire.gov.uk/");
     }
-    
+
     [Test]
     public void IncomeBandIsValid_ForNullCustodianCode_ReturnsFalse()
     {
@@ -367,18 +529,18 @@ public class QuestionnaireTests
             CustodianCode = null,
             IncomeBand = IncomeBand.GreaterThan36000
         };
-        
+
         // Act
         var result = questionnaire.IncomeBandIsValid;
-        
+
         // Assert
         result.Should().BeFalse();
     }
-    
+
 #pragma warning disable CS0618 // Obsolete Income Bands used to preserve backwards-compatibility
-    [TestCase(IncomeBand.GreaterThan31000)] 
+    [TestCase(IncomeBand.GreaterThan31000)]
     [TestCase(IncomeBand.GreaterThan34500)]
-#pragma warning restore CS0618 
+#pragma warning restore CS0618
     [TestCase(IncomeBand.GreaterThan36000)]
     public void IncomeIsTooHigh_ForHighIncomeBandAndNonImd_ReturnsTrue(IncomeBand incomeBand)
     {
@@ -388,17 +550,17 @@ public class QuestionnaireTests
             IncomeBand = incomeBand,
             IsImdPostcode = false
         };
-        
+
         // Act
         var result = questionnaire.IncomeIsTooHigh;
-        
+
         // Assert
         result.Should().BeTrue();
     }
-    
+
 #pragma warning disable CS0618 // Obsolete Income Bands used to preserve backwards-compatibility
-    [TestCase(IncomeBand.GreaterThan31000)] 
-    [TestCase(IncomeBand.GreaterThan34500)] 
+    [TestCase(IncomeBand.GreaterThan31000)]
+    [TestCase(IncomeBand.GreaterThan34500)]
 #pragma warning restore CS0618
     [TestCase(IncomeBand.GreaterThan36000)]
     public void IncomeIsTooHigh_ForHighIncomeBandAndImd_ReturnsFalse(IncomeBand incomeBand)
@@ -409,20 +571,20 @@ public class QuestionnaireTests
             IncomeBand = incomeBand,
             IsImdPostcode = true
         };
-        
+
         // Act
         var result = questionnaire.IncomeIsTooHigh;
-        
+
         // Assert
         result.Should().BeFalse();
     }
-    
+
 #pragma warning disable CS0618 // Obsolete Income Bands used to preserve backwards-compatibility
-    [TestCase(IncomeBand.UnderOrEqualTo31000, true)] 
-    [TestCase(IncomeBand.UnderOrEqualTo31000, false)] 
-    [TestCase(IncomeBand.UnderOrEqualTo34500, true)] 
-    [TestCase(IncomeBand.UnderOrEqualTo34500, false)] 
-#pragma warning restore CS0618 
+    [TestCase(IncomeBand.UnderOrEqualTo31000, true)]
+    [TestCase(IncomeBand.UnderOrEqualTo31000, false)]
+    [TestCase(IncomeBand.UnderOrEqualTo34500, true)]
+    [TestCase(IncomeBand.UnderOrEqualTo34500, false)]
+#pragma warning restore CS0618
     [TestCase(IncomeBand.UnderOrEqualTo36000, true)]
     [TestCase(IncomeBand.UnderOrEqualTo36000, false)]
     public void IncomeIsTooHigh_ForLowIncomeBand_ReturnsFalse(IncomeBand incomeBand, bool isImd)
@@ -433,14 +595,14 @@ public class QuestionnaireTests
             IncomeBand = incomeBand,
             IsImdPostcode = isImd
         };
-        
+
         // Act
         var result = questionnaire.IncomeIsTooHigh;
-        
+
         // Assert
         result.Should().BeFalse();
     }
-    
+
     [Test]
     public void IncomeBandIsValid_ForNullIncomeBand_ReturnsFalse()
     {
@@ -450,18 +612,18 @@ public class QuestionnaireTests
             CustodianCode = "9052",
             IncomeBand = null
         };
-        
+
         // Act
         var result = questionnaire.IncomeBandIsValid;
-        
+
         // Assert
         result.Should().BeFalse();
     }
-    
+
 #pragma warning disable CS0618 // Obsolete Income Bands used to preserve backwards-compatibility 
-    [TestCase(IncomeBand.GreaterThan34500)] 
-    [TestCase(IncomeBand.UnderOrEqualTo34500)] 
-#pragma warning restore CS0618 
+    [TestCase(IncomeBand.GreaterThan34500)]
+    [TestCase(IncomeBand.UnderOrEqualTo34500)]
+#pragma warning restore CS0618
     public void IncomeBandIsValid_ForBadIncomeBand_ReturnsFalse(IncomeBand incomeBand)
     {
         // Arrange
@@ -470,14 +632,14 @@ public class QuestionnaireTests
             CustodianCode = "9052", // Aberdeenshire is configured with a £36,000 threshold
             IncomeBand = incomeBand
         };
-        
+
         // Act
         var result = questionnaire.IncomeBandIsValid;
-        
+
         // Assert
         result.Should().BeFalse();
     }
-    
+
     [TestCase(IncomeBand.GreaterThan36000)]
     [TestCase(IncomeBand.UnderOrEqualTo36000)]
     public void IncomeBandIsValid_ForGoodIncomeBand_ReturnsTrue(IncomeBand incomeBand)
@@ -488,10 +650,10 @@ public class QuestionnaireTests
             CustodianCode = "9052", // Aberdeenshire is configured with a £36,000 threshold
             IncomeBand = incomeBand
         };
-        
+
         // Act
         var result = questionnaire.IncomeBandIsValid;
-        
+
         // Assert
         result.Should().BeTrue();
     }

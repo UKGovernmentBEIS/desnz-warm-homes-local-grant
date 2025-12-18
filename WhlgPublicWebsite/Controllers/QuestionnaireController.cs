@@ -697,6 +697,25 @@ public class QuestionnaireController : Controller
     [HttpPost("check")]
     public async Task<IActionResult> CheckAnswers_Post()
     {
+        switch (questionnaireService.GetQuestionnaire().QuestionnaireStatus)
+        {
+            case IncompleteQuestionnaireStatus incompleteQuestionnaireStatus:
+            {
+                foreach (var unansweredEligibilityCriterion in incompleteQuestionnaireStatus
+                             .UnansweredQuestions)
+                {
+                    ModelState.AddModelError(string.Empty, unansweredEligibilityCriterion.ToErrorMessage());
+                }
+
+                break;
+            }
+
+            case IneligibleQuestionnaireStatus ineligibleQuestionnaireStatus:
+            {
+                return RedirectToNextStep(ineligibleQuestionnaireStatus.IneligibleFlowStep);
+            }
+        }
+        
         await googleAnalyticsService.SendQuestionnaireCompletedEventAsync(Request);
         var questionnaire = questionnaireService.GetQuestionnaire();
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.CheckAnswers, questionnaire);
@@ -735,7 +754,28 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> Eligible_Post(EligibleViewModel viewModel)
     {
         if (viewModel.CanContactByEmail is YesOrNo.No && viewModel.CanContactByPhone is YesOrNo.No)
+        {
             ModelState.AddModelError(string.Empty, "Select at least one method to be contacted by");
+        }
+
+        switch (questionnaireService.GetQuestionnaire().QuestionnaireStatus)
+        {
+            case IncompleteQuestionnaireStatus incompleteQuestionnaireStatus:
+            {
+                foreach (var unansweredEligibilityCriterion in incompleteQuestionnaireStatus
+                             .UnansweredQuestions)
+                {
+                    ModelState.AddModelError(string.Empty, unansweredEligibilityCriterion.ToErrorMessage());
+                }
+
+                break;
+            }
+
+            case IneligibleQuestionnaireStatus ineligibleQuestionnaireStatus:
+            {
+                return RedirectToNextStep(ineligibleQuestionnaireStatus.IneligibleFlowStep, viewModel.EntryPoint);
+            }
+        }
 
         if (!ModelState.IsValid) return await Eligible_Get();
 
@@ -818,7 +858,7 @@ public class QuestionnaireController : Controller
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
 
-        if (questionnaire.IsEligibleForWhlg)
+        if (questionnaire.QuestionnaireStatus is EligibleQuestionnaireStatus)
             throw new Exception($"Ineligible page shown when questionnaire {questionnaire.SessionId} is eligible");
         await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, false);
 
