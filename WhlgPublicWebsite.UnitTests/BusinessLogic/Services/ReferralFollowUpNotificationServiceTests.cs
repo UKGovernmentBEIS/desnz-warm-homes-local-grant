@@ -60,7 +60,7 @@ public class ReferralFollowUpNotificationServiceTests
 
     [Test]
     public async Task
-        SendReferralFollowUpNotifications_WhenCalled_CallsCreateReferralsRequestFollowUpWithReferralsIncludedInFilter()
+        SendReferralFollowUpNotifications_WhenCalled_CallsCreateReferralsRequestFollowUpWithReferralsSubmittedToPendingLocalAuthority()
     {
         // Arrange
         var validReferral = new ReferralRequestBuilder(1)
@@ -68,6 +68,44 @@ public class ReferralFollowUpNotificationServiceTests
             .Build();
         var invalidReferral = new ReferralRequestBuilder(2)
             .WithWasSubmittedToPendingLocalAuthority(true)
+            .Build();
+
+        var allReferrals = new List<ReferralRequest>
+        {
+            validReferral, invalidReferral
+        };
+
+        mockDataProvider
+            .Setup(dp =>
+                dp.GetWhlgReferralRequestsWithNoFollowUpBetweenDates(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+            .ReturnsAsync(allReferrals);
+
+        var referralFollowUp = new ReferralRequestFollowUpBuilder(1)
+            .WithToken("token1")
+            .Build(validReferral);
+
+        mockReferralFollowUpService.Setup(rfus => rfus.CreateReferralRequestFollowUp(
+            validReferral)).ReturnsAsync(referralFollowUp);
+
+        // Act
+        await referralFollowUpNotificationService.SendReferralFollowUpEmails();
+
+        // Assert
+        mockReferralFollowUpService.Verify(rfus => rfus.CreateReferralRequestFollowUp(
+            validReferral), Times.Once);
+        mockReferralFollowUpService.VerifyNoOtherCalls();
+    }
+    
+    [Test]
+    public async Task
+        SendReferralFollowUpNotifications_WhenCalled_CallsCreateReferralsRequestFollowUpWithReferralsWithEmailAddress()
+    {
+        // Arrange
+        var validReferral = new ReferralRequestBuilder(1)
+            .WithEmailAddress("test1@example.com")
+            .Build();
+        var invalidReferral = new ReferralRequestBuilder(2)
+            .WithEmailAddress(null)
             .Build();
 
         var allReferrals = new List<ReferralRequest>

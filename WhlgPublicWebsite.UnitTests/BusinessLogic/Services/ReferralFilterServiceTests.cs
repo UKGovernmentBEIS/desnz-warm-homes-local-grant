@@ -24,7 +24,7 @@ public class ReferralFilterServiceTests
         startOfPreviousMonth = 1.February(2024);
         mockDateHelper = new Mock<IDateHelper>();
         mockDateHelper.Setup(mdh => mdh.GetStartOfPreviousMonth()).Returns(startOfPreviousMonth);
-        
+
         referralFilterService = new ReferralFilterService(mockDateHelper.Object);
     }
 
@@ -41,17 +41,18 @@ public class ReferralFilterServiceTests
         bool referralWasSubmittedInTheLastMonth)
     {
         // Arrange
-        var inputReferralRequest = BuildReferralRequest(localAuthorityIsNowPending, localAuthorityWasPending, referralWasSubmittedInTheLastMonth);
+        var inputReferralRequest = BuildReferralRequest(localAuthorityIsNowPending, localAuthorityWasPending,
+            referralWasSubmittedInTheLastMonth);
         var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
-        
+
         // Act
         var outputReferralRequests = referralFilterService
             .FilterForPendingReferralReport(inputReferralRequests);
-        
+
         // Assert
         outputReferralRequests.Should().Contain(inputReferralRequest);
     }
-    
+
     [TestCase(false, false, false)]
     [TestCase(false, false, true)]
     [TestCase(false, true, false)]
@@ -61,17 +62,18 @@ public class ReferralFilterServiceTests
         bool referralWasSubmittedInTheLastMonth)
     {
         // Arrange
-        var inputReferralRequest = BuildReferralRequest(localAuthorityIsNowPending, localAuthorityWasPending, referralWasSubmittedInTheLastMonth);
+        var inputReferralRequest = BuildReferralRequest(localAuthorityIsNowPending, localAuthorityWasPending,
+            referralWasSubmittedInTheLastMonth);
         var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
-        
+
         // Act
         var outputReferralRequests = referralFilterService
             .FilterForPendingReferralReport(inputReferralRequests);
-        
+
         // Assert
         outputReferralRequests.Should().NotContain(inputReferralRequest);
     }
-    
+
     [Test]
     public void FilterForSentToNonPending_WhenCalledWithReferralSendToNonPendingLa_DoesIncludeInFilter()
     {
@@ -80,15 +82,15 @@ public class ReferralFilterServiceTests
             .WithWasSubmittedToPendingLocalAuthority(false)
             .Build();
         var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
-        
+
         // Act
         var outputReferralRequests = referralFilterService
             .FilterForSentToNonPending(inputReferralRequests);
-        
+
         // Assert
         outputReferralRequests.Should().Contain(inputReferralRequest);
     }
-    
+
     [Test]
     public void FilterForSentToNonPending_WhenCalledWithReferralSendToPendingLa_DoesNotIncludeInFilter()
     {
@@ -97,11 +99,45 @@ public class ReferralFilterServiceTests
             .WithWasSubmittedToPendingLocalAuthority(true)
             .Build();
         var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
-        
+
         // Act
         var outputReferralRequests = referralFilterService
             .FilterForSentToNonPending(inputReferralRequests);
-        
+
+        // Assert
+        outputReferralRequests.Should().NotContain(inputReferralRequest);
+    }
+
+    [Test]
+    public void FilterForHasContactEmailAddress_WhenCalledWithReferralWithEmailAddress_DoesIncludeInFilter()
+    {
+        // Arrange
+        var inputReferralRequest = new ReferralRequestBuilder(10)
+            .WithEmailAddress("test1@example.com")
+            .Build();
+        var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
+
+        // Act
+        var outputReferralRequests = referralFilterService
+            .FilterForHasContactEmailAddress(inputReferralRequests);
+
+        // Assert
+        outputReferralRequests.Should().Contain(inputReferralRequest);
+    }
+
+    [Test]
+    public void FilterForHasContactEmailAddress_WhenCalledWithReferralWithoutEmailAddress_DoesNotIncludeInFilter()
+    {
+        // Arrange
+        var inputReferralRequest = new ReferralRequestBuilder(10)
+            .WithEmailAddress(null)
+            .Build();
+        var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
+
+        // Act
+        var outputReferralRequests = referralFilterService
+            .FilterForHasContactEmailAddress(inputReferralRequests);
+
         // Assert
         outputReferralRequests.Should().NotContain(inputReferralRequest);
     }
@@ -113,11 +149,11 @@ public class ReferralFilterServiceTests
     {
         var currentStatus = localAuthorityIsNowPending ? LocalAuthorityStatus.Pending : LocalAuthorityStatus.Live;
         var custodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(currentStatus);
-        
+
         var requestDate = referralWasSubmittedInTheLastMonth
             ? startOfPreviousMonth.Add(10.Days())
             : startOfPreviousMonth.Subtract(10.Days());
-        
+
         return new ReferralRequestBuilder(10)
             .WithCustodianCode(custodianCode)
             .WithWasSubmittedToPendingLocalAuthority(localAuthorityWasPending)
