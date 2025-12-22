@@ -7,6 +7,7 @@ public interface IReferralFilterService
 {
     public IEnumerable<ReferralRequest> FilterForPendingReferralReport(IEnumerable<ReferralRequest> referralRequests);
     public IEnumerable<ReferralRequest> FilterForSentToNonPending(IEnumerable<ReferralRequest> referralRequests);
+    public IEnumerable<ReferralRequest> FilterForHasContactEmailAddress(IEnumerable<ReferralRequest> referralRequests);
 }
 
 public class ReferralFilterService : IReferralFilterService
@@ -28,6 +29,11 @@ public class ReferralFilterService : IReferralFilterService
     public IEnumerable<ReferralRequest> FilterForSentToNonPending(IEnumerable<ReferralRequest> referralRequests)
     {
         return referralRequests.Where(rr => !rr.WasSubmittedToPendingLocalAuthority);
+    }
+    
+    public IEnumerable<ReferralRequest> FilterForHasContactEmailAddress(IEnumerable<ReferralRequest> referralRequests)
+    {
+        return referralRequests.Where(rr => !string.IsNullOrWhiteSpace(rr.ContactEmailAddress));
     }
     
     private static bool ShouldIncludeInReport(ReferralRequest referral, DateTime startDate)
