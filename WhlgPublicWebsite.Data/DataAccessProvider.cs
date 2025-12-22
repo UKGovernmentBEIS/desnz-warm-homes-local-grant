@@ -87,7 +87,6 @@ public class DataAccessProvider(WhlgDbContext context)
     {
         return await context.ReferralRequests
             .Where(rr => rr.RequestDate >= startDate & rr.RequestDate <= endDate && !rr.FollowUpEmailSent)
-            .Where(rr => rr.ContactEmailAddress != null)
             .Where(IsExcludedFromSlaComplianceReporting)
             .ToListAsync();
     }
