@@ -47,8 +47,8 @@ namespace WhlgPublicWebsite
 
             recurringJobManager.AddOrUpdate<ReferralFollowUpNotificationService>(
                 "Get referrals passed ten day working threshold with no follow up",
-                service => service.SendReferralFollowUpNotifications(),
                 "30 0 * * *"); // at 00:30 every day
+                service => service.SendReferralFollowUpEmails(),
 
             recurringJobManager.AddOrUpdate<UnsubmittedReferralRequestsService>(
                 "Write unsubmitted referral requests to csv",

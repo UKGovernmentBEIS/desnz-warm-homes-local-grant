@@ -7,7 +7,7 @@ namespace WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public interface IReferralFollowUpNotificationService
 {
-    public Task SendReferralFollowUpNotifications();
+    public Task SendReferralFollowUpEmails();
 }
 
 public class ReferralFollowUpNotificationService : IReferralFollowUpNotificationService

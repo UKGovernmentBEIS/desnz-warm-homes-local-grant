@@ -88,7 +88,7 @@ public class ReferralFollowUpNotificationServiceTests
             validReferral)).ReturnsAsync(referralFollowUp);
 
         // Act
-        await referralFollowUpNotificationService.SendReferralFollowUpNotifications();
+        await referralFollowUpNotificationService.SendReferralFollowUpEmails();
 
         // Assert
         mockReferralFollowUpService.Verify(rfus => rfus.CreateReferralRequestFollowUp(
