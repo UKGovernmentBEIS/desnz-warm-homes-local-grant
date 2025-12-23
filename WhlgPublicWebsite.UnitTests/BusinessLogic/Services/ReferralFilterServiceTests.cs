@@ -77,7 +77,7 @@ public class ReferralFilterServiceTests
 
     [TestCase(true, false)]
     [TestCase(false, true)]
-    public void WasSubmittedToNonPendingAuthority_WhenCalledWithReferralSendToPendingLa_DoesNotIncludeInFilter(bool wasSubmittedToPendingAuthority, bool expectedResult)
+    public void WasSubmittedToNonPendingAuthority_WhenCalledOnReferral_ReturnsExpectedBool(bool wasSubmittedToPendingAuthority, bool expectedResult)
     {
         // Arrange
         var referralRequest = new ReferralRequestBuilder(10)
