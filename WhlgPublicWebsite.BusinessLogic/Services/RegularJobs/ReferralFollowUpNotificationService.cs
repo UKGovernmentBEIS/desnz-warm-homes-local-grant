@@ -45,17 +45,18 @@ public class ReferralFollowUpNotificationService : IReferralFollowUpNotification
     {
         var endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Today, -10);
         var startDate = referralRequestNotificationConfig.CutoffEpoch;
-        var newReferrals = referralFilterService.FilterForHasContactEmailAddress(
-            referralFilterService.FilterForSentToNonPending(
-                await dataProvider.GetWhlgReferralRequestsWithNoFollowUpBetweenDates(startDate, endDate)));
+        var newReferrals = await dataProvider.GetWhlgReferralRequestsWithNoFollowUpBetweenDates(startDate, endDate);
+        var filteredReferrals = newReferrals
+            .Where(referralFilterService.WasSubmittedWithContactEmailAddress)
+            .Where(referralFilterService.WasSubmittedToNonPendingAuthority);
         var uriBuilder = new UriBuilder(globalConfig.AppBaseUrl);
         uriBuilder.Path = "referral-follow-up";
-        foreach (var newReferral in newReferrals)
+        foreach (var referral in filteredReferrals)
         {
-            var referralRequestFollowUp = await referralFollowUpManager.CreateReferralRequestFollowUp(newReferral);
+            var referralRequestFollowUp = await referralFollowUpManager.CreateReferralRequestFollowUp(referral);
             uriBuilder.Query = "token=" + referralRequestFollowUp.Token;
-            emailSender.SendFollowUpEmail(newReferral, uriBuilder.ToString());
-            await dataProvider.UpdateReferralRequestByIdWithFollowUpSentAsync(newReferral.Id);
+            emailSender.SendFollowUpEmail(referral, uriBuilder.ToString());
+            await dataProvider.UpdateReferralRequestByIdWithFollowUpSentAsync(referral.Id);
         }
     }
 }

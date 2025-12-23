@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using WhlgPublicWebsite.BusinessLogic.Models;
@@ -84,8 +85,8 @@ public class ReferralFilterServiceTests
         var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
 
         // Act
-        var outputReferralRequests = referralFilterService
-            .FilterForSentToNonPending(inputReferralRequests);
+        var outputReferralRequests =
+            inputReferralRequests.Where(referralFilterService.WasSubmittedToNonPendingAuthority);
 
         // Assert
         outputReferralRequests.Should().Contain(inputReferralRequest);
@@ -101,8 +102,8 @@ public class ReferralFilterServiceTests
         var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
 
         // Act
-        var outputReferralRequests = referralFilterService
-            .FilterForSentToNonPending(inputReferralRequests);
+        var outputReferralRequests =
+            inputReferralRequests.Where(referralFilterService.WasSubmittedToNonPendingAuthority);
 
         // Assert
         outputReferralRequests.Should().NotContain(inputReferralRequest);
@@ -118,8 +119,8 @@ public class ReferralFilterServiceTests
         var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
 
         // Act
-        var outputReferralRequests = referralFilterService
-            .FilterForHasContactEmailAddress(inputReferralRequests);
+        var outputReferralRequests =
+            inputReferralRequests.Where(referralFilterService.WasSubmittedWithContactEmailAddress);
 
         // Assert
         outputReferralRequests.Should().Contain(inputReferralRequest);
@@ -135,8 +136,8 @@ public class ReferralFilterServiceTests
         var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
 
         // Act
-        var outputReferralRequests = referralFilterService
-            .FilterForHasContactEmailAddress(inputReferralRequests);
+        var outputReferralRequests =
+            inputReferralRequests.Where(referralFilterService.WasSubmittedWithContactEmailAddress);
 
         // Assert
         outputReferralRequests.Should().NotContain(inputReferralRequest);
