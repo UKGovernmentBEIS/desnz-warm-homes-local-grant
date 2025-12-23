@@ -75,72 +75,36 @@ public class ReferralFilterServiceTests
         outputReferralRequests.Should().NotContain(inputReferralRequest);
     }
 
-    [Test]
-    public void FilterForSentToNonPending_WhenCalledWithReferralSendToNonPendingLa_DoesIncludeInFilter()
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    public void WasSubmittedToNonPendingAuthority_WhenCalledWithReferralSendToPendingLa_DoesNotIncludeInFilter(bool wasSubmittedToPendingAuthority, bool expectedResult)
     {
         // Arrange
-        var inputReferralRequest = new ReferralRequestBuilder(10)
-            .WithWasSubmittedToPendingLocalAuthority(false)
+        var referralRequest = new ReferralRequestBuilder(10)
+            .WithWasSubmittedToPendingLocalAuthority(wasSubmittedToPendingAuthority)
             .Build();
-        var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
 
         // Act
-        var outputReferralRequests =
-            inputReferralRequests.Where(referralFilterService.WasSubmittedToNonPendingAuthority);
+        var referralSubmittedToNonPendingAuthority = referralFilterService.WasSubmittedToNonPendingAuthority(referralRequest);
 
         // Assert
-        outputReferralRequests.Should().Contain(inputReferralRequest);
+        referralSubmittedToNonPendingAuthority.Should().Be(expectedResult);
     }
 
-    [Test]
-    public void FilterForSentToNonPending_WhenCalledWithReferralSendToPendingLa_DoesNotIncludeInFilter()
+    [TestCase("test1@example.com", true)]
+    [TestCase(null, false)]
+    public void WasSubmittedWithContactEmailAddress_WhenCalledOnReferral_ReturnsExpectedBool(string emailAddress, bool expectedResult)
     {
         // Arrange
-        var inputReferralRequest = new ReferralRequestBuilder(10)
-            .WithWasSubmittedToPendingLocalAuthority(true)
+        var referralRequest = new ReferralRequestBuilder(10)
+            .WithEmailAddress(emailAddress)
             .Build();
-        var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
 
         // Act
-        var outputReferralRequests =
-            inputReferralRequests.Where(referralFilterService.WasSubmittedToNonPendingAuthority);
+        var referralHasEmailAddress = referralFilterService.WasSubmittedWithContactEmailAddress(referralRequest);
 
         // Assert
-        outputReferralRequests.Should().NotContain(inputReferralRequest);
-    }
-
-    [Test]
-    public void FilterForHasContactEmailAddress_WhenCalledWithReferralWithEmailAddress_DoesIncludeInFilter()
-    {
-        // Arrange
-        var inputReferralRequest = new ReferralRequestBuilder(10)
-            .WithEmailAddress("test1@example.com")
-            .Build();
-        var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
-
-        // Act
-        var outputReferralRequests =
-            inputReferralRequests.Where(referralFilterService.WasSubmittedWithContactEmailAddress);
-
-        // Assert
-        outputReferralRequests.Should().Contain(inputReferralRequest);
-    }
-
-    [Test]
-    public void FilterForHasContactEmailAddress_WhenCalledWithReferralWithoutEmailAddress_DoesNotIncludeInFilter()
-    {
-        // Arrange
-        var inputReferralRequest = new ReferralRequestBuilder(10)
-            .WithEmailAddress(null)
-            .Build();
-        var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
-
-        // Act
-        var outputReferralRequests =
-            inputReferralRequests.Where(referralFilterService.WasSubmittedWithContactEmailAddress);
-
-        // Assert
-        outputReferralRequests.Should().NotContain(inputReferralRequest);
+        referralHasEmailAddress.Should().Be(expectedResult);
     }
 
     private ReferralRequest BuildReferralRequest(
