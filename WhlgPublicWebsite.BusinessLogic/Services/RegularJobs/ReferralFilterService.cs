@@ -6,7 +6,8 @@ namespace WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
 public interface IReferralFilterService
 {
     public IEnumerable<ReferralRequest> FilterForPendingReferralReport(IEnumerable<ReferralRequest> referralRequests);
-    public IEnumerable<ReferralRequest> FilterForSentToNonPending(IEnumerable<ReferralRequest> referralRequests);
+    public bool WasSubmittedToNonPendingAuthority(ReferralRequest referralRequest);
+    public bool WasSubmittedWithContactEmailAddress(ReferralRequest referralRequest);
 }
 
 public class ReferralFilterService : IReferralFilterService
@@ -17,20 +18,25 @@ public class ReferralFilterService : IReferralFilterService
     {
         this.dateHelper = dateHelper;
     }
-    
+
     public IEnumerable<ReferralRequest> FilterForPendingReferralReport(IEnumerable<ReferralRequest> referralRequests)
     {
         var startDate = dateHelper.GetStartOfPreviousMonth();
 
-        return referralRequests.Where(rr => ShouldIncludeInReport(rr, startDate));
+        return referralRequests.Where(rr => WasSubmittedToPendingAuthority(rr, startDate));
     }
-    
-    public IEnumerable<ReferralRequest> FilterForSentToNonPending(IEnumerable<ReferralRequest> referralRequests)
+
+    public bool WasSubmittedToNonPendingAuthority(ReferralRequest referralRequest)
     {
-        return referralRequests.Where(rr => !rr.WasSubmittedToPendingLocalAuthority);
+        return !referralRequest.WasSubmittedToPendingLocalAuthority;
     }
-    
-    private static bool ShouldIncludeInReport(ReferralRequest referral, DateTime startDate)
+
+    public bool WasSubmittedWithContactEmailAddress(ReferralRequest referralRequest)
+    {
+        return !string.IsNullOrWhiteSpace(referralRequest.ContactEmailAddress);
+    }
+
+    private static bool WasSubmittedToPendingAuthority(ReferralRequest referral, DateTime startDate)
     {
         var custodianCode = LaMapping.GetCurrentCustodianCode(referral.CustodianCode);
         var localAuthority = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[custodianCode];
