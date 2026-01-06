@@ -24,7 +24,6 @@ public class ReferralFollowUpNotificationServiceTests
     private Mock<IWorkingDayHelperService> mockWorkingDayHelperService;
     private Mock<IReferralFollowUpService> mockReferralFollowUpService;
     private Mock<IEmailSender> mockEmailSender;
-    private Mock<IDateHelper> mockDateHelper;
     private IReferralFilterService referralFilterService;
     private ReferralFollowUpNotificationService referralFollowUpNotificationService;
 
@@ -44,8 +43,7 @@ public class ReferralFollowUpNotificationServiceTests
         mockWorkingDayHelperService = new Mock<IWorkingDayHelperService>();
         mockReferralFollowUpService = new Mock<IReferralFollowUpService>();
         mockEmailSender = new Mock<IEmailSender>();
-        mockDateHelper = new Mock<IDateHelper>();
-        referralFilterService = new ReferralFilterService(mockDateHelper.Object);
+        referralFilterService = new ReferralFilterService();
 
         referralFollowUpNotificationService = new ReferralFollowUpNotificationService(
             globalConfig.AsOptions(),

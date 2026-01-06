@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using FluentAssertions.Extensions;
 using WhlgPublicWebsite.BusinessLogic;
 using WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 using WhlgPublicWebsite.BusinessLogic.Models;
@@ -15,6 +16,8 @@ namespace Tests.BusinessLogic.Services;
 [TestFixture]
 public class PendingReferralNotificationServiceTests
 {
+    private DateTime startOfPreviousMonth;
+    private Mock<IDateHelper> mockDateHelper;
     private Mock<IDataAccessProvider> mockDataAccessProvider;
     private Mock<ICsvFileCreator> mockCsvFileCreator;
     private Mock<IEmailSender> mockEmailSender;
@@ -24,6 +27,11 @@ public class PendingReferralNotificationServiceTests
     [SetUp]
     public void Setup()
     {
+        startOfPreviousMonth = 1.February(2024);
+        mockDateHelper = new Mock<IDateHelper>();
+        mockDateHelper
+            .Setup(dh => dh.GetStartOfPreviousMonth())
+            .Returns(startOfPreviousMonth);
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
         mockCsvFileCreator = new Mock<ICsvFileCreator>();
         mockEmailSender = new Mock<IEmailSender>();
@@ -32,7 +40,8 @@ public class PendingReferralNotificationServiceTests
             mockDataAccessProvider.Object,
             mockCsvFileCreator.Object,
             mockEmailSender.Object,
-            mockReferralFilterService.Object);
+            mockReferralFilterService.Object,
+            mockDateHelper.Object);
     }
 
     [Test]
@@ -45,9 +54,6 @@ public class PendingReferralNotificationServiceTests
             .ReturnsAsync(allReferralRequests);
 
         var filteredReferralRequests = new List<ReferralRequest>();
-        mockReferralFilterService
-            .Setup(prfs => prfs.FilterForPendingReferralReport(allReferralRequests))
-            .Returns(filteredReferralRequests);
 
         var bytes = new byte[] { 0x0, 0x1, 0x2, 0x3 };
         var memoryStream = new MemoryStream(bytes);

@@ -15,18 +15,14 @@ namespace Tests.BusinessLogic.Services;
 
 public class ReferralFilterServiceTests
 {
-    private Mock<IDateHelper> mockDateHelper;
-    private ReferralFilterService referralFilterService;
     private DateTime startOfPreviousMonth;
+    private IReferralFilterService referralFilterService;
 
     [SetUp]
     public void Setup()
     {
         startOfPreviousMonth = 1.February(2024);
-        mockDateHelper = new Mock<IDateHelper>();
-        mockDateHelper.Setup(mdh => mdh.GetStartOfPreviousMonth()).Returns(startOfPreviousMonth);
-
-        referralFilterService = new ReferralFilterService(mockDateHelper.Object);
+        referralFilterService = new ReferralFilterService();
     }
 
     // If LA is now pending, include.
@@ -36,43 +32,39 @@ public class ReferralFilterServiceTests
     [TestCase(true, true, true)]
     // If LA is not now pending but referral was submitted in the last month to a then pending LA, include.
     [TestCase(false, true, true)]
-    public void FilterForPendingReferralReport_WhenCalledWithEmailPendingReferral_IncludesInFilter(
+    public void WasSubmittedToPendingAuthority_WhenCalledWithEmailPendingReferral_IncludesInFilter(
         bool localAuthorityIsNowPending,
         bool localAuthorityWasPending,
         bool referralWasSubmittedInTheLastMonth)
     {
         // Arrange
-        var inputReferralRequest = BuildReferralRequest(localAuthorityIsNowPending, localAuthorityWasPending,
+        var referralRequest = BuildReferralRequest(localAuthorityIsNowPending, localAuthorityWasPending,
             referralWasSubmittedInTheLastMonth);
-        var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
-
+        
         // Act
-        var outputReferralRequests = referralFilterService
-            .FilterForPendingReferralReport(inputReferralRequests);
+        var referralSubmittedToPendingAuthority = referralFilterService.WasSubmittedToPendingAuthority(referralRequest, startOfPreviousMonth);
 
         // Assert
-        outputReferralRequests.Should().Contain(inputReferralRequest);
+        referralSubmittedToPendingAuthority.Should().BeTrue();
     }
 
     [TestCase(false, false, false)]
     [TestCase(false, false, true)]
     [TestCase(false, true, false)]
-    public void FilterForPendingReferralReport_WhenCalledWithNotEmailPendingReferral_DoesNotIncludeInFilter(
+    public void WasSubmittedToPendingAuthority_WhenCalledWithNotEmailPendingReferral_DoesNotIncludeInFilter(
         bool localAuthorityIsNowPending,
         bool localAuthorityWasPending,
         bool referralWasSubmittedInTheLastMonth)
     {
         // Arrange
-        var inputReferralRequest = BuildReferralRequest(localAuthorityIsNowPending, localAuthorityWasPending,
+        var referralRequest = BuildReferralRequest(localAuthorityIsNowPending, localAuthorityWasPending,
             referralWasSubmittedInTheLastMonth);
-        var inputReferralRequests = new List<ReferralRequest> { inputReferralRequest };
 
         // Act
-        var outputReferralRequests = referralFilterService
-            .FilterForPendingReferralReport(inputReferralRequests);
+        var referralSubmittedToPendingAuthority = referralFilterService.WasSubmittedToPendingAuthority(referralRequest, startOfPreviousMonth);
 
         // Assert
-        outputReferralRequests.Should().NotContain(inputReferralRequest);
+        referralSubmittedToPendingAuthority.Should().BeFalse();
     }
 
     [TestCase(true, false)]

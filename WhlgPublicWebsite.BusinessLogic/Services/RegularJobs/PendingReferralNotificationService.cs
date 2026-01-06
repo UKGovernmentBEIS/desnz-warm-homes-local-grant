@@ -9,17 +9,20 @@ public class PendingReferralNotificationService
     private readonly ICsvFileCreator csvFileCreator;
     private readonly IEmailSender emailSender;
     private readonly IReferralFilterService referralFilterService;
+    private readonly IDateHelper dateHelper;
 
     public PendingReferralNotificationService(
         IDataAccessProvider dataProvider,
         ICsvFileCreator csvFileCreator,
         IEmailSender emailSender,
-        IReferralFilterService referralFilterService)
+        IReferralFilterService referralFilterService,
+        IDateHelper dateHelper)
     {
         this.dataProvider = dataProvider;
         this.csvFileCreator = csvFileCreator;
         this.emailSender = emailSender;
         this.referralFilterService = referralFilterService;
+        this.dateHelper = dateHelper;
     }
 
     public async Task SendPendingReferralNotifications()
@@ -30,8 +33,10 @@ public class PendingReferralNotificationService
 
     private async Task<MemoryStream> BuildPendingReferralRequestsFileData()
     {
+        var startDate = dateHelper.GetStartOfPreviousMonth();
         var referralRequests = await dataProvider.GetAllWhlgReferralRequests();
-        var pendingReferralRequests = referralFilterService.FilterForPendingReferralReport(referralRequests);
+        var pendingReferralRequests = referralRequests
+            .Where(rr => referralFilterService.WasSubmittedToPendingAuthority(rr, startDate));
         return csvFileCreator.CreatePendingReferralRequestFileDataForS3(pendingReferralRequests);
     }
 }
