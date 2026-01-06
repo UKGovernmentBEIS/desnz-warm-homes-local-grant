@@ -54,6 +54,9 @@ public class PendingReferralNotificationServiceTests
             .ReturnsAsync(allReferralRequests);
 
         var filteredReferralRequests = new List<ReferralRequest>();
+        mockReferralFilterService
+            .Setup(rfs => rfs.WasSubmittedToPendingAuthority(It.IsAny<ReferralRequest>(), startOfPreviousMonth))
+            .Returns(true);
 
         var bytes = new byte[] { 0x0, 0x1, 0x2, 0x3 };
         var memoryStream = new MemoryStream(bytes);
