@@ -40,9 +40,10 @@ public class ReferralFilterServiceTests
         // Arrange
         var referralRequest = BuildReferralRequest(localAuthorityIsNowPending, localAuthorityWasPending,
             referralWasSubmittedInTheLastMonth);
-        
+
         // Act
-        var referralSubmittedToPendingAuthority = referralFilterService.WasSubmittedToPendingAuthority(referralRequest, startOfPreviousMonth);
+        var referralSubmittedToPendingAuthority =
+            referralFilterService.WasSubmittedToPendingAuthority(referralRequest, startOfPreviousMonth);
 
         // Assert
         referralSubmittedToPendingAuthority.Should().BeTrue();
@@ -61,7 +62,8 @@ public class ReferralFilterServiceTests
             referralWasSubmittedInTheLastMonth);
 
         // Act
-        var referralSubmittedToPendingAuthority = referralFilterService.WasSubmittedToPendingAuthority(referralRequest, startOfPreviousMonth);
+        var referralSubmittedToPendingAuthority =
+            referralFilterService.WasSubmittedToPendingAuthority(referralRequest, startOfPreviousMonth);
 
         // Assert
         referralSubmittedToPendingAuthority.Should().BeFalse();
@@ -69,7 +71,8 @@ public class ReferralFilterServiceTests
 
     [TestCase(true, false)]
     [TestCase(false, true)]
-    public void WasSubmittedToNonPendingAuthority_WhenCalledOnReferral_ReturnsExpectedBool(bool wasSubmittedToPendingAuthority, bool expectedResult)
+    public void WasSubmittedToNonPendingAuthority_WhenCalledOnReferral_ReturnsExpectedBool(
+        bool wasSubmittedToPendingAuthority, bool expectedResult)
     {
         // Arrange
         var referralRequest = new ReferralRequestBuilder(10)
@@ -77,7 +80,8 @@ public class ReferralFilterServiceTests
             .Build();
 
         // Act
-        var referralSubmittedToNonPendingAuthority = referralFilterService.WasSubmittedToNonPendingAuthority(referralRequest);
+        var referralSubmittedToNonPendingAuthority =
+            referralFilterService.WasSubmittedToNonPendingAuthority(referralRequest);
 
         // Assert
         referralSubmittedToNonPendingAuthority.Should().Be(expectedResult);
@@ -85,7 +89,8 @@ public class ReferralFilterServiceTests
 
     [TestCase("test1@example.com", true)]
     [TestCase(null, false)]
-    public void WasSubmittedWithContactEmailAddress_WhenCalledOnReferral_ReturnsExpectedBool(string emailAddress, bool expectedResult)
+    public void WasSubmittedWithContactEmailAddress_WhenCalledOnReferral_ReturnsExpectedBool(string emailAddress,
+        bool expectedResult)
     {
         // Arrange
         var referralRequest = new ReferralRequestBuilder(10)

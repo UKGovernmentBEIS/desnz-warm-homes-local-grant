@@ -93,7 +93,7 @@ public class ReferralFollowUpNotificationServiceTests
             validReferral), Times.Once);
         mockReferralFollowUpService.VerifyNoOtherCalls();
     }
-    
+
     [Test]
     public async Task
         SendReferralFollowUpNotifications_WhenCalled_CallsCreateReferralsRequestFollowUpWithReferralsWithEmailAddress()
