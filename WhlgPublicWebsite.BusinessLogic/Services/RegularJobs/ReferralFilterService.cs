@@ -1,5 +1,4 @@
-﻿using Amazon.Util;
-using WhlgPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
+﻿using WhlgPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using WhlgPublicWebsite.BusinessLogic.Models;
 
 namespace WhlgPublicWebsite.BusinessLogic.Services.RegularJobs;
