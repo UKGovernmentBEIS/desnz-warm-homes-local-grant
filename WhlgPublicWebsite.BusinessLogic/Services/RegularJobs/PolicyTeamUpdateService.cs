@@ -54,9 +54,10 @@ public class PolicyTeamUpdateService : IPolicyTeamUpdate
     {
         var endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now, -10);
         var startDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now.AddDays(-7), -10);
-        var referrals = referralFilterService.FilterForSentToNonPending(
-            await dataProvider.GetWhlgReferralRequestsBetweenDates(startDate, endDate));
-        return csvFileCreator.CreateReferralRequestOverviewFileDataForS3(referrals);
+        var referrals = await dataProvider.GetWhlgReferralRequestsBetweenDates(startDate, endDate);
+        var filteredReferrals = referrals
+            .Where(referralFilterService.WasSubmittedToNonPendingAuthority);
+        return csvFileCreator.CreateReferralRequestOverviewFileDataForS3(filteredReferrals);
     }
 
     private async Task<(DateTime, DateTime)> RecentReferralRequestTimePeriod()
@@ -69,17 +70,21 @@ public class PolicyTeamUpdateService : IPolicyTeamUpdate
     private async Task<(MemoryStream, MemoryStream)> BuildRecentReferralRequestFollowUpFileData()
     {
         var (endDate, startDate) = await RecentReferralRequestTimePeriod();
-        var referrals = referralFilterService.FilterForSentToNonPending(
-            await dataProvider.GetWhlgReferralRequestsBetweenDates(startDate, endDate)).ToList();
-        return (csvFileCreator.CreateLocalAuthorityReferralRequestFollowUpFileDataForS3(referrals),
-            csvFileCreator.CreateConsortiumReferralRequestFollowUpFileDataForS3(referrals));
+        var referrals = await dataProvider.GetWhlgReferralRequestsBetweenDates(startDate, endDate);
+        var filteredReferrals = referrals
+            .Where(referralFilterService.WasSubmittedToNonPendingAuthority)
+            .ToList();
+        return (csvFileCreator.CreateLocalAuthorityReferralRequestFollowUpFileDataForS3(filteredReferrals),
+            csvFileCreator.CreateConsortiumReferralRequestFollowUpFileDataForS3(filteredReferrals));
     }
 
     private async Task<(MemoryStream, MemoryStream)> BuildHistoricReferralRequestFollowUpFileData()
     {
-        var referrals = referralFilterService.FilterForSentToNonPending(
-            await dataProvider.GetAllWhlgReferralRequestsForSlaComplianceReporting()).ToList();
-        return (csvFileCreator.CreateLocalAuthorityReferralRequestFollowUpFileDataForS3(referrals),
-            csvFileCreator.CreateConsortiumReferralRequestFollowUpFileDataForS3(referrals));
+        var referrals = await dataProvider.GetAllWhlgReferralRequestsForSlaComplianceReporting();
+        var filteredReferrals = referrals
+            .Where(referralFilterService.WasSubmittedToNonPendingAuthority)
+            .ToList();
+        return (csvFileCreator.CreateLocalAuthorityReferralRequestFollowUpFileDataForS3(filteredReferrals),
+            csvFileCreator.CreateConsortiumReferralRequestFollowUpFileDataForS3(filteredReferrals));
     }
 }

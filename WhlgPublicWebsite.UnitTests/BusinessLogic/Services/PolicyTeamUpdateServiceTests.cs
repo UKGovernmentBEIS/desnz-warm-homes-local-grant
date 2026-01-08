@@ -21,7 +21,6 @@ public class PolicyTeamUpdateServiceTests
     private Mock<ICsvFileCreator> mockCsvFileCreator;
     private Mock<IWorkingDayHelperService> mockWorkingDayHelperService;
     private Mock<IEmailSender> mockEmailSender;
-    private Mock<IDateHelper> mockDateHelper;
     private IReferralFilterService referralFilterService;
     private PolicyTeamUpdateService policyTeamUpdateService;
 
@@ -32,8 +31,7 @@ public class PolicyTeamUpdateServiceTests
         mockCsvFileCreator = new Mock<ICsvFileCreator>();
         mockWorkingDayHelperService = new Mock<IWorkingDayHelperService>();
         mockEmailSender = new Mock<IEmailSender>();
-        mockDateHelper = new Mock<IDateHelper>();
-        referralFilterService = new ReferralFilterService(mockDateHelper.Object);
+        referralFilterService = new ReferralFilterService();
         policyTeamUpdateService = new PolicyTeamUpdateService(
             mockDataProvider.Object,
             mockCsvFileCreator.Object,
