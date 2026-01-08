@@ -205,7 +205,11 @@ public class CommandHandler(
 
         outputProvider.Output("Details:");
         outputProvider.Output($"Request is to {emergencyMaintenanceVerb} emergency maintenance mode.");
-        outputProvider.Output($"Portal is currently {(isMaintenanceStateEnabled ? "IN" : "NOT IN")} emergency maintenance mode. Referrals cannot be submitted.");
+        outputProvider.Output($"Portal emergency maintenance mode is currently {(isMaintenanceStateEnabled ? "ENABLED" : "DISABLED")}.");
+        if (isMaintenanceStateEnabled)
+        {
+            outputProvider.Output("Referrals cannot be submitted.");
+        }
     }
 
     private void DisplayMaintenanceStateWarnings()
