@@ -67,7 +67,7 @@ public class ReferralRequest : IEntityWithRowVersioning
     public ReferralRequestFollowUp? FollowUp { get; set; }
 
     public string ReferralCode { get; set; }
-    
+
     public uint Version { get; set; }
 
     public void UpdateReferralCode()
