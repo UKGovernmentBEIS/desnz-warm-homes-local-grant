@@ -234,6 +234,19 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 personalisation[template.WebsiteUrlPlaceholder] = "https://www.warmerhomes.org.uk";
             }
 
+            if (LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
+                    ConsortiumNames.OxfordshireCountyCouncil))
+            {
+                personalisation[template.TitleDeliveryPartnerPlaceholder] = "Oxfordshire County Council";
+                personalisation[template.TitleDeliveryPartnerOrContractorPlaceholder] =
+                    "Oxfordshire County Council or their official contractor";
+                personalisation[template.YourDeliveryPartnerOrContractorPlaceholder] =
+                    "Oxfordshire County Council or their official contractor";
+                personalisation[template.WebsiteNamePlaceholder] = "Oxfordshire County Council website";
+                personalisation[template.WebsiteUrlPlaceholder] =
+                    "https://www.oxfordshire.gov.uk/residents/environment-and-planning/energy-and-climate-change/retrofitting-your-home/retrofit-help-you";
+            }
+
             var emailModel = new GovUkNotifyEmailModel
             {
                 EmailAddress = emailAddress,
