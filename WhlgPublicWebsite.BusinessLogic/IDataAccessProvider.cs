@@ -24,4 +24,6 @@ public interface IDataAccessProvider
     Task<ReferralRequestFollowUp> UpdateReferralFollowUpByTokenWithWasFollowedUp(string token, bool wasFollowedUp);
     Task<Session> PersistSession(Session session);
     Task RecordEligiblityAndJourneyCompletion(int sessionId, bool? isEligible);
+    Task<EmergencyMaintenanceHistory> GetLatestEmergencyMaintenanceHistoryAsync();
+    Task AddEmergencyMaintenanceHistory(EmergencyMaintenanceHistory history);
 }
