@@ -3,7 +3,7 @@ name: trivy
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: ["develop"]
   pull_request:
 
 permissions:
@@ -24,10 +24,10 @@ jobs:
           docker build -t app:${{ github.sha }} .
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        uses: aquasecurity/trivy-action@0.34.0
         with:
-          image-ref: 'app:${{ github.sha }}'
-          exit-code: '1'
-          severity: 'CRITICAL,HIGH'
+          image-ref: "app:${{ github.sha }}"
+          exit-code: "1"
+          severity: "CRITICAL,HIGH"
           ignore-unfixed: true
-          vuln-type: 'os,library'
+          vuln-type: "os,library"
