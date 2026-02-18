@@ -19,7 +19,7 @@ internal static class LocalAuthorityConsortiums
             { "9053", null },
             { "9054", null },
             { "3810", "Portsmouth City Council" },
-            { "3005", null },
+            { "3005", "Nottinghamshire County Council" },
             { "2205", null },
             { "3505", "Suffolk County Council" },
             { "5090", "Greater London Authority" },

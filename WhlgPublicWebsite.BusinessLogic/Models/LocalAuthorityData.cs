@@ -65,7 +65,7 @@ public class LocalAuthorityData
         { "9053", new LocalAuthorityDetails("Angus Council", LocalAuthorityStatus.NoFunding, "https://www.angus.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "9054", new LocalAuthorityDetails("Argyll and Bute Council", LocalAuthorityStatus.NoFunding, "https://www.argyll-bute.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "3810", new LocalAuthorityDetails("Arun District Council", LocalAuthorityStatus.Live, "https://www.warmerhomes.org.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
-        { "3005", new LocalAuthorityDetails("Ashfield District Council", LocalAuthorityStatus.NoFunding, "https://www.ashfield.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "3005", new LocalAuthorityDetails("Ashfield District Council", LocalAuthorityStatus.Live, "https://www.ashfield.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Nottinghamshire County Council") },
         { "2205", new LocalAuthorityDetails("Ashford Borough Council", LocalAuthorityStatus.Live, "https://www.ashford.gov.uk", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "3505", new LocalAuthorityDetails("Babergh District Council", LocalAuthorityStatus.Live, "https://www.babergh.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Suffolk County Council") },
         { "5090", new LocalAuthorityDetails("Barnet Council", LocalAuthorityStatus.ReferralsPaused, "https://www.barnet.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
