@@ -353,7 +353,7 @@ public class LocalAuthorityData
         { "3720", new LocalAuthorityDetails("Stratford-on-Avon District Council", LocalAuthorityStatus.Live, "https://www.stratford.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Nottingham City Council") },
         { "1625", new LocalAuthorityDetails("Stroud District Council", LocalAuthorityStatus.Live, "https://www.stroud.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Stroud District Council") },
         { "3500", new LocalAuthorityDetails("Suffolk County Council", LocalAuthorityStatus.Live, "https://www.suffolk.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Suffolk County Council") },
-        { "4525", new LocalAuthorityDetails("Sunderland City Council", LocalAuthorityStatus.ReferralsPaused, "https://www.sunderland.gov.uk", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "4525", new LocalAuthorityDetails("Sunderland City Council", LocalAuthorityStatus.Live, "https://www.sunderland.gov.uk", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "3600", new LocalAuthorityDetails("Surrey County Council", LocalAuthorityStatus.Live, "https://www.surreycc.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Surrey County Council") },
         { "3640", new LocalAuthorityDetails("Surrey Heath Borough Council", LocalAuthorityStatus.Live, "https://www.surreyheath.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Surrey County Council") },
         { "2255", new LocalAuthorityDetails("Swale Borough Council", LocalAuthorityStatus.NoFunding, "https://swale.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },

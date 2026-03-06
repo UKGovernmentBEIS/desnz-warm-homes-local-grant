@@ -303,6 +303,9 @@ public class Startup
         app.UseMiddleware<SecurityHeadersMiddleware>();
 
         app.UseSession();
+        
+        // This should be placed after useSession() method, to be able to extract the sessionId using questionnaireService
+        ConfigureCorrelationLogsMiddleware(app);
 
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }
@@ -318,5 +321,11 @@ public class Startup
     {
         // Add emergency maintenance middleware to return 503 Service Unavailable if required
         app.UseMiddleware<EmergencyMaintenanceMiddleware>();
+    }
+    
+    private void ConfigureCorrelationLogsMiddleware(IApplicationBuilder app)
+    {
+        // Add correlation logs middleware to log all the request details for easier logs lookups.
+        app.UseMiddleware<CorrelationLogsMiddleware>();
     }
 }
