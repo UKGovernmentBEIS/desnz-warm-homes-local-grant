@@ -7,6 +7,8 @@ namespace WhlgPublicWebsite.Models.Questionnaire;
 public class ReferralsPausedViewModel : QuestionFlowViewModel
 {
     public string LocalAuthorityName { get; set; }
+    
+    public string LocalAuthorityMessagePartialViewPath { get; set; }
 
     [EmailAddress(ErrorMessage = "Enter an email address in the correct format, like name@example.com")]
     [GovUkValidateRequiredIf(ErrorMessageIfMissing = "Enter your email address",

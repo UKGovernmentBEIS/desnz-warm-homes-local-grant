@@ -549,6 +549,8 @@ public class QuestionnaireController : Controller
         var viewModel = new ReferralsPausedViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
+            LocalAuthorityMessagePartialViewPath =
+                GetLocalAuthorityReferralsPausedMessagePartialViewPath(questionnaire),
             Submitted = emailPreferenceSubmitted,
             EmailAddress = questionnaire.NotificationEmailAddress,
             CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
@@ -1039,6 +1041,19 @@ public class QuestionnaireController : Controller
         };
 
         return $"~/Views/Partials/LocalAuthorityMessages/NotParticipating/{partialViewName}.cshtml";
+    }
+
+    private static string GetLocalAuthorityReferralsPausedMessagePartialViewPath(Questionnaire questionnaire)
+    {
+        var partialViewName = questionnaire.CustodianCode switch
+        {
+            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(custodianCode,
+                    ConsortiumNames.GreaterLondonAuthority) =>
+                "GreaterLondonAuthority",
+            _ => "Default"
+        };
+
+        return $"~/Views/Partials/LocalAuthorityMessages/ReferralsPaused/{partialViewName}.cshtml";
     }
 
     private static string GetLocalAuthorityNoLongerParticipatingMessagePartialViewPath(Questionnaire questionnaire)
