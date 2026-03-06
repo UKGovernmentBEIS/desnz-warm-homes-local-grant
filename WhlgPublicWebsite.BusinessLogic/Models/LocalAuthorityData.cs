@@ -135,7 +135,7 @@ public class LocalAuthorityData
         { "4610", new LocalAuthorityDetails("Coventry City Council", LocalAuthorityStatus.Live, "https://www.coventry.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "West Midlands Combined Authority") },
         { "3820", new LocalAuthorityDetails("Crawley Borough Council", LocalAuthorityStatus.Live, "https://www.warmerhomes.org.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
         { "5240", new LocalAuthorityDetails("Croydon Council", LocalAuthorityStatus.Live, "https://www.warmerhomes.org.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
-        { "940", new LocalAuthorityDetails("Cumberland Council", LocalAuthorityStatus.Live, "https://www.cumberland.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Westmorland and Furness Council") },
+        { "940", new LocalAuthorityDetails("Cumberland Council", LocalAuthorityStatus.Live, "https://www.cumberland.gov.uk/housing/warm-homes/warm-homes-local-grant", IncomeBandOptions[IncomeThreshold._36000], "Westmorland and Furness Council") },
         { "1910", new LocalAuthorityDetails("Dacorum Borough Council", LocalAuthorityStatus.Live, "https://www.dacorum.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1350", new LocalAuthorityDetails("Darlington Borough Council", LocalAuthorityStatus.Live, "https://www.darlington.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Darlington Borough Council (Tees Consortium)") },
         { "2215", new LocalAuthorityDetails("Dartford Borough Council", LocalAuthorityStatus.Live, "https://www.dartford.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Dover District Council") },
