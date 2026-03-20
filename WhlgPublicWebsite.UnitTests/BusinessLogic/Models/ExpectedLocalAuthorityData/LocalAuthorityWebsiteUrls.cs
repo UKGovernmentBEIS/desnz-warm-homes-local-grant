@@ -88,7 +88,7 @@ internal static class LocalAuthorityWebsiteUrls
             { "4610", "https://www.coventry.gov.uk/" },
             { "3820", "https://www.warmerhomes.org.uk/" },
             { "5240", "https://www.warmerhomes.org.uk/" },
-            { "940", "https://www.cumberland.gov.uk" },
+            { "940", "https://www.cumberland.gov.uk/housing/warm-homes/warm-homes-local-grant" },
             { "1910", "https://www.dacorum.gov.uk/" },
             { "1350", "https://www.darlington.gov.uk/" },
             { "2215", "https://www.dartford.gov.uk/" },
