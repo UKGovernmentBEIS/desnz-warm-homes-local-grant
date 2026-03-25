@@ -163,7 +163,8 @@ public class CommandHandler(
         var authorEmail = GetUserEmailForAudit();
         if (authorEmail is null) return;
 
-        await commandLineEmergencyMaintenanceService.SetEmergencyMaintenanceState((EmergencyMaintenanceState)argEmergencyMaintenanceState, authorEmail);
+        await commandLineEmergencyMaintenanceService.SetEmergencyMaintenanceState(
+            (EmergencyMaintenanceState)argEmergencyMaintenanceState, authorEmail);
 
         outputProvider.Output("Output Complete.");
     }
@@ -178,10 +179,10 @@ public class CommandHandler(
             outputProvider.Output("Exiting without changes...");
             return null;
         }
-        
+
         return authorEmail;
     }
-    
+
     private bool GetUserConfirmationForSettingMaintenanceState(string emergencyMaintenanceVerb)
     {
         outputProvider.Output("!!!!!!!!!!!!!!!!!!!!!!");
@@ -197,13 +198,15 @@ public class CommandHandler(
         return confirmation;
     }
 
-    private void DisplayMaintenanceStateDetails(string emergencyMaintenanceVerb, EmergencyMaintenanceState liveEmergencyMaintenanceState)
+    private void DisplayMaintenanceStateDetails(string emergencyMaintenanceVerb,
+        EmergencyMaintenanceState liveEmergencyMaintenanceState)
     {
         var isMaintenanceStateEnabled = liveEmergencyMaintenanceState == EmergencyMaintenanceState.Enabled;
 
         outputProvider.Output("Details:");
         outputProvider.Output($"Request is to {emergencyMaintenanceVerb} emergency maintenance mode.");
-        outputProvider.Output($"Portal emergency maintenance mode is currently {(isMaintenanceStateEnabled ? "ENABLED" : "DISABLED")}.");
+        outputProvider.Output(
+            $"Portal emergency maintenance mode is currently {(isMaintenanceStateEnabled ? "ENABLED" : "DISABLED")}.");
         if (isMaintenanceStateEnabled)
         {
             outputProvider.Output("Referrals cannot be submitted.");
