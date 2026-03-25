@@ -91,17 +91,15 @@ public class CommandHandler(
 
     public async Task ExportNewReferralRequestsToPortal(WhlgDbContext context)
     {
-        if (FlagAndReturnIfRunningOnProd()) return;
-
         // "DEV" is used for deployed development environments
         // "Development" is used for local development environments
         // No connection to AWS is possible in local dev so prevent running this command.
-        if (!(GetEnvironment() == "DEV" || GetEnvironment() == "Staging"))
+        if (!(GetEnvironment() == "DEV" || GetEnvironment() == "Staging") || GetEnvironment() == "Production")
         {
             outputProvider.Output(
-                $"This command can only run with \"{EnvironmentKey}\" set to \"DEV\" or \"Staging\".");
+                $"This command can only run with \"{EnvironmentKey}\" set to \"DEV\", \"Staging\" or \"Production\".");
             outputProvider.Output(
-                "We expect to find this configuration on Development & Staging deployed environments respectively.");
+                "We expect to find this configuration on deployed environments.");
             outputProvider.Output("This command cannot be run locally.");
             return;
         }
