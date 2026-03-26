@@ -1021,6 +1021,9 @@ public class QuestionnaireController : Controller
             var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(
                     custodianCode, ConsortiumNames.OxfordshireCountyCouncil) =>
                 "OxfordshireCountyCouncil",
+            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(
+                    custodianCode, ConsortiumNames.GreaterLondonAuthority) =>
+                "GreaterLondonAuthority",
             _ => "Default"
         };
 
