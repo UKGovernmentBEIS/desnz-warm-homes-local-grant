@@ -1,8 +1,9 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
+using Microsoft.Extensions.Logging;
 using WhlgPublicWebsite.BusinessLogic.Models;
 using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 
@@ -30,70 +31,80 @@ public interface ICsvFileCreator
 
 public class CsvFileCreator : ICsvFileCreator
 {
+    private readonly ILogger<CsvFileCreator> logger;
+
+    public CsvFileCreator(ILogger<CsvFileCreator> logger)
+    {
+        this.logger = logger;
+    }
+
     public MemoryStream CreateReferralRequestFileDataForS3(IEnumerable<ReferralRequest> referralRequests)
     {
-        var rows = referralRequests.Select(rr => new CsvRowReferralRequest(rr));
+        var rows = ExtractRows(referralRequests, rr => new CsvRowReferralRequest(rr));
         return GenerateCsvMemoryStreamFromFileRows(rows, true);
     }
 
     public MemoryStream CreateReferralRequestOverviewFileDataForS3(IEnumerable<ReferralRequest> referralRequests)
     {
-        var rows = referralRequests.Select(rr => new CsvRowReferralCodes(rr));
+        var rows = ExtractRows(referralRequests, rr => new CsvRowReferralCodes(rr));
         return GenerateCsvMemoryStreamFromFileRows(rows, true);
     }
 
     public MemoryStream CreateLocalAuthorityReferralRequestFollowUpFileDataForS3(
         IEnumerable<ReferralRequest> referralRequests)
     {
-        var rows = referralRequests
-            .GroupBy(rr => rr.CustodianCode)
-            .Select(groupingByLa => new CsvRowLaDownloadInformation(groupingByLa));
+        var groupedRequests = referralRequests.GroupBy(rr => rr.CustodianCode);
+        var rows = ExtractRows(
+            groupedRequests,
+            groupingByLa => new CsvRowLaDownloadInformation(groupingByLa));
         return GenerateCsvMemoryStreamFromFileRows(rows, true);
     }
 
     public MemoryStream CreateConsortiumReferralRequestFollowUpFileDataForS3(
         IEnumerable<ReferralRequest> referralRequests)
     {
-        var rows = referralRequests
+        var groupedRequests = referralRequests
             .GroupBy(rr => rr.CustodianCode)
             .GroupBy(groupingByLa =>
                 LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[groupingByLa.Key].Consortium)
-            .Where(groupingByConsortium => groupingByConsortium.Key is not null)
-            .Select(groupingByConsortium =>
-                {
-                    var consortiumReferrals = groupingByConsortium.SelectMany(g => g).ToList();
-                    var consortiumStatistics = new ConsortiumStatistics(consortiumReferrals);
-                    return new CsvRowConsortiumDownloadInformationRow(groupingByConsortium.Key, consortiumStatistics);
-                }
-            );
+            .Where(groupingByConsortium => groupingByConsortium.Key is not null);
+        var rows = ExtractRows(
+            groupedRequests,
+            groupingByConsortium =>
+            {
+                var consortiumReferrals = groupingByConsortium.SelectMany(g => g).ToList();
+                var consortiumStatistics = new ConsortiumStatistics(consortiumReferrals);
+                return new CsvRowConsortiumDownloadInformationRow(groupingByConsortium.Key, consortiumStatistics);
+            });
         return GenerateCsvMemoryStreamFromFileRows(rows, true);
     }
 
     public MemoryStream CreatePendingReferralRequestFileDataForS3(IEnumerable<ReferralRequest> referralRequests)
     {
-        var rows = referralRequests
-            .Select(rr => new CsvRowPendingReferralRequest(rr));
+        var rows = ExtractRows(referralRequests, rr => new CsvRowPendingReferralRequest(rr));
 
         return GenerateCsvMemoryStreamFromFileRows(rows, true);
     }
 
     public MemoryStream CreatePerMonthLocalAuthorityReferralStatisticsForConsole(IEnumerable<ReferralRequest> requests)
     {
-        var rows = requests
-            .GroupBy(r => r.CustodianCode)
-            .Select(custodianCodeRequests => new CsvRowLocalAuthorityPerMonthStatistics(custodianCodeRequests));
+        var groupedRequests = requests.GroupBy(rr => rr.CustodianCode);
+        var rows = ExtractRows(
+            groupedRequests,
+            custodianCodeRequests => new CsvRowLocalAuthorityPerMonthStatistics(custodianCodeRequests));
 
         return GenerateCsvMemoryStreamFromFileRows(rows, false);
     }
 
     public MemoryStream CreatePerMonthConsortiumReferralStatisticsForConsole(IEnumerable<ReferralRequest> requests)
     {
-        var rows = requests
+        var groupedRequests = requests
             .GroupBy(rr =>
                 LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Consortium)
-            .Where(group => group.Key != null)
-            .Select(consortiumRequests => new CsvRowConsortiumPerMonthStatistics(consortiumRequests)
-            );
+            .Where(group => group.Key != null);
+        var rows = ExtractRows(
+            groupedRequests,
+            consortiumRequests => new CsvRowConsortiumPerMonthStatistics(consortiumRequests));
         return GenerateCsvMemoryStreamFromFileRows(rows, false);
     }
 
@@ -367,8 +378,6 @@ public class CsvFileCreator : ICsvFileCreator
                 EpcConfirmation.Unknown => "Homeowner unsure",
                 // Yes not included here as a failsafe, we don't expect this to be coming up normally,
                 // users shouldn't be referred if they've confirmed a high EPC
-                // TODO DESNZ-2087: Once the CsvFileCreator is more resilient we can remove this case again
-                EpcConfirmation.Yes => "Homeowner agrees with rating",
                 null => "",
                 _ => throw new ArgumentOutOfRangeException("request.EpcConfirmation",
                     "Unrecognised EpcConfirmation value: " + request.EpcConfirmation)
@@ -455,6 +464,21 @@ public class CsvFileCreator : ICsvFileCreator
             csvWriter.WriteRecords(rows);
             csvWriter.Flush();
             return new MemoryStream(writeableMemoryStream.GetBuffer(), 0, (int)writeableMemoryStream.Length, false);
+        }
+    }
+    
+    private IEnumerable<TResult> ExtractRows<TSource, TResult>(IEnumerable<TSource> source, Func<TSource, TResult> selector)
+    {
+        foreach (var item in source)
+        {
+            TResult result;
+            try { result = selector(item); }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "[CsvFileCreator] Skipping row {Row} due to error", item);
+                continue;
+            }
+            yield return result;
         }
     }
 }
