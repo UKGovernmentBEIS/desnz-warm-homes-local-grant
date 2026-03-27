@@ -22,7 +22,7 @@ public class EligiblePostcodeServiceTests
     private ILogger<EligiblePostcodeService> logger;
     private EligiblePostcodeService underTest;
 
-    [TestCase("BN99 9GA")]
+    [TestCase("BN88 1ZT")]
     [TestCase("YO24 3LY")]
     public void IsEligiblePostcode_CalledWithEligiblePostcode_ReturnsTrue(string postcode)
     {
@@ -37,7 +37,7 @@ public class EligiblePostcodeServiceTests
     public void IsEligiblePostcode_CalledWithIneligiblePostcode_ReturnsFalse()
     {
         // Act
-        var result = underTest.IsEligiblePostcode("AL1 2AP");
+        var result = underTest.IsEligiblePostcode("AL1 1AG");
 
         // Assert
         result.Should().BeFalse();
@@ -60,9 +60,9 @@ public class EligiblePostcodeServiceTests
     [TestCase("BN99 9GA", true, Description = "Only in original file")]
     [TestCase("N8 7JL", false, Description = "Only in IMD2025 file")]
     [TestCase("YO24 3LY", true, Description = "In both files")]
-    public void IsEligiblePostcode_BeforeApril2026_UsesOriginalPostcodes(string postcode, bool expectedResult)
+    public void IsEligiblePostcode_BeforeMarch2026_UsesOriginalPostcodes(string postcode, bool expectedResult)
     {
-        var service = CreateServiceWithDate(new DateTime(2026, 3, 31));
+        var service = CreateServiceWithDate(new DateTime(2026, 2, 28));
 
         service.IsEligiblePostcode(postcode).Should().Be(expectedResult);
     }
@@ -70,9 +70,9 @@ public class EligiblePostcodeServiceTests
     [TestCase("BN99 9GA", false, Description = "Only in original file")]
     [TestCase("N8 7JL", true, Description = "Only in IMD2025 file")]
     [TestCase("YO24 3LY", true, Description = "In both files")]
-    public void IsEligiblePostcode_OnOrAfterApril2026_UsesImd2025Postcodes(string postcode, bool expectedResult)
+    public void IsEligiblePostcode_OnOrAfterMarch2026_UsesImd2025Postcodes(string postcode, bool expectedResult)
     {
-        var service = CreateServiceWithDate(new DateTime(2026, 4, 1));
+        var service = CreateServiceWithDate(new DateTime(2026, 3, 1));
 
         service.IsEligiblePostcode(postcode).Should().Be(expectedResult);
     }
