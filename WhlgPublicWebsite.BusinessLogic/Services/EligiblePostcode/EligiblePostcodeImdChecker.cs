@@ -21,6 +21,6 @@ public class EligiblePostcodeImdFileChecker : IEligiblePostcodeImdFileChecker
 
     public bool ShouldUseImd2025()
     {
-        return getToday() >= new DateTime(2026, 4, 1);
+        return getToday() >= new DateTime(2026, 3, 1);
     }
 }
