@@ -25,7 +25,7 @@ public class EligiblePostcodeListCache
 
     public List<string> GetEligiblePostcodes()
     {
-        return imdChecker.ShouldUseImd2025()
+        return imdChecker.ShouldUseImd2025Only()
             ? eligiblePostcodesImd2025
             : eligiblePostcodes.Concat(eligiblePostcodesImd2025).Distinct().ToList();
     }
