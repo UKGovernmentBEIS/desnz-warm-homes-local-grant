@@ -22,7 +22,7 @@ public class EligiblePostcodeServiceTests
     private ILogger<EligiblePostcodeService> logger;
     private EligiblePostcodeService underTest;
 
-    [TestCase("BN99 9GA")]
+    [TestCase("BN88 1ZT")]
     [TestCase("YO24 3LY")]
     public void IsEligiblePostcode_CalledWithEligiblePostcode_ReturnsTrue(string postcode)
     {
