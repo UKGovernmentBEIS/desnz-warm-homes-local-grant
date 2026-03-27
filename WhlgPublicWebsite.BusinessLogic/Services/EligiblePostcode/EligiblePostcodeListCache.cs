@@ -27,7 +27,7 @@ public class EligiblePostcodeListCache
     {
         return imdChecker.ShouldUseImd2025()
             ? eligiblePostcodesImd2025
-            : eligiblePostcodes;
+            : eligiblePostcodes.Concat(eligiblePostcodesImd2025).Distinct().ToList();
     }
 
     private static string ReadPostcodesFromJsonFile(string fileName)

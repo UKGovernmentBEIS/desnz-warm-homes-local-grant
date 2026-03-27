@@ -37,7 +37,7 @@ public class EligiblePostcodeServiceTests
     public void IsEligiblePostcode_CalledWithIneligiblePostcode_ReturnsFalse()
     {
         // Act
-        var result = underTest.IsEligiblePostcode("AL1 2AP");
+        var result = underTest.IsEligiblePostcode("AL1 1AG");
 
         // Assert
         result.Should().BeFalse();
@@ -58,7 +58,7 @@ public class EligiblePostcodeServiceTests
     // N8 7JL: only in the IMD2025 file
     // YO24 3LY: in both files
     [TestCase("BN99 9GA", true, Description = "Only in original file")]
-    [TestCase("N8 7JL", false, Description = "Only in IMD2025 file")]
+    [TestCase("N8 7JL", true, Description = "Only in IMD2025 file")]
     [TestCase("YO24 3LY", true, Description = "In both files")]
     public void IsEligiblePostcode_BeforeApril2026_UsesOriginalPostcodes(string postcode, bool expectedResult)
     {
