@@ -16,6 +16,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
+    <!-- TODO DESNZ-2197: Remove the references to the old file once we have moved entirely to the IMD2025 postcodes. -->
     <EmbeddedResource Include="Services\EligiblePostcode\EligiblePostcodeData.json"/>
+    <EmbeddedResource Include="Services\EligiblePostcode\EligiblePostcodeData_IMD2025.json"/>
   </ItemGroup>
 </Project>
