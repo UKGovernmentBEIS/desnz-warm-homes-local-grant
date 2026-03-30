@@ -717,7 +717,7 @@ public class QuestionnaireController : Controller
                 return RedirectToNextStep(ineligibleQuestionnaireStatus.IneligibleFlowStep);
             }
         }
-        
+
         await googleAnalyticsService.SendQuestionnaireCompletedEventAsync(Request);
         var questionnaire = questionnaireService.GetQuestionnaire();
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.CheckAnswers, questionnaire);
