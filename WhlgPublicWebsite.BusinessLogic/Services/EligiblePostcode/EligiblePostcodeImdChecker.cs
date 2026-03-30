@@ -2,7 +2,7 @@ namespace WhlgPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 
 public interface IEligiblePostcodeImdFileChecker
 {
-    bool ShouldUseImd2025();
+    bool ShouldUseImd2025Only();
 }
 
 public class EligiblePostcodeImdFileChecker : IEligiblePostcodeImdFileChecker
@@ -19,7 +19,7 @@ public class EligiblePostcodeImdFileChecker : IEligiblePostcodeImdFileChecker
         this.getToday = getToday;
     }
 
-    public bool ShouldUseImd2025()
+    public bool ShouldUseImd2025Only()
     {
         return getToday() >= new DateTime(2026, 4, 1);
     }
