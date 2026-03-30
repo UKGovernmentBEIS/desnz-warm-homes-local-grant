@@ -20,10 +20,6 @@
     <div class="govuk-grid-column-two-thirds">
         @await Html.PartialAsync(Model.LocalAuthorityMessagePartialViewPath)
 
-        <p class="govuk-body">
-            If your Local Authority does not seem right, <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your correct Local Authority</a> and contact them directly.
-        </p>
-
         @if (Model.Submitted)
         {
             @await Html.GovUkNotificationBanner(
