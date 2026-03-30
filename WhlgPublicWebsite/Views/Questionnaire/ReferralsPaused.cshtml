@@ -18,19 +18,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
-        <h1 class="govuk-heading-l">Your Local Authority is no longer receiving applications via this service</h1>
-
-        <h2 class="govuk-heading-m">What to do next</h2>
-
-        <p class="govuk-body">
-            Your Local Authority, <strong class="govuk-!-font-weight-bold">@Model.LocalAuthorityName</strong>, is no longer receiving applications for the Warm Homes: Local Grant
-            as they are oversubscribed for this year. Please check back in April when more funding may be available.
-        </p>
-
-        <p class="govuk-body">
-            If your Local Authority does not seem right, <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your correct Local Authority</a> and contact them directly.
-        </p>
+        @await Html.PartialAsync(Model.LocalAuthorityMessagePartialViewPath)
 
         @if (Model.Submitted)
         {
