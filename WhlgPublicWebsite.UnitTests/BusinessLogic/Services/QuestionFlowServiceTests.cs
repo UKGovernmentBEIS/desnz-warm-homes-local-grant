@@ -30,9 +30,9 @@ public class QuestionFlowServiceTests
             .NotParticipating);
 
     // DESNZ-2080: Comment out when all LAs of ReferralsPaused are removed
-    private static readonly string ReferralsPausedCustodianCode =
-        LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
-            .ReferralsPaused);
+    // private static readonly string ReferralsPausedCustodianCode =
+    //     LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
+    //         .ReferralsPaused);
 
     private static readonly string PendingCustodianCode =
         LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
@@ -86,11 +86,12 @@ public class QuestionFlowServiceTests
         // Do the following:
         // 1. Search the project for "DESNZ-2080" and uncomment the snippets
         // 2. Change this test to .Should().NotThrow()
+        // 3. Update this test's name to reflect the new status being tested
         // If in the future we lose all LAs of this status, this test will start failing again. To fix, do the reverse of the above.
         Action act = () =>
             LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
                 .ReferralsPaused);
-        act.Should().NotThrow<InvalidOperationException>();
+        act.Should().Throw<InvalidOperationException>();
     }
 
     private static QuestionFlowServiceTestCase[] BackTestCases =
@@ -583,14 +584,14 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.NoFunding),
         // DESNZ-2080: Comment out when all LAs of ReferralsPaused are removed
-        new(
-            "Confirm local authority continues to referrals paused if authority is paused",
-            new Input(
-                QuestionFlowStep.ConfirmLocalAuthority,
-                localAuthorityIsCorrect: true,
-                custodianCode: ReferralsPausedCustodianCode
-            ),
-            QuestionFlowStep.ReferralsPaused),
+        // new(
+        //     "Confirm local authority continues to referrals paused if authority is paused",
+        //     new Input(
+        //         QuestionFlowStep.ConfirmLocalAuthority,
+        //         localAuthorityIsCorrect: true,
+        //         custodianCode: ReferralsPausedCustodianCode
+        //     ),
+        //     QuestionFlowStep.ReferralsPaused),
         new(
             "Confirm local authority continues to not participating if authority is participating",
             new Input(
