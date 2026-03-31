@@ -1084,6 +1084,9 @@ public class QuestionnaireController : Controller
                 (LocalAuthorityData.LocalAuthorityStatus.Live, var custodianCode) when LocalAuthorityData
                         .CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.PortsmouthCityCouncil) =>
                     "PortsmouthCityCouncil",
+                (LocalAuthorityData.LocalAuthorityStatus.Live, var custodianCode) when LocalAuthorityData
+                        .CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.GreaterLondonAuthority) =>
+                    "GreaterLondonAuthority",
                 _ => "Default"
             };
         return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";
