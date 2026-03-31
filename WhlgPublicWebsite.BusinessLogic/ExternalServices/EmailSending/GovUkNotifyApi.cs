@@ -252,9 +252,9 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             {
                 personalisation[template.TitleDeliveryPartnerPlaceholder] = "Greater London Authority";
                 personalisation[template.TitleDeliveryPartnerOrContractorPlaceholder] =
-                    "Greater London Authority";
+                    "Greater London Authority or their official contractor";
                 personalisation[template.YourDeliveryPartnerOrContractorPlaceholder] =
-                    "Greater London Authority";
+                    "Greater London Authority or their official contractor";
                 personalisation[template.WebsiteNamePlaceholder] = "Greater London Authority website";
                 personalisation[template.WebsiteUrlPlaceholder] =
                     "https://www.london.gov.uk/programmes-strategies/environment-and-climate-change/net-zero-energy/warmer-homes";
