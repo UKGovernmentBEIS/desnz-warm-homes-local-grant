@@ -29,14 +29,14 @@ public class QuestionFlowServiceTests
         LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
             .NotParticipating);
 
-    // DESNZ-2080: Comment out when all LAs of ReferralsPaused are removed
+    // DESNZ-2080: Reinstate when an LA of ReferralsPaused exists
     // private static readonly string ReferralsPausedCustodianCode =
     //     LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
     //         .ReferralsPaused);
 
     private static readonly string PendingCustodianCode =
         LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
-    // DESNZ-1849: Reinstate when an LA of takingFutureReferrals is added
+    // DESNZ-1849: Reinstate when an LA of takingFutureReferrals exists
     // private static readonly string TakingFutureReferralsCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals);
 
     [TestCaseSource(nameof(BackTestCases))]
@@ -68,11 +68,11 @@ public class QuestionFlowServiceTests
     [Test]
     public void NoTakingFutureReferralsLasExist()
     {
-        // If this test starts failing, this is because we have written tests to cover LAs of this status but couldn't turn them on yet
+        // If this test starts failing, the LA data has been updated and the statement in the test name is now false
         // Do the following:
-        // 1. Search the project for "DESNZ-1849" and uncomment the snippets
-        // 2. Change this test to .Should().NotThrow()
-        // If in the future we lose all LAs of this status, this test will start failing again. To fix, do the reverse of the above.
+        // 1. Update this test's name to reflect if this LocalAuthorityStatus exists within the LA data
+        // 2. Search the project for "DESNZ-1849" for all references to this status and ensure they are updated to reflect the test name statement
+        // 3. Invert the test assertion to correctly assert the statement in the test name (i.e. Throw should become NotThrow and vice versa)
         Action act = () =>
             LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
                 .TakingFutureReferrals);
@@ -82,12 +82,11 @@ public class QuestionFlowServiceTests
     [Test]
     public void NoReferralsPausedLasExist()
     {
-        // If this test starts failing, this is because we have written tests to cover LAs of this status but couldn't turn them on yet
+        // If this test starts failing, the LA data has been updated and the statement in the test name is now false
         // Do the following:
-        // 1. Search the project for "DESNZ-2080" and uncomment the snippets
-        // 2. Change this test to .Should().NotThrow()
-        // 3. Update this test's name to reflect the new status being tested
-        // If in the future we lose all LAs of this status, this test will start failing again. To fix, do the reverse of the above.
+        // 1. Update this test's name to reflect if this LocalAuthorityStatus exists within the LA data
+        // 2. Search the project for "DESNZ-2080" for all references to this status and ensure they are updated to reflect the test name statement
+        // 3. Invert the test assertion to correctly assert the statement in the test name (i.e. Throw should become NotThrow and vice versa)
         Action act = () =>
             LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
                 .ReferralsPaused);
@@ -583,7 +582,7 @@ public class QuestionFlowServiceTests
                 custodianCode: NoFundingCustodianCode
             ),
             QuestionFlowStep.NoFunding),
-        // DESNZ-2080: Comment out when all LAs of ReferralsPaused are removed
+        // DESNZ-2080: Reinstate when an LA of ReferralsPaused exists
         // new(
         //     "Confirm local authority continues to referrals paused if authority is paused",
         //     new Input(
@@ -628,7 +627,7 @@ public class QuestionFlowServiceTests
                 custodianCode: PendingCustodianCode
             ),
             QuestionFlowStep.Pending),
-        // DESNZ-1849: Reinstate when an LA of takingFutureReferrals is added
+        // DESNZ-1849: Reinstate when an LA of takingFutureReferrals exists
         // new(
         //     "Check answers continues to taking future referrals if LA is taking future referrals",
         //     new Input(

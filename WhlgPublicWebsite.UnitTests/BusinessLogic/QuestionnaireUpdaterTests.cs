@@ -37,7 +37,7 @@ public class QuestionnaireUpdaterTests
             LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live);
         pendingCustodianCode =
             LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
-        // DESNZ-1849: Reinstate when an LA of takingFutureReferrals is added
+        // DESNZ-1849: Reinstate when an LA of takingFutureReferrals exists
         // takingFutureReferralsCustodianCode =
         //     LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
         //         .TakingFutureReferrals);
@@ -324,7 +324,7 @@ public class QuestionnaireUpdaterTests
     }
 
     [Test]
-    [Ignore("DESNZ-1849: Reinstate when an LA of takingFutureReferrals is added")]
+    [Ignore("DESNZ-1849: Reinstate when an LA of takingFutureReferrals exists")]
     public async Task
         GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsTakingFutureReferrals_SendOneEmailWithReferralCodeWithTakingFutureReferralTemplate()
     {
