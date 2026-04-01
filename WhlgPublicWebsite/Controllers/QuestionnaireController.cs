@@ -549,6 +549,8 @@ public class QuestionnaireController : Controller
         var viewModel = new ReferralsPausedViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
+            LocalAuthorityMessagePartialViewPath =
+                GetLocalAuthorityReferralsPausedMessagePartialViewPath(questionnaire),
             Submitted = emailPreferenceSubmitted,
             EmailAddress = questionnaire.NotificationEmailAddress,
             CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
@@ -715,7 +717,7 @@ public class QuestionnaireController : Controller
                 return RedirectToNextStep(ineligibleQuestionnaireStatus.IneligibleFlowStep);
             }
         }
-        
+
         await googleAnalyticsService.SendQuestionnaireCompletedEventAsync(Request);
         var questionnaire = questionnaireService.GetQuestionnaire();
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.CheckAnswers, questionnaire);
@@ -1019,6 +1021,9 @@ public class QuestionnaireController : Controller
             var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(
                     custodianCode, ConsortiumNames.OxfordshireCountyCouncil) =>
                 "OxfordshireCountyCouncil",
+            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(
+                    custodianCode, ConsortiumNames.GreaterLondonAuthority) =>
+                "GreaterLondonAuthority",
             _ => "Default"
         };
 
@@ -1039,6 +1044,19 @@ public class QuestionnaireController : Controller
         };
 
         return $"~/Views/Partials/LocalAuthorityMessages/NotParticipating/{partialViewName}.cshtml";
+    }
+
+    private static string GetLocalAuthorityReferralsPausedMessagePartialViewPath(Questionnaire questionnaire)
+    {
+        var partialViewName = questionnaire.CustodianCode switch
+        {
+            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(custodianCode,
+                    ConsortiumNames.GreaterLondonAuthority) =>
+                "GreaterLondonAuthority",
+            _ => "Default"
+        };
+
+        return $"~/Views/Partials/LocalAuthorityMessages/ReferralsPaused/{partialViewName}.cshtml";
     }
 
     private static string GetLocalAuthorityNoLongerParticipatingMessagePartialViewPath(Questionnaire questionnaire)
@@ -1066,6 +1084,9 @@ public class QuestionnaireController : Controller
                 (LocalAuthorityData.LocalAuthorityStatus.Live, var custodianCode) when LocalAuthorityData
                         .CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.PortsmouthCityCouncil) =>
                     "PortsmouthCityCouncil",
+                (LocalAuthorityData.LocalAuthorityStatus.Live, var custodianCode) when LocalAuthorityData
+                        .CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.GreaterLondonAuthority) =>
+                    "GreaterLondonAuthority",
                 _ => "Default"
             };
         return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";

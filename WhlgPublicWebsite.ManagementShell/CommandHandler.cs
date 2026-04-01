@@ -91,17 +91,15 @@ public class CommandHandler(
 
     public async Task ExportNewReferralRequestsToPortal(WhlgDbContext context)
     {
-        if (FlagAndReturnIfRunningOnProd()) return;
-
         // "DEV" is used for deployed development environments
         // "Development" is used for local development environments
         // No connection to AWS is possible in local dev so prevent running this command.
-        if (!(GetEnvironment() == "DEV" || GetEnvironment() == "Staging"))
+        if (!(GetEnvironment() == "DEV" || GetEnvironment() == "Staging") || GetEnvironment() == "Production")
         {
             outputProvider.Output(
-                $"This command can only run with \"{EnvironmentKey}\" set to \"DEV\" or \"Staging\".");
+                $"This command can only run with \"{EnvironmentKey}\" set to \"DEV\", \"Staging\" or \"Production\".");
             outputProvider.Output(
-                "We expect to find this configuration on Development & Staging deployed environments respectively.");
+                "We expect to find this configuration on deployed environments.");
             outputProvider.Output("This command cannot be run locally.");
             return;
         }
@@ -165,7 +163,8 @@ public class CommandHandler(
         var authorEmail = GetUserEmailForAudit();
         if (authorEmail is null) return;
 
-        await commandLineEmergencyMaintenanceService.SetEmergencyMaintenanceState((EmergencyMaintenanceState)argEmergencyMaintenanceState, authorEmail);
+        await commandLineEmergencyMaintenanceService.SetEmergencyMaintenanceState(
+            (EmergencyMaintenanceState)argEmergencyMaintenanceState, authorEmail);
 
         outputProvider.Output("Output Complete.");
     }
@@ -180,10 +179,10 @@ public class CommandHandler(
             outputProvider.Output("Exiting without changes...");
             return null;
         }
-        
+
         return authorEmail;
     }
-    
+
     private bool GetUserConfirmationForSettingMaintenanceState(string emergencyMaintenanceVerb)
     {
         outputProvider.Output("!!!!!!!!!!!!!!!!!!!!!!");
@@ -199,13 +198,15 @@ public class CommandHandler(
         return confirmation;
     }
 
-    private void DisplayMaintenanceStateDetails(string emergencyMaintenanceVerb, EmergencyMaintenanceState liveEmergencyMaintenanceState)
+    private void DisplayMaintenanceStateDetails(string emergencyMaintenanceVerb,
+        EmergencyMaintenanceState liveEmergencyMaintenanceState)
     {
         var isMaintenanceStateEnabled = liveEmergencyMaintenanceState == EmergencyMaintenanceState.Enabled;
 
         outputProvider.Output("Details:");
         outputProvider.Output($"Request is to {emergencyMaintenanceVerb} emergency maintenance mode.");
-        outputProvider.Output($"Portal emergency maintenance mode is currently {(isMaintenanceStateEnabled ? "ENABLED" : "DISABLED")}.");
+        outputProvider.Output(
+            $"Portal emergency maintenance mode is currently {(isMaintenanceStateEnabled ? "ENABLED" : "DISABLED")}.");
         if (isMaintenanceStateEnabled)
         {
             outputProvider.Output("Referrals cannot be submitted.");
