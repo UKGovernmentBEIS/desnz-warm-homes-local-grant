@@ -15,7 +15,8 @@ public static class Program
                 @"UserId=postgres;Password=postgres;Server=db;Port=5432;Database=whlgdev;Include Error Detail=true;Pooling=true")
             .Options;
         using var context = new WhlgDbContext(contextOptions);
-        var csvFileCreator = new CsvFileCreator();
+        var csvFileCreatorLogger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<CsvFileCreator>();
+        var csvFileCreator = new CsvFileCreator(csvFileCreatorLogger);
         var databaseOperation = new DatabaseOperation(context, outputProvider);
         var fakeReferralGenerator = new FakeReferralGenerator();
         var commandHandler =
