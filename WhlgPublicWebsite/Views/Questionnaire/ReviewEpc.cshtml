@@ -27,51 +27,44 @@
             This certificate may be registered to your property or one of the properties nearby that shares part of your address.
         </p>
 
-        <div class="govuk-summary-card">
-            <div class="govuk-summary-card__title-wrapper">
-                <h2 class="govuk-summary-card__title govuk-heading-m">Certificate</h2>
-            </div>
-            <div class="govuk-summary-card__content">
-                @await Html.GovUkSummaryList(new SummaryListViewModel
-                       {
-                           Rows = new List<SummaryListRowViewModel>
-                           {
-                               new()
-                               {
-                                   Key = new SummaryListRowKey { Text = "Registered address" },
-                                   Value = new SummaryListRowValue
-                                   {
-                                       Html = @<text>@Html.Raw(Model.AddressRawHtml)</text>
-                                   }
-                               },
-                               new()
-                               {
-                                   Key = new SummaryListRowKey { Text = "Energy rating" },
-                                   Value = new SummaryListRowValue
-                                   {
-                                       Text = Model.EpcBand
-                                   }
-                               },
-                               new()
-                               {
-                                   Key = new SummaryListRowKey { Text = "Valid from" },
-                                   Value = new SummaryListRowValue
-                                   {
-                                       Text = Model.ValidFrom
-                                   }
-                               },
-                               new()
-                               {
-                                   Key = new SummaryListRowKey { Text = "Valid until" },
-                                   Value = new SummaryListRowValue
-                                   {
-                                       Text = Model.ValidUntil
-                                   }
-                               }
-                           }
-                       })
-            </div>
-        </div>
+        @await Html.GovUkSummaryList(new SummaryListViewModel
+        {
+            Rows = new List<SummaryListRowViewModel>
+            {
+                new()
+                {
+                    Key = new SummaryListRowKey { Text = "Registered address" },
+                    Value = new SummaryListRowValue
+                    {
+                        Html = @<text>@Html.Raw(Model.AddressRawHtml)</text>
+                    }
+                },
+                new()
+                {
+                    Key = new SummaryListRowKey { Text = "Energy rating" },
+                    Value = new SummaryListRowValue
+                    {
+                        Text = Model.EpcBand
+                    }
+                },
+                new()
+                {
+                    Key = new SummaryListRowKey { Text = "Valid from" },
+                    Value = new SummaryListRowValue
+                    {
+                        Text = Model.ValidFrom
+                    }
+                },
+                new()
+                {
+                    Key = new SummaryListRowKey { Text = "Valid until" },
+                    Value = new SummaryListRowValue
+                    {
+                        Text = Model.ValidUntil
+                    }
+                }
+            }
+        })
         
         <form action="@Url.Action(nameof(QuestionnaireController.ReviewEpc_Post), "Questionnaire")" method="post" novalidate>
             @(Html.HiddenFor(m => m.EntryPoint))
