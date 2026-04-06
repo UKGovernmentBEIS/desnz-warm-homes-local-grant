@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using WhlgPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using WhlgPublicWebsite.Data;
 
