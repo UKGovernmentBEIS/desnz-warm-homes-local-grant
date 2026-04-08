@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using NUnit.Framework;
 using Tests.Builders;
 using WhlgPublicWebsite.BusinessLogic.Models;
@@ -17,6 +20,8 @@ namespace Tests.BusinessLogic.Services;
 [TestFixture]
 public class CsvFileCreatorTests
 {
+    private const string UnknownCustodianCode = "not-a-valid-custodian-code";
+
     [Test]
     public void CreateReferralRequestFileDataForS3_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
@@ -156,6 +161,91 @@ public class CsvFileCreatorTests
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
             "Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Household income band,Is eligible postcode,Tenure\r\n");
+    }
+
+    [Test]
+    public void CreateReferralRequestFileDataForS3_WhenRowThrows_LogsErrorWithSkippedRow()
+    {
+        // Arrange
+        var mockLogger = new Mock<ILogger<CsvFileCreator>>();
+        var underTest = new CsvFileCreator(mockLogger.Object);
+        var validRequest = new ReferralRequestBuilder(1).Build();
+        var faultyRequest = new ReferralRequestBuilder(2).WithEpcConfirmation(EpcConfirmation.Yes).Build();
+        var referralRequests = new List<ReferralRequest> { validRequest, faultyRequest };
+
+        // Act
+        underTest.CreateReferralRequestFileDataForS3(referralRequests);
+
+        // Assert
+        VerifySkippingRowLoggedOnce(mockLogger, $"ReferralCode={faultyRequest.ReferralCode}");
+    }
+
+    [Test]
+    public void CreateReferralRequestOverviewFileDataForS3_WhenRowThrows_LogsErrorWithSkippedRow()
+    {
+        // Arrange
+        var mockLogger = new Mock<ILogger<CsvFileCreator>>();
+        var underTest = new CsvFileCreator(mockLogger.Object);
+        var validRequest = new ReferralRequestBuilder(1).WithCustodianCode("114").Build();
+        var faultyRequest = new ReferralRequestBuilder(2).WithCustodianCode(UnknownCustodianCode).Build();
+        var referralRequests = new List<ReferralRequest> { validRequest, faultyRequest };
+
+        // Act
+        underTest.CreateReferralRequestOverviewFileDataForS3(referralRequests);
+
+        // Assert
+        VerifySkippingRowLoggedOnce(mockLogger, $"ReferralCode={faultyRequest.ReferralCode}");
+    }
+
+    [Test]
+    public void CreateLocalAuthorityReferralRequestFollowUpFileDataForS3_WhenRowThrows_LogsErrorWithSkippedRow()
+    {
+        // Arrange
+        var mockLogger = new Mock<ILogger<CsvFileCreator>>();
+        var underTest = new CsvFileCreator(mockLogger.Object);
+        var validRequest = new ReferralRequestBuilder(1).WithCustodianCode("114").Build();
+        var faultyRequest = new ReferralRequestBuilder(2).WithCustodianCode(UnknownCustodianCode).Build();
+        var referralRequests = new List<ReferralRequest> { validRequest, faultyRequest };
+
+        // Act
+        underTest.CreateLocalAuthorityReferralRequestFollowUpFileDataForS3(referralRequests);
+
+        // Assert
+        VerifySkippingRowLoggedOnce(mockLogger, $"CustodianCode={UnknownCustodianCode}");
+    }
+
+    [Test]
+    public void CreatePendingReferralRequestFileDataForS3_WhenRowThrows_LogsErrorWithSkippedRow()
+    {
+        // Arrange
+        var mockLogger = new Mock<ILogger<CsvFileCreator>>();
+        var underTest = new CsvFileCreator(mockLogger.Object);
+        var validRequest = new ReferralRequestBuilder(1).WithCustodianCode("114").Build();
+        var faultyRequest = new ReferralRequestBuilder(2).WithCustodianCode(UnknownCustodianCode).Build();
+        var referralRequests = new List<ReferralRequest> { validRequest, faultyRequest };
+
+        // Act
+        underTest.CreatePendingReferralRequestFileDataForS3(referralRequests);
+
+        // Assert
+        VerifySkippingRowLoggedOnce(mockLogger, $"ReferralCode={faultyRequest.ReferralCode}");
+    }
+
+    [Test]
+    public void CreatePerMonthLocalAuthorityReferralStatisticsForConsole_WhenRowThrows_LogsErrorWithSkippedRow()
+    {
+        // Arrange
+        var mockLogger = new Mock<ILogger<CsvFileCreator>>();
+        var underTest = new CsvFileCreator(mockLogger.Object);
+        var validRequest = new ReferralRequestBuilder(1).WithCustodianCode("114").Build();
+        var faultyRequest = new ReferralRequestBuilder(2).WithCustodianCode(UnknownCustodianCode).Build();
+        var referralRequests = new List<ReferralRequest> { validRequest, faultyRequest };
+
+        // Act
+        underTest.CreatePerMonthLocalAuthorityReferralStatisticsForConsole(referralRequests);
+
+        // Assert
+        VerifySkippingRowLoggedOnce(mockLogger, $"CustodianCode={UnknownCustodianCode}");
     }
 
     [Test]
@@ -543,6 +633,20 @@ public class CsvFileCreatorTests
 
         // Assert
         ContainsBom(data).Should().BeFalse();
+    }
+
+    private static void VerifySkippingRowLoggedOnce(Mock<ILogger<CsvFileCreator>> mockLogger,
+        string expectedSubstringInMessage)
+    {
+        var errorLogs = mockLogger.Invocations
+            .Where(i => i.Method.Name == nameof(ILogger.Log) && (LogLevel)i.Arguments[0] == LogLevel.Error)
+            .Select(i => i.Arguments[2]?.ToString() ?? "")
+            .Where(msg => msg.Contains("[CsvFileCreator] Skipping row (", StringComparison.Ordinal)
+                          && msg.Contains("due to exception.", StringComparison.Ordinal)
+                          && msg.Contains(expectedSubstringInMessage, StringComparison.Ordinal))
+            .ToList();
+
+        errorLogs.Should().ContainSingle();
     }
 
     private static bool ContainsBom(MemoryStream stream)
