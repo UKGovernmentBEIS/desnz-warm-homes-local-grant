@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
@@ -466,19 +467,40 @@ public class CsvFileCreator : ICsvFileCreator
             return new MemoryStream(writeableMemoryStream.GetBuffer(), 0, (int)writeableMemoryStream.Length, false);
         }
     }
-    
-    private IEnumerable<TResult> ExtractRows<TSource, TResult>(IEnumerable<TSource> source, Func<TSource, TResult> selector)
+
+    private IEnumerable<TResult> ExtractRows<TSource, TResult>(IEnumerable<TSource> source,
+        Func<TSource, TResult> selector)
     {
         foreach (var item in source)
         {
             TResult result;
-            try { result = selector(item); }
+            try
+            {
+                result = selector(item);
+            }
             catch (Exception ex)
             {
-                logger.LogError(ex, "[CsvFileCreator] Skipping row {Row} due to error", item);
+                logger.LogError(ex, $"[CsvFileCreator] Skipping row ({FormatSourceForCsvLog(item)}) due to exception.");
                 continue;
             }
+
             yield return result;
         }
+    }
+
+    private static string FormatSourceForCsvLog<TSource>(TSource item)
+    {
+        if (item is null) return "null";
+
+        return item switch
+        {
+            ReferralRequest rr =>
+                $"ReferralRequest Id={rr.Id}, ReferralCode={rr.ReferralCode}",
+            IGrouping<string, IGrouping<string, ReferralRequest>> consortiumOfLas =>
+                $"Consortium={consortiumOfLas.Key}, LaGroupCount={consortiumOfLas.Count()}, ReferralCount={consortiumOfLas.Sum(g => g.Count())}",
+            IGrouping<string, ReferralRequest> byCustodian =>
+                $"CustodianCode={byCustodian.Key}, ReferralCount={byCustodian.Count()}",
+            _ => item.ToString() ?? "unknown"
+        };
     }
 }
