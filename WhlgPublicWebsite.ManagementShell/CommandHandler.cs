@@ -94,7 +94,7 @@ public class CommandHandler(
         // "DEV" is used for deployed development environments
         // "Development" is used for local development environments
         // No connection to AWS is possible in local dev so prevent running this command.
-        if (!(GetEnvironment() == "DEV" || GetEnvironment() == "Staging") || GetEnvironment() == "Production")
+        if (!(GetEnvironment() == "DEV" || GetEnvironment() == "Staging" || GetEnvironment() == "Production"))
         {
             outputProvider.Output(
                 $"This command can only run with \"{EnvironmentKey}\" set to \"DEV\", \"Staging\" or \"Production\".");
