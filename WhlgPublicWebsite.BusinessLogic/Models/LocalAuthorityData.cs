@@ -121,7 +121,7 @@ public class LocalAuthorityData
         { "6855", new LocalAuthorityDetails("City and County of Swansea Council", LocalAuthorityStatus.NoFunding, "https://www.swansea.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "4705", new LocalAuthorityDetails("City of Bradford Metropolitan District Council", LocalAuthorityStatus.Pending, "https://www.bradford.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "6815", new LocalAuthorityDetails("City of Cardiff Council", LocalAuthorityStatus.NoFunding, "https://www.cardiff.gov.uk/ENG/Pages/default.aspx", IncomeBandOptions[IncomeThreshold._36000], null) },
-        { "4410", new LocalAuthorityDetails("City of Doncaster Council", LocalAuthorityStatus.Pending, "https://www.doncaster.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "4410", new LocalAuthorityDetails("City of Doncaster Council", LocalAuthorityStatus.Live, "https://www.doncaster.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "9064", new LocalAuthorityDetails("City of Edinburgh Council", LocalAuthorityStatus.NoFunding, "https://www.edinburgh.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "5030", new LocalAuthorityDetails("City of London Corporation", LocalAuthorityStatus.Live, "https://www.cityoflondon.gov.uk/about-us", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
         { "2741", new LocalAuthorityDetails("City of York Council", LocalAuthorityStatus.Live, "https://www.york.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
