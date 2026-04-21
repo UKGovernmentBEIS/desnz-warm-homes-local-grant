@@ -38,9 +38,9 @@ public class QuestionnaireUpdaterTests
         pendingCustodianCode =
             LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
         // DESNZ-1849: Reinstate when an LA of takingFutureReferrals exists
-        // takingFutureReferralsCustodianCode =
-        //     LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
-        //         .TakingFutureReferrals);
+        takingFutureReferralsCustodianCode =
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
+                .TakingFutureReferrals);
         mockEpcApi = new Mock<IEpcApi>();
         mockPostCodeService = new Mock<IEligiblePostcodeService>();
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
@@ -324,7 +324,7 @@ public class QuestionnaireUpdaterTests
     }
 
     [Test]
-    [Ignore("DESNZ-1849: Reinstate when an LA of takingFutureReferrals exists")]
+    // [Ignore("DESNZ-1849: Reinstate when an LA of takingFutureReferrals exists")]
     public async Task
         GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsTakingFutureReferrals_SendOneEmailWithReferralCodeWithTakingFutureReferralTemplate()
     {
