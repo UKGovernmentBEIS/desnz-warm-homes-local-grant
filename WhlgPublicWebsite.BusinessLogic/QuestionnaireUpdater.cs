@@ -219,19 +219,29 @@ public class QuestionnaireUpdater
 
         if (confirmationConsentGranted)
         {
-            if (questionnaire.LocalAuthorityStatus == LocalAuthorityData.LocalAuthorityStatus.Pending)
+            switch (questionnaire.LocalAuthorityStatus)
             {
-                emailSender.SendReferenceCodeEmailForPendingLocalAuthority(
-                    confirmationEmailAddress,
-                    questionnaire.LaContactName,
-                    new ReferralRequest(questionnaire));
-            }
-            else
-            {
-                emailSender.SendReferenceCodeEmailForLiveLocalAuthority(
-                    confirmationEmailAddress,
-                    questionnaire.LaContactName,
-                    new ReferralRequest(questionnaire));
+                case LocalAuthorityData.LocalAuthorityStatus.Pending:
+                    emailSender.SendReferenceCodeEmailForPendingLocalAuthority(
+                        confirmationEmailAddress,
+                        questionnaire.LaContactName,
+                        new ReferralRequest(questionnaire));
+                    break;
+                case LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals:
+                    emailSender.SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority(
+                        confirmationEmailAddress,
+                        questionnaire.LaContactName,
+                        new ReferralRequest(questionnaire));
+                    break;
+                case LocalAuthorityData.LocalAuthorityStatus.Live:
+                    emailSender.SendReferenceCodeEmailForLiveLocalAuthority(
+                        confirmationEmailAddress,
+                        questionnaire.LaContactName,
+                        new ReferralRequest(questionnaire));
+                    break;
+                default:
+                    throw new Exception(
+                        $"Local Authority status ({questionnaire.LocalAuthorityStatus}) should never get to this method as they should not recieve a confirmation email.");
             }
         }
 

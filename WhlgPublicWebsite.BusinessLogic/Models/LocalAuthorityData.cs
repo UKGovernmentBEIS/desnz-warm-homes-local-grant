@@ -58,7 +58,7 @@ public class LocalAuthorityData
     // Avoid making manual changes to this code if possible
     public static readonly Dictionary<string, LocalAuthorityDetails> LocalAuthorityDetailsByCustodianCode = new()
     {
-        { "9051", new LocalAuthorityDetails("Aberdeen City Council", LocalAuthorityStatus.NoFunding, "https://www.aberdeencity.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "9051", new LocalAuthorityDetails("Aberdeen City Council", LocalAuthorityStatus.TakingFutureReferrals, "https://www.aberdeencity.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "9052", new LocalAuthorityDetails("Aberdeenshire Council", LocalAuthorityStatus.NoFunding, "https://www.aberdeenshire.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "3805", new LocalAuthorityDetails("Adur District Council", LocalAuthorityStatus.Live, "https://www.warmerhomes.org.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
         { "1005", new LocalAuthorityDetails("Amber Valley Borough Council", LocalAuthorityStatus.Live, "https://www.ambervalley.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Nottingham City Council") },
