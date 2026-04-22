@@ -15,6 +15,7 @@ Add the ticket number below and uncomment
 - [ ] I have checked there are no unintentional line ending changes
 - [ ] I have added tests where applicable
 - [ ] If I have made any changes to the code, I have used the IDE auto-formatter on it
+- [ ] If I have introduced custom wording for an LA, I have checked the GOVUK Notify template reflects this wording
 - [ ] If I have made any changes to website flow, I have updated the [Flow Miro Board](https://miro.com/app/board/uXjVL4Sjlmk=/)
 - [ ] If I have made any changes to website flow, I have checked forward and back behaviour is still consistent
 - [ ] If I have made any changes to the Local Authority or Consortium data, I have made sure these changes have been reflected in [the WHLG Portal repository](https://github.com/UKGovernmentBEIS/desnz-warm-homes-local-grant-portal)
