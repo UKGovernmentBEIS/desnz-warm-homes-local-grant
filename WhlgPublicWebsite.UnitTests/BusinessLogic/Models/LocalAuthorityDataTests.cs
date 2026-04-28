@@ -1,9 +1,10 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
 using Tests.BusinessLogic.Models.ExpectedLocalAuthorityData;
+using WhlgPublicWebsite.BusinessLogic.Models;
 using static WhlgPublicWebsite.BusinessLogic.Models.LocalAuthorityData;
 
 namespace Tests.BusinessLogic.Models;
@@ -77,6 +78,25 @@ public class LocalAuthorityDataTests
         }
 
         LocalAuthorityDetailsByCustodianCode.Should().HaveSameCount(expectedStatusesByCode);
+    }
+
+    [Test]
+    public void WmcaLocalAuthorities_HaveOnlyLiveOrPendingStatuses()
+    {
+        // If this test starts failing, the WMCA LA data has been updated and the statement in the test name is now false
+        // Do the following:
+        // 1. Update this test's name to reflect the new LocalAuthorityStatus within the WMCA LA data
+        // 2. Ensure the correct GOV.UK Notify templates have been created and conditional logic has been introduced in the GovUkNotifyApi.cs (see SendReferenceCodeEmailForLiveLocalAuthority for an example)
+        // 3. Append appropriate QA instructions to the ticket for DESNZ to check the wording of the email sent to users
+        // 4. Update the test assertion to correctly assert the statement in the test name
+        var wmcaAuthorities = LocalAuthorityDetailsByCustodianCode
+            .Where(la => la.Value.Consortium == ConsortiumNames.WestMidlandsCombinedAuthority);
+
+        foreach (var (code, details) in wmcaAuthorities)
+        {
+            using var _ = LocalAuthorityPropertyAssertionScope(nameof(LocalAuthorityDetails.Status), code);
+            details.Status.Should().BeOneOf(LocalAuthorityStatus.Pending, LocalAuthorityStatus.Live);
+        }
     }
 
     [Test]
