@@ -43,6 +43,7 @@ function getLaStatus(localAuthority) {
             return "NoLongerParticipating";
         case "Referrals Paused":
         case "ReferralsPaused":
+        case "Paused":
             return "ReferralsPaused";
         default:
             throw new Error(`LA in invalid state to determine status, ${JSON.stringify(localAuthority)}`);
