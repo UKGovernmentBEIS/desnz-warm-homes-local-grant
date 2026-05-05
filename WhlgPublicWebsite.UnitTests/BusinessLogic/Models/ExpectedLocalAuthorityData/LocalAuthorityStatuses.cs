@@ -13,7 +13,7 @@ internal static class LocalAuthorityStatuses
     {
         return new Dictionary<string, LocalAuthorityStatus>
         {
-            { "9051", NoFunding },
+                        { "9051", NoFunding },
             { "9052", NoFunding },
             { "3805", Live },
             { "1005", Live },
@@ -110,10 +110,10 @@ internal static class LocalAuthorityStatuses
             { "9061", NoFunding },
             { "1710", Live },
             { "1915", Live },
-            { "2510", Live },
+            { "2510", ReferralsPaused },
             { "9062", NoFunding },
             { "9063", NoFunding },
-            { "2001", Live },
+            { "2001", ReferralsPaused },
             { "3410", Live },
             { "3540", Live },
             { "1440", Live },
