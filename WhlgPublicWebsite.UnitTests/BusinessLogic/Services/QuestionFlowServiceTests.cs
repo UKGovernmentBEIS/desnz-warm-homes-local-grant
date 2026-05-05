@@ -29,10 +29,10 @@ public class QuestionFlowServiceTests
         LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
             .NotParticipating);
 
-    // DESNZ-2080: Reinstate when an LA of ReferralsPaused exists
-    // private static readonly string ReferralsPausedCustodianCode =
-    //     LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
-    //         .ReferralsPaused);
+    // DESNZ-2080: Comment when no LAs of ReferralsPaused exists
+    private static readonly string ReferralsPausedCustodianCode =
+        LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
+            .ReferralsPaused);
 
     private static readonly string PendingCustodianCode =
         LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
@@ -80,7 +80,7 @@ public class QuestionFlowServiceTests
     }
 
     [Test]
-    public void NoReferralsPausedLasExist()
+    public void ReferralsPausedLasExist()
     {
         // If this test starts failing, the LA data has been updated and the statement in the test name is now false
         // Do the following:
@@ -90,7 +90,7 @@ public class QuestionFlowServiceTests
         Action act = () =>
             LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
                 .ReferralsPaused);
-        act.Should().Throw<InvalidOperationException>();
+        act.Should().NotThrow<InvalidOperationException>();
     }
 
     private static QuestionFlowServiceTestCase[] BackTestCases =
@@ -582,15 +582,15 @@ public class QuestionFlowServiceTests
                 custodianCode: NoFundingCustodianCode
             ),
             QuestionFlowStep.NoFunding),
-        // DESNZ-2080: Reinstate when an LA of ReferralsPaused exists
-        // new(
-        //     "Confirm local authority continues to referrals paused if authority is paused",
-        //     new Input(
-        //         QuestionFlowStep.ConfirmLocalAuthority,
-        //         localAuthorityIsCorrect: true,
-        //         custodianCode: ReferralsPausedCustodianCode
-        //     ),
-        //     QuestionFlowStep.ReferralsPaused),
+        // DESNZ-2080: Comment when no LAs of ReferralsPaused exists
+        new(
+            "Confirm local authority continues to referrals paused if authority is paused",
+            new Input(
+                QuestionFlowStep.ConfirmLocalAuthority,
+                localAuthorityIsCorrect: true,
+                custodianCode: ReferralsPausedCustodianCode
+            ),
+            QuestionFlowStep.ReferralsPaused),
         new(
             "Confirm local authority continues to not participating if authority is participating",
             new Input(
