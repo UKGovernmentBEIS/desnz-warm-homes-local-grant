@@ -88,7 +88,8 @@ public class LocalAuthorityDataTests
         // 1. Update this test's name to reflect the new LocalAuthorityStatus within the WMCA LA data
         // 2. Ensure the correct GOV.UK Notify templates have been created and conditional logic has been introduced in the GovUkNotifyApi.cs (see SendReferenceCodeEmailForLiveLocalAuthority for an example)
         // 3. Append appropriate QA instructions to the ticket for DESNZ to check the wording of the email sent to users
-        // 4. Update the test assertion to correctly assert the statement in the test name
+        // 4. Ensure the wording on the custom wording page for each status correctly reflects what the client is expecting
+        // 5. Update the test assertion to correctly assert the statement in the test name
         var wmcaAuthorities = LocalAuthorityDetailsByCustodianCode
             .Where(la => la.Value.Consortium == ConsortiumNames.WestMidlandsCombinedAuthority);
 
@@ -96,6 +97,26 @@ public class LocalAuthorityDataTests
         {
             using var _ = LocalAuthorityPropertyAssertionScope(nameof(LocalAuthorityDetails.Status), code);
             details.Status.Should().BeOneOf(LocalAuthorityStatus.Pending, LocalAuthorityStatus.Live);
+        }
+    }
+    
+    [Test]
+    public void GlaLocalAuthorities_HaveOnlyLiveStatuses()
+    {
+        // If this test starts failing, the GLA LA data has been updated and the statement in the test name is now false
+        // Do the following:
+        // 1. Update this test's name to reflect the new LocalAuthorityStatus within the GLA LA data
+        // 2. Ensure the correct GOV.UK Notify templates have been created and conditional logic has been introduced in the GovUkNotifyApi.cs (see SendReferenceCodeEmailForLiveLocalAuthority for an example)
+        // 3. Append appropriate QA instructions to the ticket for DESNZ to check the wording of the email sent to users
+        // 4. Ensure the wording on the custom wording page for each status correctly reflects what the client is expecting
+        // 5. Update the test assertion to correctly assert the statement in the test name
+        var glaAuthorities = LocalAuthorityDetailsByCustodianCode
+            .Where(la => la.Value.Consortium == ConsortiumNames.GreaterLondonAuthority);
+
+        foreach (var (code, details) in glaAuthorities)
+        {
+            using var _ = LocalAuthorityPropertyAssertionScope(nameof(LocalAuthorityDetails.Status), code);
+            details.Status.Should().Be(LocalAuthorityStatus.Live);
         }
     }
 
