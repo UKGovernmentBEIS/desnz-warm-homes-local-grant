@@ -142,7 +142,7 @@ public class LocalAuthorityData
         { "1055", new LocalAuthorityDetails("Derby City Council", LocalAuthorityStatus.Live, "https://www.derby.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Nottingham City Council") },
         { "1045", new LocalAuthorityDetails("Derbyshire Dales District Council", LocalAuthorityStatus.Live, "https://www.derbyshiredales.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Nottingham City Council") },
         { "1155", new LocalAuthorityDetails("Devon County Council", LocalAuthorityStatus.Live, "https://www.devon.gov.uk", IncomeBandOptions[IncomeThreshold._36000], "Devon County Council") },
-        { "1265", new LocalAuthorityDetails("Dorset Council", LocalAuthorityStatus.Live, "https://www.dorsetcouncil.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Dorset Council") },
+        { "1265", new LocalAuthorityDetails("Dorset Council", LocalAuthorityStatus.ReferralsPaused, "https://www.dorsetcouncil.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Dorset Council") },
         { "2220", new LocalAuthorityDetails("Dover District Council", LocalAuthorityStatus.Live, "https://www.dover.gov.uk/Home.aspx", IncomeBandOptions[IncomeThreshold._36000], "Dover District Council") },
         { "4615", new LocalAuthorityDetails("Dudley Borough Council", LocalAuthorityStatus.Live, "https://www.dudley.gov.uk/residents/", IncomeBandOptions[IncomeThreshold._36000], "West Midlands Combined Authority") },
         { "9058", new LocalAuthorityDetails("Dumfries and Galloway Council", LocalAuthorityStatus.NoFunding, "https://www.dumfriesandgalloway.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
