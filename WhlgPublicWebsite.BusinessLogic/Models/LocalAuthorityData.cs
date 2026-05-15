@@ -85,7 +85,7 @@ public class LocalAuthorityData
         { "2635", new LocalAuthorityDetails("Borough Council of King's Lynn & West Norfolk", LocalAuthorityStatus.Live, "https://norfolkwarmhomes.org.uk/", IncomeBandOptions[IncomeThreshold._36000], "Broadland District Council") },
         { "1905", new LocalAuthorityDetails("Borough of Broxbourne Council", LocalAuthorityStatus.Live, "https://www.broxbourne.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "2505", new LocalAuthorityDetails("Boston Borough Council", LocalAuthorityStatus.Live, "https://www.boston.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "East Lindsey District Council") },
-        { "1260", new LocalAuthorityDetails("Bournemouth, Christchurch and Poole Council", LocalAuthorityStatus.Live, "https://www.bcpcouncil.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Dorset Council") },
+        { "1260", new LocalAuthorityDetails("Bournemouth, Christchurch and Poole Council", LocalAuthorityStatus.ReferralsPaused, "https://www.bcpcouncil.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Dorset Council") },
         { "335", new LocalAuthorityDetails("Bracknell Forest Borough Council", LocalAuthorityStatus.Live, "https://www.warmerhomes.org.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
         { "1510", new LocalAuthorityDetails("Braintree District Council", LocalAuthorityStatus.Live, "https://www.braintree.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Essex County Council") },
         { "2605", new LocalAuthorityDetails("Breckland District Council", LocalAuthorityStatus.Live, "https://norfolkwarmhomes.org.uk/", IncomeBandOptions[IncomeThreshold._36000], "Broadland District Council") },
