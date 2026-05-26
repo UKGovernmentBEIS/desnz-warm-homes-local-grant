@@ -164,6 +164,7 @@ public class CsvFileCreatorTests
         // Arrange
         var underTest = new CsvFileCreator();
         var referralRequest = new ReferralRequestBuilder(1).WithCustodianCode("114").Build();
+        var localAuthority = GetLocalAuthorityDetails(referralRequest);
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
         // Act
@@ -173,7 +174,7 @@ public class CsvFileCreatorTests
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
             "Consortium,Local Authority,Referral Code\r\n" +
-            "Bristol City Council,Bath and North East Somerset Council,DummyCode00001\r\n");
+            $"{localAuthority.Consortium},{localAuthority.Name},{referralRequest.ReferralCode}\r\n");
     }
 
     [Test]
@@ -184,6 +185,7 @@ public class CsvFileCreatorTests
         var underTest = new CsvFileCreator();
         var referralRequest = new ReferralRequestBuilder(1).WithCustodianCode("9052")
             .WithFollowUp(new ReferralRequestFollowUpBuilder(1)).Build();
+        var localAuthority = GetLocalAuthorityDetails(referralRequest);
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
         // Act
@@ -193,7 +195,7 @@ public class CsvFileCreatorTests
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
             "Consortium,Local Authority,Referral Code\r\n" +
-            ",Aberdeenshire Council,DummyCode00001\r\n");
+            $"{localAuthority.Consortium},{localAuthority.Name},{referralRequest.ReferralCode}\r\n");
     }
 
     [Test]
@@ -239,6 +241,9 @@ public class CsvFileCreatorTests
             referralRequest1, referralRequest2, referralRequest3, referralRequest4, referralRequest5, referralRequest6,
             referralRequest7, referralRequest8
         };
+        var localAuthority1 = GetLocalAuthorityDetails(referralRequest1);
+        var localAuthority3 = GetLocalAuthorityDetails(referralRequest3);
+        var localAuthority6 = GetLocalAuthorityDetails(referralRequest6);
         var today = DateTime.Today.ToString("dd-MMM");
 
         // Act
@@ -249,9 +254,9 @@ public class CsvFileCreatorTests
         reader.ReadToEnd().Should().Be(
             "SLA Report Date,LA,LA Number of Referrals Not Downloaded,LA Percentage of Referrals Not Downloaded," +
             "LA Number of Referrals Not Contacted,LA Percentage of Referrals Not Contacted,LA Number of Referrals Responded to email,LA Percentage of Referrals Responded to email\r\n" +
-            $"{today},Bath and North East Somerset Council,2,100,1,50,1,50\r\n" + // Custodian Code 114
-            $"{today},North Somerset Council,1,33.333333333333336,1,33.333333333333336,3,100\r\n" + // Custodian Code 121
-            $"{today},Aberdeenshire Council,1,33.333333333333336,2,66.66666666666667,3,100\r\n" // Custodian Code 9052
+            $"{today},{localAuthority1.Name},2,100,1,50,1,50\r\n" +
+            $"{today},{localAuthority3.Name},1,33.333333333333336,1,33.333333333333336,3,100\r\n" +
+            $"{today},{localAuthority6.Name},1,33.333333333333336,2,66.66666666666667,3,100\r\n"
         );
     }
 
@@ -301,6 +306,7 @@ public class CsvFileCreatorTests
             referralRequest1, referralRequest2, referralRequest3, referralRequest4, referralRequest5, referralRequest6,
             referralRequest7, referralRequest8, referralRequest9
         };
+        var consortium = GetLocalAuthorityDetails(referralRequest1).Consortium;
 
         var today = DateTime.Today.ToString("dd-MMM");
         // Act
@@ -312,7 +318,7 @@ public class CsvFileCreatorTests
             "SLA Report Date,Consortium,Consortium All Referrals Downloaded,Consortium Number of Referrals Not Downloaded," +
             "Consortium Percentage of Referrals Not Downloaded,Consortium All Referrals Contacted," +
             "Consortium Number of Referrals Not Contacted,Consortium Percentage of Referrals Not Contacted\r\n" +
-            $"{today},Bristol City Council,False,3,60,False,2,40\r\n" // Custodian codes 114 and 121"
+            $"{today},{consortium},False,3,60,False,2,40\r\n"
         ); // Stats for 9052 and 2205 with no Consortium name should not appear as LAs with no Consortium should not be included
     }
 
@@ -361,6 +367,9 @@ public class CsvFileCreatorTests
             .WithEmailAddress("")
             .WithTelephone("333")
             .Build();
+        var localAuthority1 = GetLocalAuthorityDetails(referralRequest1);
+        var localAuthority2 = GetLocalAuthorityDetails(referralRequest2);
+        var localAuthority3 = GetLocalAuthorityDetails(referralRequest3);
 
         var referralRequests = new List<ReferralRequest> { referralRequest1, referralRequest2, referralRequest3 };
 
@@ -371,9 +380,9 @@ public class CsvFileCreatorTests
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
             "Consortium,Local Authority,Referral Date,Referral Code,Name,Email,Telephone,Local Authority Status\r\n" +
-            "Bristol City Council,Bath and North East Somerset Council,2024-03-05 01:00:00,TEST0001,Test User 1,test1@example.com,111,Pending\r\n" +
-            "Portsmouth City Council,Bedford Borough Council,2024-02-05 01:00:00,TEST0002,Test User 2,test2@example.com,,Live\r\n" +
-            "Bristol City Council,North Somerset Council,2024-01-05 01:00:00,TEST0003,Test User 3,,333,Pending\r\n");
+            $"{localAuthority1.Consortium},{localAuthority1.Name},2024-03-05 01:00:00,TEST0001,Test User 1,test1@example.com,111,{localAuthority1.Status}\r\n" +
+            $"{localAuthority2.Consortium},{localAuthority2.Name},2024-02-05 01:00:00,TEST0002,Test User 2,test2@example.com,,{localAuthority2.Status}\r\n" +
+            $"{localAuthority3.Consortium},{localAuthority3.Name},2024-01-05 01:00:00,TEST0003,Test User 3,,333,{localAuthority3.Status}\r\n");
     }
 
     [Test]
@@ -431,6 +440,9 @@ public class CsvFileCreatorTests
 
         var referralRequests = new List<ReferralRequest>
             { referralRequest1, referralRequest2, referralRequest3, referralRequest4, referralRequest5 };
+        var localAuthority1 = GetLocalAuthorityDetails(referralRequest1);
+        var localAuthority2 = GetLocalAuthorityDetails(referralRequest2);
+        var localAuthority3 = GetLocalAuthorityDetails(referralRequest3);
 
         // Act
         var data = underTest.CreatePerMonthLocalAuthorityReferralStatisticsForConsole(referralRequests);
@@ -439,9 +451,9 @@ public class CsvFileCreatorTests
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
             "LA Name,Consortium Name,Total WH:LG Referrals,Date of First Referral,Months Since First Referral,Referrals Per Month\r\n" +
-            $"Bath and North East Somerset Council,Bristol City Council,1,{requestDate1:dd/MM/yyyy},1,1\r\n" +
-            $"Bedford Borough Council,Portsmouth City Council,1,{requestDate2:dd/MM/yyyy},3,0.33\r\n" +
-            $"North Somerset Council,Bristol City Council,3,{requestDate3:dd/MM/yyyy},3,1\r\n");
+            $"{localAuthority1.Name},{localAuthority1.Consortium},1,{requestDate1:dd/MM/yyyy},1,1\r\n" +
+            $"{localAuthority2.Name},{localAuthority2.Consortium},1,{requestDate2:dd/MM/yyyy},3,0.33\r\n" +
+            $"{localAuthority3.Name},{localAuthority3.Consortium},3,{requestDate3:dd/MM/yyyy},3,1\r\n");
     }
 
     [Test]
@@ -493,6 +505,8 @@ public class CsvFileCreatorTests
 
         var referralRequests = new List<ReferralRequest>
             { referralRequest1, referralRequest2, referralRequest3, referralRequest4 };
+        var consortium1 = GetLocalAuthorityDetails(referralRequest1).Consortium;
+        var consortium2 = GetLocalAuthorityDetails(referralRequest2).Consortium;
 
         // Act
         var data = underTest.CreatePerMonthConsortiumReferralStatisticsForConsole(referralRequests);
@@ -501,8 +515,8 @@ public class CsvFileCreatorTests
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
             "Consortium Name,Total WH:LG Referrals,Date of First Referral,Months Since First Referral,Referrals Per Month\r\n" +
-            $"Bristol City Council,3,{requestDate2:dd/MM/yyyy},3,1\r\n" +
-            $"Portsmouth City Council,1,{requestDate3:dd/MM/yyyy},3,0.33\r\n");
+            $"{consortium1},3,{requestDate3:dd/MM/yyyy},3,1\r\n" +
+            $"{consortium2},1,{requestDate2:dd/MM/yyyy},3,0.33\r\n");
     }
 
     [Test]
@@ -543,6 +557,11 @@ public class CsvFileCreatorTests
 
         // Assert
         ContainsBom(data).Should().BeFalse();
+    }
+
+    private static LocalAuthorityData.LocalAuthorityDetails GetLocalAuthorityDetails(ReferralRequest referralRequest)
+    {
+        return LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referralRequest.CustodianCode];
     }
 
     private static bool ContainsBom(MemoryStream stream)
