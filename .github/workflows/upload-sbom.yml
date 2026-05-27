@@ -28,7 +28,7 @@ jobs:
       - name: Generate SBOM
         run: |
           dotnet restore --configfile nuget.config
-          dotnet tool install --global CycloneDX --version 5.4.1
+          dotnet tool install --global CycloneDX --version 6.2.0
           dotnet CycloneDX WarmHomesLocalGrant.sln -o . -fn bom.xml --spec-version 1.5
 
       - uses: DependencyTrack/gh-upload-sbom@v3
