@@ -1,0 +1,42 @@
+name: Upload SBOM to Dependency-Track
+
+on:
+  push:
+    branches:
+      - develop
+      - staging
+      - main
+
+jobs:
+  sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Determine project version
+        id: version
+        run: |
+          case "${GITHUB_REF_NAME}" in
+            main) echo "version=prod" >> "$GITHUB_OUTPUT" ;;
+            *)    echo "version=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Generate SBOM
+        run: |
+          dotnet restore --configfile nuget.config
+          dotnet tool install --global CycloneDX --version 5.4.1
+          dotnet CycloneDX WarmHomesLocalGrant.sln -o . -fn bom.xml --spec-version 1.5
+
+      - uses: DependencyTrack/gh-upload-sbom@v3
+        with:
+          serverhostname: api-deps.softwire.com
+          apikey: ${{ secrets.DTRACK_API_KEY }}
+          autocreate: true
+          projectname: warm-homes-local-grant
+          projectversion: ${{ steps.version.outputs.version }}
+          parentname: Support
+          bomfilename: bom.xml
