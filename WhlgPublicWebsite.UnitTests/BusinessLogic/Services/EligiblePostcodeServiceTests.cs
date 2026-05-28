@@ -1,8 +1,8 @@
 using FluentAssertions;
-using WhlgPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
+using WhlgPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 
 namespace Tests.BusinessLogic.Services;
 
