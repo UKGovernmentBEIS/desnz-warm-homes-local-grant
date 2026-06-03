@@ -32,7 +32,7 @@ public class LocalAuthorityData
         { IncomeThreshold._36000, new[] { IncomeBand.UnderOrEqualTo36000, IncomeBand.GreaterThan36000 } }
     };
 
-    private static IEnumerable<string> FilterCustodianCodes(
+    public static IEnumerable<string> FilterCustodianCodes(
         string consortium,
         LocalAuthorityStatus? status = null)
     {
@@ -427,6 +427,8 @@ public class LocalAuthorityData
                localAuthority.Consortium == consortium;
     }
 
+    public static readonly IReadOnlyList<string> ManagedByLcrcaCodes = new[] { "650", "4305", "4315", "4325" };
+    
     public static bool CustodianCodeIsManagedByLcrca(string custodianCode)
     {
         return 
@@ -436,6 +438,6 @@ public class LocalAuthorityData
             // Knowsley
             // St Helens
             // Wirral
-            && custodianCode is "650" or "4305" or "4315" or "4325";
+            && ManagedByLcrcaCodes.Contains(custodianCode);
     }
 }
