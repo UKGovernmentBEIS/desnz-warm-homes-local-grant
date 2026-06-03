@@ -431,8 +431,8 @@ public class LocalAuthorityData
     
     public static bool CustodianCodeIsManagedByLcrca(string custodianCode)
     {
-        return
-            CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.LiverpoolCityRegionCombinedAuthority)
+        return 
+            CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.LiverpoolCityRegionCombinedAuthority) 
             // not all LAs in the LCRCA are managed by the LCRCA, so we must filter further to
             // Halton
             // Knowsley
