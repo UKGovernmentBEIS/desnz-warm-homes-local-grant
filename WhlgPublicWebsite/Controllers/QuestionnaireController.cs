@@ -1003,7 +1003,7 @@ public class QuestionnaireController : Controller
         return ret;
     }
 
-    private static string GetLocalAuthorityEligibleMessagePartialViewPath(Questionnaire questionnaire)
+    internal static string GetLocalAuthorityEligibleMessagePartialViewPath(Questionnaire questionnaire)
     {
         var partialViewName = questionnaire.CustodianCode switch
         {
@@ -1030,7 +1030,7 @@ public class QuestionnaireController : Controller
         return $"~/Views/Partials/LocalAuthorityMessages/Eligible/{partialViewName}.cshtml";
     }
 
-    private static string GetLocalAuthorityNotParticipatingMessagePartialViewPath(Questionnaire questionnaire)
+    internal static string GetLocalAuthorityNotParticipatingMessagePartialViewPath(Questionnaire questionnaire)
     {
         var partialViewName = questionnaire.CustodianCode switch
         {
@@ -1046,7 +1046,7 @@ public class QuestionnaireController : Controller
         return $"~/Views/Partials/LocalAuthorityMessages/NotParticipating/{partialViewName}.cshtml";
     }
 
-    private static string GetLocalAuthorityReferralsPausedMessagePartialViewPath(Questionnaire questionnaire)
+    internal static string GetLocalAuthorityReferralsPausedMessagePartialViewPath(Questionnaire questionnaire)
     {
         var partialViewName = questionnaire.CustodianCode switch
         {
@@ -1059,7 +1059,7 @@ public class QuestionnaireController : Controller
         return $"~/Views/Partials/LocalAuthorityMessages/ReferralsPaused/{partialViewName}.cshtml";
     }
 
-    private static string GetLocalAuthorityNoLongerParticipatingMessagePartialViewPath(Questionnaire questionnaire)
+    internal static string GetLocalAuthorityNoLongerParticipatingMessagePartialViewPath(Questionnaire questionnaire)
     {
         var partialViewName = questionnaire.CustodianCode switch
         {
@@ -1068,7 +1068,7 @@ public class QuestionnaireController : Controller
         return $"~/Views/Partials/LocalAuthorityMessages/NoLongerParticipating/{partialViewName}.cshtml";
     }
 
-    private static string GetLocalAuthorityConfirmationMessagePartialViewPath(Questionnaire questionnaire)
+    internal static string GetLocalAuthorityConfirmationMessagePartialViewPath(Questionnaire questionnaire)
     {
         var partialViewName =
             (questionnaire.LocalAuthorityStatus, questionnaire.CustodianCode) switch
