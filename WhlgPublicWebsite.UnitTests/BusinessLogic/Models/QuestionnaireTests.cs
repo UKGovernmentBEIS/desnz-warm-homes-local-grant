@@ -329,6 +329,7 @@ public class QuestionnaireTests
     [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false,
         IncomeBand.UnderOrEqualTo36000, LocalAuthorityData.LocalAuthorityStatus.NoLongerParticipating,
         QuestionFlowStep.NoLongerParticipating)] // Ineligible no longer LA
+    // DESNZ-2080: Comment when no LAs of ReferralsPaused exists
     [TestCase(Country.England, OwnershipStatus.OwnerOccupancy, EpcConfirmation.Yes, EpcRating.D, false,
         IncomeBand.UnderOrEqualTo36000, LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused,
         QuestionFlowStep.ReferralsPaused)] // Ineligible referrals paused LA

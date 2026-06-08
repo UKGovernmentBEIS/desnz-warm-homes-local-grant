@@ -174,6 +174,11 @@ If the scan fails, we should look into the new vulnerability and either:
 - Fix it
 - Add to .trivyignore if the issue is a false positive.
 
+### Dependency tracking
+
+After deploying to each environment, an SBOM is generated and uploaded to deps.softwire.com to
+track dependencies and look out for any vulnerabilities or licensing issues.
+
 ### Database migrations
 
 Migrations will be run automatically on deployment. If a migration needs to be rolled back for any reason there are two options:
@@ -233,4 +238,4 @@ This is likely because the CSS hasn't been built. To fix this:
 - Run `npm install` to install any new dependencies
 - Run `npm run build` to build the CSS
 
-Note that running with docker compose will do this automatically.
+Note that running with docker compose will do this automatically. 

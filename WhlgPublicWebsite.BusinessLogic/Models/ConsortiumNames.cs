@@ -8,4 +8,5 @@ public static class ConsortiumNames
     public const string PortsmouthCityCouncil = "Portsmouth City Council";
     public const string LiverpoolCityRegionCombinedAuthority = "Liverpool City Region Combined Authority";
     public const string OxfordshireCountyCouncil = "Oxfordshire County Council";
+    public const string GreaterLondonAuthority = "Greater London Authority";
 }

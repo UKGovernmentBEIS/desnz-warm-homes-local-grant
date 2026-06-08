@@ -25,7 +25,8 @@ public class ReferralRequest : IEntityWithRowVersioning
         FullName = questionnaire.LaContactName;
         ContactEmailAddress = questionnaire.LaContactEmailAddress;
         ContactTelephone = questionnaire.LaContactTelephone;
-
+        
+        ReferralCode = questionnaire.ReferralCode;
         RequestDate = DateTime.Now;
         WasSubmittedToPendingLocalAuthority =
             questionnaire.LocalAuthorityStatus == LocalAuthorityData.LocalAuthorityStatus.Pending;
@@ -66,7 +67,7 @@ public class ReferralRequest : IEntityWithRowVersioning
 
     public ReferralRequestFollowUp? FollowUp { get; set; }
 
-    public string ReferralCode { get; set; }
+    public string? ReferralCode { get; set; }
 
     public uint Version { get; set; }
 

@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +47,15 @@ public class ReferralRequestFollowUpController : Controller
     [HttpPost("")]
     public async Task<IActionResult> RespondPage_Post(ReferralRequestFollowUpResponsePageViewModel viewModel)
     {
-        await referralFollowUpService.RecordFollowUpResponseForToken(viewModel.Token, viewModel.HasFollowedUp is YesOrNo.Yes);
+        try
+        {
+            await referralFollowUpService.RecordFollowUpResponseForToken(viewModel.Token, viewModel.HasFollowedUp is YesOrNo.Yes);
+        }
+        catch (InvalidOperationException)
+        {
+            return RedirectToAction(nameof(AlreadyResponded), "ReferralRequestFollowUp");
+        }
+
         return RedirectToAction(nameof(ResponseRecorded), "ReferralRequestFollowUp");
     }
 

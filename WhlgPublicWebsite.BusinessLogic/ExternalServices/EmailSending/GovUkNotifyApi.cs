@@ -247,6 +247,19 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                     "https://www.oxfordshire.gov.uk/residents/environment-and-planning/energy-and-climate-change/retrofitting-your-home/retrofit-help-you";
             }
 
+            if (LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
+                    ConsortiumNames.GreaterLondonAuthority))
+            {
+                personalisation[template.TitleDeliveryPartnerPlaceholder] = "Greater London Authority";
+                personalisation[template.TitleDeliveryPartnerOrContractorPlaceholder] =
+                    "Greater London Authority or their official contractor";
+                personalisation[template.YourDeliveryPartnerOrContractorPlaceholder] =
+                    "Greater London Authority or their official contractor";
+                personalisation[template.WebsiteNamePlaceholder] = "Greater London Authority website";
+                personalisation[template.WebsiteUrlPlaceholder] =
+                    "https://www.london.gov.uk/programmes-strategies/environment-and-climate-change/net-zero-energy/warmer-homes";
+            }
+
             var emailModel = new GovUkNotifyEmailModel
             {
                 EmailAddress = emailAddress,
