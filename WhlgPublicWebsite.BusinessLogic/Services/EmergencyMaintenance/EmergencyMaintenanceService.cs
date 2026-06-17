@@ -4,9 +4,19 @@ namespace WhlgPublicWebsite.BusinessLogic.Services.EmergencyMaintenance;
 
 public class EmergencyMaintenanceService(IDataAccessProvider dataAccessProvider)
 {
+    private static readonly TimeSpan CacheDuration = TimeSpan.FromSeconds(30);
+    private EmergencyMaintenanceState? cachedState;
+    private DateTime timeLastStateFetch = DateTime.MinValue;
+
     public async Task<bool> SiteIsInEmergencyMaintenance()
     {
-        return await GetEmergencyMaintenanceState() == EmergencyMaintenanceState.Enabled;
+        if (IsCacheStale())
+        {
+            cachedState = await GetEmergencyMaintenanceState();
+            timeLastStateFetch = DateTime.UtcNow;
+        }
+
+        return cachedState == EmergencyMaintenanceState.Enabled;
     }
 
     public async Task<EmergencyMaintenanceState> GetEmergencyMaintenanceState()
@@ -26,5 +36,12 @@ public class EmergencyMaintenanceService(IDataAccessProvider dataAccessProvider)
         };
 
         await dataAccessProvider.AddEmergencyMaintenanceHistory(history);
+        cachedState = state;
+        timeLastStateFetch = DateTime.UtcNow;
+    }
+
+    private bool IsCacheStale()
+    {
+        return DateTime.UtcNow - timeLastStateFetch > CacheDuration;
     }
 }
