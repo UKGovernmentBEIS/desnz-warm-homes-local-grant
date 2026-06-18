@@ -260,6 +260,12 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                     "https://www.london.gov.uk/programmes-strategies/environment-and-climate-change/net-zero-energy/warmer-homes";
             }
 
+            if (LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
+                    ConsortiumNames.BroadlandDistrictCouncil))
+            {
+                personalisation[template.WebsiteNamePlaceholder] = "Norfolk Warm Homes website";
+            }
+
             var emailModel = new GovUkNotifyEmailModel
             {
                 EmailAddress = emailAddress,
