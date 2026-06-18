@@ -6,338 +6,349 @@ using Notify.Exceptions;
 using Notify.Interfaces;
 using WhlgPublicWebsite.BusinessLogic.Models;
 
-namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending
+namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
+
+public class GovUkNotifyApi(
+    INotificationClient client,
+    IOptions<GovUkNotifyConfiguration> config,
+    ILogger<GovUkNotifyApi> logger)
+    : IEmailSender
 {
-    public class GovUkNotifyApi(
-        INotificationClient client,
-        IOptions<GovUkNotifyConfiguration> config,
-        ILogger<GovUkNotifyApi> logger)
-        : IEmailSender
+    private readonly GovUkNotifyConfiguration govUkNotifyConfig = config.Value;
+
+    public void SendReferenceCodeEmailForLiveLocalAuthority
+    (
+        string emailAddress,
+        string recipientName,
+        ReferralRequest referralRequest)
     {
-        private readonly GovUkNotifyConfiguration govUkNotifyConfig = config.Value;
+        // Live LAs in WMCA are not required to meet SLA requirements and thus have a different email template
+        SendLiveReferenceCodeEmail(emailAddress, recipientName, referralRequest,
+            LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
+                ConsortiumNames.WestMidlandsCombinedAuthority)
+                ? govUkNotifyConfig.ReferenceCodeForLiveNo10DaySlaLocalAuthorityTemplate
+                : govUkNotifyConfig.ReferenceCodeForLiveLocalAuthorityTemplate);
+    }
 
-        private void SendEmail(GovUkNotifyEmailModel emailModel)
+    public void SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority
+    (
+        string emailAddress,
+        string recipientName,
+        ReferralRequest referralRequest)
+    {
+        SendReferenceCodeEmail(emailAddress, recipientName, referralRequest,
+            govUkNotifyConfig.ReferenceCodeForTakingFutureReferralsLocalAuthorityTemplate);
+    }
+
+    public void SendReferenceCodeEmailForPendingLocalAuthority
+    (
+        string emailAddress,
+        string recipientName,
+        ReferralRequest referralRequest)
+    {
+        SendReferenceCodeEmail(emailAddress, recipientName, referralRequest,
+            govUkNotifyConfig.ReferenceCodeForPendingLocalAuthorityTemplate);
+    }
+
+    public void SendFollowUpEmail
+    (
+        ReferralRequest referralRequest,
+        string followUpLink
+    )
+    {
+        var template = govUkNotifyConfig.ReferralFollowUpTemplate;
+        LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
+        try
         {
-            try
-            {
-                client.SendEmail(
-                    emailModel.EmailAddress,
-                    emailModel.TemplateId,
-                    emailModel.Personalisation,
-                    emailModel.Reference,
-                    emailModel.EmailReplyToId,
-                    emailModel.OneClickUnsubscribeUrl);
-            }
-            catch (NotifyClientException e)
-            {
-                if (e.Message.Contains("Not a valid email address"))
-                {
-                    logger.LogWarning("GOV.UK Notify could not send to an invalid email address");
-                }
-                else if (e.Message.Contains("send to this recipient using a team-only API key"))
-                {
-                    // In development we use a 'team-only' API key which can only send to team emails
-                    logger.LogWarning("GOV.UK Notify cannot send to this recipient using a team-only API key");
-                }
-                else
-                {
-                    logger.LogError(e, "GOV.UK Notify returned an error");
-                }
-            }
-        }
-
-        public void SendReferenceCodeEmailForLiveLocalAuthority
-        (
-            string emailAddress,
-            string recipientName,
-            ReferralRequest referralRequest)
-        {
-            // Live LAs in WMCA are not required to meet SLA requirements and thus have a different email template
-            SendLiveReferenceCodeEmail(emailAddress, recipientName, referralRequest,
-                LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
-                    ConsortiumNames.WestMidlandsCombinedAuthority)
-                    ? govUkNotifyConfig.ReferenceCodeForLiveNo10DaySlaLocalAuthorityTemplate
-                    : govUkNotifyConfig.ReferenceCodeForLiveLocalAuthorityTemplate);
-        }
-
-        public void SendReferenceCodeEmailForTakingFutureReferralsLocalAuthority
-        (
-            string emailAddress,
-            string recipientName,
-            ReferralRequest referralRequest)
-        {
-            SendReferenceCodeEmail(emailAddress, recipientName, referralRequest,
-                govUkNotifyConfig.ReferenceCodeForTakingFutureReferralsLocalAuthorityTemplate);
-        }
-
-        public void SendReferenceCodeEmailForPendingLocalAuthority
-        (
-            string emailAddress,
-            string recipientName,
-            ReferralRequest referralRequest)
-        {
-            SendReferenceCodeEmail(emailAddress, recipientName, referralRequest,
-                govUkNotifyConfig.ReferenceCodeForPendingLocalAuthorityTemplate);
-        }
-
-        public void SendFollowUpEmail
-        (
-            ReferralRequest referralRequest,
-            string followUpLink
-        )
-        {
-            var template = govUkNotifyConfig.ReferralFollowUpTemplate;
-            LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
-            try
-            {
-                localAuthorityDetails =
-                    LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referralRequest.CustodianCode];
-
-                var personalisation = new Dictionary<string, dynamic>
-                {
-                    { template.RecipientNamePlaceholder, referralRequest.FullName },
-                    { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
-                    { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
-                    { template.ReferralDatePlaceholder, referralRequest.RequestDate.ToString("dd/MM/yyyy") },
-                    { template.FollowUpLinkPlaceholder, followUpLink },
-                };
-                var emailModel = new GovUkNotifyEmailModel
-                {
-                    EmailAddress = referralRequest.ContactEmailAddress,
-                    TemplateId = template.Id,
-                    Personalisation = personalisation
-                };
-                SendEmail(emailModel);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                logger.LogError
-                (
-                    ex,
-                    "Failed to send follow up email for referral request \"{referralRequest.Id}\" with invalid custodian code",
-                    referralRequest.Id
-                );
-            }
-        }
-
-        public void SendComplianceEmail(
-            MemoryStream recentReferralRequestOverviewFileData,
-            MemoryStream recentLocalAuthorityReferralRequestFollowUpFileData,
-            MemoryStream recentConsortiumReferralRequestFollowUpFileData,
-            MemoryStream historicLocalAuthorityReferralRequestFollowUpFileData,
-            MemoryStream historicConsortiumReferralRequestFollowUpFileData)
-        {
-            var recipientList = govUkNotifyConfig.ComplianceEmailRecipients;
-            var template = govUkNotifyConfig.ComplianceReportTemplate;
-            var personalisation = new Dictionary<string, dynamic>
-            {
-                { "OverviewFileLink", PrepareCsvUpload(recentReferralRequestOverviewFileData, "overview.csv") },
-                {
-                    "RecentLocalAuthorityFollowUpFileLink",
-                    PrepareCsvUpload(recentLocalAuthorityReferralRequestFollowUpFileData,
-                        "recent-local-authority-follow-up.csv")
-                },
-                {
-                    "RecentConsortiumFollowUpFileLink",
-                    PrepareCsvUpload(recentConsortiumReferralRequestFollowUpFileData, "recent-consortium-follow-up.csv")
-                },
-                {
-                    "HistoricLocalAuthorityFollowUpFileLink",
-                    PrepareCsvUpload(historicLocalAuthorityReferralRequestFollowUpFileData,
-                        "historic-local-authority-follow-up.csv")
-                },
-                {
-                    "HistoricConsortiumFollowUpFileLink",
-                    PrepareCsvUpload(historicConsortiumReferralRequestFollowUpFileData,
-                        "historic-consortium-follow-up.csv")
-                },
-            };
-            SendEmailToRecipients(recipientList, template.Id, personalisation);
-        }
-
-        public void SendPendingReferralReportEmail(MemoryStream pendingReferralRequestsFileData)
-        {
-            var recipientList = govUkNotifyConfig.PendingReferralEmailRecipients;
-            var template = govUkNotifyConfig.PendingReferralReportTemplate;
-            var personalisation = new Dictionary<string, dynamic>
-            {
-                {
-                    template.LinkPlaceholder,
-                    PrepareCsvUpload(pendingReferralRequestsFileData, "pending-referral-requests.csv")
-                },
-            };
-            SendEmailToRecipients(recipientList, template.Id, personalisation);
-        }
-
-        private void SendReferenceCodeEmail
-        (
-            string emailAddress,
-            string recipientName,
-            ReferralRequest referralRequest,
-            ReferenceCodeConfiguration template)
-        {
-            var localAuthorityDetails = GetLocalAuthorityDetails(referralRequest);
+            localAuthorityDetails =
+                LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referralRequest.CustodianCode];
 
             var personalisation = new Dictionary<string, dynamic>
             {
-                { template.RecipientNamePlaceholder, recipientName },
+                { template.RecipientNamePlaceholder, referralRequest.FullName },
                 { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
                 { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
-                { template.LocalAuthorityWebsiteUrlPlaceholder, localAuthorityDetails.WebsiteUrl }
+                { template.ReferralDatePlaceholder, referralRequest.RequestDate.ToString("dd/MM/yyyy") },
+                { template.FollowUpLinkPlaceholder, followUpLink }
             };
             var emailModel = new GovUkNotifyEmailModel
             {
-                EmailAddress = emailAddress,
+                EmailAddress = referralRequest.ContactEmailAddress,
                 TemplateId = template.Id,
                 Personalisation = personalisation
             };
             SendEmail(emailModel);
         }
-
-        private void SendLiveReferenceCodeEmail
-        (
-            string emailAddress,
-            string recipientName,
-            ReferralRequest referralRequest,
-            LiveReferenceCodeConfiguration template)
+        catch (KeyNotFoundException ex)
         {
-            var localAuthorityDetails = GetLocalAuthorityDetails(referralRequest);
-
-            var personalisation = new Dictionary<string, dynamic>
-            {
-                { template.RecipientNamePlaceholder, recipientName },
-                { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
-                { template.TitleDeliveryPartnerPlaceholder, localAuthorityDetails.Name },
-                {
-                    template.TitleDeliveryPartnerOrContractorPlaceholder,
-                    localAuthorityDetails.Name + " or their official contractor"
-                },
-                {
-                    template.YourDeliveryPartnerOrContractorPlaceholder,
-                    "Your Local Authority or their official contractor"
-                },
-                { template.WebsiteNamePlaceholder, localAuthorityDetails.Name + " website" },
-                { template.WebsiteUrlPlaceholder, localAuthorityDetails.WebsiteUrl }
-            };
-
-            // LA specific overrides
-            if (LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
-                    ConsortiumNames.PortsmouthCityCouncil))
-            {
-                personalisation[template.TitleDeliveryPartnerPlaceholder] = localAuthorityDetails.Name +
-                                                                            "'s official delivery partner: Warmer Homes";
-                personalisation[template.TitleDeliveryPartnerOrContractorPlaceholder] =
-                    localAuthorityDetails.Name + "'s official delivery partner: Warmer Homes";
-                personalisation[template.YourDeliveryPartnerOrContractorPlaceholder] = localAuthorityDetails.Name +
-                    "'s official delivery partner: Warmer Homes";
-                personalisation[template.WebsiteNamePlaceholder] = "Warmer Homes website";
-                personalisation[template.WebsiteUrlPlaceholder] = "https://www.warmerhomes.org.uk";
-            }
-
-            if (LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
-                    ConsortiumNames.OxfordshireCountyCouncil))
-            {
-                personalisation[template.TitleDeliveryPartnerPlaceholder] = "Oxfordshire County Council";
-                personalisation[template.TitleDeliveryPartnerOrContractorPlaceholder] =
-                    "Oxfordshire County Council or their official contractor";
-                personalisation[template.YourDeliveryPartnerOrContractorPlaceholder] =
-                    "Oxfordshire County Council or their official contractor";
-                personalisation[template.WebsiteNamePlaceholder] = "Oxfordshire County Council website";
-                personalisation[template.WebsiteUrlPlaceholder] =
-                    "https://www.oxfordshire.gov.uk/residents/environment-and-planning/energy-and-climate-change/retrofitting-your-home/retrofit-help-you";
-            }
-
-            if (LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
-                    ConsortiumNames.GreaterLondonAuthority))
-            {
-                personalisation[template.TitleDeliveryPartnerPlaceholder] = "Greater London Authority";
-                personalisation[template.TitleDeliveryPartnerOrContractorPlaceholder] =
-                    "Greater London Authority or their official contractor";
-                personalisation[template.YourDeliveryPartnerOrContractorPlaceholder] =
-                    "Greater London Authority or their official contractor";
-                personalisation[template.WebsiteNamePlaceholder] = "Greater London Authority website";
-                personalisation[template.WebsiteUrlPlaceholder] =
-                    "https://www.london.gov.uk/programmes-strategies/environment-and-climate-change/net-zero-energy/warmer-homes";
-            }
-
-            if (LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
-                    ConsortiumNames.BroadlandDistrictCouncil))
-            {
-                personalisation[template.WebsiteNamePlaceholder] = "Norfolk Warm Homes website";
-            }
-
-            var emailModel = new GovUkNotifyEmailModel
-            {
-                EmailAddress = emailAddress,
-                TemplateId = template.Id,
-                Personalisation = personalisation
-            };
-            SendEmail(emailModel);
-        }
-
-        private LocalAuthorityData.LocalAuthorityDetails GetLocalAuthorityDetails(ReferralRequest referralRequest)
-        {
-            LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
-            try
-            {
-                localAuthorityDetails =
-                    LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referralRequest.CustodianCode];
-            }
-            catch (KeyNotFoundException ex)
-            {
-                logger.LogError
-                (
-                    ex,
-                    "Attempted to send reference code email with invalid custodian code \"{CustodianCode}\"",
-                    referralRequest.CustodianCode
-                );
-                throw new ArgumentOutOfRangeException
-                (
-                    $"Attempted to send reference code email with invalid custodian code \"{referralRequest.CustodianCode}\"",
-                    ex
-                );
-            }
-
-            return localAuthorityDetails;
-        }
-
-        private static JObject PrepareCsvUpload(MemoryStream csvData, string name)
-        {
-            var datePrefix = DateTime.Now.ToString("yyyyMMdd");
-            return NotificationClient.PrepareUpload(csvData.ToArray(), $"{datePrefix}-{name}");
-        }
-
-        private void SendEmailToRecipients(
-            string recipientList,
-            string templateId,
-            Dictionary<string, dynamic> personalisation)
-        {
-            if (string.IsNullOrEmpty(recipientList))
-            {
-                return;
-            }
-
-            var emailAddresses = recipientList.Split(",").Select(emailAddress => emailAddress.Trim());
-            foreach (var emailAddress in emailAddresses)
-            {
-                var emailModel = new GovUkNotifyEmailModel
-                {
-                    EmailAddress = emailAddress,
-                    TemplateId = templateId,
-                    Personalisation = personalisation
-                };
-                SendEmail(emailModel);
-            }
+            logger.LogError
+            (
+                ex,
+                "Failed to send follow up email for referral request \"{referralRequest.Id}\" with invalid custodian code",
+                referralRequest.Id
+            );
         }
     }
 
-    internal class GovUkNotifyEmailModel
+    public void SendComplianceEmail(
+        MemoryStream recentReferralRequestOverviewFileData,
+        MemoryStream recentLocalAuthorityReferralRequestFollowUpFileData,
+        MemoryStream recentConsortiumReferralRequestFollowUpFileData,
+        MemoryStream historicLocalAuthorityReferralRequestFollowUpFileData,
+        MemoryStream historicConsortiumReferralRequestFollowUpFileData)
     {
-        public string EmailAddress { get; init; }
-        public string TemplateId { get; init; }
-        public Dictionary<string, dynamic> Personalisation { get; init; }
-        public string Reference { get; set; }
-        public string EmailReplyToId { get; set; }
-        public string OneClickUnsubscribeUrl { get; set; }
+        var recipientList = govUkNotifyConfig.ComplianceEmailRecipients;
+        var template = govUkNotifyConfig.ComplianceReportTemplate;
+        var personalisation = new Dictionary<string, dynamic>
+        {
+            { "OverviewFileLink", PrepareCsvUpload(recentReferralRequestOverviewFileData, "overview.csv") },
+            {
+                "RecentLocalAuthorityFollowUpFileLink",
+                PrepareCsvUpload(recentLocalAuthorityReferralRequestFollowUpFileData,
+                    "recent-local-authority-follow-up.csv")
+            },
+            {
+                "RecentConsortiumFollowUpFileLink",
+                PrepareCsvUpload(recentConsortiumReferralRequestFollowUpFileData, "recent-consortium-follow-up.csv")
+            },
+            {
+                "HistoricLocalAuthorityFollowUpFileLink",
+                PrepareCsvUpload(historicLocalAuthorityReferralRequestFollowUpFileData,
+                    "historic-local-authority-follow-up.csv")
+            },
+            {
+                "HistoricConsortiumFollowUpFileLink",
+                PrepareCsvUpload(historicConsortiumReferralRequestFollowUpFileData,
+                    "historic-consortium-follow-up.csv")
+            }
+        };
+        SendEmailToRecipients(recipientList, template.Id, personalisation);
     }
+
+    public void SendPendingReferralReportEmail(MemoryStream pendingReferralRequestsFileData)
+    {
+        var recipientList = govUkNotifyConfig.PendingReferralEmailRecipients;
+        var template = govUkNotifyConfig.PendingReferralReportTemplate;
+        var personalisation = new Dictionary<string, dynamic>
+        {
+            {
+                template.LinkPlaceholder,
+                PrepareCsvUpload(pendingReferralRequestsFileData, "pending-referral-requests.csv")
+            }
+        };
+        SendEmailToRecipients(recipientList, template.Id, personalisation);
+    }
+
+    private void SendEmail(GovUkNotifyEmailModel emailModel)
+    {
+        try
+        {
+            client.SendEmail(
+                emailModel.EmailAddress,
+                emailModel.TemplateId,
+                emailModel.Personalisation,
+                emailModel.Reference,
+                emailModel.EmailReplyToId,
+                emailModel.OneClickUnsubscribeUrl);
+        }
+        catch (NotifyClientException e)
+        {
+            if (e.Message.Contains("Not a valid email address"))
+            {
+                logger.LogWarning("GOV.UK Notify could not send to an invalid email address");
+            }
+            else if (e.Message.Contains("send to this recipient using a team-only API key"))
+            {
+                // In development we use a 'team-only' API key which can only send to team emails
+                logger.LogWarning("GOV.UK Notify cannot send to this recipient using a team-only API key");
+            }
+            else
+            {
+                logger.LogError(e, "GOV.UK Notify returned an error");
+            }
+        }
+    }
+
+    private void SendReferenceCodeEmail
+    (
+        string emailAddress,
+        string recipientName,
+        ReferralRequest referralRequest,
+        ReferenceCodeConfiguration template)
+    {
+        var localAuthorityDetails = GetLocalAuthorityDetails(referralRequest);
+
+        var personalisation = new Dictionary<string, dynamic>
+        {
+            { template.RecipientNamePlaceholder, recipientName },
+            { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
+            { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
+            { template.LocalAuthorityWebsiteUrlPlaceholder, localAuthorityDetails.WebsiteUrl }
+        };
+        var emailModel = new GovUkNotifyEmailModel
+        {
+            EmailAddress = emailAddress,
+            TemplateId = template.Id,
+            Personalisation = personalisation
+        };
+        SendEmail(emailModel);
+    }
+
+    private void SendLiveReferenceCodeEmail
+    (
+        string emailAddress,
+        string recipientName,
+        ReferralRequest referralRequest,
+        LiveReferenceCodeConfiguration template)
+    {
+        var localAuthorityDetails = GetLocalAuthorityDetails(referralRequest);
+
+        var personalisation = new Dictionary<string, dynamic>
+        {
+            { template.RecipientNamePlaceholder, recipientName },
+            { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
+            { template.TitleDeliveryPartnerPlaceholder, localAuthorityDetails.Name },
+            {
+                template.TitleDeliveryPartnerOrContractorPlaceholder,
+                localAuthorityDetails.Name + " or their official contractor"
+            },
+            {
+                template.YourDeliveryPartnerOrContractorPlaceholder,
+                "Your Local Authority or their official contractor"
+            },
+            { template.WebsiteNamePlaceholder, localAuthorityDetails.Name + " website" },
+            { template.WebsiteUrlPlaceholder, localAuthorityDetails.WebsiteUrl }
+        };
+
+        // LA specific overrides
+        if (LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
+                ConsortiumNames.PortsmouthCityCouncil))
+        {
+            personalisation[template.TitleDeliveryPartnerPlaceholder] = localAuthorityDetails.Name +
+                                                                        "'s official delivery partner: Warmer Homes";
+            personalisation[template.TitleDeliveryPartnerOrContractorPlaceholder] =
+                localAuthorityDetails.Name + "'s official delivery partner: Warmer Homes";
+            personalisation[template.YourDeliveryPartnerOrContractorPlaceholder] = localAuthorityDetails.Name +
+                "'s official delivery partner: Warmer Homes";
+            personalisation[template.WebsiteNamePlaceholder] = "Warmer Homes website";
+            personalisation[template.WebsiteUrlPlaceholder] = "https://www.warmerhomes.org.uk";
+        }
+
+        if (LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
+                ConsortiumNames.OxfordshireCountyCouncil))
+        {
+            personalisation[template.TitleDeliveryPartnerPlaceholder] = "Oxfordshire County Council";
+            personalisation[template.TitleDeliveryPartnerOrContractorPlaceholder] =
+                "Oxfordshire County Council or their official contractor";
+            personalisation[template.YourDeliveryPartnerOrContractorPlaceholder] =
+                "Oxfordshire County Council or their official contractor";
+            personalisation[template.WebsiteNamePlaceholder] = "Oxfordshire County Council website";
+            personalisation[template.WebsiteUrlPlaceholder] =
+                "https://www.oxfordshire.gov.uk/residents/environment-and-planning/energy-and-climate-change/retrofitting-your-home/retrofit-help-you";
+        }
+
+        if (LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
+                ConsortiumNames.GreaterLondonAuthority))
+        {
+            personalisation[template.TitleDeliveryPartnerPlaceholder] = "Greater London Authority";
+            personalisation[template.TitleDeliveryPartnerOrContractorPlaceholder] =
+                "Greater London Authority or their official contractor";
+            personalisation[template.YourDeliveryPartnerOrContractorPlaceholder] =
+                "Greater London Authority or their official contractor";
+            personalisation[template.WebsiteNamePlaceholder] = "Greater London Authority website";
+            personalisation[template.WebsiteUrlPlaceholder] =
+                "https://www.london.gov.uk/programmes-strategies/environment-and-climate-change/net-zero-energy/warmer-homes";
+        }
+
+        if (LocalAuthorityData.CustodianCodeIsInConsortium(referralRequest.CustodianCode,
+                ConsortiumNames.BroadlandDistrictCouncil))
+        {
+            personalisation[template.WebsiteNamePlaceholder] = "Norfolk Warm Homes website";
+        }
+
+        if (LocalAuthorityData.CustodianCodeIsManagedByLcrca(referralRequest.CustodianCode))
+        {
+            personalisation[template.TitleDeliveryPartnerPlaceholder] = "Liverpool City Region Combined Authority";
+            personalisation[template.TitleDeliveryPartnerOrContractorPlaceholder] =
+                "Liverpool City Region Combined Authority or their official contractor";
+            personalisation[template.YourDeliveryPartnerOrContractorPlaceholder] =
+                "Liverpool City Region Combined Authority or their official contractor";
+            personalisation[template.WebsiteNamePlaceholder] = "Liverpool City Region Combined Authority website";
+            personalisation[template.WebsiteUrlPlaceholder] =
+                "https://www.liverpoolcityregion-ca.gov.uk/warm-homes-local-grant";
+        }
+
+        var emailModel = new GovUkNotifyEmailModel
+        {
+            EmailAddress = emailAddress,
+            TemplateId = template.Id,
+            Personalisation = personalisation
+        };
+        SendEmail(emailModel);
+    }
+
+    private LocalAuthorityData.LocalAuthorityDetails GetLocalAuthorityDetails(ReferralRequest referralRequest)
+    {
+        LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
+        try
+        {
+            localAuthorityDetails =
+                LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referralRequest.CustodianCode];
+        }
+        catch (KeyNotFoundException ex)
+        {
+            logger.LogError
+            (
+                ex,
+                "Attempted to send reference code email with invalid custodian code \"{CustodianCode}\"",
+                referralRequest.CustodianCode
+            );
+            throw new ArgumentOutOfRangeException
+            (
+                $"Attempted to send reference code email with invalid custodian code \"{referralRequest.CustodianCode}\"",
+                ex
+            );
+        }
+
+        return localAuthorityDetails;
+    }
+
+    private static JObject PrepareCsvUpload(MemoryStream csvData, string name)
+    {
+        var datePrefix = DateTime.Now.ToString("yyyyMMdd");
+        return NotificationClient.PrepareUpload(csvData.ToArray(), $"{datePrefix}-{name}");
+    }
+
+    private void SendEmailToRecipients(
+        string recipientList,
+        string templateId,
+        Dictionary<string, dynamic> personalisation)
+    {
+        if (string.IsNullOrEmpty(recipientList))
+        {
+            return;
+        }
+
+        var emailAddresses = recipientList.Split(",").Select(emailAddress => emailAddress.Trim());
+        foreach (var emailAddress in emailAddresses)
+        {
+            var emailModel = new GovUkNotifyEmailModel
+            {
+                EmailAddress = emailAddress,
+                TemplateId = templateId,
+                Personalisation = personalisation
+            };
+            SendEmail(emailModel);
+        }
+    }
+}
+
+internal class GovUkNotifyEmailModel
+{
+    public string EmailAddress { get; init; }
+    public string TemplateId { get; init; }
+    public Dictionary<string, dynamic> Personalisation { get; init; }
+    public string Reference { get; set; }
+    public string EmailReplyToId { get; set; }
+    public string OneClickUnsubscribeUrl { get; set; }
 }
