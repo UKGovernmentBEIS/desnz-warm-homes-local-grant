@@ -233,4 +233,4 @@ This is likely because the CSS hasn't been built. To fix this:
 - Run `npm install` to install any new dependencies
 - Run `npm run build` to build the CSS
 
-Note that running with docker compose will do this automatically.
+Note that running with docker compose will do this automatically. 
