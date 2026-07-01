@@ -73,6 +73,8 @@ public class QuestionFlowServiceTests
         // 1. Update this test's name to reflect if this LocalAuthorityStatus exists within the LA data
         // 2. Search the project for "DESNZ-1849" for all references to this status and ensure they are updated to reflect the test name statement
         // 3. Invert the test assertion to correctly assert the statement in the test name (i.e. Throw should become NotThrow and vice versa)
+        // Note: the wording on the TakingFutureReferrals mentions 'spring 2025'. The wording/date here and in other places that mention 
+        // old dates should be reviewed
         Action act = () =>
             LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
                 .TakingFutureReferrals);
