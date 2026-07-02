@@ -1,8 +1,9 @@
-﻿using WhlgPublicWebsite.BusinessLogic.Models;
+﻿using Microsoft.Extensions.DependencyInjection;
+using WhlgPublicWebsite.BusinessLogic.Models;
 
 namespace WhlgPublicWebsite.BusinessLogic.Services.EmergencyMaintenance;
 
-public class EmergencyMaintenanceService(IDataAccessProvider dataAccessProvider)
+public class EmergencyMaintenanceService(IServiceScopeFactory scopeFactory)
 {
     private static readonly TimeSpan CacheDuration = TimeSpan.FromSeconds(30);
     private EmergencyMaintenanceState? cachedState;
@@ -19,25 +20,12 @@ public class EmergencyMaintenanceService(IDataAccessProvider dataAccessProvider)
         return cachedState == EmergencyMaintenanceState.Enabled;
     }
 
-    public async Task<EmergencyMaintenanceState> GetEmergencyMaintenanceState()
+    private async Task<EmergencyMaintenanceState> GetEmergencyMaintenanceState()
     {
+        await using var scope = scopeFactory.CreateAsyncScope();
+        var dataAccessProvider = scope.ServiceProvider.GetRequiredService<IDataAccessProvider>();
         var latestHistory = await dataAccessProvider.GetLatestEmergencyMaintenanceHistoryAsync();
-
         return latestHistory?.State ?? EmergencyMaintenanceState.Disabled;
-    }
-
-    public async Task SetEmergencyMaintenanceState(EmergencyMaintenanceState state, string authorEmail)
-    {
-        var history = new EmergencyMaintenanceHistory
-        {
-            State = state,
-            ChangeDate = DateTime.UtcNow,
-            AuthorEmail = authorEmail
-        };
-
-        await dataAccessProvider.AddEmergencyMaintenanceHistory(history);
-        cachedState = state;
-        timeLastStateFetch = DateTime.UtcNow;
     }
 
     private bool IsCacheStale()
