@@ -35,7 +35,7 @@ public class QuestionnaireUpdaterTests
     {
         liveCustodianCode =
             LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live);
-        // Comment when no Pending LA exists
+        // DESNZ-2233: Comment when no Pending LA exists
         // pendingCustodianCode =
         //     LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
         // DESNZ-1849: Reinstate when an LA of takingFutureReferrals exists
@@ -271,7 +271,7 @@ public class QuestionnaireUpdaterTests
         ), Times.Once);
     }
 
-    // Comment when no Pending LA exists
+    // DESNZ-2233: Comment when no Pending LA exists
     // [Test]
     // public async Task
     //     GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsPending_SendOneEmailWithReferralCodeWithPendingTemplate()
@@ -534,7 +534,7 @@ public class QuestionnaireUpdaterTests
             Times.Once);
     }
 
-    // Comment when no Pending LA exists
+    // DESNZ-2233: Comment when no Pending LA exists
     // [TestCase(true, "test@example.com")]
     // [TestCase(false, "")]
     // public async Task
