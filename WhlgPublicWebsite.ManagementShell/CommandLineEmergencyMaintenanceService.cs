@@ -1,26 +1,27 @@
-﻿using WhlgPublicWebsite.BusinessLogic.Models;
-using WhlgPublicWebsite.BusinessLogic.Services.EmergencyMaintenance;
+﻿using WhlgPublicWebsite.BusinessLogic;
+using WhlgPublicWebsite.BusinessLogic.Models;
 using WhlgPublicWebsite.Data;
 
 namespace WhlgPublicWebsite.ManagementShell;
 
-public class CommandLineEmergencyMaintenanceService
+public class CommandLineEmergencyMaintenanceService(WhlgDbContext context)
 {
-    private EmergencyMaintenanceService EmergencyMaintenanceService { get; }
-
-    public CommandLineEmergencyMaintenanceService(WhlgDbContext context)
-    {
-        var dataAccessProvider = new DataAccessProvider(context);
-        EmergencyMaintenanceService = new EmergencyMaintenanceService(dataAccessProvider);
-    }
+    private readonly DataAccessProvider dataAccessProvider = new(context);
 
     public async Task<EmergencyMaintenanceState> GetEmergencyMaintenanceState()
     {
-        return await EmergencyMaintenanceService.GetEmergencyMaintenanceState();
+        var latestHistory = await dataAccessProvider.GetLatestEmergencyMaintenanceHistoryAsync();
+        return latestHistory?.State ?? EmergencyMaintenanceState.Disabled;
     }
 
     public async Task SetEmergencyMaintenanceState(EmergencyMaintenanceState state, string authorEmail)
     {
-        await EmergencyMaintenanceService.SetEmergencyMaintenanceState(state, authorEmail);
+        var history = new EmergencyMaintenanceHistory
+        {
+            State = state,
+            ChangeDate = DateTime.UtcNow,
+            AuthorEmail = authorEmail
+        };
+        await dataAccessProvider.AddEmergencyMaintenanceHistory(history);
     }
 }

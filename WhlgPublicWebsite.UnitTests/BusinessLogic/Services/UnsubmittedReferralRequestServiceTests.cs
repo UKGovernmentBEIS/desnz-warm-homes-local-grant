@@ -14,6 +14,7 @@ using Tests.Builders;
 using RichardSzalay.MockHttp;
 using WhlgPublicWebsite.BusinessLogic.ExternalServices.Common;
 using WhlgPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
+using Microsoft.Extensions.Logging.Abstractions;
 using WhlgPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 
 namespace Tests.BusinessLogic.Services;
@@ -32,7 +33,7 @@ public class UnsubmittedReferralRequestsServiceTests
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
         mockS3FileWriter = new Mock<IS3FileWriter>();
         unsubmittedReferralRequestsService = new UnsubmittedReferralRequestsService(mockDataAccessProvider.Object,
-            mockS3FileWriter.Object, new CsvFileCreator());
+            mockS3FileWriter.Object, new CsvFileCreator(new NullLogger<CsvFileCreator>()));
         mockHttpHandler = new MockHttpMessageHandler();
         HttpRequestHelper.handler = mockHttpHandler;
     }

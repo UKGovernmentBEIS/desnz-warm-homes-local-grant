@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using static WhlgPublicWebsite.BusinessLogic.Models.LocalAuthorityData;
 using static WhlgPublicWebsite.BusinessLogic.Models.LocalAuthorityData.LocalAuthorityStatus;
 
@@ -172,7 +172,7 @@ internal static class LocalAuthorityStatuses
             { "5660", Live },
             { "2335", Live },
             { "4720", Live },
-            { "2465", Live },
+            { "2465", ReferralsPaused },
             { "1425", Live },
             { "5690", Live },
             { "3415", Live },

@@ -84,15 +84,13 @@ public class Startup
         services.AddScoped<IReferralFilterService, ReferralFilterService>();
         services.AddScoped<ISessionRecorderService, SessionRecorderService>();
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();
-        services.AddScoped<EmergencyMaintenanceService>();
 
         services.AddMemoryCache();
         services.AddSingleton<StaticAssetsVersioningService>();
-        // TODO DESNZ-2197: Remove this checker once we have moved entirely to the IMD2025 postcodes.
-        services.AddSingleton<IEligiblePostcodeImdFileChecker, EligiblePostcodeImdFileChecker>();
         services.AddSingleton<EligiblePostcodeListCache>();
         // This allows encrypted cookies to be understood across multiple web server instances
         services.AddDataProtection().PersistKeysToDbContext<WhlgDbContext>();
+        services.AddSingleton<EmergencyMaintenanceService>();
 
         ConfigureReferralFollowUpNotificationService(services);
         ConfigureS3Client(services);
