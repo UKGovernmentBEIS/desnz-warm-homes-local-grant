@@ -34,8 +34,9 @@ public class QuestionFlowServiceTests
         LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
             .ReferralsPaused);
 
-    private static readonly string PendingCustodianCode =
-        LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
+    // Comment when no Pending LA exists
+    // private static readonly string PendingCustodianCode =
+    //     LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
     // DESNZ-1849: Reinstate when an LA of takingFutureReferrals exists
     // private static readonly string TakingFutureReferralsCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals);
 
@@ -622,13 +623,14 @@ public class QuestionFlowServiceTests
                 custodianCode: LiveCustodianCode
             ),
             QuestionFlowStep.Eligible),
-        new(
-            "Check answers continues to pending if LA is pending",
-            new Input(
-                QuestionFlowStep.CheckAnswers,
-                custodianCode: PendingCustodianCode
-            ),
-            QuestionFlowStep.Pending),
+        // Comment when no Pending LA exists
+        // new(
+        //     "Check answers continues to pending if LA is pending",
+        //     new Input(
+        //         QuestionFlowStep.CheckAnswers,
+        //         custodianCode: PendingCustodianCode
+        //     ),
+        //     QuestionFlowStep.Pending),
         // DESNZ-1849: Reinstate when an LA of takingFutureReferrals exists
         // new(
         //     "Check answers continues to taking future referrals if LA is taking future referrals",
