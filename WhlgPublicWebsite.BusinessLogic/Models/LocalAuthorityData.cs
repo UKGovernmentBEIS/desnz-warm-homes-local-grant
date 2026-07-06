@@ -1,4 +1,4 @@
-﻿using WhlgPublicWebsite.BusinessLogic.Models.Enums;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 
 namespace WhlgPublicWebsite.BusinessLogic.Models;
 
@@ -32,7 +32,7 @@ public class LocalAuthorityData
         { IncomeThreshold._36000, new[] { IncomeBand.UnderOrEqualTo36000, IncomeBand.GreaterThan36000 } }
     };
 
-    private static IEnumerable<string> FilterCustodianCodes(
+    public static IEnumerable<string> FilterCustodianCodes(
         string consortium,
         LocalAuthorityStatus? status = null)
     {
@@ -217,7 +217,7 @@ public class LocalAuthorityData
         { "5660", new LocalAuthorityDetails("Lambeth Council", LocalAuthorityStatus.Live, "https://www.lambeth.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
         { "2335", new LocalAuthorityDetails("Lancaster City Council", LocalAuthorityStatus.Live, "https://www.lancaster.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Blackpool Council") },
         { "4720", new LocalAuthorityDetails("Leeds City Council", LocalAuthorityStatus.Live, "https://www.leeds.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
-        { "2465", new LocalAuthorityDetails("Leicester City Council", LocalAuthorityStatus.Live, "https://www.leicester.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "2465", new LocalAuthorityDetails("Leicester City Council", LocalAuthorityStatus.ReferralsPaused, "https://www.leicester.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1425", new LocalAuthorityDetails("Lewes District Council", LocalAuthorityStatus.Live, "https://www.lewes-eastbourne.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Lewes District Council") },
         { "5690", new LocalAuthorityDetails("Lewisham Council", LocalAuthorityStatus.Live, "https://lewisham.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
         { "3415", new LocalAuthorityDetails("Lichfield City Council", LocalAuthorityStatus.Live, "https://www.lichfield.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Staffordshire") },
@@ -427,6 +427,8 @@ public class LocalAuthorityData
                localAuthority.Consortium == consortium;
     }
 
+    public static readonly IReadOnlyList<string> ManagedByLcrcaCodes = new[] { "650", "4305", "4315", "4325" };
+    
     public static bool CustodianCodeIsManagedByLcrca(string custodianCode)
     {
         return 
@@ -436,6 +438,6 @@ public class LocalAuthorityData
             // Knowsley
             // St Helens
             // Wirral
-            && custodianCode is "650" or "4305" or "4315" or "4325";
+            && ManagedByLcrcaCodes.Contains(custodianCode);
     }
 }

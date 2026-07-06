@@ -31,7 +31,8 @@ public class CommandLineUnsubmittedReferralRequestsService
         var s3Client = new AmazonS3Client(RegionEndpoint.GetBySystemName(s3Config.Region));
         var s3FileWriter = new S3FileWriter(Options.Create(s3Config), s3FileWriterLogger, s3ReferralFileKeyGenerator,
             s3Client);
-        var csvFileCreator = new CsvFileCreator();
+        var csvFileCreatorLogger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<CsvFileCreator>();
+        var csvFileCreator = new CsvFileCreator(csvFileCreatorLogger);
         UnsubmittedReferralRequestsService =
             new UnsubmittedReferralRequestsService(dataAccessProvider, s3FileWriter, csvFileCreator);
     }
