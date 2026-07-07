@@ -34,8 +34,9 @@ public class QuestionFlowServiceTests
         LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
             .ReferralsPaused);
 
-    private static readonly string PendingCustodianCode =
-        LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
+    // DESNZ-2233: Comment when no Pending LA exists
+    // private static readonly string PendingCustodianCode =
+    //     LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
     // DESNZ-1849: Reinstate when an LA of takingFutureReferrals exists
     // private static readonly string TakingFutureReferralsCustodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.TakingFutureReferrals);
 
@@ -66,19 +67,57 @@ public class QuestionFlowServiceTests
     }
 
     [Test]
-    public void NoTakingFutureReferralsLasExist()
+    public void LiveLasExist()
     {
         // If this test starts failing, the LA data has been updated and the statement in the test name is now false
         // Do the following:
         // 1. Update this test's name to reflect if this LocalAuthorityStatus exists within the LA data
-        // 2. Search the project for "DESNZ-1849" for all references to this status and ensure they are updated to reflect the test name statement
+        // 2. Search the project for "DESNZ-????" (update when needed) for all references to this status and ensure they are updated to reflect the test name statement
         // 3. Invert the test assertion to correctly assert the statement in the test name (i.e. Throw should become NotThrow and vice versa)
-        // Note: the wording on the TakingFutureReferrals mentions 'spring 2025'. The wording/date here and in other places that mention 
-        // old dates should be reviewed
+        Action act = () =>
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live);
+        act.Should().NotThrow<InvalidOperationException>();
+    }
+
+    [Test]
+    public void NoFundingLasExist()
+    {
+        // If this test starts failing, the LA data has been updated and the statement in the test name is now false
+        // Do the following:
+        // 1. Update this test's name to reflect if this LocalAuthorityStatus exists within the LA data
+        // 2. Search the project for "DESNZ-????" (update when needed) for all references to this status and ensure they are updated to reflect the test name statement
+        // 3. Invert the test assertion to correctly assert the statement in the test name (i.e. Throw should become NotThrow and vice versa)
+        Action act = () =>
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.NoFunding);
+        act.Should().NotThrow<InvalidOperationException>();
+    }
+
+    [Test]
+    public void NotParticipatingLasExist()
+    {
+        // If this test starts failing, the LA data has been updated and the statement in the test name is now false
+        // Do the following:
+        // 1. Update this test's name to reflect if this LocalAuthorityStatus exists within the LA data
+        // 2. Search the project for "DESNZ-????" (update when needed) for all references to this status and ensure they are updated to reflect the test name statement
+        // 3. Invert the test assertion to correctly assert the statement in the test name (i.e. Throw should become NotThrow and vice versa)
         Action act = () =>
             LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
-                .TakingFutureReferrals);
-        act.Should().Throw<InvalidOperationException>();
+                .NotParticipating);
+        act.Should().NotThrow<InvalidOperationException>();
+    }
+
+    [Test]
+    public void NoLongerParticipatingLasExist()
+    {
+        // If this test starts failing, the LA data has been updated and the statement in the test name is now false
+        // Do the following:
+        // 1. Update this test's name to reflect if this LocalAuthorityStatus exists within the LA data
+        // 2. Search the project for "DESNZ-????" (update when needed) for all references to this status and ensure they are updated to reflect the test name statement
+        // 3. Invert the test assertion to correctly assert the statement in the test name (i.e. Throw should become NotThrow and vice versa)
+        Action act = () =>
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
+                .NoLongerParticipating);
+        act.Should().NotThrow<InvalidOperationException>();
     }
 
     [Test]
@@ -93,6 +132,35 @@ public class QuestionFlowServiceTests
             LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
                 .ReferralsPaused);
         act.Should().NotThrow<InvalidOperationException>();
+    }
+
+    [Test]
+    public void PendingLasDoNotExist()
+    {
+        // If this test starts failing, the LA data has been updated and the statement in the test name is now false
+        // Do the following:
+        // 1. Update this test's name to reflect if this LocalAuthorityStatus exists within the LA data
+        // 2. Search the project for "DESNZ-2233" (update when needed) for all references to this status and ensure they are updated to reflect the test name statement
+        // 3. Invert the test assertion to correctly assert the statement in the test name (i.e. Throw should become NotThrow and vice versa)
+        Action act = () =>
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
+        act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Test]
+    public void TakingFutureReferralsLasDoNotExist()
+    {
+        // If this test starts failing, the LA data has been updated and the statement in the test name is now false
+        // Do the following:
+        // 1. Update this test's name to reflect if this LocalAuthorityStatus exists within the LA data
+        // 2. Search the project for "DESNZ-????" (update when needed) for all references to this status and ensure they are updated to reflect the test name statement
+        // 3. Invert the test assertion to correctly assert the statement in the test name (i.e. Throw should become NotThrow and vice versa)
+        // Note: the wording on the TakingFutureReferrals mentions 'spring 2025'. The wording/date here and in other places that mention 
+        // old dates should be reviewed
+        Action act = () =>
+            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
+                .TakingFutureReferrals);
+        act.Should().Throw<InvalidOperationException>();
     }
 
     private static QuestionFlowServiceTestCase[] BackTestCases =
@@ -622,13 +690,14 @@ public class QuestionFlowServiceTests
                 custodianCode: LiveCustodianCode
             ),
             QuestionFlowStep.Eligible),
-        new(
-            "Check answers continues to pending if LA is pending",
-            new Input(
-                QuestionFlowStep.CheckAnswers,
-                custodianCode: PendingCustodianCode
-            ),
-            QuestionFlowStep.Pending),
+        // DESNZ-2233: Comment when no Pending LA exists
+        // new(
+        //     "Check answers continues to pending if LA is pending",
+        //     new Input(
+        //         QuestionFlowStep.CheckAnswers,
+        //         custodianCode: PendingCustodianCode
+        //     ),
+        //     QuestionFlowStep.Pending),
         // DESNZ-1849: Reinstate when an LA of takingFutureReferrals exists
         // new(
         //     "Check answers continues to taking future referrals if LA is taking future referrals",

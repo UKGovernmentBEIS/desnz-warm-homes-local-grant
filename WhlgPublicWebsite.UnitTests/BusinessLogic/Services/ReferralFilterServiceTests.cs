@@ -25,29 +25,30 @@ public class ReferralFilterServiceTests
         referralFilterService = new ReferralFilterService();
     }
 
-    // If LA is now pending, include.
-    [TestCase(true, false, false)]
-    [TestCase(true, false, true)]
-    [TestCase(true, true, false)]
-    [TestCase(true, true, true)]
-    // If LA is not now pending but referral was submitted in the last month to a then pending LA, include.
-    [TestCase(false, true, true)]
-    public void WasSubmittedToPendingAuthority_WhenCalledWithEmailPendingReferral_IncludesInFilter(
-        bool localAuthorityIsNowPending,
-        bool localAuthorityWasPending,
-        bool referralWasSubmittedInTheLastMonth)
-    {
-        // Arrange
-        var referralRequest = BuildReferralRequest(localAuthorityIsNowPending, localAuthorityWasPending,
-            referralWasSubmittedInTheLastMonth);
-
-        // Act
-        var referralSubmittedToPendingAuthority =
-            referralFilterService.WasSubmittedToPendingAuthority(referralRequest, startOfPreviousMonth);
-
-        // Assert
-        referralSubmittedToPendingAuthority.Should().BeTrue();
-    }
+    // DESNZ-2233: Comment when no Pending LA exists
+    // // If LA is now pending, include.
+    // [TestCase(true, false, false)]
+    // [TestCase(true, false, true)]
+    // [TestCase(true, true, false)]
+    // [TestCase(true, true, true)]
+    // // If LA is not now pending but referral was submitted in the last month to a then pending LA, include.
+    // [TestCase(false, true, true)]
+    // public void WasSubmittedToPendingAuthority_WhenCalledWithEmailPendingReferral_IncludesInFilter(
+    //     bool localAuthorityIsNowPending,
+    //     bool localAuthorityWasPending,
+    //     bool referralWasSubmittedInTheLastMonth)
+    // {
+    //     // Arrange
+    //     var referralRequest = BuildReferralRequest(localAuthorityIsNowPending, localAuthorityWasPending,
+    //         referralWasSubmittedInTheLastMonth);
+    //
+    //     // Act
+    //     var referralSubmittedToPendingAuthority =
+    //         referralFilterService.WasSubmittedToPendingAuthority(referralRequest, startOfPreviousMonth);
+    //
+    //     // Assert
+    //     referralSubmittedToPendingAuthority.Should().BeTrue();
+    // }
 
     [TestCase(false, false, false)]
     [TestCase(false, false, true)]
