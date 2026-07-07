@@ -37,8 +37,9 @@ public class ReferralRequestTests
         act.Should().Throw<InvalidOperationException>();
     }
     
+    // DESNZ-2233: Comment when no Pending LA exists
     [TestCase(LocalAuthorityData.LocalAuthorityStatus.Live, false)]
-    [TestCase(LocalAuthorityData.LocalAuthorityStatus.Pending, true)]
+    // [TestCase(LocalAuthorityData.LocalAuthorityStatus.Pending, true)]
     public void WasSubmittedToPendingFlag_IfLocalAuthorityIsPending_WasSubmittedToPendingIsTrueOtherwiseFalse(LocalAuthorityData.LocalAuthorityStatus localAuthorityStatus, bool expectedWasSubmittedToPendingLocalAuthorityValue)
     {
         // Arrange

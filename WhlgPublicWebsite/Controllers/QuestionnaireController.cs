@@ -1087,6 +1087,12 @@ public class QuestionnaireController : Controller
                 (LocalAuthorityData.LocalAuthorityStatus.Live, var custodianCode) when LocalAuthorityData
                         .CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.GreaterLondonAuthority) =>
                     "GreaterLondonAuthority",
+                (LocalAuthorityData.LocalAuthorityStatus.Live, var custodianCode) when LocalAuthorityData
+                        .CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.OxfordshireCountyCouncil) =>
+                    "OxfordshireCountyCouncil",
+                (LocalAuthorityData.LocalAuthorityStatus.Live, var custodianCode) when LocalAuthorityData
+                        .CustodianCodeIsManagedByLcrca(custodianCode) =>
+                    "LiverpoolCityRegionCombinedAuthority",
                 _ => "Default"
             };
         return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";

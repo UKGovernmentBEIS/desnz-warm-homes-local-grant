@@ -1,4 +1,4 @@
-﻿using WhlgPublicWebsite.BusinessLogic.Models.Enums;
+using WhlgPublicWebsite.BusinessLogic.Models.Enums;
 
 namespace WhlgPublicWebsite.BusinessLogic.Models;
 
@@ -32,7 +32,7 @@ public class LocalAuthorityData
         { IncomeThreshold._36000, new[] { IncomeBand.UnderOrEqualTo36000, IncomeBand.GreaterThan36000 } }
     };
 
-    private static IEnumerable<string> FilterCustodianCodes(
+    public static IEnumerable<string> FilterCustodianCodes(
         string consortium,
         LocalAuthorityStatus? status = null)
     {
@@ -107,7 +107,7 @@ public class LocalAuthorityData
         { "2210", new LocalAuthorityDetails("Canterbury City Council", LocalAuthorityStatus.Live, "https://www.canterbury.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "6825", new LocalAuthorityDetails("Carmarthenshire County Council", LocalAuthorityStatus.NoFunding, "https://www.carmarthenshire.gov.wales/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1520", new LocalAuthorityDetails("Castle Point District Council", LocalAuthorityStatus.ReferralsPaused, "https://www.castlepoint.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Essex County Council") },
-        { "240", new LocalAuthorityDetails("Central Bedfordshire Council", LocalAuthorityStatus.Pending, "https://www.centralbedfordshire.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "240", new LocalAuthorityDetails("Central Bedfordshire Council", LocalAuthorityStatus.Live, "https://www.centralbedfordshire.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "6820", new LocalAuthorityDetails("Ceredigion County Council", LocalAuthorityStatus.NoFunding, "https://www.ceredigion.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "2410", new LocalAuthorityDetails("Charnwood Borough Council", LocalAuthorityStatus.Live, "https://www.charnwood.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Leicestershire") },
         { "1525", new LocalAuthorityDetails("Chelmsford City Council", LocalAuthorityStatus.ReferralsPaused, "https://www.chelmsford.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Essex County Council") },
@@ -119,7 +119,7 @@ public class LocalAuthorityData
         { "3815", new LocalAuthorityDetails("Chichester District Council", LocalAuthorityStatus.Live, "https://www.warmerhomes.org.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
         { "2320", new LocalAuthorityDetails("Chorley Borough Council", LocalAuthorityStatus.Live, "https://chorley.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Blackpool Council") },
         { "6855", new LocalAuthorityDetails("City and County of Swansea Council", LocalAuthorityStatus.NoFunding, "https://www.swansea.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
-        { "4705", new LocalAuthorityDetails("City of Bradford Metropolitan District Council", LocalAuthorityStatus.Pending, "https://www.bradford.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "4705", new LocalAuthorityDetails("City of Bradford Metropolitan District Council", LocalAuthorityStatus.Live, "https://www.bradford.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "6815", new LocalAuthorityDetails("City of Cardiff Council", LocalAuthorityStatus.NoFunding, "https://www.cardiff.gov.uk/ENG/Pages/default.aspx", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "4410", new LocalAuthorityDetails("City of Doncaster Council", LocalAuthorityStatus.Live, "https://www.doncaster.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "9064", new LocalAuthorityDetails("City of Edinburgh Council", LocalAuthorityStatus.NoFunding, "https://www.edinburgh.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
@@ -217,7 +217,7 @@ public class LocalAuthorityData
         { "5660", new LocalAuthorityDetails("Lambeth Council", LocalAuthorityStatus.Live, "https://www.lambeth.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
         { "2335", new LocalAuthorityDetails("Lancaster City Council", LocalAuthorityStatus.Live, "https://www.lancaster.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Blackpool Council") },
         { "4720", new LocalAuthorityDetails("Leeds City Council", LocalAuthorityStatus.Live, "https://www.leeds.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
-        { "2465", new LocalAuthorityDetails("Leicester City Council", LocalAuthorityStatus.Live, "https://www.leicester.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "2465", new LocalAuthorityDetails("Leicester City Council", LocalAuthorityStatus.ReferralsPaused, "https://www.leicester.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1425", new LocalAuthorityDetails("Lewes District Council", LocalAuthorityStatus.Live, "https://www.lewes-eastbourne.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Lewes District Council") },
         { "5690", new LocalAuthorityDetails("Lewisham Council", LocalAuthorityStatus.Live, "https://lewisham.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
         { "3415", new LocalAuthorityDetails("Lichfield City Council", LocalAuthorityStatus.Live, "https://www.lichfield.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Staffordshire") },
@@ -308,7 +308,7 @@ public class LocalAuthorityData
         { "5600", new LocalAuthorityDetails("Royal Borough of Kensington and Chelsea", LocalAuthorityStatus.Live, "https://www.rbkc.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
         { "5630", new LocalAuthorityDetails("Royal Borough of Kingston upon Thames", LocalAuthorityStatus.Live, "https://www.kingston.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
         { "355", new LocalAuthorityDetails("Royal Borough of Windsor and Maidenhead", LocalAuthorityStatus.Live, "https://www.warmerhomes.org.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
-        { "3715", new LocalAuthorityDetails("Rugby Borough Council", LocalAuthorityStatus.Pending, "https://www.rugby.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Nottingham City Council") },
+        { "3715", new LocalAuthorityDetails("Rugby Borough Council", LocalAuthorityStatus.ReferralsPaused, "https://www.rugby.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Nottingham City Council") },
         { "3630", new LocalAuthorityDetails("Runnymede Borough Council", LocalAuthorityStatus.Live, "https://www.runnymede.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Surrey County Council") },
         { "3040", new LocalAuthorityDetails("Rushcliffe Borough Council", LocalAuthorityStatus.Live, "https://www.rushcliffe.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Nottinghamshire County Council") },
         { "1750", new LocalAuthorityDetails("Rushmoor Borough Council", LocalAuthorityStatus.Live, "https://www.warmerhomes.org.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
@@ -427,6 +427,8 @@ public class LocalAuthorityData
                localAuthority.Consortium == consortium;
     }
 
+    public static readonly IReadOnlyList<string> ManagedByLcrcaCodes = new[] { "650", "4305", "4315", "4325" };
+    
     public static bool CustodianCodeIsManagedByLcrca(string custodianCode)
     {
         return 
@@ -436,6 +438,6 @@ public class LocalAuthorityData
             // Knowsley
             // St Helens
             // Wirral
-            && custodianCode is "650" or "4305" or "4315" or "4325";
+            && ManagedByLcrcaCodes.Contains(custodianCode);
     }
 }

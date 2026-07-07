@@ -1,8 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using NUnit.Framework;
 using Tests.Builders;
 using WhlgPublicWebsite.BusinessLogic.Models;
@@ -16,11 +20,13 @@ namespace Tests.BusinessLogic.Services;
 [TestFixture]
 public class CsvFileCreatorTests
 {
+    private const string UnknownCustodianCode = "not-a-valid-custodian-code";
+
     [Test]
     public void CreateReferralRequestFileDataForS3_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest = new ReferralRequestBuilder(1).Build();
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
@@ -48,7 +54,7 @@ public class CsvFileCreatorTests
             IncomeBand incomeBand, string expectedValue)
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest = new ReferralRequestBuilder(1).WithIncomeBand(incomeBand).Build();
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
@@ -66,7 +72,7 @@ public class CsvFileCreatorTests
     public void CreateReferralRequestFileDataForS3_CalledWithReferralRequestWithUnsureEpc_GeneratesExpectedFileData()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest = new ReferralRequestBuilder(1).WithEpcConfirmation(EpcConfirmation.Unknown).Build();
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
@@ -84,7 +90,7 @@ public class CsvFileCreatorTests
     public void CreateReferralRequestFileDataForS3_CalledWithMultipleReferralRequests_GeneratesExpectedFileData()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest1 = new ReferralRequestBuilder(1).Build();
         var referralRequest2 = new ReferralRequestBuilder(2).Build();
         var referralRequest3 = new ReferralRequestBuilder(3).Build();
@@ -111,7 +117,7 @@ public class CsvFileCreatorTests
         string expectedOutput)
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest = new ReferralRequestBuilder(1).WithFullName(nameInput).Build();
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
@@ -129,7 +135,7 @@ public class CsvFileCreatorTests
     public void CreateReferralRequestFileDataForS3_CalledWithReferralRequest_IncludesBOMInTheMemoryStream()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest = new ReferralRequestBuilder(1).Build();
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
@@ -144,7 +150,7 @@ public class CsvFileCreatorTests
     public void CreateReferralRequestFileDataForS3_CalledWithReferralRequestWithEpcConfirmedYes_GeneratesExpectedFileData()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest = new ReferralRequestBuilder(1).WithEpcConfirmation(EpcConfirmation.Yes).Build();
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
@@ -154,15 +160,99 @@ public class CsvFileCreatorTests
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
         reader.ReadToEnd().Should().Be(
-            "Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Household income band,Is eligible postcode,Tenure\r\n" +
-            "2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 123456,Address 1 line 1,Address 1 line 2,Town1,County1,AL01 1RS,100 111 222 001,E,Homeowner agrees with rating,2023-01-01 15:00:01,\"£36,000 or less\",no,Owner\r\n");
+            "Referral date,Referral code,Name,Email,Telephone,Address1,Address2,Town,County,Postcode,UPRN,EPC Band,EPC confirmed by homeowner,EPC Lodgement Date,Household income band,Is eligible postcode,Tenure\r\n");
+    }
+
+    [Test]
+    public void CreateReferralRequestFileDataForS3_WhenRowThrows_LogsErrorWithSkippedRow()
+    {
+        // Arrange
+        var mockLogger = new Mock<ILogger<CsvFileCreator>>();
+        var underTest = new CsvFileCreator(mockLogger.Object);
+        var validRequest = new ReferralRequestBuilder(1).Build();
+        var faultyRequest = new ReferralRequestBuilder(2).WithEpcConfirmation(EpcConfirmation.Yes).Build();
+        var referralRequests = new List<ReferralRequest> { validRequest, faultyRequest };
+
+        // Act
+        underTest.CreateReferralRequestFileDataForS3(referralRequests);
+
+        // Assert
+        VerifySkippingRowLoggedOnce(mockLogger, $"ReferralCode={faultyRequest.ReferralCode}");
+    }
+
+    [Test]
+    public void CreateReferralRequestOverviewFileDataForS3_WhenRowThrows_LogsErrorWithSkippedRow()
+    {
+        // Arrange
+        var mockLogger = new Mock<ILogger<CsvFileCreator>>();
+        var underTest = new CsvFileCreator(mockLogger.Object);
+        var validRequest = new ReferralRequestBuilder(1).WithCustodianCode("114").Build();
+        var faultyRequest = new ReferralRequestBuilder(2).WithCustodianCode(UnknownCustodianCode).Build();
+        var referralRequests = new List<ReferralRequest> { validRequest, faultyRequest };
+
+        // Act
+        underTest.CreateReferralRequestOverviewFileDataForS3(referralRequests);
+
+        // Assert
+        VerifySkippingRowLoggedOnce(mockLogger, $"ReferralCode={faultyRequest.ReferralCode}");
+    }
+
+    [Test]
+    public void CreateLocalAuthorityReferralRequestFollowUpFileDataForS3_WhenRowThrows_LogsErrorWithSkippedRow()
+    {
+        // Arrange
+        var mockLogger = new Mock<ILogger<CsvFileCreator>>();
+        var underTest = new CsvFileCreator(mockLogger.Object);
+        var validRequest = new ReferralRequestBuilder(1).WithCustodianCode("114").Build();
+        var faultyRequest = new ReferralRequestBuilder(2).WithCustodianCode(UnknownCustodianCode).Build();
+        var referralRequests = new List<ReferralRequest> { validRequest, faultyRequest };
+
+        // Act
+        underTest.CreateLocalAuthorityReferralRequestFollowUpFileDataForS3(referralRequests);
+
+        // Assert
+        VerifySkippingRowLoggedOnce(mockLogger, $"CustodianCode={UnknownCustodianCode}");
+    }
+
+    [Test]
+    public void CreatePendingReferralRequestFileDataForS3_WhenRowThrows_LogsErrorWithSkippedRow()
+    {
+        // Arrange
+        var mockLogger = new Mock<ILogger<CsvFileCreator>>();
+        var underTest = new CsvFileCreator(mockLogger.Object);
+        var validRequest = new ReferralRequestBuilder(1).WithCustodianCode("114").Build();
+        var faultyRequest = new ReferralRequestBuilder(2).WithCustodianCode(UnknownCustodianCode).Build();
+        var referralRequests = new List<ReferralRequest> { validRequest, faultyRequest };
+
+        // Act
+        underTest.CreatePendingReferralRequestFileDataForS3(referralRequests);
+
+        // Assert
+        VerifySkippingRowLoggedOnce(mockLogger, $"ReferralCode={faultyRequest.ReferralCode}");
+    }
+
+    [Test]
+    public void CreatePerMonthLocalAuthorityReferralStatisticsForConsole_WhenRowThrows_LogsErrorWithSkippedRow()
+    {
+        // Arrange
+        var mockLogger = new Mock<ILogger<CsvFileCreator>>();
+        var underTest = new CsvFileCreator(mockLogger.Object);
+        var validRequest = new ReferralRequestBuilder(1).WithCustodianCode("114").Build();
+        var faultyRequest = new ReferralRequestBuilder(2).WithCustodianCode(UnknownCustodianCode).Build();
+        var referralRequests = new List<ReferralRequest> { validRequest, faultyRequest };
+
+        // Act
+        underTest.CreatePerMonthLocalAuthorityReferralStatisticsForConsole(referralRequests);
+
+        // Assert
+        VerifySkippingRowLoggedOnce(mockLogger, $"CustodianCode={UnknownCustodianCode}");
     }
 
     [Test]
     public void CreateReferralRequestOverviewFileDataForS3_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest = new ReferralRequestBuilder(1).WithCustodianCode("114").Build();
         var localAuthority = GetLocalAuthorityDetails(referralRequest);
         var referralRequests = new List<ReferralRequest> { referralRequest };
@@ -182,7 +272,7 @@ public class CsvFileCreatorTests
         CreateReferralRequestOverviewFileDataForS3_CalledWithReferralRequestFromNullConsortium_GeneratesExpectedFileData()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest = new ReferralRequestBuilder(1).WithCustodianCode("9052")
             .WithFollowUp(new ReferralRequestFollowUpBuilder(1)).Build();
         var localAuthority = GetLocalAuthorityDetails(referralRequest);
@@ -202,7 +292,7 @@ public class CsvFileCreatorTests
     public void CreateReferralRequestOverviewFileDataForS3_CalledWithReferralRequest_IncludesBOMInTheMemoryStream()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest = new ReferralRequestBuilder(1).Build();
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
@@ -218,7 +308,7 @@ public class CsvFileCreatorTests
         CreateLocalAuthorityReferralRequestFollowUpFileDataForS3_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest1 = new ReferralRequestBuilder(1).WithWrittenToCsv(false).WithCustodianCode("114")
             .WithFollowUp(new ReferralRequestFollowUpBuilder(1).WithWasFollowedUp(null)).Build();
         var referralRequest2 = new ReferralRequestBuilder(2).WithWrittenToCsv(false).WithCustodianCode("114")
@@ -265,7 +355,7 @@ public class CsvFileCreatorTests
         CreateLocalAuthorityReferralRequestFollowUpFileDataForS3_CalledWithReferralRequest_IncludesBOMInTheMemoryStream()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest = new ReferralRequestBuilder(1).Build();
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
@@ -281,7 +371,7 @@ public class CsvFileCreatorTests
         CreateConsortiumReferralRequestFollowUpFileDataForS3_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest1 = new ReferralRequestBuilder(1).WithWrittenToCsv(false).WithCustodianCode("114")
             .WithFollowUp(new ReferralRequestFollowUpBuilder(1).WithWasFollowedUp(null)).Build();
         var referralRequest2 = new ReferralRequestBuilder(2).WithWrittenToCsv(false).WithCustodianCode("114")
@@ -327,7 +417,7 @@ public class CsvFileCreatorTests
         CreateConsortiumReferralRequestFollowUpFileDataForS3_CalledWithReferralRequest_IncludesBOMInTheMemoryStream()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest = new ReferralRequestBuilder(1).Build();
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
@@ -342,7 +432,7 @@ public class CsvFileCreatorTests
     public void CreatePendingReferralRequestFileDataForS3_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest1 = new ReferralRequestBuilder(1)
             .WithCustodianCode("114")
             .WithRequestDate(new DateTime(2024, 3, 5, 1, 0, 0))
@@ -389,7 +479,7 @@ public class CsvFileCreatorTests
     public void CreatePendingReferralRequestFileDataForS3_CalledWithReferralRequest_IncludesBOMInTheMemoryStream()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest = new ReferralRequestBuilder(1).Build();
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
@@ -405,7 +495,7 @@ public class CsvFileCreatorTests
         CreatePerMonthLocalAuthorityReferralStatisticsForConsole_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var today = DateTime.Now;
         var requestTime1 = today;
         var requestDate1 = new DateTime(requestTime1.Year, requestTime1.Month, 5);
@@ -461,7 +551,7 @@ public class CsvFileCreatorTests
         CreatePerMonthLocalAuthorityReferralStatisticsForConsole_CalledWithReferralRequest_DoesNotIncludeBOMInTheMemoryStream()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest = new ReferralRequestBuilder(1).Build();
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
@@ -477,7 +567,7 @@ public class CsvFileCreatorTests
         CreatePerMonthConsortiumReferralStatisticsForConsole_CalledWithReferralRequest_GeneratesExpectedFileData()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var requestTime1 = DateTime.Now;
         var requestDate1 = new DateTime(requestTime1.Year, requestTime1.Month, 5);
         var referralRequest1 = new ReferralRequestBuilder(1)
@@ -524,7 +614,7 @@ public class CsvFileCreatorTests
         CreatePerMonthConsortiumReferralStatisticsForConsole_CalledWithNonConsortiumReferralRequest_GeneratesFileDataWithoutNonConsortiumRequests()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var requestTime1 = DateTime.Now.AddMonths(-3);
         var referralRequest1 = new ReferralRequestBuilder(3)
             .WithCustodianCode("440")
@@ -548,7 +638,7 @@ public class CsvFileCreatorTests
         CreatePerMonthConsortiumReferralStatisticsForConsole_CalledWithReferralRequest_DoesNotIncludeBOMInTheMemoryStream()
     {
         // Arrange
-        var underTest = new CsvFileCreator();
+        var underTest = new CsvFileCreator(new NullLogger<CsvFileCreator>());
         var referralRequest = new ReferralRequestBuilder(1).Build();
         var referralRequests = new List<ReferralRequest> { referralRequest };
 
@@ -557,6 +647,20 @@ public class CsvFileCreatorTests
 
         // Assert
         ContainsBom(data).Should().BeFalse();
+    }
+
+    private static void VerifySkippingRowLoggedOnce(Mock<ILogger<CsvFileCreator>> mockLogger,
+        string expectedSubstringInMessage)
+    {
+        var errorLogs = mockLogger.Invocations
+            .Where(i => i.Method.Name == nameof(ILogger.Log) && (LogLevel)i.Arguments[0] == LogLevel.Error)
+            .Select(i => i.Arguments[2]?.ToString() ?? "")
+            .Where(msg => msg.Contains("[CsvFileCreator] Skipping row (", StringComparison.Ordinal)
+                          && msg.Contains("due to exception.", StringComparison.Ordinal)
+                          && msg.Contains(expectedSubstringInMessage, StringComparison.Ordinal))
+            .ToList();
+
+        errorLogs.Should().ContainSingle();
     }
 
     private static LocalAuthorityData.LocalAuthorityDetails GetLocalAuthorityDetails(ReferralRequest referralRequest)

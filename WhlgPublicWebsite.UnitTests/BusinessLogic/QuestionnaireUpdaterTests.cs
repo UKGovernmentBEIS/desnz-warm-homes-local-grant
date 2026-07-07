@@ -35,8 +35,9 @@ public class QuestionnaireUpdaterTests
     {
         liveCustodianCode =
             LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Live);
-        pendingCustodianCode =
-            LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
+        // DESNZ-2233: Comment when no Pending LA exists
+        // pendingCustodianCode =
+        //     LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus.Pending);
         // DESNZ-1849: Reinstate when an LA of takingFutureReferrals exists
         // takingFutureReferralsCustodianCode =
         //     LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData.LocalAuthorityStatus
@@ -270,58 +271,59 @@ public class QuestionnaireUpdaterTests
         ), Times.Once);
     }
 
-    [Test]
-    public async Task
-        GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsPending_SendOneEmailWithReferralCodeWithPendingTemplate()
-    {
-        // Arrange
-        string testCustodianCode = pendingCustodianCode;
-        const int testReferralId = 12;
-        const string testName = "Example Person";
-        const string testEmailAddress = "test@example.com";
-
-        var questionnaire = new Questionnaire
-        {
-            CustodianCode = testCustodianCode,
-            IsImdPostcode = false,
-            IncomeBand = IncomeBand.UnderOrEqualTo36000
-        };
-        var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
-
-        var referral = new ReferralRequestBuilder(testReferralId);
-        referral.WithCustodianCode(testCustodianCode);
-        referral.WithRequestDate(creationDate);
-        var testReferralRequest = referral.Build();
-
-        mockDataAccessProvider.Setup(dap =>
-            dap.PersistNewReferralRequestAsync
-            (
-                It.Is<ReferralRequest>(rr => rr.CustodianCode == testCustodianCode)
-            )).ReturnsAsync(testReferralRequest);
-        mockEmailSender.Setup(es =>
-            es.SendReferenceCodeEmailForPendingLocalAuthority(
-                testEmailAddress,
-                testName,
-                testReferralRequest)
-        );
-
-        // Act
-        var result = await underTest.GenerateReferralAsync
-        (
-            questionnaire,
-            testName,
-            testEmailAddress,
-            ""
-        );
-
-        // Assert
-        mockEmailSender.Verify(es => es.SendReferenceCodeEmailForPendingLocalAuthority
-        (
-            testEmailAddress,
-            testName,
-            testReferralRequest
-        ), Times.Once);
-    }
+    // DESNZ-2233: Comment when no Pending LA exists
+    // [Test]
+    // public async Task
+    //     GenerateReferralAsync_WhenCalledWithEmailAndLocalAuthorityIsPending_SendOneEmailWithReferralCodeWithPendingTemplate()
+    // {
+    //     // Arrange
+    //     string testCustodianCode = pendingCustodianCode;
+    //     const int testReferralId = 12;
+    //     const string testName = "Example Person";
+    //     const string testEmailAddress = "test@example.com";
+    //
+    //     var questionnaire = new Questionnaire
+    //     {
+    //         CustodianCode = testCustodianCode,
+    //         IsImdPostcode = false,
+    //         IncomeBand = IncomeBand.UnderOrEqualTo36000
+    //     };
+    //     var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
+    //
+    //     var referral = new ReferralRequestBuilder(testReferralId);
+    //     referral.WithCustodianCode(testCustodianCode);
+    //     referral.WithRequestDate(creationDate);
+    //     var testReferralRequest = referral.Build();
+    //
+    //     mockDataAccessProvider.Setup(dap =>
+    //         dap.PersistNewReferralRequestAsync
+    //         (
+    //             It.Is<ReferralRequest>(rr => rr.CustodianCode == testCustodianCode)
+    //         )).ReturnsAsync(testReferralRequest);
+    //     mockEmailSender.Setup(es =>
+    //         es.SendReferenceCodeEmailForPendingLocalAuthority(
+    //             testEmailAddress,
+    //             testName,
+    //             testReferralRequest)
+    //     );
+    //
+    //     // Act
+    //     var result = await underTest.GenerateReferralAsync
+    //     (
+    //         questionnaire,
+    //         testName,
+    //         testEmailAddress,
+    //         ""
+    //     );
+    //
+    //     // Assert
+    //     mockEmailSender.Verify(es => es.SendReferenceCodeEmailForPendingLocalAuthority
+    //     (
+    //         testEmailAddress,
+    //         testName,
+    //         testReferralRequest
+    //     ), Times.Once);
+    // }
 
     [Test]
     [Ignore("DESNZ-1849: Reinstate when an LA of takingFutureReferrals exists")]
@@ -532,61 +534,62 @@ public class QuestionnaireUpdaterTests
             Times.Once);
     }
 
-    [TestCase(true, "test@example.com")]
-    [TestCase(false, "")]
-    public async Task
-        RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentGrantedAndEmailGivenAndLocalAuthorityIsPending_SendsOnePendingTemplateEmailWithReferralCode
-        (
-            bool notificationConsentGranted,
-            string notificationEmailAddress
-        )
-    {
-        // Arrange
-        string testCustodianCode = pendingCustodianCode;
-        const string testReferralCode = "referral code";
-        const int testReferralId = 12;
-        const string testName = "Example Person";
-        const string testEmailAddress = "test@example.com";
-        var questionnaire = new Questionnaire
-        {
-            LaContactName = testName,
-            LaContactEmailAddress = testEmailAddress,
-            ReferralCode = testReferralCode,
-            CustodianCode = testCustodianCode,
-            IsImdPostcode = false,
-            IncomeBand = IncomeBand.UnderOrEqualTo36000
-        };
-        var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
-
-        var referral = new ReferralRequestBuilder(testReferralId);
-        referral.WithCustodianCode(testCustodianCode);
-        referral.WithRequestDate(creationDate);
-        var testReferralRequest = referral.Build();
-
-        mockEmailSender.Setup(es =>
-            es.SendReferenceCodeEmailForPendingLocalAuthority(
-                testEmailAddress,
-                testName,
-                testReferralRequest)
-        );
-
-        // Act
-        var result = await underTest.RecordConfirmationAndNotificationConsentAsync
-        (
-            questionnaire,
-            notificationConsentGranted,
-            notificationEmailAddress,
-            true,
-            testEmailAddress
-        );
-
-        // Assert
-        mockEmailSender.Verify(es => es.SendReferenceCodeEmailForPendingLocalAuthority(
-                testEmailAddress,
-                testName,
-                It.IsAny<ReferralRequest>()),
-            Times.Once);
-    }
+    // DESNZ-2233: Comment when no Pending LA exists
+    // [TestCase(true, "test@example.com")]
+    // [TestCase(false, "")]
+    // public async Task
+    //     RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentGrantedAndEmailGivenAndLocalAuthorityIsPending_SendsOnePendingTemplateEmailWithReferralCode
+    //     (
+    //         bool notificationConsentGranted,
+    //         string notificationEmailAddress
+    //     )
+    // {
+    //     // Arrange
+    //     string testCustodianCode = pendingCustodianCode;
+    //     const string testReferralCode = "referral code";
+    //     const int testReferralId = 12;
+    //     const string testName = "Example Person";
+    //     const string testEmailAddress = "test@example.com";
+    //     var questionnaire = new Questionnaire
+    //     {
+    //         LaContactName = testName,
+    //         LaContactEmailAddress = testEmailAddress,
+    //         ReferralCode = testReferralCode,
+    //         CustodianCode = testCustodianCode,
+    //         IsImdPostcode = false,
+    //         IncomeBand = IncomeBand.UnderOrEqualTo36000
+    //     };
+    //     var creationDate = new DateTime(2023, 01, 01, 13, 0, 0);
+    //
+    //     var referral = new ReferralRequestBuilder(testReferralId);
+    //     referral.WithCustodianCode(testCustodianCode);
+    //     referral.WithRequestDate(creationDate);
+    //     var testReferralRequest = referral.Build();
+    //
+    //     mockEmailSender.Setup(es =>
+    //         es.SendReferenceCodeEmailForPendingLocalAuthority(
+    //             testEmailAddress,
+    //             testName,
+    //             testReferralRequest)
+    //     );
+    //
+    //     // Act
+    //     var result = await underTest.RecordConfirmationAndNotificationConsentAsync
+    //     (
+    //         questionnaire,
+    //         notificationConsentGranted,
+    //         notificationEmailAddress,
+    //         true,
+    //         testEmailAddress
+    //     );
+    //
+    //     // Assert
+    //     mockEmailSender.Verify(es => es.SendReferenceCodeEmailForPendingLocalAuthority(
+    //             testEmailAddress,
+    //             testName,
+    //             It.IsAny<ReferralRequest>()),
+    //         Times.Once);
+    // }
 
     [TestCase(true, "test@example.com")]
     [TestCase(false, "")]

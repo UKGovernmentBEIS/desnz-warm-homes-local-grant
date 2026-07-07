@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 using WhlgPublicWebsite.BusinessLogic;
@@ -10,15 +12,28 @@ namespace Tests.BusinessLogic.Services;
 
 public class EmergencyMaintenanceServiceTests
 {
+    private Mock<IServiceScopeFactory> mockScopeFactory;
+    private Mock<IServiceScope> mockScope;
+    private Mock<IServiceProvider> mockServiceProvider;
     private Mock<IDataAccessProvider> mockDataAccessProvider;
     private EmergencyMaintenanceService underTest;
 
     [SetUp]
     public void Setup()
     {
+        mockScopeFactory = new Mock<IServiceScopeFactory>();
+        mockScope = new Mock<IServiceScope>();
+        mockServiceProvider = new Mock<IServiceProvider>();
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
-
-        underTest = new EmergencyMaintenanceService(mockDataAccessProvider.Object);
+ 
+        mockScopeFactory.Setup(x => x.CreateScope()).Returns(mockScope.Object);
+    
+        mockScope.Setup(x => x.ServiceProvider).Returns(mockServiceProvider.Object);
+    
+        mockServiceProvider.Setup(x => x.GetService(typeof(IDataAccessProvider)))
+            .Returns(mockDataAccessProvider.Object);
+ 
+        underTest = new EmergencyMaintenanceService(mockScopeFactory.Object);;
     }
 
     [TestCase(EmergencyMaintenanceState.Enabled, true)]
