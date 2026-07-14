@@ -299,11 +299,11 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Address),
         new(
-            "Check answers goes back to LA contact",
+            "Check answers goes back to household income",
             new Input(
                 QuestionFlowStep.CheckAnswers
             ),
-            QuestionFlowStep.LaContact),
+            QuestionFlowStep.HouseholdIncome),
         new(
             "Future contact topics goes back to eligible in the main flow",
             new Input(
@@ -323,12 +323,6 @@ public class QuestionFlowServiceTests
                 QuestionFlowStep.FutureContactChannels
             ),
             QuestionFlowStep.FutureContactTopics),
-        new(
-            "LA contact goes back to household income",
-            new Input(
-                QuestionFlowStep.LaContact
-            ),
-            QuestionFlowStep.HouseholdIncome),
         new(
             "Eligible goes back to check answers",
             new Input(
@@ -356,11 +350,11 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
-            "No consent goes back to LA contact",
+            "No consent goes back to eligible",
             new Input(
                 QuestionFlowStep.NoConsent
             ),
-            QuestionFlowStep.LaContact),
+            QuestionFlowStep.Eligible),
         new(
             "Country goes back to check answers if was changing answer",
             new Input(
@@ -695,16 +689,10 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.NotParticipating),
         new(
-            "Household income continues to LA contact if income is eligible",
+            "Household income continues to check answers if income is eligible",
             new Input(
                 QuestionFlowStep.HouseholdIncome,
                 incomeBand: IncomeBand.UnderOrEqualTo36000
-            ),
-            QuestionFlowStep.LaContact),
-        new(
-            "LA contact continues to check answers",
-            new Input(
-                QuestionFlowStep.LaContact
             ),
             QuestionFlowStep.CheckAnswers),
         new(
@@ -945,13 +933,13 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.NotParticipating),
         new(
-            "Household income continues to LA contact if income is eligible and was changing answer",
+            "Household income continues to check answers if income is eligible and was changing answer",
             new Input(
                 QuestionFlowStep.HouseholdIncome,
                 entryPoint: QuestionFlowStep.HouseholdIncome,
                 incomeBand: IncomeBand.UnderOrEqualTo36000
             ),
-            QuestionFlowStep.LaContact),
+            QuestionFlowStep.CheckAnswers),
         new(
             "Household income continues to ineligible if income is ineligible and was changing answer",
             new Input(
