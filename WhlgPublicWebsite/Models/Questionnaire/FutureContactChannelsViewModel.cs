@@ -16,6 +16,7 @@ public class FutureContactChannelsViewModel : QuestionFlowViewModel
     [GovUkValidateRequiredIf(ErrorMessageIfMissing = "Enter your email address", IsRequiredPropertyName = nameof(EmailRequired))]
     public string Email { get; set; }
 
+    [Phone(ErrorMessage = "Enter a phone number in the correct format")]
     [GovUkValidateRequiredIf(ErrorMessageIfMissing = "Enter your phone number", IsRequiredPropertyName = nameof(PhoneRequired))]
     public string PhoneNumber { get; set; }
 
