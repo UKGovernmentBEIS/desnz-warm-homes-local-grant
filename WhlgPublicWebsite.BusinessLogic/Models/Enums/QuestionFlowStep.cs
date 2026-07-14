@@ -31,6 +31,5 @@ public enum QuestionFlowStep
     Ineligible,
     NoConsent,
     FutureContactTopics,
-    FutureContactChannels,
-    LaContact
+    FutureContactChannels
 }
