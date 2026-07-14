@@ -7,6 +7,7 @@ public interface IDataAccessProvider
     Task<ReferralRequest> PersistNewReferralRequestAsync(ReferralRequest referralRequest);
     Task<ReferralRequest> UpdateReferralRequestByIdWithFollowUpSentAsync(int id);
     Task PersistNotificationConsentAsync(string referralId, NotificationDetails notificationDetails);
+    Task PersistFutureContactConsentAsync(string referralCode, FutureContactConsent consent);
     Task<IList<ReferralRequest>> GetWhlgUnsubmittedReferralRequestsAsync();
     Task<IList<ReferralRequest>> GetAllWhlgReferralRequests();
     Task<IList<ReferralRequest>> GetAllWhlgReferralRequestsForSlaComplianceReporting();
