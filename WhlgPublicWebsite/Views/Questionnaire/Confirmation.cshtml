@@ -38,122 +38,55 @@
             @await Html.GovUkNotificationBanner(new NotificationBannerViewModel
             {
                 TitleText = "Success",
-                Text = Model.CanNotifyAboutFutureSchemes is YesOrNo.Yes ? "Your contact details have been submitted." : "Your answers have been submitted.",
+                Text = "Your answers have been submitted.",
                 Classes = "govuk-notification-banner--success",
                 Role = "alert"
             })
         }
-        else
+        else if (Model.RequestEmailAddress)
         {
-            @if (Model.RequestEmailAddress)
-            {
-                <form action="@Url.Action(nameof(QuestionnaireController.Confirmation_Post), "Questionnaire")" method="post" novalidate>
-                    @(Html.HiddenFor(m => m.EntryPoint))
-                    @(Html.HiddenFor(m => m.RequestEmailAddress))
-                    @Html.AntiForgeryToken()
+            <form action="@Url.Action(nameof(QuestionnaireController.Confirmation_Post), "Questionnaire")" method="post" novalidate>
+                @(Html.HiddenFor(m => m.EntryPoint))
+                @(Html.HiddenFor(m => m.RequestEmailAddress))
+                @Html.AntiForgeryToken()
 
-                    @await Html.GovUkRadiosFor(
-                        m => m.SendConfirmationDetails,
-                        fieldsetOptions: new FieldsetViewModel
+                @await Html.GovUkRadiosFor(
+                    m => m.SendConfirmationDetails,
+                    fieldsetOptions: new FieldsetViewModel
+                    {
+                        Legend = new LegendViewModel
                         {
-                            Legend = new LegendViewModel
-                            {
-                                Text = "Can we email you the confirmation details?",
-                                Classes = "govuk-fieldset__legend--m",
-                            },
+                            Text = "Can we email you the confirmation details?",
+                            Classes = "govuk-fieldset__legend--m",
                         },
-                        conditionalOptions: new Dictionary<YesOrNo, Conditional>
+                    },
+                    conditionalOptions: new Dictionary<YesOrNo, Conditional>
+                    {
                         {
+                            YesOrNo.Yes,
+                            new Conditional
                             {
-                                YesOrNo.Yes,
-                                new Conditional
-                                {
-                                    Html = (@<text>
-                                                 @await Html.GovUkTextInputFor(
-                                                     m => m.ConfirmationEmailAddress,
-                                                     labelOptions: new LabelViewModel
-                                                     {
-                                                         Text = "Email address",
-                                                     },
-                                                     classes: "govuk-input govuk-input--width-20",
-                                                     autocomplete: "email")
-                                             </text>)
-                                }
+                                Html = (@<text>
+                                             @await Html.GovUkTextInputFor(
+                                                 m => m.ConfirmationEmailAddress,
+                                                 labelOptions: new LabelViewModel
+                                                 {
+                                                     Text = "Email address",
+                                                 },
+                                                 classes: "govuk-input govuk-input--width-20",
+                                                 autocomplete: "email")
+                                         </text>)
                             }
-                        })
+                        }
+                    })
 
-                    @await Html.GovUkRadiosFor(
-                        m => m.CanNotifyAboutFutureSchemes,
-                        fieldsetOptions: new FieldsetViewModel
-                        {
-                            Legend = new LegendViewModel
-                            {
-                                Text = "Can we email you about future energy grants?",
-                                Classes = "govuk-fieldset__legend--m",
-                            },
-                        },
-                        new HintViewModel
-                        {
-                            Text = "We will only email you when new grants for homes become available."
-                        },
-                        conditionalOptions: new Dictionary<YesOrNo, Conditional>
-                        {
-                            {
-                                YesOrNo.Yes,
-                                new Conditional
-                                {
-                                    Html = (@<text>
-                                                 @await Html.GovUkTextInputFor(
-                                                     m => m.NotificationEmailAddress,
-                                                     labelOptions: new LabelViewModel
-                                                     {
-                                                         Text = "Email address",
-                                                     },
-                                                     classes: "govuk-input govuk-input--width-20",
-                                                     autocomplete: "email")
-                                             </text>)
-                                }
-                            }
-                        })
-
-
-                    <div class="govuk-button-group">
-                        @(await Html.GovUkButton(new ButtonViewModel
-                        {
-                            Text = "Submit",
-                        }))
-                    </div>
-                </form>
-            }
-            else
-            {
-                <form action="@Url.Action(nameof(QuestionnaireController.Confirmation_Post), "Questionnaire")" method="post" novalidate>
-                    @(Html.HiddenFor(m => m.EntryPoint))
-                    @Html.AntiForgeryToken()
-
-                    @await Html.GovUkRadiosFor(
-                        m => m.CanNotifyAboutFutureSchemes,
-                        fieldsetOptions: new FieldsetViewModel
-                        {
-                            Legend = new LegendViewModel
-                            {
-                                Text = "Can we email you about future energy grants?",
-                                Classes = "govuk-fieldset__legend--m",
-                            },
-                        },
-                        new HintViewModel
-                        {
-                            Text = "We will only email you when new grants for homes become available."
-                        })
-
-                    <div class="govuk-button-group">
-                        @(await Html.GovUkButton(new ButtonViewModel
-                        {
-                            Text = "Submit",
-                        }))
-                    </div>
-                </form>
-            }
+                <div class="govuk-button-group">
+                    @(await Html.GovUkButton(new ButtonViewModel
+                    {
+                        Text = "Submit",
+                    }))
+                </div>
+            </form>
         }
 
         <h3 class="govuk-heading-s">Give feedback</h3>
@@ -178,11 +111,3 @@
     </div>
 </div>
 
-@section Scripts {
-    @if (!Model.EmailPreferenceSubmitted && Model.RequestEmailAddress)
-    {
-        <script nonce="@Context.GetScriptNonce()">
-            ConfirmationPage.duplicateDefaultValue('ConfirmationEmailAddress', 'NotificationEmailAddress');
-        </script>
-    }
-}

@@ -55,6 +55,17 @@ public record Questionnaire
 
     public string ConfirmationEmailAddress { get; set; }
 
+    public bool FutureConsentToGrants { get; set; }
+    public bool FutureConsentToAdvice { get; set; }
+    public bool FutureConsentToUpdates { get; set; }
+    public bool FutureContactByEmail { get; set; }
+    public bool FutureContactByPhone { get; set; }
+    public bool FutureContactBySms { get; set; }
+    public string FutureContactName { get; set; }
+    public string FutureContactEmail { get; set; }
+    public string FutureContactPhone { get; set; }
+    public QuestionFlowStep? FutureContactOriginStep { get; set; }
+
     public Questionnaire UneditedData { get; set; }
 
     public string LocalAuthorityName

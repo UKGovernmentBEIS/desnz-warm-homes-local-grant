@@ -29,5 +29,8 @@ public enum QuestionFlowStep
     Eligible,
     Confirmation,
     Ineligible,
-    NoConsent
+    NoConsent,
+    FutureContactTopics,
+    FutureContactChannels,
+    LaContact
 }

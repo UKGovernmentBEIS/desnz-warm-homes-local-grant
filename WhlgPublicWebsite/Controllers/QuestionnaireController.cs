@@ -405,7 +405,7 @@ public class QuestionnaireController : Controller
     // The old name is still used in the URL to avoid breaking existing links.
     [HttpGet("not-taking-part")]
     public async Task<IActionResult> NoFunding_Get(QuestionFlowStep? entryPoint,
-        bool emailPreferenceSubmitted = false)
+        bool futureConsentSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, null);
@@ -413,9 +413,7 @@ public class QuestionnaireController : Controller
         var viewModel = new NoFundingViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
-            Submitted = emailPreferenceSubmitted,
-            EmailAddress = questionnaire.NotificationEmailAddress,
-            CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
+            Submitted = futureConsentSubmitted,
             EntryPoint = entryPoint,
             BackLink = GetBackUrl(QuestionFlowStep.NoFunding, questionnaire, entryPoint)
         };
@@ -423,34 +421,9 @@ public class QuestionnaireController : Controller
         return View("NoFunding", viewModel);
     }
 
-    [HttpPost("not-taking-part")]
-    public async Task<IActionResult> NoFunding_Post(NoFundingViewModel viewModel)
-    {
-        if (!ModelState.IsValid) return await NoFunding_Get(viewModel.EntryPoint);
-
-        var emailAddress = viewModel.EmailAddress?.Trim();
-
-        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
-            viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
-            emailAddress
-        );
-
-        var nextStep =
-            questionFlowService.NextStep(QuestionFlowStep.NoFunding, questionnaire, viewModel.EntryPoint);
-        var forwardArgs = GetActionArgumentsForQuestion(
-            nextStep,
-            viewModel.EntryPoint,
-            new Dictionary<string, object>
-            {
-                { "emailPreferenceSubmitted", true }
-            }
-        );
-        return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
-    }
-
     [HttpGet("not-participating")]
     public async Task<IActionResult> NotParticipating_Get(QuestionFlowStep? entryPoint,
-        bool emailPreferenceSubmitted = false)
+        bool futureConsentSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, null);
@@ -458,11 +431,9 @@ public class QuestionnaireController : Controller
         var viewModel = new NotParticipatingViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
-            Submitted = emailPreferenceSubmitted,
-            EmailAddress = questionnaire.NotificationEmailAddress,
+            Submitted = futureConsentSubmitted,
             LocalAuthorityMessagePartialViewPath =
                 GetLocalAuthorityNotParticipatingMessagePartialViewPath(questionnaire),
-            CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
             EntryPoint = entryPoint,
             BackLink = GetBackUrl(QuestionFlowStep.NoFunding, questionnaire, entryPoint)
         };
@@ -470,43 +441,16 @@ public class QuestionnaireController : Controller
         return View("NotParticipating", viewModel);
     }
 
-    [HttpPost("not-participating")]
-    public async Task<IActionResult> NotParticipating_Post(NotParticipatingViewModel viewModel)
-    {
-        if (!ModelState.IsValid) return await NotParticipating_Get(viewModel.EntryPoint);
-
-        var emailAddress = viewModel.EmailAddress?.Trim();
-
-        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
-            viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
-            emailAddress
-        );
-
-        var nextStep =
-            questionFlowService.NextStep(QuestionFlowStep.NotParticipating, questionnaire, viewModel.EntryPoint);
-        var forwardArgs = GetActionArgumentsForQuestion(
-            nextStep,
-            viewModel.EntryPoint,
-            new Dictionary<string, object>
-            {
-                { "emailPreferenceSubmitted", true }
-            }
-        );
-        return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
-    }
-
     [HttpGet("no-longer-participating")]
-    public IActionResult NoLongerParticipating_Get(QuestionFlowStep? entryPoint, bool emailPreferenceSubmitted = false)
+    public IActionResult NoLongerParticipating_Get(QuestionFlowStep? entryPoint, bool futureConsentSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new NoLongerParticipatingViewModel
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
-            Submitted = emailPreferenceSubmitted,
-            EmailAddress = questionnaire.NotificationEmailAddress,
+            Submitted = futureConsentSubmitted,
             LocalAuthorityMessagePartialViewPath =
                 GetLocalAuthorityNoLongerParticipatingMessagePartialViewPath(questionnaire),
-            CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
             EntryPoint = entryPoint,
             BackLink = GetBackUrl(QuestionFlowStep.NoFunding, questionnaire, entryPoint)
         };
@@ -514,34 +458,9 @@ public class QuestionnaireController : Controller
         return View("NoLongerParticipating", viewModel);
     }
 
-    [HttpPost("no-longer-participating")]
-    public async Task<IActionResult> NoLongerParticipating_Post(NoLongerParticipatingViewModel viewModel)
-    {
-        if (!ModelState.IsValid) return NoLongerParticipating_Get(viewModel.EntryPoint);
-
-        var emailAddress = viewModel.EmailAddress?.Trim();
-
-        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
-            viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
-            emailAddress
-        );
-
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.NoLongerParticipating, questionnaire,
-            viewModel.EntryPoint);
-        var forwardArgs = GetActionArgumentsForQuestion(
-            nextStep,
-            viewModel.EntryPoint,
-            new Dictionary<string, object>
-            {
-                { "emailPreferenceSubmitted", true }
-            }
-        );
-        return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
-    }
-
     [HttpGet("referrals-paused")]
     public async Task<IActionResult> ReferralsPaused_Get(QuestionFlowStep? entryPoint,
-        bool emailPreferenceSubmitted = false)
+        bool futureConsentSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, null);
@@ -551,39 +470,12 @@ public class QuestionnaireController : Controller
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityMessagePartialViewPath =
                 GetLocalAuthorityReferralsPausedMessagePartialViewPath(questionnaire),
-            Submitted = emailPreferenceSubmitted,
-            EmailAddress = questionnaire.NotificationEmailAddress,
-            CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
+            Submitted = futureConsentSubmitted,
             EntryPoint = entryPoint,
             BackLink = GetBackUrl(QuestionFlowStep.NoFunding, questionnaire, entryPoint)
         };
 
         return View("ReferralsPaused", viewModel);
-    }
-
-    [HttpPost("referrals-paused")]
-    public async Task<IActionResult> ReferralsPaused_Post(ReferralsPausedViewModel viewModel)
-    {
-        if (!ModelState.IsValid) return await NoFunding_Get(viewModel.EntryPoint);
-
-        var emailAddress = viewModel.EmailAddress?.Trim();
-
-        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
-            viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
-            emailAddress
-        );
-
-        var nextStep =
-            questionFlowService.NextStep(QuestionFlowStep.ReferralsPaused, questionnaire, viewModel.EntryPoint);
-        var forwardArgs = GetActionArgumentsForQuestion(
-            nextStep,
-            viewModel.EntryPoint,
-            new Dictionary<string, object>
-            {
-                { "emailPreferenceSubmitted", true }
-            }
-        );
-        return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
 
     [HttpGet("pending")]
@@ -741,11 +633,6 @@ public class QuestionnaireController : Controller
                 questionnaire.LocalAuthorityStatus is LocalAuthorityData.LocalAuthorityStatus.Pending,
             LocalAuthorityMessagePartialViewPath =
                 GetLocalAuthorityEligibleMessagePartialViewPath(questionnaire),
-            CanContactByEmail = questionnaire.LaCanContactByEmail.ToNullableYesOrNo(),
-            CanContactByPhone = questionnaire.LaCanContactByPhone.ToNullableYesOrNo(),
-            Name = questionnaire.LaContactName,
-            EmailAddress = questionnaire.LaContactEmailAddress,
-            Telephone = questionnaire.LaContactTelephone,
             BackLink = GetBackUrl(QuestionFlowStep.Eligible, questionnaire)
         };
 
@@ -796,7 +683,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("confirmation")]
-    public IActionResult Confirmation_Get(bool emailPreferenceSubmitted)
+    public IActionResult Confirmation_Get(bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
         var viewModel = new ConfirmationViewModel
@@ -811,10 +698,8 @@ public class QuestionnaireController : Controller
             ConfirmationSentToEmailAddress =
                 questionnaire.LaContactEmailAddress ?? questionnaire.ConfirmationEmailAddress,
             RequestEmailAddress = questionnaire.LaCanContactByEmail is not true,
-            CanNotifyAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
             SendConfirmationDetails = questionnaire.ConfirmationConsent.ToNullableYesOrNo(),
             ConfirmationEmailAddress = questionnaire.ConfirmationEmailAddress,
-            NotificationEmailAddress = questionnaire.NotificationEmailAddress,
             EmailPreferenceSubmitted = emailPreferenceSubmitted,
             BackLink = GetBackUrl(QuestionFlowStep.Confirmation, questionnaire)
         };
@@ -828,19 +713,13 @@ public class QuestionnaireController : Controller
         if (!ModelState.IsValid) return Confirmation_Get(viewModel.EmailPreferenceSubmitted);
 
         var questionnaire = questionnaireService.GetQuestionnaire();
-
-        var notificationEmailAddress = viewModel.NotificationEmailAddress?.Trim();
         var confirmationEmailAddress = viewModel.ConfirmationEmailAddress?.Trim();
 
-        if (questionnaire.LaCanContactByEmail is true)
-            questionnaire = await questionnaireService.RecordNotificationConsentAsync(
-                viewModel.CanNotifyAboutFutureSchemes is YesOrNo.Yes);
-        else
-            questionnaire = await questionnaireService.RecordConfirmationAndNotificationConsentAsync(
-                viewModel.CanNotifyAboutFutureSchemes is YesOrNo.Yes,
-                notificationEmailAddress,
-                viewModel.SendConfirmationDetails is YesOrNo.Yes,
-                confirmationEmailAddress);
+        await questionnaireService.RecordConfirmationAndNotificationConsentAsync(
+            false,
+            null,
+            viewModel.SendConfirmationDetails is YesOrNo.Yes,
+            confirmationEmailAddress);
 
         var nextStep = questionFlowService.NextStep(QuestionFlowStep.Confirmation, questionnaire, viewModel.EntryPoint);
         var forwardArgs = GetActionArgumentsForQuestion(
@@ -856,7 +735,7 @@ public class QuestionnaireController : Controller
     }
 
     [HttpGet("ineligible")]
-    public async Task<IActionResult> Ineligible_Get(bool emailPreferenceSubmitted = false)
+    public async Task<IActionResult> Ineligible_Get(bool futureConsentSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
 
@@ -869,37 +748,11 @@ public class QuestionnaireController : Controller
             EpcIsTooHigh = questionnaire.EpcIsTooHigh,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
-            EmailAddress = questionnaire.NotificationEmailAddress,
-            CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
-            Submitted = emailPreferenceSubmitted,
+            Submitted = futureConsentSubmitted,
             BackLink = GetBackUrl(QuestionFlowStep.Ineligible, questionnaire)
         };
 
         return View("Ineligible", viewModel);
-    }
-
-    [HttpPost("ineligible")]
-    public async Task<IActionResult> Ineligible_Post(IneligibleViewModel viewModel)
-    {
-        if (!ModelState.IsValid) return await Ineligible_Get();
-
-        var emailAddress = viewModel.EmailAddress?.Trim();
-
-        var questionnaire = await questionnaireService.RecordNotificationConsentAsync(
-            viewModel.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes,
-            emailAddress
-        );
-
-        var nextStep = questionFlowService.NextStep(QuestionFlowStep.Ineligible, questionnaire, viewModel.EntryPoint);
-        var forwardArgs = GetActionArgumentsForQuestion(
-            nextStep,
-            viewModel.EntryPoint,
-            new Dictionary<string, object>
-            {
-                { "emailPreferenceSubmitted", true }
-            }
-        );
-        return RedirectToAction(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values);
     }
 
     [HttpGet("no-consent")]
@@ -915,6 +768,107 @@ public class QuestionnaireController : Controller
         return View("NoConsent", viewModel);
     }
 
+    [HttpGet("future-contact-topics")]
+    public async Task<IActionResult> FutureContactTopics_Get(QuestionFlowStep? fromStep = null)
+    {
+        if (fromStep.HasValue)
+        {
+            await questionnaireService.SetFutureContactOriginStepAsync(fromStep);
+        }
+
+        var questionnaire = questionnaireService.GetQuestionnaire();
+
+        var viewModel = new FutureContactTopicsViewModel
+        {
+            ConsentToGrants = questionnaire.FutureConsentToGrants,
+            ConsentToAdvice = questionnaire.FutureConsentToAdvice,
+            ConsentToUpdates = questionnaire.FutureConsentToUpdates,
+            SkipUrl = GetFutureContactSkipUrl(questionnaire),
+            BackLink = GetBackUrl(QuestionFlowStep.FutureContactTopics, questionnaire)
+        };
+
+        return View("FutureContactTopics", viewModel);
+    }
+
+    [HttpPost("future-contact-topics")]
+    public async Task<IActionResult> FutureContactTopics_Post(FutureContactTopicsViewModel viewModel)
+    {
+        if (!viewModel.ConsentToGrants && !viewModel.ConsentToAdvice && !viewModel.ConsentToUpdates)
+        {
+            viewModel.AtLeastOneTopicRequired = true;
+            var questionnaire = questionnaireService.GetQuestionnaire();
+            viewModel.BackLink = GetBackUrl(QuestionFlowStep.FutureContactTopics, questionnaire);
+            viewModel.SkipUrl = GetFutureContactSkipUrl(questionnaire);
+            return View("FutureContactTopics", viewModel);
+        }
+
+        await questionnaireService.UpdateFutureContactTopicsAsync(
+            viewModel.ConsentToGrants,
+            viewModel.ConsentToAdvice,
+            viewModel.ConsentToUpdates);
+
+        return RedirectToAction(nameof(FutureContactChannels_Get), "Questionnaire");
+    }
+
+    [HttpGet("future-contact-channels")]
+    public IActionResult FutureContactChannels_Get()
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+
+        var viewModel = new FutureContactChannelsViewModel
+        {
+            ContactByEmail = questionnaire.FutureContactByEmail,
+            ContactByPhone = questionnaire.FutureContactByPhone,
+            ContactBySms = questionnaire.FutureContactBySms,
+            Name = questionnaire.FutureContactName,
+            Email = questionnaire.FutureContactEmail,
+            PhoneNumber = questionnaire.FutureContactPhone,
+            BackLink = GetBackUrl(QuestionFlowStep.FutureContactChannels, questionnaire)
+        };
+
+        return View("FutureContactChannels", viewModel);
+    }
+
+    [HttpPost("future-contact-channels")]
+    public async Task<IActionResult> FutureContactChannels_Post(FutureContactChannelsViewModel viewModel)
+    {
+        if (!viewModel.ContactByEmail && !viewModel.ContactByPhone && !viewModel.ContactBySms)
+        {
+            ModelState.AddModelError(string.Empty, "Select at least one way for us to contact you");
+            viewModel.AtLeastOneChannelRequired = true;
+        }
+
+        if (!ModelState.IsValid)
+        {
+            var invalid = questionnaireService.GetQuestionnaire();
+            viewModel.BackLink = GetBackUrl(QuestionFlowStep.FutureContactChannels, invalid);
+            return View("FutureContactChannels", viewModel);
+        }
+
+        var questionnaire = await questionnaireService.UpdateFutureContactChannelsAsync(
+            contactByEmail: viewModel.ContactByEmail,
+            contactByPhone: viewModel.ContactByPhone,
+            contactBySms: viewModel.ContactBySms,
+            name: viewModel.Name?.Trim(),
+            email: viewModel.Email?.Trim(),
+            phone: viewModel.PhoneNumber?.Trim());
+
+        if (questionnaire.FutureContactOriginStep is { } originStep)
+        {
+            await questionnaireService.PersistFutureContactConsentAsync();
+            await questionnaireService.SetFutureContactOriginStepAsync(null);
+
+            var originArgs = GetActionArgumentsForQuestion(originStep);
+            var routeValues = new RouteValueDictionary(originArgs.Values ?? new RouteValueDictionary())
+            {
+                ["futureConsentSubmitted"] = true
+            };
+            return RedirectToAction(originArgs.Action, originArgs.Controller, routeValues);
+        }
+        
+        await questionnaireService.PersistFutureContactConsentAsync();
+        return RedirectToAction(nameof(Confirmation_Get), "Questionnaire");
+    }
     private string GetBackUrl(
         QuestionFlowStep currentStep,
         Questionnaire questionnaire = null,
@@ -923,6 +877,13 @@ public class QuestionnaireController : Controller
         var backStep = questionFlowService.PreviousStep(currentStep, questionnaire, entryPoint);
         var args = GetActionArgumentsForQuestion(backStep, entryPoint);
         return Url.Action(args.Action, args.Controller, args.Values);
+    }
+
+    private string GetFutureContactSkipUrl(Questionnaire questionnaire)
+    {
+        var skipStep = questionnaire.FutureContactOriginStep ?? QuestionFlowStep.Confirmation;
+        var args = GetActionArgumentsForQuestion(skipStep);
+        return Url.Action(args.Action, args.Controller);
     }
 
     private RedirectToActionResult RedirectToNextStep(QuestionFlowStep nextStep, QuestionFlowStep? entryPoint = null)
@@ -985,6 +946,10 @@ public class QuestionnaireController : Controller
                 GetRouteValues(extraRouteValues)),
             QuestionFlowStep.Confirmation => new PathByActionArguments(nameof(Confirmation_Get), "Questionnaire",
                 GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.FutureContactTopics => new PathByActionArguments(nameof(FutureContactTopics_Get),
+                "Questionnaire", GetRouteValues(extraRouteValues)),
+            QuestionFlowStep.FutureContactChannels => new PathByActionArguments(nameof(FutureContactChannels_Get),
+                "Questionnaire", GetRouteValues(extraRouteValues)),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

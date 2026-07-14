@@ -299,9 +299,34 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Address),
         new(
-            "Check answers goes back to household income",
+            "Check answers goes back to LA contact",
             new Input(
                 QuestionFlowStep.CheckAnswers
+            ),
+            QuestionFlowStep.LaContact),
+        new(
+            "Future contact topics goes back to eligible in the main flow",
+            new Input(
+                QuestionFlowStep.FutureContactTopics
+            ),
+            QuestionFlowStep.Eligible),
+        new(
+            "Future contact topics goes back to origin step in end-state flow",
+            new Input(
+                QuestionFlowStep.FutureContactTopics,
+                futureContactOriginStep: QuestionFlowStep.NoFunding
+            ),
+            QuestionFlowStep.NoFunding),
+        new(
+            "Future contact channels goes back to future contact topics",
+            new Input(
+                QuestionFlowStep.FutureContactChannels
+            ),
+            QuestionFlowStep.FutureContactTopics),
+        new(
+            "LA contact goes back to household income",
+            new Input(
+                QuestionFlowStep.LaContact
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
@@ -331,11 +356,11 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
-            "No consent goes back to eligible",
+            "No consent goes back to LA contact",
             new Input(
                 QuestionFlowStep.NoConsent
             ),
-            QuestionFlowStep.Eligible),
+            QuestionFlowStep.LaContact),
         new(
             "Country goes back to check answers if was changing answer",
             new Input(
@@ -670,12 +695,37 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.NotParticipating),
         new(
-            "Household income continues to check answers if income is eligible",
+            "Household income continues to LA contact if income is eligible",
             new Input(
                 QuestionFlowStep.HouseholdIncome,
                 incomeBand: IncomeBand.UnderOrEqualTo36000
             ),
+            QuestionFlowStep.LaContact),
+        new(
+            "LA contact continues to check answers",
+            new Input(
+                QuestionFlowStep.LaContact
+            ),
             QuestionFlowStep.CheckAnswers),
+        new(
+            "Future contact topics continues to future contact channels",
+            new Input(
+                QuestionFlowStep.FutureContactTopics
+            ),
+            QuestionFlowStep.FutureContactChannels),
+        new(
+            "Future contact channels continues to confirmation in the main eligible flow",
+            new Input(
+                QuestionFlowStep.FutureContactChannels
+            ),
+            QuestionFlowStep.Confirmation),
+        new(
+            "Future contact channels returns to origin step when set (end-state journey)",
+            new Input(
+                QuestionFlowStep.FutureContactChannels,
+                futureContactOriginStep: QuestionFlowStep.NoFunding
+            ),
+            QuestionFlowStep.NoFunding),
         new(
             "Household income continues to ineligible if income is ineligible",
             new Input(
@@ -713,11 +763,11 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Eligible),
         new(
-            "Eligible continues to confirmation",
+            "Eligible continues to future contact topics",
             new Input(
                 QuestionFlowStep.Eligible
             ),
-            QuestionFlowStep.Confirmation),
+            QuestionFlowStep.FutureContactTopics),
         new(
             "Confirmation continues to confirmation",
             new Input(
@@ -895,13 +945,13 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.NotParticipating),
         new(
-            "Household income returns to check answers if income is eligible and was changing answer",
+            "Household income continues to LA contact if income is eligible and was changing answer",
             new Input(
                 QuestionFlowStep.HouseholdIncome,
                 entryPoint: QuestionFlowStep.HouseholdIncome,
                 incomeBand: IncomeBand.UnderOrEqualTo36000
             ),
-            QuestionFlowStep.CheckAnswers),
+            QuestionFlowStep.LaContact),
         new(
             "Household income continues to ineligible if income is ineligible and was changing answer",
             new Input(
@@ -953,7 +1003,11 @@ public class QuestionFlowServiceTests
             bool localAuthorityIsCorrect = false,
             string custodianCode = null,
             QuestionFlowStep? entryPoint = null,
-            bool localAuthorityAutomaticallyMatched = false)
+            bool localAuthorityAutomaticallyMatched = false,
+            bool futureContactByEmail = false,
+            bool futureContactByPhone = false,
+            bool futureContactBySms = false,
+            QuestionFlowStep? futureContactOriginStep = null)
         {
             Page = page;
             Questionnaire = new Questionnaire
@@ -969,7 +1023,11 @@ public class QuestionFlowServiceTests
                 CustodianCode = custodianCode ??
                                 LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData
                                     .LocalAuthorityStatus.Live),
-                LocalAuthorityAutomaticallyMatched = localAuthorityAutomaticallyMatched
+                LocalAuthorityAutomaticallyMatched = localAuthorityAutomaticallyMatched,
+                FutureContactByEmail = futureContactByEmail,
+                FutureContactByPhone = futureContactByPhone,
+                FutureContactBySms = futureContactBySms,
+                FutureContactOriginStep = futureContactOriginStep
             };
             EntryPoint = entryPoint;
         }

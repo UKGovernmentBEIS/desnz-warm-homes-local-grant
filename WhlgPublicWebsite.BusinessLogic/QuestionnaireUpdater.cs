@@ -248,6 +248,48 @@ public class QuestionnaireUpdater
         return questionnaire;
     }
 
+    public Questionnaire UpdateFutureContactTopics(
+        Questionnaire questionnaire,
+        bool consentToGrants,
+        bool consentToAdvice,
+        bool consentToUpdates)
+    {
+        questionnaire.FutureConsentToGrants = consentToGrants;
+        questionnaire.FutureConsentToAdvice = consentToAdvice;
+        questionnaire.FutureConsentToUpdates = consentToUpdates;
+        return questionnaire;
+    }
+
+    public Questionnaire UpdateFutureContactChannels(
+        Questionnaire questionnaire,
+        bool contactByEmail,
+        bool contactByPhone,
+        bool contactBySms,
+        string name,
+        string email,
+        string phone)
+    {
+        questionnaire.FutureContactByEmail = contactByEmail;
+        questionnaire.FutureContactByPhone = contactByPhone;
+        questionnaire.FutureContactBySms = contactBySms;
+        questionnaire.FutureContactName = name;
+        questionnaire.FutureContactEmail = email;
+        questionnaire.FutureContactPhone = phone;
+        return questionnaire;
+    }
+
+    public Questionnaire SetFutureContactOriginStep(Questionnaire questionnaire, QuestionFlowStep? originStep)
+    {
+        questionnaire.FutureContactOriginStep = originStep;
+        return questionnaire;
+    }
+
+    public async Task PersistFutureContactConsentAsync(Questionnaire questionnaire)
+    {
+        var consent = new FutureContactConsent(questionnaire);
+        await dataAccessProvider.PersistFutureContactConsentAsync(questionnaire.ReferralCode, consent);
+    }
+
     public Questionnaire RecordSessionId(Questionnaire questionnaire, int sessionId)
     {
         questionnaire.SessionId = sessionId;

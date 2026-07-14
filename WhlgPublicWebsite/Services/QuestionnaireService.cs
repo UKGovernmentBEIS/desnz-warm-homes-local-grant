@@ -183,6 +183,47 @@ public class QuestionnaireService
         return questionnaire;
     }
 
+    public async Task<Questionnaire> UpdateFutureContactTopicsAsync(
+        bool consentToGrants,
+        bool consentToAdvice,
+        bool consentToUpdates)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdateFutureContactTopics(
+            questionnaire, consentToGrants, consentToAdvice, consentToUpdates);
+        await SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+
+    public async Task<Questionnaire> UpdateFutureContactChannelsAsync(
+        bool contactByEmail,
+        bool contactByPhone,
+        bool contactBySms,
+        string name,
+        string email,
+        string phone)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.UpdateFutureContactChannels(
+            questionnaire, contactByEmail, contactByPhone, contactBySms, name, email, phone);
+        await SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+
+    public async Task<Questionnaire> SetFutureContactOriginStepAsync(QuestionFlowStep? originStep)
+    {
+        var questionnaire = GetQuestionnaire();
+        questionnaire = questionnaireUpdater.SetFutureContactOriginStep(questionnaire, originStep);
+        await SaveQuestionnaireToSession(questionnaire);
+        return questionnaire;
+    }
+
+    public async Task PersistFutureContactConsentAsync()
+    {
+        var questionnaire = GetQuestionnaire();
+        await questionnaireUpdater.PersistFutureContactConsentAsync(questionnaire);
+    }
+
     public async Task SaveQuestionnaireToSession(Questionnaire questionnaire)
     {
         var hasNotSavedQuestionnaireBefore =
