@@ -38,55 +38,16 @@
                 {
                     Type = "success",
                     TitleText = "Success",
-                    Text = Model.CanContactByEmailAboutFutureSchemes is YesOrNo.Yes ? "Your contact details have been submitted." : "Your contact details have not been submitted.",
+                    Text = "Your contact preferences have been submitted.",
                     Role = "alert"
                 }
             )
         }
         else
         {
-            <form action="@Url.Action(nameof(QuestionnaireController.NoFunding_Post), "Questionnaire")" method="post" novalidate>
-                @(Html.HiddenFor(m => m.EntryPoint))
-                @Html.AntiForgeryToken()
-
-                @await Html.GovUkRadiosFor(
-                    m => m.CanContactByEmailAboutFutureSchemes,
-                    fieldsetOptions: new FieldsetViewModel
-                    {
-                        Legend = new LegendViewModel
-                        {
-                            Html = @<text>
-                                        <h2 class="govuk-fieldset__legend--m">Can we email you about future energy grants?</h2>
-                                        <p class="govuk-body">We will only email you when new grants for homes become available.</p>
-                                    </text>
-                        }
-                    },
-                    conditionalOptions: new Dictionary<YesOrNo, Conditional>
-                    {
-                        {
-                            YesOrNo.Yes,
-                            new Conditional
-                            {
-                                Html = (@<text>
-                                             @await Html.GovUkTextInputFor(
-                                                 m => m.EmailAddress,
-                                                 new LabelViewModel
-                                                 {
-                                                     Text = "Email address"
-                                                 },
-                                                 classes: "govuk-input govuk-input--width-20",
-                                                 autocomplete: "email")
-                                         </text>)
-                            }
-                        }
-                    })
-                <div class="govuk-button-group">
-                    @(await Html.GovUkButton(new ButtonViewModel
-                    {
-                        Text = "Submit"
-                    }))
-                </div>
-            </form>
+            <p class="govuk-body">
+                <a class="govuk-link" href="@Url.Action(nameof(QuestionnaireController.FutureContactTopics_Get), "Questionnaire", new { fromStep = WhlgPublicWebsite.BusinessLogic.Models.Enums.QuestionFlowStep.NoFunding })">Keep me informed about government energy efficiency support</a>
+            </p>
         }
 
         <h2 class="govuk-heading-m">You might be able to get help from your energy supplier</h2>
