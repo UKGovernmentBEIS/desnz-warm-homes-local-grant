@@ -387,7 +387,7 @@ public class QuestionFlowService : IQuestionFlowService
 
     private QuestionFlowStep FutureContactTopicsBackDestination(Questionnaire questionnaire)
     {
-        return questionnaire.FutureContactOriginStep ?? QuestionFlowStep.Eligible;
+        return questionnaire.FutureContactOriginStep ?? QuestionFlowStep.Confirmation;
     }
 
     private QuestionFlowStep FutureContactChannelsBackDestination()
@@ -402,8 +402,6 @@ public class QuestionFlowService : IQuestionFlowService
 
     private QuestionFlowStep FutureContactChannelsForwardDestination(Questionnaire questionnaire)
     {
-        return questionnaire.FutureContactOriginStep.HasValue
-            ? questionnaire.FutureContactOriginStep.Value
-            : QuestionFlowStep.Confirmation;
+        return questionnaire.FutureContactOriginStep ?? QuestionFlowStep.Confirmation;
     }
 }
