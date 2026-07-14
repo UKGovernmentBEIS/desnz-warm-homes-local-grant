@@ -166,17 +166,13 @@ public class QuestionnaireService
         return questionnaire;
     }
 
-    public async Task<Questionnaire> RecordConfirmationAndNotificationConsentAsync(
-        bool notificationConsentGranted,
-        string notificationEmailAddress,
+    public async Task<Questionnaire> RecordConfirmationConsentAsync(
         bool confirmationConsentGranted,
         string confirmationEmailAddress)
     {
         var questionnaire = GetQuestionnaire();
-        questionnaire = await questionnaireUpdater.RecordConfirmationAndNotificationConsentAsync(
+        questionnaire = await questionnaireUpdater.RecordConfirmationConsentAsync(
             questionnaire,
-            notificationConsentGranted,
-            notificationEmailAddress,
             confirmationConsentGranted,
             confirmationEmailAddress);
         await SaveQuestionnaireToSession(questionnaire);
@@ -204,7 +200,7 @@ public class QuestionnaireService
         string phone)
     {
         var questionnaire = GetQuestionnaire();
-        questionnaire = questionnaireUpdater.UpdateFutureContactChannels(
+        questionnaire = questionnaireUpdater.UpdateFutureContactMethods(
             questionnaire, contactByEmail, contactByPhone, contactBySms, name, email, phone);
         await SaveQuestionnaireToSession(questionnaire);
         return questionnaire;

@@ -715,9 +715,7 @@ public class QuestionnaireController : Controller
         var questionnaire = questionnaireService.GetQuestionnaire();
         var confirmationEmailAddress = viewModel.ConfirmationEmailAddress?.Trim();
 
-        await questionnaireService.RecordConfirmationAndNotificationConsentAsync(
-            false,
-            null,
+        await questionnaireService.RecordConfirmationConsentAsync(
             viewModel.SendConfirmationDetails is YesOrNo.Yes,
             confirmationEmailAddress);
 

@@ -201,15 +201,13 @@ public class QuestionnaireUpdater
         return questionnaire;
     }
 
-    public async Task<Questionnaire> RecordConfirmationAndNotificationConsentAsync(
+    public async Task<Questionnaire> RecordConfirmationConsentAsync(
         Questionnaire questionnaire,
-        bool notificationConsentGranted,
-        string notificationEmailAddress,
         bool confirmationConsentGranted,
         string confirmationEmailAddress)
     {
-        questionnaire.NotificationConsent = notificationConsentGranted;
-        questionnaire.NotificationEmailAddress = notificationConsentGranted ? notificationEmailAddress : null;
+        questionnaire.NotificationConsent = false;
+        questionnaire.NotificationEmailAddress = null;
         questionnaire.ConfirmationConsent = confirmationConsentGranted;
         questionnaire.ConfirmationEmailAddress = confirmationConsentGranted ? confirmationEmailAddress : null;
 
@@ -260,7 +258,7 @@ public class QuestionnaireUpdater
         return questionnaire;
     }
 
-    public Questionnaire UpdateFutureContactChannels(
+    public Questionnaire UpdateFutureContactMethods(
         Questionnaire questionnaire,
         bool contactByEmail,
         bool contactByPhone,
