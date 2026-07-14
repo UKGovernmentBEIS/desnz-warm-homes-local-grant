@@ -305,11 +305,11 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
-            "Future contact topics goes back to eligible in the main flow",
+            "Future contact topics goes back to confirmation in the main flow",
             new Input(
                 QuestionFlowStep.FutureContactTopics
             ),
-            QuestionFlowStep.Eligible),
+            QuestionFlowStep.Confirmation),
         new(
             "Future contact topics goes back to origin step in end-state flow",
             new Input(
