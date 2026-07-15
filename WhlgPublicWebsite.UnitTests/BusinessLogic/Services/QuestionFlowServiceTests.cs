@@ -305,6 +305,25 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.HouseholdIncome),
         new(
+            "Future contact topics goes back to confirmation in the main flow",
+            new Input(
+                QuestionFlowStep.FutureContactTopics
+            ),
+            QuestionFlowStep.Confirmation),
+        new(
+            "Future contact topics goes back to origin step in end-state flow",
+            new Input(
+                QuestionFlowStep.FutureContactTopics,
+                futureContactOriginStep: QuestionFlowStep.NoFunding
+            ),
+            QuestionFlowStep.NoFunding),
+        new(
+            "Future contact channels goes back to future contact topics",
+            new Input(
+                QuestionFlowStep.FutureContactChannels
+            ),
+            QuestionFlowStep.FutureContactTopics),
+        new(
             "Eligible goes back to check answers",
             new Input(
                 QuestionFlowStep.Eligible
@@ -677,6 +696,25 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.CheckAnswers),
         new(
+            "Future contact topics continues to future contact channels",
+            new Input(
+                QuestionFlowStep.FutureContactTopics
+            ),
+            QuestionFlowStep.FutureContactChannels),
+        new(
+            "Future contact channels continues to confirmation in the main eligible flow",
+            new Input(
+                QuestionFlowStep.FutureContactChannels
+            ),
+            QuestionFlowStep.Confirmation),
+        new(
+            "Future contact channels returns to origin step when set (end-state journey)",
+            new Input(
+                QuestionFlowStep.FutureContactChannels,
+                futureContactOriginStep: QuestionFlowStep.NoFunding
+            ),
+            QuestionFlowStep.NoFunding),
+        new(
             "Household income continues to ineligible if income is ineligible",
             new Input(
                 QuestionFlowStep.HouseholdIncome,
@@ -713,11 +751,11 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Eligible),
         new(
-            "Eligible continues to confirmation",
+            "Eligible continues to future contact topics",
             new Input(
                 QuestionFlowStep.Eligible
             ),
-            QuestionFlowStep.Confirmation),
+            QuestionFlowStep.FutureContactTopics),
         new(
             "Confirmation continues to confirmation",
             new Input(
@@ -895,7 +933,7 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.NotParticipating),
         new(
-            "Household income returns to check answers if income is eligible and was changing answer",
+            "Household income continues to check answers if income is eligible and was changing answer",
             new Input(
                 QuestionFlowStep.HouseholdIncome,
                 entryPoint: QuestionFlowStep.HouseholdIncome,
@@ -953,7 +991,11 @@ public class QuestionFlowServiceTests
             bool localAuthorityIsCorrect = false,
             string custodianCode = null,
             QuestionFlowStep? entryPoint = null,
-            bool localAuthorityAutomaticallyMatched = false)
+            bool localAuthorityAutomaticallyMatched = false,
+            bool futureContactByEmail = false,
+            bool futureContactByPhone = false,
+            bool futureContactBySms = false,
+            QuestionFlowStep? futureContactOriginStep = null)
         {
             Page = page;
             Questionnaire = new Questionnaire
@@ -969,7 +1011,11 @@ public class QuestionFlowServiceTests
                 CustodianCode = custodianCode ??
                                 LocalAuthorityDataHelper.GetExampleCustodianCodeForStatus(LocalAuthorityData
                                     .LocalAuthorityStatus.Live),
-                LocalAuthorityAutomaticallyMatched = localAuthorityAutomaticallyMatched
+                LocalAuthorityAutomaticallyMatched = localAuthorityAutomaticallyMatched,
+                FutureContactByEmail = futureContactByEmail,
+                FutureContactByPhone = futureContactByPhone,
+                FutureContactBySms = futureContactBySms,
+                FutureContactOriginStep = futureContactOriginStep
             };
             EntryPoint = entryPoint;
         }

@@ -479,14 +479,9 @@ public class QuestionnaireUpdaterTests
         result.NotificationEmailAddress.Should().BeNull();
     }
 
-    [TestCase(true, "test@example.com")]
-    [TestCase(false, "")]
+    [Test]
     public async Task
-        RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentGrantedAndEmailGivenAndLocalAuthorityIsLive_SendsOneLiveTemplateEmailWithReferralCode
-        (
-            bool notificationConsentGranted,
-            string notificationEmailAddress
-        )
+        RecordConfirmationConsentAsync_WhenConfirmationConsentGrantedAndEmailGivenAndLocalAuthorityIsLive_SendsOneLiveTemplateEmailWithReferralCode()
     {
         // Arrange
         string testCustodianCode = liveCustodianCode;
@@ -517,11 +512,9 @@ public class QuestionnaireUpdaterTests
         );
 
         // Act
-        var result = await underTest.RecordConfirmationAndNotificationConsentAsync
+        var result = await underTest.RecordConfirmationConsentAsync
         (
             questionnaire,
-            notificationConsentGranted,
-            notificationEmailAddress,
             true,
             testEmailAddress
         );
@@ -591,14 +584,9 @@ public class QuestionnaireUpdaterTests
     //         Times.Once);
     // }
 
-    [TestCase(true, "test@example.com")]
-    [TestCase(false, "")]
+    [Test]
     public async Task
-        RecordConfirmationAndNotificationConsentAsync_WhenConfirmationConsentNotGrantedAndEmailNotGiven_DoesNotSendEmail
-        (
-            bool notificationConsentGranted,
-            string notificationEmailAddress
-        )
+        RecordConfirmationConsentAsync_WhenConfirmationConsentNotGrantedAndEmailNotGiven_DoesNotSendEmail()
     {
         // Arrange
         const string testCustodianCode = "1234";
@@ -620,11 +608,9 @@ public class QuestionnaireUpdaterTests
         );
 
         // Act
-        var result = await underTest.RecordConfirmationAndNotificationConsentAsync
+        var result = await underTest.RecordConfirmationConsentAsync
         (
             questionnaire,
-            notificationConsentGranted,
-            notificationEmailAddress,
             false,
             ""
         );

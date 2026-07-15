@@ -9,6 +9,7 @@ public class WhlgDbContext(DbContextOptions<WhlgDbContext> options) : DbContext(
 {
     public DbSet<ReferralRequest> ReferralRequests { get; set; }
     public DbSet<NotificationDetails> NotificationDetails { get; set; }
+    public DbSet<FutureContactConsent> FutureContactConsents { get; set; }
     public DbSet<ReferralRequestFollowUp> ReferralRequestFollowUps { get; set; }
     public DbSet<Session> Sessions { get; set; }
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
@@ -18,6 +19,7 @@ public class WhlgDbContext(DbContextOptions<WhlgDbContext> options) : DbContext(
     {
         SetupReferralRequests(modelBuilder);
         SetupContactDetails(modelBuilder);
+        SetupFutureContactConsents(modelBuilder);
         SetupReferralRequestFollowUps(modelBuilder);
         SetupSession(modelBuilder);
         SetupEmergencyMaintenanceHistory(modelBuilder);
@@ -55,6 +57,26 @@ public class WhlgDbContext(DbContextOptions<WhlgDbContext> options) : DbContext(
 
         // Contact details row versioning
         AddRowVersionColumn(modelBuilder.Entity<NotificationDetails>());
+    }
+
+    private void SetupFutureContactConsents(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<FutureContactConsent>()
+            .Property<int>("Id")
+            .HasColumnType("integer")
+            .ValueGeneratedOnAdd();
+        modelBuilder.Entity<FutureContactConsent>()
+            .HasKey("Id");
+        modelBuilder.Entity<FutureContactConsent>()
+            .Property(fcc => fcc.CreatedAt)
+            .HasColumnType("timestamp with time zone");
+        modelBuilder.Entity<FutureContactConsent>()
+            .HasOne(fcc => fcc.ReferralRequest)
+            .WithMany()
+            .HasForeignKey(fcc => fcc.ReferralRequestId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        AddRowVersionColumn(modelBuilder.Entity<FutureContactConsent>());
     }
 
     private void SetupReferralRequestFollowUps(ModelBuilder modelBuilder)

@@ -48,6 +48,19 @@ public class DataAccessProvider(WhlgDbContext context)
         }
     }
 
+    public async Task PersistFutureContactConsentAsync(string referralCode, FutureContactConsent consent)
+    {
+        if (referralCode is not null)
+        {
+            var referralRequest = await context.ReferralRequests
+                .SingleAsync(rr => rr.ReferralCode == referralCode);
+            consent.ReferralRequest = referralRequest;
+        }
+
+        context.FutureContactConsents.Add(consent);
+        await context.SaveChangesAsync();
+    }
+
     public async Task<IList<ReferralRequest>> GetWhlgUnsubmittedReferralRequestsAsync()
     {
         return await context.ReferralRequests
