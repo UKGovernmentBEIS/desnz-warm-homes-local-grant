@@ -1,6 +1,7 @@
 @using GovUkDesignSystem
 @using GovUkDesignSystem.GovUkDesignSystemComponents
 @using WhlgPublicWebsite.Controllers
+@using WhlgPublicWebsite.Middleware
 @model WhlgPublicWebsite.Models.Questionnaire.FutureContactChannelsViewModel
 
 @{
@@ -108,3 +109,28 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <script nonce="@Context.GetScriptNonce()">
+        (function () {
+            const phone = document.getElementById('ContactByPhone');
+            const sms = document.getElementById('ContactBySms');
+            const phoneNumberField = document.getElementById('phone-conditional');
+            
+            if (!phone || !sms || !phoneNumberField) {
+                return;
+            }
+
+            function syncPhoneNumberFieldVisibility() {
+                const phoneNumberRequired = phone.checked || sms.checked;
+                phoneNumberField.classList.toggle('govuk-checkboxes__conditional--hidden', !phoneNumberRequired);
+                phone.setAttribute('aria-expanded', phoneNumberRequired);
+                sms.setAttribute('aria-expanded', phoneNumberRequired);
+            }
+
+            phone.addEventListener('change', syncPhoneNumberFieldVisibility);
+            sms.addEventListener('change', syncPhoneNumberFieldVisibility);
+            syncPhoneNumberFieldVisibility();
+        })();
+    </script>
+}
