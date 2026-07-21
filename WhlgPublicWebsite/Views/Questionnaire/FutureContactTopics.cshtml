@@ -1,0 +1,92 @@
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using WhlgPublicWebsite.Controllers
+@model WhlgPublicWebsite.Models.Questionnaire.FutureContactTopicsViewModel
+
+@{
+    ViewBag.Title = "Keep me informed about government energy efficiency support";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <form action="@Url.Action(nameof(QuestionnaireController.FutureContactTopics_Post), "Questionnaire")" method="post" novalidate>
+            @Html.AntiForgeryToken()
+
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-fieldset__heading">Keep me informed about government energy efficiency support</h1>
+                </legend>
+
+                <p class="govuk-body">Department for Energy Security and Net Zero (DESNZ) would like your permission to contact you about government energy efficiency support. Please select all the options you agree to.</p>
+
+                @if (Model.AtLeastOneTopicRequired)
+                {
+                    <div class="govuk-error-summary" data-module="govuk-error-summary">
+                        <div role="alert">
+                            <h2 class="govuk-error-summary__title">There is a problem</h2>
+                            <div class="govuk-error-summary__body">
+                                <ul class="govuk-list govuk-error-summary__list">
+                                    <li><a href="#ConsentToGrants">Select at least one topic, or skip this step</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="govuk-form-group @(Model.AtLeastOneTopicRequired ? "govuk-form-group--error" : "")">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                            I agree to be contacted about:
+                        </legend>
+                        @if (Model.AtLeastOneTopicRequired)
+                        {
+                            <p id="topics-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> Select at least one topic, or skip this step
+                            </p>
+                        }
+                        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="ConsentToGrants" name="ConsentToGrants" type="checkbox" value="true" @(Model.ConsentToGrants ? "checked" : "")>
+                                <label class="govuk-label govuk-checkboxes__label" for="ConsentToGrants">
+                                    Grants, locally administered funding, or loan schemes I may be eligible for
+                                </label>
+                            </div>
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="ConsentToAdvice" name="ConsentToAdvice" type="checkbox" value="true" @(Model.ConsentToAdvice ? "checked" : "")>
+                                <label class="govuk-label govuk-checkboxes__label" for="ConsentToAdvice">
+                                    Advice on improving the energy efficiency of my home
+                                </label>
+                            </div>
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="ConsentToUpdates" name="ConsentToUpdates" type="checkbox" value="true" @(Model.ConsentToUpdates ? "checked" : "")>
+                                <label class="govuk-label govuk-checkboxes__label" for="ConsentToUpdates">
+                                    Updates about government energy efficiency support
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </fieldset>
+
+            <p class="govuk-body">
+                <a class="govuk-link" href="@Model.SkipUrl">No thanks, skip this step</a>
+            </p>
+
+            <div class="govuk-button-group">
+                @(await Html.GovUkButton(new ButtonViewModel
+                {
+                    Text = "Continue"
+                }))
+            </div>
+        </form>
+    </div>
+</div>

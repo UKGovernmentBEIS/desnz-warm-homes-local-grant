@@ -37,6 +37,10 @@ public static class QuestionnaireHelper
             ConfirmationConsent = true,
             NotificationEmailAddress = "person@example.com",
             ConfirmationEmailAddress = "person@example.com",
+            FutureContactName = "Contact Name",
+            FutureContactEmail = "person@example.com",
+            FutureContactPhone = "07123456789",
+            FutureContactOriginStep = QuestionFlowStep.NoFunding,
             UneditedData = new Questionnaire()
         };
     }
