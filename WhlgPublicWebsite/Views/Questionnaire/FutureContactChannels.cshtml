@@ -116,7 +116,7 @@
             const phone = document.getElementById('ContactByPhone');
             const sms = document.getElementById('ContactBySms');
             const phoneNumberField = document.getElementById('phone-conditional');
-            
+
             if (!phone || !sms || !phoneNumberField) {
                 return;
             }
@@ -127,10 +127,19 @@
                 phone.setAttribute('aria-expanded', phoneNumberRequired);
                 sms.setAttribute('aria-expanded', phoneNumberRequired);
             }
+            
+            function syncListeners() {
+                phone.addEventListener('change', syncPhoneNumberFieldVisibility);
+                sms.addEventListener('change', syncPhoneNumberFieldVisibility);
+                window.addEventListener('pageshow', syncPhoneNumberFieldVisibility);
+                syncPhoneNumberFieldVisibility();
+            }
 
-            phone.addEventListener('change', syncPhoneNumberFieldVisibility);
-            sms.addEventListener('change', syncPhoneNumberFieldVisibility);
-            syncPhoneNumberFieldVisibility();
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', syncListeners);
+            } else {
+                syncListeners();
+            }
         })();
     </script>
 }
