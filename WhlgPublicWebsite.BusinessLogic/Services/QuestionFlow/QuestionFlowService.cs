@@ -45,6 +45,8 @@ public class QuestionFlowService : IQuestionFlowService
             QuestionFlowStep.Confirmation => ConfirmationBackDestination(),
             QuestionFlowStep.NoConsent => NoConsentBackDestination(),
             QuestionFlowStep.Ineligible => IneligibleBackDestination(questionnaire),
+            QuestionFlowStep.FutureContactTopics => FutureContactTopicsBackDestination(questionnaire),
+            QuestionFlowStep.FutureContactChannels => FutureContactChannelsBackDestination(),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -75,6 +77,8 @@ public class QuestionFlowService : IQuestionFlowService
             QuestionFlowStep.Eligible => EligibleForwardDestination(),
             QuestionFlowStep.Confirmation => ConfirmationForwardDestination(),
             QuestionFlowStep.Ineligible => IneligibleForwardDestination(),
+            QuestionFlowStep.FutureContactTopics => FutureContactTopicsForwardDestination(),
+            QuestionFlowStep.FutureContactChannels => FutureContactChannelsForwardDestination(questionnaire),
             _ => throw new ArgumentOutOfRangeException(nameof(page), page, null)
         };
     }
@@ -368,7 +372,7 @@ public class QuestionFlowService : IQuestionFlowService
 
     private QuestionFlowStep EligibleForwardDestination()
     {
-        return QuestionFlowStep.Confirmation;
+        return QuestionFlowStep.FutureContactTopics;
     }
 
     private QuestionFlowStep ConfirmationForwardDestination()
@@ -379,5 +383,25 @@ public class QuestionFlowService : IQuestionFlowService
     private QuestionFlowStep IneligibleForwardDestination()
     {
         return QuestionFlowStep.Ineligible;
+    }
+
+    private QuestionFlowStep FutureContactTopicsBackDestination(Questionnaire questionnaire)
+    {
+        return questionnaire.FutureContactOriginStep ?? QuestionFlowStep.Confirmation;
+    }
+
+    private QuestionFlowStep FutureContactChannelsBackDestination()
+    {
+        return QuestionFlowStep.FutureContactTopics;
+    }
+
+    private QuestionFlowStep FutureContactTopicsForwardDestination()
+    {
+        return QuestionFlowStep.FutureContactChannels;
+    }
+
+    private QuestionFlowStep FutureContactChannelsForwardDestination(Questionnaire questionnaire)
+    {
+        return questionnaire.FutureContactOriginStep ?? QuestionFlowStep.Confirmation;
     }
 }

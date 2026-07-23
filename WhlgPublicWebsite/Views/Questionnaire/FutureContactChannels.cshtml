@@ -1,0 +1,145 @@
+@using GovUkDesignSystem
+@using GovUkDesignSystem.GovUkDesignSystemComponents
+@using WhlgPublicWebsite.Controllers
+@using WhlgPublicWebsite.Middleware
+@model WhlgPublicWebsite.Models.Questionnaire.FutureContactChannelsViewModel
+
+@{
+    ViewBag.Title = "How would you like to hear from us?";
+}
+
+@section BeforeMain {
+    @await Html.GovUkBackLink(new BackLinkViewModel
+    {
+        Text = "Back",
+        Href = Model.BackLink
+    })
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <form action="@Url.Action(nameof(QuestionnaireController.FutureContactChannels_Post), "Questionnaire")" method="post" novalidate>
+            @Html.AntiForgeryToken()
+
+            <h1 class="govuk-heading-l">How would you like to hear from us?</h1>
+
+            <p class="govuk-body">You can choose how you want to hear from us. You can select more than one option.</p>
+
+            @if (Model.AtLeastOneChannelRequired)
+            {
+                <div class="govuk-error-summary" data-module="govuk-error-summary">
+                    <div role="alert">
+                        <h2 class="govuk-error-summary__title">There is a problem</h2>
+                        <div class="govuk-error-summary__body">
+                            <ul class="govuk-list govuk-error-summary__list">
+                                <li><a href="#ContactByEmail">Select at least one way for us to contact you</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="govuk-form-group @(Model.AtLeastOneChannelRequired ? "govuk-form-group--error" : "")">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        You can select more than one option.
+                    </legend>
+                    @if (Model.AtLeastOneChannelRequired)
+                    {
+                        <p id="channels-error" class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> Select at least one way for us to contact you
+                        </p>
+                    }
+                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="ContactByEmail" name="ContactByEmail" type="checkbox" value="true" @(Model.ContactByEmail ? "checked" : "") data-aria-controls="email-conditional">
+                            <label class="govuk-label govuk-checkboxes__label" for="ContactByEmail">
+                                Email
+                            </label>
+                        </div>
+                        <div class="govuk-checkboxes__conditional @(Model.ContactByEmail ? "" : "govuk-checkboxes__conditional--hidden")" id="email-conditional">
+                            @await Html.GovUkTextInputFor(
+                                m => m.Email,
+                                new LabelViewModel { Text = "Email address" },
+                                classes: "govuk-input govuk-input--width-20",
+                                autocomplete: "email")
+                        </div>
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="ContactByPhone" name="ContactByPhone" type="checkbox" value="true" @(Model.ContactByPhone ? "checked" : "") data-aria-controls="phone-conditional">
+                            <label class="govuk-label govuk-checkboxes__label" for="ContactByPhone">
+                                Phone call
+                            </label>
+                        </div>
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="ContactBySms" name="ContactBySms" type="checkbox" value="true" @(Model.ContactBySms ? "checked" : "") data-aria-controls="phone-conditional">
+                            <label class="govuk-label govuk-checkboxes__label" for="ContactBySms">
+                                Text message (SMS)
+                            </label>
+                        </div>
+                        <div class="govuk-checkboxes__conditional @(Model.ContactByPhone || Model.ContactBySms ? "" : "govuk-checkboxes__conditional--hidden")" id="phone-conditional">
+                            @await Html.GovUkTextInputFor(
+                                m => m.PhoneNumber,
+                                new LabelViewModel { Text = "Phone number" },
+                                classes: "govuk-input govuk-input--width-20",
+                                autocomplete: "tel")
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="govuk-form-group">
+                @await Html.GovUkTextInputFor(
+                    m => m.Name,
+                    new LabelViewModel { Text = "Full name", IsPageHeading = false },
+                    classes: "govuk-input govuk-input--width-20",
+                    autocomplete: "name")
+            </div>
+
+            <p class="govuk-body govuk-!-margin-top-4">
+                You can withdraw your consent at any time by following the instructions in our communications or by contacting us directly.
+            </p>
+
+            <div class="govuk-button-group">
+                @(await Html.GovUkButton(new ButtonViewModel
+                {
+                    Text = "Submit"
+                }))
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script nonce="@Context.GetScriptNonce()">
+        (function () {
+            const phone = document.getElementById('ContactByPhone');
+            const sms = document.getElementById('ContactBySms');
+            const phoneNumberField = document.getElementById('phone-conditional');
+
+            if (!phone || !sms || !phoneNumberField) {
+                return;
+            }
+
+            function syncPhoneNumberFieldVisibility() {
+                const phoneNumberRequired = phone.checked || sms.checked;
+                phoneNumberField.classList.toggle('govuk-checkboxes__conditional--hidden', !phoneNumberRequired);
+                phone.setAttribute('aria-expanded', phoneNumberRequired);
+                sms.setAttribute('aria-expanded', phoneNumberRequired);
+            }
+            
+            function syncListeners() {
+                phone.addEventListener('change', syncPhoneNumberFieldVisibility);
+                sms.addEventListener('change', syncPhoneNumberFieldVisibility);
+                window.addEventListener('pageshow', syncPhoneNumberFieldVisibility);
+                syncPhoneNumberFieldVisibility();
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', syncListeners);
+            } else {
+                syncListeners();
+            }
+        })();
+    </script>
+}
