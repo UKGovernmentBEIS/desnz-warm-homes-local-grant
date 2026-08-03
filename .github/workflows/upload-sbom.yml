@@ -38,5 +38,5 @@ jobs:
           autocreate: true
           projectname: warm-homes-local-grant
           projectversion: ${{ steps.version.outputs.version }}
-          parentUUID: 0927c52e-5343-4e19-9498-68aa93dd13c6
+          parent: 0927c52e-5343-4e19-9498-68aa93dd13c6
           bomfilename: bom.xml
