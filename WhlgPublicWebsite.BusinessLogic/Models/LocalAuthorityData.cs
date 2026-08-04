@@ -336,7 +336,7 @@ public class LocalAuthorityData
         { "3115", new LocalAuthorityDetails("South Oxfordshire District Council", LocalAuthorityStatus.Live, "https://www.southoxon.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Oxfordshire County Council") },
         { "2360", new LocalAuthorityDetails("South Ribble Borough Council", LocalAuthorityStatus.Live, "https://southribble.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Blackpool Council") },
         { "3430", new LocalAuthorityDetails("South Staffordshire District Council", LocalAuthorityStatus.Live, "https://www.sstaffs.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Staffordshire") },
-        { "4520", new LocalAuthorityDetails("South Tyneside Council", LocalAuthorityStatus.Live, "https://www.southtyneside.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "4520", new LocalAuthorityDetails("South Tyneside Council", LocalAuthorityStatus.ReferralsPaused, "https://www.southtyneside.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1780", new LocalAuthorityDetails("Southampton City Council", LocalAuthorityStatus.Live, "https://www.warmerhomes.org.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
         { "1590", new LocalAuthorityDetails("Southend-on-Sea Borough Council", LocalAuthorityStatus.ReferralsPaused, "https://www.southend.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Essex County Council") },
         { "5840", new LocalAuthorityDetails("Southwark Council", LocalAuthorityStatus.Live, "https://www.southwark.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
