@@ -35,38 +35,38 @@ public class CustomWordingConsistencyTests
             ("2630", LocalAuthorityData.LocalAuthorityStatus.Live), // South Norfolk District Council
 
             // Portsmouth City Council (custom: Eligible, Confirmation, email overrides)
-            ("1775", LocalAuthorityData.LocalAuthorityStatus.Live), // Portsmouth City Council
-            ("3805", LocalAuthorityData.LocalAuthorityStatus.Live), // Adur District Council
-            ("3810", LocalAuthorityData.LocalAuthorityStatus.Live), // Arun District Council
-            ("1705", LocalAuthorityData.LocalAuthorityStatus.Live), // Basingstoke and Deane Borough Council
-            ("235", LocalAuthorityData.LocalAuthorityStatus.Live), // Bedford Borough Council
-            ("335", LocalAuthorityData.LocalAuthorityStatus.Live), // Bracknell Forest Borough Council
-            ("1445", LocalAuthorityData.LocalAuthorityStatus.Live), // Brighton and Hove City Council
-            ("3815", LocalAuthorityData.LocalAuthorityStatus.Live), // Chichester District Council
-            ("3820", LocalAuthorityData.LocalAuthorityStatus.Live), // Crawley Borough Council
-            ("5240", LocalAuthorityData.LocalAuthorityStatus.Live), // Croydon Council
-            ("1710", LocalAuthorityData.LocalAuthorityStatus.Live), // East Hampshire District Council
-            ("1715", LocalAuthorityData.LocalAuthorityStatus.Live), // Eastleigh Borough Council
-            ("1720", LocalAuthorityData.LocalAuthorityStatus.Live), // Fareham Borough Council
-            ("1725", LocalAuthorityData.LocalAuthorityStatus.Live), // Gosport Borough Council
-            ("1730", LocalAuthorityData.LocalAuthorityStatus.Live), // Hart District Council
-            ("1735", LocalAuthorityData.LocalAuthorityStatus.Live), // Havant Borough Council
-            ("3825", LocalAuthorityData.LocalAuthorityStatus.Live), // Horsham District Council
-            ("2114", LocalAuthorityData.LocalAuthorityStatus.Live), // Isle of Wight Council
-            ("230", LocalAuthorityData.LocalAuthorityStatus.Live), // Luton Borough Council
-            ("435", LocalAuthorityData.LocalAuthorityStatus.Live), // Milton Keynes Council
-            ("3830", LocalAuthorityData.LocalAuthorityStatus.Live), // Mid Sussex District Council
-            ("1740", LocalAuthorityData.LocalAuthorityStatus.Live), // New Forest District Council
-            ("345", LocalAuthorityData.LocalAuthorityStatus.Live), // Reading Borough Council
-            ("355", LocalAuthorityData.LocalAuthorityStatus.Live), // Royal Borough of Windsor and Maidenhead
-            ("1750", LocalAuthorityData.LocalAuthorityStatus.Live), // Rushmoor Borough Council
-            ("2470", LocalAuthorityData.LocalAuthorityStatus.Live), // Rutland County Council
-            ("1780", LocalAuthorityData.LocalAuthorityStatus.Live), // Southampton City Council
-            ("1760", LocalAuthorityData.LocalAuthorityStatus.Live), // Test Valley Borough Council
-            ("340", LocalAuthorityData.LocalAuthorityStatus.Live), // West Berkshire Council
-            ("1765", LocalAuthorityData.LocalAuthorityStatus.Live), // Winchester City Council
-            ("360", LocalAuthorityData.LocalAuthorityStatus.Live), // Wokingham Borough Council
-            ("3835", LocalAuthorityData.LocalAuthorityStatus.Live), // Worthing Borough Council
+            ("1775", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Portsmouth City Council
+            ("3805", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Adur District Council
+            ("3810", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Arun District Council
+            ("1705", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Basingstoke and Deane Borough Council
+            ("235", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Bedford Borough Council
+            ("335", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Bracknell Forest Borough Council
+            ("1445", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Brighton and Hove City Council
+            ("3815", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Chichester District Council
+            ("3820", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Crawley Borough Council
+            ("5240", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Croydon Council
+            ("1710", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // East Hampshire District Council
+            ("1715", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Eastleigh Borough Council
+            ("1720", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Fareham Borough Council
+            ("1725", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Gosport Borough Council
+            ("1730", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Hart District Council
+            ("1735", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Havant Borough Council
+            ("3825", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Horsham District Council
+            ("2114", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Isle of Wight Council
+            ("230", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Luton Borough Council
+            ("435", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Milton Keynes Council
+            ("3830", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Mid Sussex District Council
+            ("1740", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // New Forest District Council
+            ("345", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Reading Borough Council
+            ("355", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Royal Borough of Windsor and Maidenhead
+            ("1750", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Rushmoor Borough Council
+            ("2470", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Rutland County Council
+            ("1780", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Southampton City Council
+            ("1760", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Test Valley Borough Council
+            ("340", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // West Berkshire Council
+            ("1765", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Winchester City Council
+            ("360", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Wokingham Borough Council
+            ("3835", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Worthing Borough Council
 
             // Greater London Authority (custom: Eligible, Confirmation, ReferralsPaused, email overrides)
             ("5090", LocalAuthorityData.LocalAuthorityStatus.Live), // Barnet Council

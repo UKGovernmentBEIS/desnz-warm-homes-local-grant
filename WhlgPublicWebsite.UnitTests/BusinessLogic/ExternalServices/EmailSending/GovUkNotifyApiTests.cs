@@ -210,7 +210,7 @@ public class GovUkNotifyApiTests
     {
         // Arrange
         var custodianCode = LocalAuthorityDataHelper.GetExampleCustodianCodeForStatusAndConsortium(LocalAuthorityData
-            .LocalAuthorityStatus.Live, ConsortiumNames.PortsmouthCityCouncil);
+            .LocalAuthorityStatus.ReferralsPaused, ConsortiumNames.PortsmouthCityCouncil);
         var localAuthorityDetails = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[custodianCode];
         List<KeyValuePair<string, object>> expectedPersonalisations =
         [
