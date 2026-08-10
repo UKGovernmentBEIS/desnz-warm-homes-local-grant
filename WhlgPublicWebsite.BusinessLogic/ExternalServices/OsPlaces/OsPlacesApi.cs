@@ -12,6 +12,8 @@ public class OsPlacesApi(IOptions<OsPlacesConfiguration> options, ILogger<OsPlac
 {
     private readonly OsPlacesConfiguration config = options.Value;
     private const int MaxResults = 100;
+    // Shorter than typical ALB/app timeouts so failures are caught and users can continue via manual entry
+    private static readonly TimeSpan RequestTimeout = TimeSpan.FromSeconds(15);
     private readonly Regex nonAlphanumericCharacters = new(@"[^a-zA-Z0-9]", RegexOptions.Compiled);
 
     public async Task<List<Address>> GetAddressesAsync(string postcode, string buildingNameOrNumber)
@@ -38,7 +40,7 @@ public class OsPlacesApi(IOptions<OsPlacesConfiguration> options, ILogger<OsPlac
                 {
                     parameters = GetRequestParameters(postcode, resultsRequested);
                     response = await HttpRequestHelper.SendGetRequestAsync<OsPlacesPostcodeResponseDto>(parameters);
-                    results = results.Concat(response.Results).ToList();
+                    results = results.Concat(response.Results ?? []).ToList();
                     resultsRequested += MaxResults;
                 }
             }
@@ -81,8 +83,8 @@ public class OsPlacesApi(IOptions<OsPlacesConfiguration> options, ILogger<OsPlac
         }
         catch (Exception e)
         {
-            logger.LogError("OS Places postcode request failed: {}", e.Message);
-            return [];
+            logger.LogError(e, "OS Places postcode request failed");
+            throw;
         }
     }
 
@@ -98,7 +100,8 @@ public class OsPlacesApi(IOptions<OsPlacesConfiguration> options, ILogger<OsPlac
         {
             BaseAddress = config.BaseUrl,
             Path = path,
-            Headers = new Dictionary<string, string> { { "Key", config.Key } }
+            Headers = new Dictionary<string, string> { { "Key", config.Key } },
+            Timeout = RequestTimeout
         };
     }
 }

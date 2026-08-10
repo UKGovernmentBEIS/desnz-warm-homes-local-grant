@@ -40,6 +40,10 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.Common
             httpClient.BaseAddress = new Uri(parameters.BaseAddress);
             httpClient.DefaultRequestHeaders.Authorization = parameters.Auth;
             httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            if (parameters.Timeout is not null)
+            {
+                httpClient.Timeout = parameters.Timeout.Value;
+            }
             foreach (var headerDetails in parameters.Headers)
             {
                 httpClient.DefaultRequestHeaders.Add(headerDetails.Key, headerDetails.Value);
@@ -68,6 +72,7 @@ namespace WhlgPublicWebsite.BusinessLogic.ExternalServices.Common
         public AuthenticationHeaderValue Auth { get; set; }
         public HttpContent Body { get; set; }
         public Dictionary<string, string> Headers { get; set; } = new();
+        public TimeSpan? Timeout { get; set; }
     }
 
     internal enum RequestType
