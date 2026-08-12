@@ -69,8 +69,8 @@ public class SessionRecorderServiceTests
 
         // Act
         var exception =
-            Assert.ThrowsAsync<Exception>(async () =>
-                await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, true));
+            Assert.ThrowsAsync<Exception>((Func<Task>)(async () =>
+                await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, true)));
 
         // Assert
         Assert.That(exception, Is.Not.Null);
