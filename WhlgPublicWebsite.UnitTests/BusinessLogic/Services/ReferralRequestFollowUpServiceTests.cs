@@ -77,6 +77,7 @@ public class ReferralRequestFollowUpServiceTests
         
         // Act
         // Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => referralFollowUpService.RecordFollowUpResponseForToken(testToken, true));
+        Assert.ThrowsAsync<InvalidOperationException>((Func<Task>)(async () =>
+            await referralFollowUpService.RecordFollowUpResponseForToken(testToken, true)));
      }
 }
