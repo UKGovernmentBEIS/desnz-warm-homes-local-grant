@@ -162,7 +162,7 @@ public class LocalAuthorityData
         { "3410", new LocalAuthorityDetails("East Staffordshire Borough Council", LocalAuthorityStatus.Live, "https://www.eaststaffsbc.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Staffordshire") },
         { "3540", new LocalAuthorityDetails("East Suffolk Council", LocalAuthorityStatus.ReferralsPaused, "https://www.eastsuffolk.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Suffolk County Council") },
         { "1440", new LocalAuthorityDetails("East Sussex County Council", LocalAuthorityStatus.Live, "https://www.eastsussex.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Lewes District Council") },
-        { "1410", new LocalAuthorityDetails("Eastbourne Borough Council", LocalAuthorityStatus.Live, "https://www.lewes-eastbourne.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Lewes District Council") },
+        { "1410", new LocalAuthorityDetails("Eastbourne Borough Council", LocalAuthorityStatus.ReferralsPaused, "https://www.lewes-eastbourne.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Lewes District Council") },
         { "1715", new LocalAuthorityDetails("Eastleigh Borough Council", LocalAuthorityStatus.ReferralsPaused, "https://www.warmerhomes.org.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
         { "3605", new LocalAuthorityDetails("Elmbridge Borough Council", LocalAuthorityStatus.Live, "https://www.elmbridge.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Surrey County Council") },
         { "5300", new LocalAuthorityDetails("Enfield Council", LocalAuthorityStatus.Live, "https://www.enfield.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
