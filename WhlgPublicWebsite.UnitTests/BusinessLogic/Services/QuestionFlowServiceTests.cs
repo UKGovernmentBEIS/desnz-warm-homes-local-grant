@@ -220,15 +220,28 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Address),
         new(
+            "No EPC found goes back to Address",
+            new Input(
+                QuestionFlowStep.NoEpcFound
+            ),
+            QuestionFlowStep.Address),
+        new(
             "Manual address goes back to Address",
             new Input(
                 QuestionFlowStep.ManualAddress
             ),
             QuestionFlowStep.Address),
         new(
-            "Select local authority goes back to Manual address",
+            "Select local authority goes back to no EPC found if no EPC details",
             new Input(
                 QuestionFlowStep.SelectLocalAuthority
+            ),
+            QuestionFlowStep.NoEpcFound),
+        new(
+            "Select local authority goes back to Manual address if EPC details exist",
+            new Input(
+                QuestionFlowStep.SelectLocalAuthority,
+                epcRating: EpcRating.D
             ),
             QuestionFlowStep.ManualAddress),
         new(
@@ -238,9 +251,15 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectLocalAuthority),
         new(
-            "No funding goes back to Address if LA matched",
+            "No funding goes back to no EPC found if LA matched and no EPC",
             new Input(
                 QuestionFlowStep.NoFunding, localAuthorityAutomaticallyMatched: true
+            ),
+            QuestionFlowStep.NoEpcFound),
+        new(
+            "No funding goes back to Address if LA matched and EPC exists",
+            new Input(
+                QuestionFlowStep.NoFunding, localAuthorityAutomaticallyMatched: true, epcRating: EpcRating.D
             ),
             QuestionFlowStep.Address),
         new(
@@ -250,11 +269,11 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
         new(
-            "Not participating goes back to Address if LA matched",
+            "Not participating goes back to no EPC found if LA matched and no EPC",
             new Input(
                 QuestionFlowStep.NotParticipating, localAuthorityAutomaticallyMatched: true
             ),
-            QuestionFlowStep.Address),
+            QuestionFlowStep.NoEpcFound),
         new(
             "Not participating goes back to confirm local authority if no LA matched",
             new Input(
@@ -262,11 +281,11 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
         new(
-            "Referrals paused goes back to Address if LA matched",
+            "Referrals paused goes back to no EPC found if LA matched and no EPC",
             new Input(
                 QuestionFlowStep.ReferralsPaused, localAuthorityAutomaticallyMatched: true
             ),
-            QuestionFlowStep.Address),
+            QuestionFlowStep.NoEpcFound),
         new(
             "Referrals paused goes back to confirm local authority if no LA matched",
             new Input(
@@ -274,11 +293,11 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
         new(
-            "Household income goes back to Address if LA matched",
+            "Household income goes back to no EPC found if LA matched and no EPC",
             new Input(
                 QuestionFlowStep.HouseholdIncome, localAuthorityAutomaticallyMatched: true
             ),
-            QuestionFlowStep.Address),
+            QuestionFlowStep.NoEpcFound),
         new(
             "Household income goes back to confirm local authority if no LA matched",
             new Input(
@@ -426,12 +445,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Address),
         new(
-            "Select local authority goes back to Manual address if was changing answer",
+            "Select local authority goes back to no EPC found if no EPC details and was changing answer",
             new Input(
                 QuestionFlowStep.SelectLocalAuthority,
                 entryPoint: QuestionFlowStep.Address
             ),
-            QuestionFlowStep.ManualAddress),
+            QuestionFlowStep.NoEpcFound),
         new(
             "Confirm local authority goes back to select local authority if was changing answer",
             new Input(
@@ -440,12 +459,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectLocalAuthority),
         new(
-            "No funding goes back to Address if LA matched if was changing answer",
+            "No funding goes back to no EPC found if LA matched and no EPC if was changing answer",
             new Input(
                 QuestionFlowStep.NoFunding, localAuthorityAutomaticallyMatched: true,
                 entryPoint: QuestionFlowStep.Address
             ),
-            QuestionFlowStep.Address),
+            QuestionFlowStep.NoEpcFound),
         new(
             "No funding goes back to confirm local authority if no LA matched if was changing answer",
             new Input(
@@ -454,12 +473,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
         new(
-            "Not participating goes back to Address if LA matched if was changing answer",
+            "Not participating goes back to no EPC found if LA matched and no EPC if was changing answer",
             new Input(
                 QuestionFlowStep.NotParticipating, localAuthorityAutomaticallyMatched: true,
                 entryPoint: QuestionFlowStep.Address
             ),
-            QuestionFlowStep.Address),
+            QuestionFlowStep.NoEpcFound),
         new(
             "Not participating goes back to confirm local authority if no LA matched if was changing answer",
             new Input(
@@ -468,12 +487,12 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.ConfirmLocalAuthority),
         new(
-            "Referrals paused goes back to Address if LA matched if was changing answer",
+            "Referrals paused goes back to no EPC found if LA matched and no EPC if was changing answer",
             new Input(
                 QuestionFlowStep.ReferralsPaused, localAuthorityAutomaticallyMatched: true,
                 entryPoint: QuestionFlowStep.Address
             ),
-            QuestionFlowStep.Address),
+            QuestionFlowStep.NoEpcFound),
         new(
             "Referrals paused goes back to confirm local authority if no LA matched if was changing answer",
             new Input(
@@ -558,12 +577,27 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectAddress),
         new(
-            "Address selection continues to select Local Authority if no LA matched",
+            "Address selection continues to no EPC found if no LA matched and no EPC",
             new Input(
                 QuestionFlowStep.SelectAddress,
                 localAuthorityAutomaticallyMatched: false
             ),
+            QuestionFlowStep.NoEpcFound),
+        new(
+            "Address selection continues to select Local Authority if no LA matched and EPC exists",
+            new Input(
+                QuestionFlowStep.SelectAddress,
+                epcRating: EpcRating.D,
+                localAuthorityAutomaticallyMatched: false
+            ),
             QuestionFlowStep.SelectLocalAuthority),
+        new(
+            "Address selection continues to no EPC found if LA matched and no EPC",
+            new Input(
+                QuestionFlowStep.SelectAddress,
+                localAuthorityAutomaticallyMatched: true
+            ),
+            QuestionFlowStep.NoEpcFound),
         new(
             "Address selection continues to household income if LA matched if EPC is low",
             new Input(
@@ -638,11 +672,25 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Ineligible),
         new(
-            "Manual address continues to select local authority",
+            "No EPC found continues to select local authority if no LA matched",
+            new Input(
+                QuestionFlowStep.NoEpcFound,
+                localAuthorityAutomaticallyMatched: false
+            ),
+            QuestionFlowStep.SelectLocalAuthority),
+        new(
+            "No EPC found continues to household income if LA matched",
+            new Input(
+                QuestionFlowStep.NoEpcFound,
+                localAuthorityAutomaticallyMatched: true
+            ),
+            QuestionFlowStep.HouseholdIncome),
+        new(
+            "Manual address continues to no EPC found",
             new Input(
                 QuestionFlowStep.ManualAddress
             ),
-            QuestionFlowStep.SelectLocalAuthority),
+            QuestionFlowStep.NoEpcFound),
         new(
             "Select local authority continues to confirm local authority",
             new Input(
@@ -832,9 +880,18 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.SelectAddress),
         new(
-            "Address selection continues to select Local Authority if no LA matched and was changing answer",
+            "Address selection continues to no EPC found if no LA matched and no EPC and was changing answer",
             new Input(
                 QuestionFlowStep.SelectAddress,
+                localAuthorityAutomaticallyMatched: false,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.NoEpcFound),
+        new(
+            "Address selection continues to select Local Authority if no LA matched and EPC exists and was changing answer",
+            new Input(
+                QuestionFlowStep.SelectAddress,
+                epcRating: EpcRating.D,
                 localAuthorityAutomaticallyMatched: false,
                 entryPoint: QuestionFlowStep.Address
             ),
@@ -894,12 +951,28 @@ public class QuestionFlowServiceTests
             ),
             QuestionFlowStep.Ineligible),
         new(
-            "Manual address continues to select local authority if was changing answer",
+            "No EPC found continues to select local authority if no LA matched and was changing answer",
+            new Input(
+                QuestionFlowStep.NoEpcFound,
+                localAuthorityAutomaticallyMatched: false,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.SelectLocalAuthority),
+        new(
+            "No EPC found returns to check answers if LA matched and was changing answer",
+            new Input(
+                QuestionFlowStep.NoEpcFound,
+                localAuthorityAutomaticallyMatched: true,
+                entryPoint: QuestionFlowStep.Address
+            ),
+            QuestionFlowStep.CheckAnswers),
+        new(
+            "Manual address continues to no EPC found if was changing answer",
             new Input(
                 QuestionFlowStep.ManualAddress,
                 entryPoint: QuestionFlowStep.Address
             ),
-            QuestionFlowStep.SelectLocalAuthority),
+            QuestionFlowStep.NoEpcFound),
         new(
             "Select local authority continues to confirm local authority if was changing answer",
             new Input(

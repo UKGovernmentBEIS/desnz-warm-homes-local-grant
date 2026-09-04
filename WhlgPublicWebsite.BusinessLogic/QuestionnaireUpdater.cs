@@ -57,8 +57,20 @@ public class QuestionnaireUpdater
     public async Task<Questionnaire> UpdateAddressAsync(Questionnaire questionnaire, Address address,
         QuestionFlowStep? entryPoint)
     {
-        // Try to find an EPC for this property
-        var epcDetails = address.Uprn != null ? await epcApi.EpcFromUprnAsync(address.Uprn) : null;
+        // Try to find an EPC for this property. API outages are treated as no EPC found so the
+        // user can continue; the question flow shows an intermediary explanation page.
+        EpcDetails epcDetails = null;
+        if (address.Uprn != null)
+        {
+            try
+            {
+                epcDetails = await epcApi.EpcFromUprnAsync(address.Uprn);
+            }
+            catch (EpcApiUnavailableException e)
+            {
+                logger.LogWarning(e, "EPC API unavailable while looking up UPRN {Uprn}", address.Uprn);
+            }
+        }
 
         var currentPage = address.Uprn != null ? QuestionFlowStep.SelectAddress : QuestionFlowStep.ManualAddress;
 
