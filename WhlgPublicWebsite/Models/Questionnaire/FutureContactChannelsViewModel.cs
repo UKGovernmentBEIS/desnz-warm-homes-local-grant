@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using GovUkDesignSystem.Attributes.ValidationAttributes;
+using WhlgPublicWebsite.Helpers;
 
 namespace WhlgPublicWebsite.Models.Questionnaire;
 
@@ -12,7 +13,7 @@ public class FutureContactChannelsViewModel : QuestionFlowViewModel
     [GovUkValidateRequired(ErrorMessageIfMissing = "Enter your name for future notifications")]
     public string Name { get; set; }
 
-    [EmailAddress(ErrorMessage = "Enter an email address in the correct format, like name@example.com")]
+    [ValidEmailAddress(ErrorMessage = "Enter an email address in the correct format, like name@example.com")]
     [GovUkValidateRequiredIf(ErrorMessageIfMissing = "Enter your email address for future notifications", IsRequiredPropertyName = nameof(EmailRequired))]
     public string Email { get; set; }
 
