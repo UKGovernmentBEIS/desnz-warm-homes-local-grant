@@ -274,7 +274,7 @@ public class LocalAuthorityData
         { "4515", new LocalAuthorityDetails("North Tyneside Council", LocalAuthorityStatus.Live, "https://my.northtyneside.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "3705", new LocalAuthorityDetails("North Warwickshire Borough Council", LocalAuthorityStatus.ReferralsPaused, "https://www.northwarks.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Nottingham City Council") },
         { "2435", new LocalAuthorityDetails("North West Leicestershire District Council", LocalAuthorityStatus.Live, "https://www.nwleics.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Leicestershire") },
-        { "2745", new LocalAuthorityDetails("North Yorkshire Council", LocalAuthorityStatus.Live, "https://www.northyorks.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "2745", new LocalAuthorityDetails("North Yorkshire Council", LocalAuthorityStatus.ReferralsPaused, "https://www.northyorks.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "2935", new LocalAuthorityDetails("Northumberland County Council", LocalAuthorityStatus.Live, "https://www.northumberland.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "2625", new LocalAuthorityDetails("Norwich City Council", LocalAuthorityStatus.Live, "https://www.norwich.gov.uk/site/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "3060", new LocalAuthorityDetails("Nottingham City Council", LocalAuthorityStatus.Live, "https://www.nottinghamcity.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Nottingham City Council") },
@@ -428,11 +428,11 @@ public class LocalAuthorityData
     }
 
     public static readonly IReadOnlyList<string> ManagedByLcrcaCodes = new[] { "650", "4305", "4315", "4325" };
-    
+
     public static bool CustodianCodeIsManagedByLcrca(string custodianCode)
     {
-        return 
-            CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.LiverpoolCityRegionCombinedAuthority) 
+        return
+            CustodianCodeIsInConsortium(custodianCode, ConsortiumNames.LiverpoolCityRegionCombinedAuthority)
             // not all LAs in the LCRCA are managed by the LCRCA, so we must filter further to
             // Halton
             // Knowsley
