@@ -366,7 +366,7 @@ public class LocalAuthorityData
         { "1560", new LocalAuthorityDetails("Tendring District Council", LocalAuthorityStatus.ReferralsPaused, "https://www.tendringdc.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Essex County Council") },
         { "1760", new LocalAuthorityDetails("Test Valley Borough Council", LocalAuthorityStatus.ReferralsPaused, "https://www.warmerhomes.org.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
         { "1630", new LocalAuthorityDetails("Tewkesbury Borough Council", LocalAuthorityStatus.ReferralsPaused, "https://tewkesbury.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Stroud District Council") },
-        { "2260", new LocalAuthorityDetails("Thanet District Council", LocalAuthorityStatus.Live, "https://www.thanet.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "2260", new LocalAuthorityDetails("Thanet District Council", LocalAuthorityStatus.ReferralsPaused, "https://www.thanet.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "9068", new LocalAuthorityDetails("The Highland Council", LocalAuthorityStatus.NoFunding, "https://www.highland.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "9071", new LocalAuthorityDetails("The Moray Council", LocalAuthorityStatus.NoFunding, "http://www.moray.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1940", new LocalAuthorityDetails("Three Rivers District Council", LocalAuthorityStatus.Live, "https://www.threerivers.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Watford Borough Council") },
