@@ -35,6 +35,7 @@ public class S3ReferralFileKeyGeneratorTests
     public void GetS3Key_WhenCalledWithInvalidData_ThrowsException(string custodianCode, int month, int year)
     {
         // Act and Assert
-        Assert.Throws<ArgumentException>(() => underTest.GetS3Key(custodianCode, month, year));
+        Assert.Throws<ArgumentException>((Action)(() =>
+            underTest.GetS3Key(custodianCode, month, year)));
     }
 }
