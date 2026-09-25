@@ -377,7 +377,7 @@ public class LocalAuthorityData
         { "1145", new LocalAuthorityDetails("Torridge District Council", LocalAuthorityStatus.ReferralsPaused, "https://www.torridge.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Devon County Council") },
         { "5900", new LocalAuthorityDetails("Tower Hamlets Council", LocalAuthorityStatus.Live, "https://www.towerhamlets.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
         { "4245", new LocalAuthorityDetails("Trafford Metropolitan Borough Council", LocalAuthorityStatus.NotParticipating, "https://www.trafford.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater Manchester Combined Authority") },
-        { "2270", new LocalAuthorityDetails("Tunbridge Wells Borough Council", LocalAuthorityStatus.Live, "https://tunbridgewells.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
+        { "2270", new LocalAuthorityDetails("Tunbridge Wells Borough Council", LocalAuthorityStatus.ReferralsPaused, "https://tunbridgewells.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1570", new LocalAuthorityDetails("Uttlesford District Council", LocalAuthorityStatus.ReferralsPaused, "https://www.uttlesford.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Essex County Council") },
         { "6950", new LocalAuthorityDetails("Vale of Glamorgan Council", LocalAuthorityStatus.NoFunding, "https://www.valeofglamorgan.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "3120", new LocalAuthorityDetails("Vale of White Horse District Council", LocalAuthorityStatus.Live, "https://www.whitehorsedc.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Oxfordshire County Council") },
