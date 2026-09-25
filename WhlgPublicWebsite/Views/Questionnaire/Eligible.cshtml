@@ -28,7 +28,8 @@
 
         @await Html.GovUkWarningText(new WarningTextViewModel
         {
-            Text = "Your application will progress faster if they are more easily able to contact you."
+            Text = "Your application will progress faster if they are more easily able to contact you.",
+            IconFallbackText = "Note"
         })
 
         <form action="@Url.Action(nameof(QuestionnaireController.Eligible_Post), "Questionnaire")" method="post" novalidate>
