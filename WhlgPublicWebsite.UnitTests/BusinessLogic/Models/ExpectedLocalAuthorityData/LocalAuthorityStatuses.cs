@@ -332,7 +332,7 @@ internal static class LocalAuthorityStatuses
             { "1145", ReferralsPaused },
             { "5900", Live },
             { "4245", NotParticipating },
-            { "2270", Live },
+            { "2270", ReferralsPaused },
             { "1570", ReferralsPaused },
             { "6950", NoFunding },
             { "3120", Live },
