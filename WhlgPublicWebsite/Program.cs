@@ -44,11 +44,8 @@ namespace WhlgPublicWebsite
             recurringJobManager.RemoveIfExists("Nightly tasks");
             // Remove testing failing job
             recurringJobManager.RemoveIfExists("Test failing job");
-
-            recurringJobManager.AddOrUpdate<ReferralFollowUpNotificationService>(
-                "Get referrals passed ten day working threshold with no follow up",
-                service => service.SendReferralFollowUpEmails(),
-                "30 0 * * *"); // at 00:30 every day
+            // Remove referral follow up (SLA compliance) email job
+            recurringJobManager.RemoveIfExists("Get referrals passed ten day working threshold with no follow up");
 
             recurringJobManager.AddOrUpdate<UnsubmittedReferralRequestsService>(
                 "Write unsubmitted referral requests to csv",
