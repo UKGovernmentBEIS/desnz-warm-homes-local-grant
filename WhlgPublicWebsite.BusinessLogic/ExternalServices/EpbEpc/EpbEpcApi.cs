@@ -30,7 +30,7 @@ public class EpbEpcApi : IEpcApi
 
     public async Task<EpcDetails> EpcFromUprnAsync(string uprn)
     {
-        string token = null;
+        string token;
         try
         {
             token = await RequestTokenIfNeeded();
@@ -38,7 +38,7 @@ public class EpbEpcApi : IEpcApi
         catch (Exception e)
         {
             logger.LogError("Unable to get EPB API Token: {}", e.Message);
-            return null;
+            throw new EpcApiUnavailableException("EPC API token request is unavailable", e);
         }
 
         // This spec suggests UPRNs shouldn't need leading zeroes, but we need them for the EPC API
@@ -65,7 +65,7 @@ public class EpbEpcApi : IEpcApi
         catch (Exception e)
         {
             logger.LogError("EPB EPC request failed: {}", e.Message);
-            return null;
+            throw new EpcApiUnavailableException("EPC API assessment lookup is unavailable", e);
         }
     }
 

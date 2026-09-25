@@ -302,6 +302,23 @@ public class QuestionnaireController : Controller
         return RedirectToNextStep(nextStep, viewModel.EntryPoint);
     }
 
+    [HttpGet("no-epc-found")]
+    public IActionResult NoEpcFound_Get(QuestionFlowStep? entryPoint)
+    {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        var nextStep = questionFlowService.NextStep(QuestionFlowStep.NoEpcFound, questionnaire, entryPoint);
+        var forwardArgs = GetActionArgumentsForQuestion(nextStep, entryPoint);
+
+        var viewModel = new NoEpcFoundViewModel
+        {
+            BackLink = GetBackUrl(QuestionFlowStep.NoEpcFound, questionnaire, entryPoint),
+            ForwardLink = Url.Action(forwardArgs.Action, forwardArgs.Controller, forwardArgs.Values),
+            EntryPoint = entryPoint
+        };
+
+        return View("NoEpcFound", viewModel);
+    }
+
     [HttpGet("address/manual")]
     public IActionResult ManualAddress_Get(QuestionFlowStep? entryPoint)
     {
@@ -915,6 +932,8 @@ public class QuestionnaireController : Controller
             QuestionFlowStep.SelectAddress => new PathByActionArguments(nameof(SelectAddress_Get), "Questionnaire",
                 GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.ReviewEpc => new PathByActionArguments(nameof(ReviewEpc_Get), "Questionnaire",
+                GetRouteValues(extraRouteValues, entryPoint)),
+            QuestionFlowStep.NoEpcFound => new PathByActionArguments(nameof(NoEpcFound_Get), "Questionnaire",
                 GetRouteValues(extraRouteValues, entryPoint)),
             QuestionFlowStep.ManualAddress => new PathByActionArguments(nameof(ManualAddress_Get), "Questionnaire",
                 GetRouteValues(extraRouteValues, entryPoint)),
