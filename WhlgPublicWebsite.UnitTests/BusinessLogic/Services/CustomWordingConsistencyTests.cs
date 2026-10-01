@@ -101,12 +101,12 @@ public class CustomWordingConsistencyTests
             ("5990", LocalAuthorityData.LocalAuthorityStatus.Live), // Westminster City Council
 
             // Oxfordshire County Council (custom: Eligible, email overrides)
-            ("3100", LocalAuthorityData.LocalAuthorityStatus.Live), // Oxfordshire County Council
-            ("3105", LocalAuthorityData.LocalAuthorityStatus.Live), // Cherwell District Council
-            ("3110", LocalAuthorityData.LocalAuthorityStatus.Live), // Oxford City Council
-            ("3115", LocalAuthorityData.LocalAuthorityStatus.Live), // South Oxfordshire District Council
-            ("3120", LocalAuthorityData.LocalAuthorityStatus.Live), // Vale of White Horse District Council
-            ("3125", LocalAuthorityData.LocalAuthorityStatus.Live), // West Oxfordshire District Council
+            ("3100", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Oxfordshire County Council
+            ("3105", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Cherwell District Council
+            ("3110", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Oxford City Council
+            ("3115", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // South Oxfordshire District Council
+            ("3120", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Vale of White Horse District Council
+            ("3125", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // West Oxfordshire District Council
 
             // Liverpool City Region Combined Authority - managed only (custom: Eligible)
             ("650", LocalAuthorityData.LocalAuthorityStatus.Live), // Halton Borough Council
