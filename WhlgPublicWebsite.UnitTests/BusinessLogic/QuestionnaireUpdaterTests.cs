@@ -110,6 +110,30 @@ public class QuestionnaireUpdaterTests
         result.EpcDetailsAreCorrect.Should().BeNull();
     }
 
+    [Test]
+    public async Task UpdateAddressAsync_WhenEpcApiUnavailable_ContinuesWithoutEpcDetails()
+    {
+        // Arrange
+        var questionnaire = new Questionnaire();
+        var address = new Address()
+        {
+            AddressLine1 = "line1",
+            County = "county",
+            Postcode = "ab1 2cd",
+            Uprn = "123456789012"
+        };
+        mockEpcApi.Setup(e => e.EpcFromUprnAsync("123456789012"))
+            .ThrowsAsync(new EpcApiUnavailableException("Down", new Exception("network")));
+
+        // Act
+        var result = await underTest.UpdateAddressAsync(questionnaire, address, null);
+
+        // Assert
+        mockEpcApi.Verify(e => e.EpcFromUprnAsync("123456789012"));
+        result.EpcDetails.Should().BeNull();
+        result.EpcDetailsAreCorrect.Should().BeNull();
+    }
+
     [TestCase(true)]
     [TestCase(false)]
     public async Task UpdateAddressAsync_WhenCalled_SetsImdStatusToMatchEligibility(bool isEligible)
