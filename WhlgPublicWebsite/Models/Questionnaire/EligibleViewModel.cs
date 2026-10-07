@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using GovUkDesignSystem.Attributes.ValidationAttributes;
+﻿using GovUkDesignSystem.Attributes.ValidationAttributes;
 using WhlgPublicWebsite.Helpers;
 using WhlgPublicWebsite.Models.Enums;
 
@@ -13,7 +12,7 @@ public class EligibleViewModel : QuestionFlowViewModel
     [GovUkValidateRequired(ErrorMessageIfMissing = "Select whether they can contact you by email")]
     public YesOrNo? CanContactByEmail { get; set; }
 
-    [EmailAddress(ErrorMessage = "Enter an email address in the correct format, like name@example.com")]
+    [ValidEmailAddress(ErrorMessage = "Enter an email address in the correct format, like name@example.com")]
     [GovUkValidateRequiredIf(ErrorMessageIfMissing = "Enter your email address",
         IsRequiredPropertyName = nameof(IsEmailAddressRequired))]
     public string EmailAddress { get; set; }
