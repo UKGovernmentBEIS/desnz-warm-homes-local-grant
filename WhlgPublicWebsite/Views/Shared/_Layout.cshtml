@@ -89,6 +89,21 @@
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             @(await Html.GovUkErrorSummary(ViewData.ModelState))
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    @* TODO: DESNZ-2258 replace placeholder text with the agreed decommission wording *@
+                    @(await Html.GovUkNotificationBanner(new NotificationBannerViewModel
+                    {
+                        TitleText = "Important",
+                        Html = @<text>
+                            <p class="govuk-notification-banner__heading">&lt;This is placeholder text for the decommission banner heading&gt;</p>
+                            <p class="govuk-body">&lt;This is placeholder text explaining that this service is closing and what users should do instead&gt;</p>
+                        </text>
+                    }))
+                </div>
+            </div>
+
             @RenderBody()
         </main>
     </div>
