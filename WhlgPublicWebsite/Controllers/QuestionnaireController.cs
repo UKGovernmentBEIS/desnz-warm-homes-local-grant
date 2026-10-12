@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using GovUkDesignSystem.Attributes;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
@@ -621,6 +622,7 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> Eligible_Get()
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
+        if (questionnaire.CustodianCode is null) return AnswersInvalidForPage();
         await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, true);
 
         var viewModel = new EligibleViewModel
@@ -737,8 +739,7 @@ public class QuestionnaireController : Controller
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
 
-        if (questionnaire.QuestionnaireStatus is EligibleQuestionnaireStatus)
-            throw new Exception($"Ineligible page shown when questionnaire {questionnaire.SessionId} is eligible");
+        if (questionnaire.QuestionnaireStatus is EligibleQuestionnaireStatus) return AnswersInvalidForPage();
         await sessionRecorderService.RecordEligibilityAndJourneyCompletion(questionnaire, false);
 
         var viewModel = new IneligibleViewModel
@@ -882,6 +883,14 @@ public class QuestionnaireController : Controller
         var skipStep = questionnaire.FutureContactOriginStep ?? QuestionFlowStep.Confirmation;
         var args = GetActionArgumentsForQuestion(skipStep);
         return Url.Action(args.Action, args.Controller);
+    }
+
+    // Shown when the saved answers no longer match the page, e.g. after changing answers and using browser history
+    private ViewResult AnswersInvalidForPage()
+    {
+        var result = View("../Error/ServiceIssue");
+        result.StatusCode = StatusCodes.Status409Conflict;
+        return result;
     }
 
     private RedirectToActionResult RedirectToNextStep(QuestionFlowStep nextStep, QuestionFlowStep? entryPoint = null)
