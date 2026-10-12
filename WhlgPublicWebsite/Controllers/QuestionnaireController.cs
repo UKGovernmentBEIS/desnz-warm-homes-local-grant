@@ -688,6 +688,7 @@ public class QuestionnaireController : Controller
     public IActionResult Confirmation_Get(bool emailPreferenceSubmitted = false)
     {
         var questionnaire = questionnaireService.GetQuestionnaire();
+        if (questionnaire.ReferralCode is null) return AnswersInvalidForPage();
         var viewModel = new ConfirmationViewModel
         {
             ReferenceCode = questionnaire.ReferralCode,
@@ -712,9 +713,10 @@ public class QuestionnaireController : Controller
     [HttpPost("confirmation")]
     public async Task<IActionResult> Confirmation_Post(ConfirmationViewModel viewModel)
     {
+        var questionnaire = questionnaireService.GetQuestionnaire();
+        if (questionnaire.ReferralCode is null) return AnswersInvalidForPage();
         if (!ModelState.IsValid) return Confirmation_Get(viewModel.EmailPreferenceSubmitted);
 
-        var questionnaire = questionnaireService.GetQuestionnaire();
         var confirmationEmailAddress = viewModel.ConfirmationEmailAddress?.Trim();
 
         await questionnaireService.RecordConfirmationConsentAsync(
