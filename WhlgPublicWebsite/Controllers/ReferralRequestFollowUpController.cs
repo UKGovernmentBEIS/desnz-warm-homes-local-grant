@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WhlgPublicWebsite.BusinessLogic.Models;
 using WhlgPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 using WhlgPublicWebsite.Models.Enums;
@@ -30,7 +31,15 @@ public class ReferralRequestFollowUpController : Controller
     [HttpGet("")]
     public async Task<IActionResult> RespondPage_Get([Required] string token)
     {
-        ReferralRequestFollowUp referralRequestFollowUp = await referralFollowUpService.GetReferralRequestFollowUpByToken(token);
+        ReferralRequestFollowUp referralRequestFollowUp;
+        try
+        {
+            referralRequestFollowUp = await referralFollowUpService.GetReferralRequestFollowUpByToken(token);
+        }
+        catch (InvalidOperationException)
+        {
+            return NotFound();
+        }
         if (referralRequestFollowUp.WasFollowedUp is not null) {
             return RedirectToAction(nameof(AlreadyResponded), "ReferralRequestFollowUp");
         } else {  
@@ -51,7 +60,7 @@ public class ReferralRequestFollowUpController : Controller
         {
             await referralFollowUpService.RecordFollowUpResponseForToken(viewModel.Token, viewModel.HasFollowedUp is YesOrNo.Yes);
         }
-        catch (InvalidOperationException)
+        catch (Exception ex) when (ex is InvalidOperationException or DbUpdateConcurrencyException)
         {
             return RedirectToAction(nameof(AlreadyResponded), "ReferralRequestFollowUp");
         }
