@@ -101,7 +101,7 @@ public class LocalAuthorityDataTests
     }
     
     [Test]
-    public void GlaLocalAuthorities_HaveOnlyLiveStatuses()
+    public void GlaLocalAuthorities_HaveOnlyLiveOrReferralsPausedStatuses()
     {
         // If this test starts failing, the GLA LA data has been updated and the statement in the test name is now false
         // Do the following:
@@ -116,7 +116,7 @@ public class LocalAuthorityDataTests
         foreach (var (code, details) in glaAuthorities)
         {
             using var _ = LocalAuthorityPropertyAssertionScope(nameof(LocalAuthorityDetails.Status), code);
-            details.Status.Should().Be(LocalAuthorityStatus.Live);
+            details.Status.Should().BeOneOf(LocalAuthorityStatus.Live, LocalAuthorityStatus.ReferralsPaused);
         }
     }
 

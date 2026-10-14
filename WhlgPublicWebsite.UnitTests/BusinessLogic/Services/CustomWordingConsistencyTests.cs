@@ -68,28 +68,28 @@ public class CustomWordingConsistencyTests
             ("360", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Wokingham Borough Council
             ("3835", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Worthing Borough Council
 
-            // Greater London Authority (custom: Eligible, Confirmation, ReferralsPaused, email overrides)
+            // Greater London Authority (custom: Eligible, Confirmation, email overrides)
             ("5090", LocalAuthorityData.LocalAuthorityStatus.Live), // Barnet Council
             ("5150", LocalAuthorityData.LocalAuthorityStatus.Live), // Brent Council
             ("5180", LocalAuthorityData.LocalAuthorityStatus.Live), // London Borough of Bromley
             ("5210", LocalAuthorityData.LocalAuthorityStatus.Live), // London Borough of Camden
             ("5030", LocalAuthorityData.LocalAuthorityStatus.Live), // City of London Corporation
             ("5270", LocalAuthorityData.LocalAuthorityStatus.Live), // Ealing Council
-            ("5300", LocalAuthorityData.LocalAuthorityStatus.Live), // Enfield Council
+            ("5300", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Enfield Council
             ("5360", LocalAuthorityData.LocalAuthorityStatus.Live), // Hackney Council
             ("5420", LocalAuthorityData.LocalAuthorityStatus.Live), // Haringey Council
             ("5450", LocalAuthorityData.LocalAuthorityStatus.Live), // London Borough of Harrow
-            ("5480", LocalAuthorityData.LocalAuthorityStatus.Live), // London Borough of Havering
+            ("5480", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // London Borough of Havering
             ("5510", LocalAuthorityData.LocalAuthorityStatus.Live), // Hillingdon Council
-            ("5540", LocalAuthorityData.LocalAuthorityStatus.Live), // London Borough of Hounslow
+            ("5540", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // London Borough of Hounslow
             ("5570", LocalAuthorityData.LocalAuthorityStatus.Live), // Islington Council
-            ("5120", LocalAuthorityData.LocalAuthorityStatus.Live), // London Borough of Bexley
+            ("5120", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // London Borough of Bexley
             ("5660", LocalAuthorityData.LocalAuthorityStatus.Live), // Lambeth Council
             ("5690", LocalAuthorityData.LocalAuthorityStatus.Live), // Lewisham Council
             ("5390", LocalAuthorityData.LocalAuthorityStatus.Live), // London Borough of Hammersmith and Fulham
             ("5720", LocalAuthorityData.LocalAuthorityStatus.Live), // London Borough of Merton
-            ("5750", LocalAuthorityData.LocalAuthorityStatus.Live), // Newham Council
-            ("5780", LocalAuthorityData.LocalAuthorityStatus.Live), // London Borough of Redbridge
+            ("5750", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Newham Council
+            ("5780", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // London Borough of Redbridge
             ("5810", LocalAuthorityData.LocalAuthorityStatus.Live), // London Borough of Richmond upon Thames
             ("5330", LocalAuthorityData.LocalAuthorityStatus.Live), // Royal Borough of Greenwich
             ("5600", LocalAuthorityData.LocalAuthorityStatus.Live), // Royal Borough of Kensington and Chelsea
