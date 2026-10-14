@@ -216,10 +216,21 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> SelectAddress_Get(string postcode, string buildingNameOrNumber,
         QuestionFlowStep? entryPoint)
     {
-        var addresses = await osPlaces.GetAddressesAsync(postcode, buildingNameOrNumber);
-
-        // autofill the postcode if the users presses manual entry, or if the below redirect happens
+        // autofill the postcode if the user presses manual entry, or if we redirect there on OS Places failure
         var questionnaire = await questionnaireService.UpdatePostcodeSearched(postcode, entryPoint);
+
+        List<Address> addresses;
+        try
+        {
+            addresses = await osPlaces.GetAddressesAsync(postcode, buildingNameOrNumber);
+        }
+        catch (Exception e)
+        {
+            // Unexpected OS Places failures (timeouts, 5xx, etc.) — let the user continue via manual entry.
+            // Failures are already logged in OsPlacesApi; healthchecks cover ongoing outages.
+            logger.LogWarning(e, "OS Places lookup failed; redirecting to manual address entry");
+            return RedirectToNextStep(QuestionFlowStep.ManualAddress, entryPoint);
+        }
 
         // 100 addresses is too many to show to user, ask for manual entry instead
         if (addresses.Count > 100)
