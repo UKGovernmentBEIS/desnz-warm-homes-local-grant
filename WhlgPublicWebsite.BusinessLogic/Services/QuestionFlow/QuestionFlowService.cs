@@ -30,6 +30,7 @@ public class QuestionFlowService : IQuestionFlowService
             QuestionFlowStep.Address => AddressBackDestination(entryPoint),
             QuestionFlowStep.SelectAddress => SelectAddressBackDestination(),
             QuestionFlowStep.ReviewEpc => ReviewEpcBackDestination(),
+            QuestionFlowStep.NoEpcFound => NoEpcFoundBackDestination(),
             QuestionFlowStep.NotParticipating => NotParticipatingBackDestination(questionnaire),
             QuestionFlowStep.NoFunding => NoFundingBackDestination(questionnaire),
             QuestionFlowStep.NoLongerParticipating => NoLongerParticipatingBackDestination(questionnaire),
@@ -37,7 +38,7 @@ public class QuestionFlowService : IQuestionFlowService
             QuestionFlowStep.TakingFutureReferrals => TakingFutureReferralsBackDestination(),
             QuestionFlowStep.Pending => PendingBackDestination(),
             QuestionFlowStep.ManualAddress => ManualAddressBackDestination(),
-            QuestionFlowStep.SelectLocalAuthority => SelectLocalAuthorityBackDestination(),
+            QuestionFlowStep.SelectLocalAuthority => SelectLocalAuthorityBackDestination(questionnaire),
             QuestionFlowStep.ConfirmLocalAuthority => ConfirmLocalAuthorityBackDestination(),
             QuestionFlowStep.HouseholdIncome => HouseholdIncomeBackDestination(questionnaire, entryPoint),
             QuestionFlowStep.CheckAnswers => CheckAnswersBackDestination(),
@@ -61,6 +62,7 @@ public class QuestionFlowService : IQuestionFlowService
             QuestionFlowStep.Address => AddressForwardDestination(),
             QuestionFlowStep.SelectAddress => SelectAddressForwardDestination(questionnaire, entryPoint),
             QuestionFlowStep.ReviewEpc => ReviewEpcForwardDestination(questionnaire, entryPoint),
+            QuestionFlowStep.NoEpcFound => NoEpcFoundForwardDestination(questionnaire, entryPoint),
             QuestionFlowStep.ManualAddress => ManualAddressForwardDestination(),
             QuestionFlowStep.SelectLocalAuthority => SelectLocalAuthorityForwardDestination(),
             QuestionFlowStep.ConfirmLocalAuthority =>
@@ -140,9 +142,11 @@ public class QuestionFlowService : IQuestionFlowService
         return QuestionFlowStep.Address;
     }
 
-    private QuestionFlowStep SelectLocalAuthorityBackDestination()
+    private QuestionFlowStep SelectLocalAuthorityBackDestination(Questionnaire questionnaire)
     {
-        return QuestionFlowStep.ManualAddress;
+        return questionnaire.EpcDetails is null
+            ? QuestionFlowStep.NoEpcFound
+            : QuestionFlowStep.ManualAddress;
     }
 
     private QuestionFlowStep ConfirmLocalAuthorityBackDestination()
@@ -152,15 +156,25 @@ public class QuestionFlowService : IQuestionFlowService
 
     private QuestionFlowStep LaStatusSwitchBackDestionation(Questionnaire questionnaire)
     {
-        return questionnaire.LocalAuthorityAutomaticallyMatched == true
-            ? QuestionFlowStep.Address
-            : QuestionFlowStep.ConfirmLocalAuthority;
+        if (questionnaire.LocalAuthorityAutomaticallyMatched == true)
+        {
+            return questionnaire.EpcDetails is null
+                ? QuestionFlowStep.NoEpcFound
+                : QuestionFlowStep.Address;
+        }
+
+        return QuestionFlowStep.ConfirmLocalAuthority;
     }
 
     private QuestionFlowStep ReviewEpcBackDestination()
     {
         // it is never possible that the user needs to go back to confirm authority
         // since the manual flow will never find an EPC
+        return QuestionFlowStep.Address;
+    }
+
+    private QuestionFlowStep NoEpcFoundBackDestination()
+    {
         return QuestionFlowStep.Address;
     }
 
@@ -190,6 +204,8 @@ public class QuestionFlowService : IQuestionFlowService
             return QuestionFlowStep.CheckAnswers;
         if (questionnaire.FoundEpcBandIsTooHigh)
             return QuestionFlowStep.ReviewEpc;
+        if (questionnaire.EpcDetails is null && questionnaire.LocalAuthorityAutomaticallyMatched == true)
+            return QuestionFlowStep.NoEpcFound;
 
         return LaStatusSwitchBackDestionation(questionnaire);
     }
@@ -288,6 +304,9 @@ public class QuestionFlowService : IQuestionFlowService
 
     private QuestionFlowStep SelectAddressForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
     {
+        if (questionnaire.EpcDetails is null)
+            return QuestionFlowStep.NoEpcFound;
+
         return questionnaire.LocalAuthorityAutomaticallyMatched
             ? LaStatusSwitchForwardDestination(questionnaire, entryPoint)
             : QuestionFlowStep.SelectLocalAuthority;
@@ -295,7 +314,14 @@ public class QuestionFlowService : IQuestionFlowService
 
     private QuestionFlowStep ManualAddressForwardDestination()
     {
-        return QuestionFlowStep.SelectLocalAuthority;
+        return QuestionFlowStep.NoEpcFound;
+    }
+
+    private QuestionFlowStep NoEpcFoundForwardDestination(Questionnaire questionnaire, QuestionFlowStep? entryPoint)
+    {
+        return questionnaire.LocalAuthorityAutomaticallyMatched
+            ? LaStatusSwitchForwardDestination(questionnaire, entryPoint)
+            : QuestionFlowStep.SelectLocalAuthority;
     }
 
     private QuestionFlowStep SelectLocalAuthorityForwardDestination()
