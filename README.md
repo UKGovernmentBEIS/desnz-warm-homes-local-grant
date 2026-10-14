@@ -14,7 +14,7 @@ Note, the WH:LG project is split across 2 repositories:
 
 For quick setup (running with docker compose):
 - Docker Desktop (https://www.docker.com/products/docker-desktop/)
-- .Net 8 (https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- .Net 10 (https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 - If you're using Rider then you will need to install the ".net core user secrets" plugin
 
 
