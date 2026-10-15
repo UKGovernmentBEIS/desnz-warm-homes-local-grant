@@ -1013,9 +1013,6 @@ public class QuestionnaireController : Controller
     {
         var partialViewName = questionnaire.CustodianCode switch
         {
-            var custodianCode when LocalAuthorityData.CustodianCodeIsInConsortium(custodianCode,
-                    ConsortiumNames.GreaterLondonAuthority) =>
-                "GreaterLondonAuthority",
             _ => "Default"
         };
 
