@@ -22,9 +22,9 @@ namespace WhlgPublicWebsite.Services
         private const string PathFromExecutableToWwwRoot = "wwwroot";
         private const string CompiledDirectory = "compiled";
 
-        private const string AppCssRegex = "app-[^-]*.css";
-        private const string AppJsRegex = "app-.*.js";
-        private const string Html5ShivJsRegex = "html5shiv-.*.js";
+        private const string AppCssRegex = @"^app-[^-]*\.css$";
+        private const string AppJsRegex = @"^app-.*\.js$";
+        private const string Html5ShivJsRegex = @"^html5shiv-.*\.js$";
 
         private ConcurrentDictionary<string, string> cachedFilenames = new();
 

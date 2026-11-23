@@ -36,7 +36,8 @@
       timeout: 5s
       retries: 5
   minio:
-    image: minio/minio
+    # MinIO no longer publishes Docker images; pgsty/minio is a community build of the same MinIO server
+    image: pgsty/minio
     container_name: minio
     ports:
       - "9000:9000"
@@ -53,7 +54,7 @@
       timeout: 5s
       retries: 5
   minio-setup:
-    image: minio/mc
+    image: pgsty/mc
     depends_on:
       minio:
         condition: service_healthy
