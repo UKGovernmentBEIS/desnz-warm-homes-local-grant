@@ -23,7 +23,7 @@ For quick setup (running with docker compose):
 If you want to run the project in Rider with access to local tools, such as the debugger and EF migrations, follow these steps:
 
 - Install EF Core CLI tools (https://docs.microsoft.com/en-us/ef/core/cli/dotnet)
-- Node v14+ (https://nodejs.org/en/)
+- Node v24 (LTS) (https://nodejs.org/en/)
 - If you need to work on the S3 file writing code, download and configure Minio (see below)
     - [Windows](https://min.io/download#/windows)
     - [Mac](https://min.io/docs/minio/macos/index.html#procedure)
