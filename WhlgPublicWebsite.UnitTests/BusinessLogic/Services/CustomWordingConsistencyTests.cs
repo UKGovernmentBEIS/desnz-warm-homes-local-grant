@@ -70,7 +70,7 @@ public class CustomWordingConsistencyTests
 
             // Greater London Authority (custom: Eligible, Confirmation, email overrides)
             ("5090", LocalAuthorityData.LocalAuthorityStatus.Live), // Barnet Council
-            ("5150", LocalAuthorityData.LocalAuthorityStatus.Live), // Brent Council
+            ("5150", LocalAuthorityData.LocalAuthorityStatus.ReferralsPaused), // Brent Council
             ("5180", LocalAuthorityData.LocalAuthorityStatus.Live), // London Borough of Bromley
             ("5210", LocalAuthorityData.LocalAuthorityStatus.Live), // London Borough of Camden
             ("5030", LocalAuthorityData.LocalAuthorityStatus.Live), // City of London Corporation
