@@ -94,4 +94,24 @@ public class EpbEpcApiTests
         // Assert
         assessment.Should().BeEquivalentTo(correctAssessment);
     }
+
+    [Test]
+    public async Task EpcFromUprnAsync_WhenNotFound_ReturnsNull()
+    {
+        mockHttpHandler.Expect("http://test.com/retrofit-funding/assessments")
+            .Respond(System.Net.HttpStatusCode.NotFound);
+
+        var assessment = await epcApi.EpcFromUprnAsync("000038153332");
+
+        assessment.Should().BeNull();
+    }
+
+    [Test]
+    public void EpcFromUprnAsync_WhenServerError_ThrowsEpcApiUnavailableException()
+    {
+        mockHttpHandler.Expect("http://test.com/retrofit-funding/assessments")
+            .Respond(System.Net.HttpStatusCode.InternalServerError);
+
+        Assert.ThrowsAsync<EpcApiUnavailableException>(() => epcApi.EpcFromUprnAsync("000038153332"));
+    }
 }
