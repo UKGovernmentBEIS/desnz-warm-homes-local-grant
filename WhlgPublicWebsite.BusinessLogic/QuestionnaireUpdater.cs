@@ -238,8 +238,11 @@ public class QuestionnaireUpdater
                         new ReferralRequest(questionnaire));
                     break;
                 default:
-                    throw new Exception(
-                        $"Local Authority status ({questionnaire.LocalAuthorityStatus}) should never get to this method as they should not recieve a confirmation email.");
+                    // The LA status can change after the referral is made, e.g. if the LA is paused in a release
+                    logger.LogWarning(
+                        "Not sending confirmation email for referral {ReferralCode} as Local Authority status is {LocalAuthorityStatus}",
+                        questionnaire.ReferralCode, questionnaire.LocalAuthorityStatus);
+                    break;
             }
         }
 

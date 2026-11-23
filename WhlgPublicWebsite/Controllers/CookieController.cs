@@ -42,9 +42,10 @@ public class CookieController: Controller
     [HttpPost("cookie-consent")]
     public IActionResult CookieConsent(CookieConsentViewModel cookieConsent)
     {
+        var returnUrl = Url.IsLocalUrl(cookieConsent.ReturnUrl) ? cookieConsent.ReturnUrl : "/";
         if (cookieConsent.Consent == "hide")
         {
-            return Redirect(cookieConsent.ReturnUrl);
+            return LocalRedirect(returnUrl);
         }
         var cookiesAccepted = cookieConsent.Consent == "accept";
         var cookieSettings = new CookieSettings
@@ -54,7 +55,7 @@ public class CookieController: Controller
             GoogleAnalytics = cookiesAccepted
         };
         cookieService.SetCookie(Response, cookieService.Configuration.CookieSettingsCookieName, cookieSettings);
-        return Redirect(cookieConsent.ReturnUrl);
+        return LocalRedirect(returnUrl);
     }
 
     [HttpGet("cookie-details")]

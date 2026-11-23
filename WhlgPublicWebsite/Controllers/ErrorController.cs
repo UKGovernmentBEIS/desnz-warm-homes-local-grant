@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace WhlgPublicWebsite.Controllers;
 
@@ -19,7 +18,7 @@ public class ErrorController: Controller
         return code switch
         {
             404 => View("PageNotFound"),
-            _ => throw new ArgumentOutOfRangeException()
+            _ => View("ServiceIssue")
         };
     }
 }
