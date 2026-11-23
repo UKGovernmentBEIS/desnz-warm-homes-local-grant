@@ -226,6 +226,21 @@ public class OsPlacesApiTests
         // Assert
         result.Count.Should().Be(0);
     }
+
+    [Test]
+    public async Task GetAddressesAsync_WhenOsPlacesRequestFails_Throws()
+    {
+        // Arrange
+        mockHttpHandler.Expect("http://test.com/search/places/v1/postcode?postcode=AB1%202CD")
+            .WithHeaders("Key", "testKey")
+            .Respond(System.Net.HttpStatusCode.ServiceUnavailable);
+
+        // Act
+        var act = async () => await underTest.GetAddressesAsync("AB1 2CD", "1");
+
+        // Assert — caller (SelectAddress) catches this and redirects to manual address entry
+        await act.Should().ThrowAsync<ApiException>();
+    }
     
     [Test]
     public async Task GetAddressesAsync_WhenThereAreMoreMatchesThanCanBeReturned_CallsOsPlacesAgain()
